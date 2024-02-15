@@ -1,0 +1,40 @@
+<div class="wrapper">
+  <div class="sidebar" data-color="danger" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
+      <app-sidebar></app-sidebar>
+      <div class="sidebar-background" style="background-image: url(./assets/img/sidebar-4.jpg)"></div>
+  </div>
+  <div class="main-panel">
+      <app-navbar></app-navbar>
+      <div class="card" style="margin-top: 10%;">
+        <div class="card-header">
+          <h2>Listado de Subcategorías</h2>
+        </div>
+        <div class="card-body">
+          <table class="table" >
+            <thead>
+              <tr>
+                <th>Categoría</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let subcategoria of subcategorias">
+                <td>{{ subcategoria.categoria }}</td>
+                <td>{{ subcategoria.nombre }}</td>
+                <td>{{ subcategoria.descripcion }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+          <app-footer></app-footer>
+      </div>
+  </div>    
+</div>
+
+
+
+  
+  

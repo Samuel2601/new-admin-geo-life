@@ -1,0 +1,14 @@
+.modal-login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* Ocupar toda la altura disponible */
+  }
+  
+  /* Ajustes para el formulario dentro del modal */
+  .modal-login-container form {
+    max-width: 100%; /* Utilizar todo el ancho disponible */
+  }
+
+  

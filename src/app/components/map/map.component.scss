@@ -1,0 +1,27 @@
+.combo-box {
+    position: relative ;
+  }
+  
+  .options-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+  
+  .options-list li {
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .options-list li:hover {
+    background-color: #f9f9f9;
+  }
+  

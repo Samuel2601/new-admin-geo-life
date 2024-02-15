@@ -1,0 +1,47 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Búsqueda de Ubicación</h5>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text" id="inputGroup-sizing-lg">Barrio:</span>
+                            <div class="combo-box">
+                                <input class="form-control" type="text" placeholder="Selecciona una opción" aria-label="Number" [formControl]="myControl" (input)="filterOptions($event.target)" (blur)="hideOptions()">
+                                <ul *ngIf="lista_feature.length > 0 && showOptions" class="options-list list-group">
+                                    <ng-container *ngFor="let option of filter">
+                                        <li class="list-group-item" (click)="buscar(option)" *ngIf="option.properties.nombre">{{ option.properties.nombre }}</li>
+                                    </ng-container>
+                                </ul>
+                            </div>                    
+                        </div>
+                    </div>
+                    <div class="col-6 text-truncate">
+                        <h6 *ngIf="opcionb">Ubicación Seleccionada:</h6>
+                        <h1 *ngIf="opcionb" [ngClass]="{'h3': !isMobile(), 'h4': isMobile()}">
+                            <span class="badge bg-secondary">{{opcionb.properties.nombre}} </span>
+                        </h1>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+                
+                <button type="button" class="btn btn-primary mt-3" (click)="reloadmap()">Ver Todos</button>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Mapa de Ubicación</h5>
+                        <div id="mapid" style="height: 500px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

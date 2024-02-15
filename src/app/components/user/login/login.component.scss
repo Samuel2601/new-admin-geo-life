@@ -1,0 +1,15 @@
+.show-password-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .show-password-btn:focus {
+    outline: none;
+  }
+  
+  .show-password-icon {
+    font-size: 1.25rem;
+    color: #6c757d; /* color gris para el icono */
+  }
+  

@@ -15,7 +15,7 @@ import { EditSubcategoriaComponent } from './components/categoria/sub/edit-subca
 import { ErrorComponent } from './components/user/error/error.component';
 import { PermisoGuard } from './guards/permiso.guard';
 const appRoute: Routes = [
-	//{ path: '', redirectTo: 'home', pathMatch: 'full' },
+	{ path: '', redirectTo: 'home', pathMatch: 'full' },
 	{ path: 'home', component: HomeComponent },//, canActivate: [AuthGuard]
 	{ path: 'inicio', component:LoginComponent },
 	{ path: 'registro', component:SignupComponent },

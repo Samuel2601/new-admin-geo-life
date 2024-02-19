@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ListService } from 'src/app/services/list.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-index-subcategoria',
   templateUrl: './index-subcategoria.component.html',
@@ -7,8 +8,10 @@ import { ListService } from 'src/app/services/list.service';
 })
 export class IndexSubcategoriaComponent {
   subcategorias: any[]|undefined;
-
-  constructor(private listService: ListService) { }
+  id: any ='';
+  constructor(private listService: ListService,private route: ActivatedRoute) {
+    this.id = this.route.snapshot.queryParamMap.get('id');
+   }
 
   ngOnInit(): void {
     this.listarSubcategorias();
@@ -16,9 +19,9 @@ export class IndexSubcategoriaComponent {
 
   listarSubcategorias(): void {
     const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
-    this.listService.listarSubcategorias(token).subscribe(
+    this.listService.listarSubcategorias(token,'categoria',this.id).subscribe(
       response => {
-        this.subcategorias = response.subcategorias;
+        this.subcategorias = response.data;
       },
       error => {
         console.log(error);

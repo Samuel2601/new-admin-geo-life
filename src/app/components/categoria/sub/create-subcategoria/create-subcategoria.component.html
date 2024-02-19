@@ -1,20 +1,52 @@
-<form [formGroup]="subcategoriaForm" (ngSubmit)="registrarSubcategoria()">
-    <div class="mb-3">
-      <label for="categoria" class="form-label">Categoría</label>
-      <select id="categoria" class="form-control" formControlName="categoria">
-        <option *ngFor="let categoria of categorias" [value]="categoria._id">{{ categoria.nombre }}</option>
-      </select>
+<div class="wrapper">
+  <div class="sidebar" data-color="danger" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
+    <app-sidebar></app-sidebar>
+    <div class="sidebar-background" style="background-image: url(./assets/img/sidebar-4.jpg)"></div>
+  </div>
+  <div class="main-panel">
+    <app-navbar></app-navbar>
+
+    <div class="main-content">
+      <div class="container-fluid">
+          <div class="card">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-auto">
+                  <h2>Nueva Sub-Categorías</h2>
+                </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <p-toast></p-toast>
+                <div class="table-responsive-sm">
+                  <form [formGroup]="subcategoriaForm" (ngSubmit)="registrarSubcategoria()">
+                    <div class="mb-3">
+                      <label for="categoria" class="form-label">Categoría</label>
+                      <select id="categoria" class="form-control" formControlName="categoria">
+                        <option *ngFor="let categoria of categorias" [value]="categoria._id">{{ categoria.nombre }}</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="nombre" class="form-label">Nombre</label>
+                      <input type="text" class="form-control" id="nombre" formControlName="nombre">
+                    </div>
+                    <div class="mb-3">
+                      <label for="descripcion" class="form-label">Descripción</label>
+                      <textarea class="form-control" id="descripcion" formControlName="descripcion"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                      <i class="bi bi-save"></i> Guardar
+                    </button>
+                  </form>
+                  
+                </div>
+              </div>
+          </div>
+      </div>
     </div>
-    <div class="mb-3">
-      <label for="nombre" class="form-label">Nombre</label>
-      <input type="text" class="form-control" id="nombre" formControlName="nombre">
+    <div>
+      <app-footer></app-footer>
     </div>
-    <div class="mb-3">
-      <label for="descripcion" class="form-label">Descripción</label>
-      <textarea class="form-control" id="descripcion" formControlName="descripcion"></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">
-      <i class="bi bi-save"></i> Guardar
-    </button>
-  </form>
-  
+  </div>
+</div>
+

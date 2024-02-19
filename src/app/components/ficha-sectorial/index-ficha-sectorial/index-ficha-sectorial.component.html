@@ -1,0 +1,103 @@
+<ng-container *ngIf="modal">
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-lg-auto">
+          <h2>Listado de Ficha Técnica: {{valor}}</h2>
+        </div>
+        <div class="col-sm-auto">
+          <a class="btn btn-primary float-end" (click)="llamarmodal()"><i class="bi bi-stack"></i></a>
+          <a class="btn btn-primary float-end" (click)="llamarmodal2()"><i class="bi bi-substack"></i></a>     
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p-toast></p-toast>
+      <div class="table-responsive-sm">
+        <table class="table table-sm align-middle table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Descripción</th>
+                <th scope="col">Encargado</th>
+                <th scope="col">Dirección Geo</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Fecha Evento</th>
+                <th scope="col">Observación</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="fichasectorial">
+              <tr *ngFor="let ficha of fichasectorial">
+                <td>{{ ficha.descripcion }}</td>
+                <td>{{ ficha.encargado }}</td>
+                <td>{{ ficha.direccion_geo }}</td>
+                <td>{{ ficha.estado }}</td>
+                <td>{{ ficha.fecha_evento | date }}</td>
+                <td>{{ ficha.observacion }}</td>
+              </tr>
+            </tbody>
+          </table>
+          
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="!modal">
+  <div class="wrapper">
+    <div class="sidebar" data-color="danger" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
+      <app-sidebar></app-sidebar>
+      <div class="sidebar-background" style="background-image: url(./assets/img/sidebar-4.jpg)"></div>
+    </div>
+    <div class="main-panel">
+      <app-navbar></app-navbar>
+      <div class="main-content">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-lg-auto">
+                  <h2>Listado de Ficha Técnica</h2>
+                </div>
+                <div class="col-sm-auto">
+                  <a class="btn btn-primary float-end" (click)="llamarmodal()"><i class="bi bi-stack"></i></a>
+                  <a class="btn btn-primary float-end" (click)="llamarmodal2()"><i class="bi bi-substack"></i></a> 
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <p-toast></p-toast>
+              <div class="table-responsive-sm">
+                <table class="table table-sm align-middle table-striped table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">Descripción</th>
+                        <th scope="col">Encargado</th>
+                        <th scope="col">Dirección Geo</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Fecha Evento</th>
+                        <th scope="col">Observación</th>
+                      </tr>
+                    </thead>
+                    <tbody *ngIf="fichasectorial">
+                      <tr *ngFor="let ficha of fichasectorial">
+                        <td>{{ ficha.descripcion }}</td>
+                        <td>{{ ficha.encargado }}</td>
+                        <td>{{ ficha.direccion_geo }}</td>
+                        <td>{{ ficha.estado }}</td>
+                        <td>{{ ficha.fecha_evento | date }}</td>
+                        <td>{{ ficha.observacion }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
+
+      <div>
+        <app-footer></app-footer>
+      </div>
+    </div>
+  </div>
+</ng-container>

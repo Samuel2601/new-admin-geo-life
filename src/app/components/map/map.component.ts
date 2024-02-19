@@ -2,7 +2,8 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { LatLng, geoJSON, Map, tileLayer, control, layerGroup, featureGroup, LeafletMouseEvent } from 'leaflet';
 import { Location, LocationStrategy, PathLocationStrategy, PopStateEvent } from '@angular/common';
 import { FormControl } from '@angular/forms';
-
+import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { CreateIncidentesDenunciaComponent } from '../incidentes-denuncia/create-incidentes-denuncia/create-incidentes-denuncia.component';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -10,9 +11,11 @@ import { FormControl } from '@angular/forms';
 })
 export class MapComponent implements AfterViewInit {
   public map: Map|undefined ;
+  constructor(private modalService: NgbModal){
+
+  }
   
   ngAfterViewInit(): void {
-    console.log('Contenedor presente:', document.getElementById('mapid'));
     this.geoserve();
   }
 
@@ -93,9 +96,6 @@ export class MapComponent implements AfterViewInit {
     this.streetLayer.addTo(this.map);
   }
   myControl = new FormControl();
-  constructor(){
-    
-  }
   public filter:any=[];
   
   showOptions: boolean = false;
@@ -168,37 +168,80 @@ export class MapComponent implements AfterViewInit {
     control.layers({googleStreets}, {'Barrios':this.wfsSelangor,'Búsqueda': this.busquedaLayer}).addTo(this.map);
   }
   lista_feature:any=[];
-  reloadmap(){    
-    this.wfsPolylayer=[];
-    // Vaciar wfsSelangor
+  bton:any
+  reloadmap() {
+    this.wfsPolylayer = [];
     this.wfsSelangor.clearLayers();
     this.getWFSgeojson().then((e) => {
-      (this.wfsPolylayer = geoJSON([e], {
-        onEachFeature: (e, t) => {
-          t.on({ mouseover: this.highlightFeature, mouseout: this.resetHighlight });	
-          
-          //t.bindPopup('<ul><h3>' + e.properties.nombre + ' </h3><li>Codigo: ' + e.properties.parr + ' </li><li>Habitantes: ' + e.properties.layer + ' Hab.. </li><li><a href="http://maps.google.com/maps?q=&layer=c&cbll=' + this.latitud + ',' + this.longitud + '&cbp=11,0,0,0,0" target="_blank" ><b>Google Street View</b></a> </li></ul>');
-          t.bindPopup(`
-          <div style="font-family: Arial, sans-serif; font-size: 14px;">
-            <h3>${e.properties.nombre}</h3>
-            <ul style="list-style-type: none; padding-left: 0;">
-              <li><strong>Código:</strong> ${e.properties.parr}</li>
-              <li><strong>Habitantes:</strong> ${e.properties.layer} Hab.</li>
-              <li>
-                <a href="http://maps.google.com/maps?q=&layer=c&cbll=${this.latitud},${this.longitud}&cbp=11,0,0,0,0" target="_blank">
-                  <strong>Google Street View</strong>
-                </a>
-              </li>
-            </ul>
-          </div>
-        `);
+        (this.wfsPolylayer = geoJSON([e], {
+            onEachFeature: (e, t) => {
+                t.on({ mouseover: this.highlightFeature, mouseout: this.resetHighlight });
+                t.bindPopup(`
+                  <div style="font-family: Arial, sans-serif; font-size: 14px;">
+                      <b>${e.properties.nombre}</b>
+                      <ul style="list-style-type: none; padding-left: 0;">
+                          <li><strong>Parroquia:</strong> ${e.properties.parr}</li>
+                          <li>
+                              <button class="btn btn-secondary mt-3" id="incidenteButton">
+                                  <strong>Generar Incidente o Denuncia</strong>
+                              </button>
+                          </li>
+                          <li>
+                            <button class="btn btn-secondary mt-3" id="fichaButton">
+                                <strong>Buscar Ficha Técnicas</strong>
+                            </button>
+                          </li>
+                      </ul>
+                  </div>
+                `);
+                if(this.bton){
+                  this.bton.removeEventListener('click', () => {
+                    this.selectmap(e);
+                  });
+                }
+                // Agrega un event listener al botón cuando se abra el popup
+                t.on('popupopen', (popupEvent) => {
+                    this.bton = document.getElementById('incidenteButton');
+                    if (this.bton) {
+                        this.bton.addEventListener('click', () => {
+                            this.selectmap(e);
+                        });
+                    }
+                });
+                // Elimina el event listener cuando se cierre el popup
+                t.on('popupclose', (popupEvent) => {
+                  let bton = document.getElementById('incidenteButton');
+                  if (bton) {
+                      bton.removeEventListener('click', () => {
+                          this.selectmap(e);
+                      });
+                  }
+                });   
 
-        },
-        style: this.geojsonWFSstyle,
-      }).addTo(this.wfsSelangor));
-      
+                // Agrega un event listener al botón cuando se abra el popup
+                t.on('popupopen', (popupEvent) => {
+                  this.bton = document.getElementById('fichaButton');
+                  if (this.bton) {
+                      this.bton.addEventListener('click', () => {
+                          this.selectficha(e);
+                        });
+                    }
+                });
+                // Elimina el event listener cuando se cierre el popup
+                t.on('popupclose', (popupEvent) => {
+                  let bton = document.getElementById('fichaButton');
+                  if (bton) {
+                      bton.removeEventListener('click', () => {
+                          this.selectficha(e);
+                      });
+                  }
+                });             
+            },
+            style: this.geojsonWFSstyle,
+        }).addTo(this.wfsSelangor));
     });
-  }
+}
+
   opcionb:any
   buscar(opcion:any){   
     this.opcionb=opcion; 
@@ -209,18 +252,63 @@ export class MapComponent implements AfterViewInit {
       style: this.geojsonWFSstyle,
     }).bindPopup(`
       <div style="font-family: Arial, sans-serif; font-size: 14px;">
-        <h3>${opcion.properties.nombre}</h3>
+        <b>${opcion.properties.nombre}</b>
         <ul style="list-style-type: none; padding-left: 0;">
-          <li><strong>Código:</strong> ${opcion.properties.parr}</li>
-          <li><strong>Habitantes:</strong> ${opcion.properties.layer} Hab.</li>
+          <li><strong>Parriquia:</strong> ${opcion.properties.parr}</li>
+
           <li>
-            <a href="http://maps.google.com/maps?q=&layer=c&cbll=${this.latitud},${this.longitud}&cbp=11,0,0,0,0" target="_blank">
-              <strong>Google Street View</strong>
-            </a>
+              <button class="btn btn-secondary mt-3" id="incidenteButton">
+                  <strong>Generar Incidente o Denuncia</strong>
+              </button>
+          </li>
+          <li>
+              <button class="btn btn-secondary mt-3" id="fichaButton">
+                  <strong>Buscar Ficha Técnicas</strong>
+              </button>
           </li>
         </ul>
       </div>
     `).addTo(this.busquedaLayer);
+    let incidenteButton:any;
+    let fichaButton:any;
+    // Agregar un event listener al botón cuando se abra el popup
+      this.buscarPolylayer.on('popupopen', (popupEvent:any) => {
+        incidenteButton = document.getElementById('incidenteButton');
+        if (incidenteButton) {
+            incidenteButton.addEventListener('click', () => {
+              this.nuevoIncidente();// Aquí puedes realizar la acción que necesites al hacer clic en el botón
+            });
+        }
+      });
+
+      // Eliminar el event listener cuando se cierre el popup
+      this.buscarPolylayer.on('popupclose', (popupEvent:any) => {
+        if (incidenteButton) {
+            incidenteButton.removeEventListener('click', () => {
+              this.nuevoIncidente();// Aquí puedes realizar la acción que necesites al hacer clic en el botón
+            });
+        }
+      });
+
+      // Agregar un event listener al botón cuando se abra el popup
+      this.buscarPolylayer.on('popupopen', (popupEvent:any) => {
+        fichaButton = document.getElementById('fichaButton');
+        if (fichaButton) {
+          fichaButton.addEventListener('click', () => {
+              this.fichaTecnica();// Aquí puedes realizar la acción que necesites al hacer clic en el botón
+            });
+        }
+      });
+
+      // Eliminar el event listener cuando se cierre el popup
+      this.buscarPolylayer.on('popupclose', (popupEvent:any) => {
+        if (fichaButton) {
+          fichaButton.removeEventListener('click', () => {
+              this.fichaTecnica();// Aquí puedes realizar la acción que necesites al hacer clic en el botón
+            });
+        }
+      });
+
     // Mover el mapa hacia el feature seleccionado
     this.map?.flyToBounds(this.buscarPolylayer.getBounds());
 
@@ -253,7 +341,7 @@ export class MapComponent implements AfterViewInit {
     const layer = e.target;
     layer.setStyle({
         weight: 5,
-        color: '#3388ff',
+        color: '#f44336',
         dashArray: '',
         fillOpacity: 0.7
     });
@@ -271,13 +359,36 @@ export class MapComponent implements AfterViewInit {
 
   geojsonWFSstyle(feature:any) {
     return {
-        fillColor: '#3388ff',
+        fillColor: '#f44336',
         weight: 2,
         opacity: 1,
         color: 'white',
         dashArray: '3',
         fillOpacity: 0.7
     };
+  }
+  selectmap(e:any){
+    this.opcionb=e;
+    this.nuevoIncidente();
+  }
+
+  nuevoIncidente() {
+    const data = this.opcionb; // JSON que quieres enviar
+    this.modalService.dismissAll();
+    const modalRef = this.modalService.open(CreateIncidentesDenunciaComponent, { centered: true });
+    modalRef.componentInstance.data = data; 
+  }
+  mostrarficha=false;
+  selectficha(e:any){
+    this.opcionb=e;
+    this.fichaTecnica();
+  }
+  fichaTecnica(){
+    this.mostrarficha=false;
+    if(this.opcionb){
+      this.mostrarficha=true;
+    } 
+    
   }
   
 }

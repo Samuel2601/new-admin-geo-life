@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { ListService } from 'src/app/services/list.service';
+
 @Component({
   selector: 'app-index-categoria',
   templateUrl: './index-categoria.component.html',
@@ -9,7 +11,7 @@ export class IndexCategoriaComponent {
   categorias=[];
   clonedProducts: { [s: string]: any } = {};
 
-  constructor(private listService: ListService) { }
+  constructor(private listService: ListService,private router: Router) { }
 
   ngOnInit(): void {
     this.listarCategorias();
@@ -46,9 +48,9 @@ export class IndexCategoriaComponent {
 
   }
 
-  verSubcategorias(categoria: any) {
-    // Lógica para ver las subcategorías
-}
+  verSubcategorias(id: any) {
+      this.router.navigate(['/subcategorias'], { queryParams: { id: id } });
+  }
 
   confirmarEliminacion(categoria: any) {
     console.log('Eliminar la categoría:', categoria);

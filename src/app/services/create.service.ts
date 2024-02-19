@@ -28,12 +28,18 @@ export class CreateService {
     return this.http.post(this.url + 'registrar_actividad_proyecto', data, { headers: headers });
   }
 
-  registrarIncidenteDenuncia(token: any, data: any): Observable<any> {
+  registrarIncidenteDenuncia(token: any, data: any, foto:any): Observable<any> {
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
       Authorization: token,
-    });
-    return this.http.post(this.url + 'registrar_incidente_denuncia', data, { headers: headers });
+    });    
+    const formData = new FormData();
+    formData.append('categoria', data.categoria);
+    formData.append('subcategoria', data.subcategoria);
+    formData.append('ciudadano', data.ciudadano);
+    formData.append('descripcion', data.descripcion);
+    formData.append('direccion_geo', data.direccion_geo);
+    formData.append('foto', foto);
+    return this.http.post(this.url + 'registrar_incidente_denuncia', formData, { headers: headers });
   }
 
   registrarCategoria(token: any, data: any): Observable<any> {

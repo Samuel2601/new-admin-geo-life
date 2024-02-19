@@ -25,3 +25,27 @@
     background-color: #f9f9f9;
   }
   
+
+  .card-body {
+    .row-cols-lg-2 {
+        @media (min-width: 992px) {
+            /* Pantallas grandes: 2 columnas */
+            display: flex;
+            flex-wrap: wrap;
+
+            > * {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+
+        @media (max-width: 991.98px) {
+            /* Dispositivos móviles: 1 columna */
+            display: block;
+
+            > * {
+                width: 100%;
+            }
+        }
+    }
+}

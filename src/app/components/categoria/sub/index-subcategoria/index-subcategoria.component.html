@@ -7,20 +7,20 @@
       <app-navbar></app-navbar>
       <div class="card" style="margin-top: 10%;">
         <div class="card-header">
-          <h2>Listado de Subcategorías</h2>
+          <h2>Listado de Subcategorías<span *ngIf="subcategorias && id">: {{subcategorias[0].categoria.nombre}}</span></h2>
         </div>
         <div class="card-body">
           <table class="table" >
             <thead>
               <tr>
-                <th>Categoría</th>
+                <th *ngIf="!id">Categoría</th>
                 <th>Nombre</th>
                 <th>Descripción</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let subcategoria of subcategorias">
-                <td>{{ subcategoria.categoria }}</td>
+                <td *ngIf="!id">{{ subcategoria.categoria.nombre }}</td>
                 <td>{{ subcategoria.nombre }}</td>
                 <td>{{ subcategoria.descripcion }}</td>
               </tr>

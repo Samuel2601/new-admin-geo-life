@@ -1,46 +1,21 @@
-<div class="main-content">
-    <div class="container-fluid">
-        <div class="card">
-            <div class="card-body">
-                
-                <div class="row row-cols-lg-2">
-                    <div class="col-6 text-center">
-                        <div class="input-group input-group-lg">
-                            <span class="input-group-text" id="inputGroup-sizing-lg">Ubicación</span>
-                            <div class="combo-box">
-                                <input class="form-control" type="text" placeholder="Selecciona un barrio" aria-label="Number" [formControl]="myControl" (input)="filterOptions($event.target)" (blur)="hideOptions()">
-                                <ul *ngIf="lista_feature.length > 0 && showOptions" class="options-list list-group">
-                                    <ng-container *ngFor="let option of filter">
-                                        <li class="list-group-item" (click)="buscar(option)" *ngIf="option.properties.nombre">{{ option.properties.nombre }}</li>
-                                    </ng-container>
-                                </ul>
-                            </div>                    
-                        </div>
-                    </div>
-                    <div class="col-6 text-truncate text-center">
-                        <h6 *ngIf="opcionb">Ubicación Seleccionada:</h6>
-                        <h1 *ngIf="opcionb" [ngClass]="{'h2': !isMobile(), 'h4': isMobile()}">
-                            <span class="badge bg-secondary">{{opcionb.properties.nombre}} </span>
-                        </h1>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <button type="button" class="btn btn-primary mt-3" (click)="reloadmap()">Ver Todos</button>
-                    <button *ngIf="opcionb" type="button" class="btn btn-secondary mt-3" (click)="fichaTecnica()">Ficha Técnica</button>
-                    <button *ngIf="opcionb" type="button" class="btn btn-secondary mt-3" (click)="nuevoIncidente()">Nuevo Incidente</button>
-                </div>
-            </div>
-            
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Mapa de Ubicación</h5>
-                <div id="mapid" style="height: 500px;"></div>
-            </div>
-        </div>
-        <ng-container *ngIf="mostrarficha">
-            <app-index-ficha-sectorial [filtro]="'direccion_geo'" [valor]="opcionb.properties.nombre" [modal]="true"></app-index-ficha-sectorial>
-        </ng-container>
-    </div>
+<div id="formulario" class="formulario-flotante" style="margin-left: 0%">
+    <div class="input-group mb-3">
+        <button class="btn btn-primary" type="button" id="button-addon1" (click)="reloadmap()"><i class="bi bi-eye-fill"></i></button>
+        <input class="form-control" type="text" placeholder="Buscar un barrio" aria-label="Number" [formControl]="myControl" (input)="filterOptions($event.target)" (blur)="hideOptions()">
+        
+        <button *ngIf="opcionb" type="button" class="btn btn-secondary" (click)="fichaTecnica()"><i class="bi bi-journal-bookmark-fill"></i>Fichas</button>
+        <button *ngIf="opcionb" type="button" class="btn btn-secondary" (click)="nuevoFicha()"> <i class="bi bi-plus-lg"></i>Ficha</button>
+        <button *ngIf="opcionb" type="button" class="btn btn-secondary" (click)="nuevoIncidente()"> <i class="bi bi-exclamation-octagon"></i>Incidente</button>
+        <button *ngIf="opcionb" type="button" class="btn btn-secondary" (click)="nuevoIncidente()"> <i class="bi bi-plus-lg"></i>Incidente</button>
+    </div>   
+        <ul *ngIf="lista_feature.length > 0 && showOptions" class="options-list list-group">
+            <ng-container *ngFor="let option of filter">
+                <li class="list-group-item" (click)="buscar(option)" *ngIf="option.properties.nombre">{{ option.properties.nombre }}</li>
+            </ng-container>
+        </ul>
 </div>
 
+<div class="container" id="listarficha" *ngIf="mostrarficha">
+    <app-index-ficha-sectorial id="formulario" style="width: 97%;bottom: 0;" [filtro]="'direccion_geo'" [valor]="opcionb.properties.nombre" [modal]="true">
+    </app-index-ficha-sectorial>
+</div>

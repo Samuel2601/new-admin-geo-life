@@ -29,7 +29,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="encargados" class="form-label">Encargados</label>
-                                    <select id="encargados" class="form-control" (change)="agregarEncargado($event.target)">
+                                    <select id="encargados" class="form-control" (change)="agregarEncargado($event.target)" multiple>
                                         <option *ngFor="let usuario of usuarios" [value]="usuario._id">{{ usuario.nombres }}</option>
                                     </select>
                                     <ul class="list-group mt-2">

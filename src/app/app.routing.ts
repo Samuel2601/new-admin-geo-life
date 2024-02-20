@@ -50,7 +50,6 @@ import { CreatePermisosComponent } from './components/permisos/create-permisos/c
 const appRoute: Routes = [
 	{ path: '', redirectTo: 'home', pathMatch: 'full' },
 	{ path: 'home', component: HomeComponent },//, canActivate: [AuthGuard]
-	{ path: 'maps', component: HomeComponent },
 	{ path: 'inicio', component:LoginComponent },
 	{ path: 'registro', component:SignupComponent },
 	{ path: 'categorias', component: IndexCategoriaComponent},

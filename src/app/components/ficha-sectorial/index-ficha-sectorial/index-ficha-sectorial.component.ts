@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ListService } from 'src/app/services/list.service';
 import { IndexEstadoActividadProyectoComponent } from '../../estado-actividad-proyecto/index-estado-actividad-proyecto/index-estado-actividad-proyecto.component';
@@ -51,4 +51,42 @@ export class IndexFichaSectorialComponent implements OnInit{
     this.modalService.dismissAll();
     this.modalService.open(IndexEstadoActividadProyectoComponent, { centered: true });
   }
+
+  width = 200; // Ancho inicial de la componente
+  height = 200; // Altura inicial de la componente
+  isResizing = false; // Indicador de si se está redimensionando
+
+  startResize(event: MouseEvent | TouchEvent): void {
+    let initialY=0;
+    if (event instanceof MouseEvent) {
+      initialY = (event as MouseEvent).clientY;
+    } else if (event instanceof TouchEvent) {
+      initialY = (event as TouchEvent).touches[0].clientY;
+    }
+
+    const mouseMoveListener = (moveEvent: MouseEvent | TouchEvent) => {
+      let currentY=0;
+      if (moveEvent instanceof MouseEvent) {
+        currentY = (moveEvent as MouseEvent).clientY;
+      } else if (moveEvent instanceof TouchEvent) {
+        currentY = (moveEvent as TouchEvent).touches[0].clientY;
+      }
+
+      this.height += initialY - currentY;
+      initialY = currentY;
+    };
+
+    const mouseUpListener = () => {
+      document.removeEventListener('mousemove', mouseMoveListener);
+      document.removeEventListener('touchmove', mouseMoveListener);
+      document.removeEventListener('mouseup', mouseUpListener);
+      document.removeEventListener('touchend', mouseUpListener);
+    };
+
+    document.addEventListener('mousemove', mouseMoveListener);
+    document.addEventListener('touchmove', mouseMoveListener);
+    document.addEventListener('mouseup', mouseUpListener);
+    document.addEventListener('touchend', mouseUpListener);
+  }
+  
 }

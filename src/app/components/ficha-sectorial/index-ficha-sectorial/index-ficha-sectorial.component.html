@@ -1,13 +1,17 @@
 <ng-container *ngIf="modal">
-  <div class="card">
-    <div class="card-header">
+  <div class="card resizable" [style.height.px]="height" style="min-height: 200px;">
+    
+    <div class="card-header">      
       <div class="row">
         <div class="col-lg-auto">
           <h2>Listado de Ficha Técnica: {{valor}}</h2>
+          
         </div>
         <div class="col-sm-auto">
+          
+          <a class="btn btn-primary float-end" id="renderlist" (mousedown)="startResize($event)" (touchstart)="startResize($event)"><i class="bi bi-arrows-expand"></i></a> 
           <a class="btn btn-primary float-end" (click)="llamarmodal()"><i class="bi bi-stack"></i></a>
-          <a class="btn btn-primary float-end" (click)="llamarmodal2()"><i class="bi bi-substack"></i></a>     
+          <a class="btn btn-primary float-end" (click)="llamarmodal2()"><i class="bi bi-substack"></i></a> 
         </div>
       </div>
     </div>
@@ -17,6 +21,7 @@
         <table class="table table-sm align-middle table-striped table-hover">
             <thead>
               <tr>
+                <th scope="col">Actividad</th>
                 <th scope="col">Descripción</th>
                 <th scope="col">Encargado</th>
                 <th scope="col">Dirección Geo</th>
@@ -27,6 +32,7 @@
             </thead>
             <tbody *ngIf="fichasectorial">
               <tr *ngFor="let ficha of fichasectorial">
+                <td>{{ ficha.actividad.nombre }}</td>
                 <td>{{ ficha.descripcion }}</td>
                 <td>{{ ficha.encargado }}</td>
                 <td>{{ ficha.direccion_geo }}</td>

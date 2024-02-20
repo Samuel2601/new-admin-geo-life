@@ -49,3 +49,25 @@
         }
     }
 }
+
+
+.formulario-flotante {
+  position: absolute;
+  top: 75px; /* Ajusta la posición vertical según tus necesidades */
+  left: 40px; /* Ajusta la posición horizontal según tus necesidades */
+  z-index: 1000; /* Asegura que el formulario esté por encima del mapa */
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#formulario {
+  position: absolute;
+  padding: 0px;
+  border: 0px solid black;
+  z-index: 1000;
+}
+
+.container {
+  height: 100vh; /* Altura total de la ventana */
+  z-index: 1000;
+}

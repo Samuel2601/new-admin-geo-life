@@ -1,9 +1,10 @@
-import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit, HostListener } from '@angular/core';
 import { LatLng, geoJSON, Map, tileLayer, control, layerGroup, featureGroup, LeafletMouseEvent } from 'leaflet';
 import { Location, LocationStrategy, PathLocationStrategy, PopStateEvent } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { CreateIncidentesDenunciaComponent } from '../incidentes-denuncia/create-incidentes-denuncia/create-incidentes-denuncia.component';
+import { CreateFichaSectorialComponent } from '../ficha-sectorial/create-ficha-sectorial/create-ficha-sectorial.component';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -165,10 +166,21 @@ export class MapComponent implements AfterViewInit {
     // Crear la capa de búsqueda
     this.busquedaLayer = featureGroup().addTo(this.map);
 
-    control.layers({googleStreets}, {'Barrios':this.wfsSelangor,'Búsqueda': this.busquedaLayer}).addTo(this.map);
+    //control.layers({googleStreets}, {'Barrios':this.wfsSelangor,'Búsqueda': this.busquedaLayer}).addTo(this.map);
   }
   lista_feature:any=[];
   bton:any
+  opcionb:any
+  /*<li>
+      <button class="btn btn-secondary mt-3" id="incidenteButton">
+          <strong>Generar Incidente o Denuncia</strong>
+      </button>
+  </li>
+  <li>
+    <button class="btn btn-secondary mt-3" id="fichaButton">
+        <strong>Buscar Ficha Técnicas</strong>
+    </button>
+  </li> */
   reloadmap() {
     this.wfsPolylayer = [];
     this.wfsSelangor.clearLayers();
@@ -180,17 +192,7 @@ export class MapComponent implements AfterViewInit {
                   <div style="font-family: Arial, sans-serif; font-size: 14px;">
                       <b>${e.properties.nombre}</b>
                       <ul style="list-style-type: none; padding-left: 0;">
-                          <li><strong>Parroquia:</strong> ${e.properties.parr}</li>
-                          <li>
-                              <button class="btn btn-secondary mt-3" id="incidenteButton">
-                                  <strong>Generar Incidente o Denuncia</strong>
-                              </button>
-                          </li>
-                          <li>
-                            <button class="btn btn-secondary mt-3" id="fichaButton">
-                                <strong>Buscar Ficha Técnicas</strong>
-                            </button>
-                          </li>
+                          <li><strong>Parroquia:</strong> ${e.properties.parr}</li>                          
                       </ul>
                   </div>
                 `);
@@ -201,6 +203,8 @@ export class MapComponent implements AfterViewInit {
                 }
                 // Agrega un event listener al botón cuando se abra el popup
                 t.on('popupopen', (popupEvent) => {
+                 
+                  this.buscar(e); // seleccionar barrio con un click en el mapa
                     this.bton = document.getElementById('incidenteButton');
                     if (this.bton) {
                         this.bton.addEventListener('click', () => {
@@ -226,6 +230,9 @@ export class MapComponent implements AfterViewInit {
                           this.selectficha(e);
                         });
                     }
+                    
+                  
+                    
                 });
                 // Elimina el event listener cuando se cierre el popup
                 t.on('popupclose', (popupEvent) => {
@@ -241,21 +248,7 @@ export class MapComponent implements AfterViewInit {
         }).addTo(this.wfsSelangor));
     });
 }
-
-  opcionb:any
-  buscar(opcion:any){   
-    this.opcionb=opcion; 
-    this.buscarPolylayer=[];
-    // Vaciar busquedaLayer
-    this.busquedaLayer.clearLayers();
-    this.buscarPolylayer = geoJSON(opcion, {
-      style: this.geojsonWFSstyle,
-    }).bindPopup(`
-      <div style="font-family: Arial, sans-serif; font-size: 14px;">
-        <b>${opcion.properties.nombre}</b>
-        <ul style="list-style-type: none; padding-left: 0;">
-          <li><strong>Parriquia:</strong> ${opcion.properties.parr}</li>
-
+/*
           <li>
               <button class="btn btn-secondary mt-3" id="incidenteButton">
                   <strong>Generar Incidente o Denuncia</strong>
@@ -266,9 +259,25 @@ export class MapComponent implements AfterViewInit {
                   <strong>Buscar Ficha Técnicas</strong>
               </button>
           </li>
+ */
+  
+  buscar(opcion:any){      
+    this.opcionb=opcion; 
+    this.myControl.setValue(this.opcionb.properties.nombre);
+    this.buscarPolylayer=[];
+    // Vaciar busquedaLayer
+    this.busquedaLayer.clearLayers();
+    this.buscarPolylayer = geoJSON(opcion, {
+      style: this.geojsonWFSstyle2,
+    }).bindPopup(`
+      <div style="font-family: Arial, sans-serif; font-size: 14px;">
+        <b>${opcion.properties.nombre}</b>
+        <ul style="list-style-type: none; padding-left: 0;">
+          <li><strong>Parriquia:</strong> ${opcion.properties.parr}</li>
         </ul>
       </div>
     `).addTo(this.busquedaLayer);
+    
     let incidenteButton:any;
     let fichaButton:any;
     // Agregar un event listener al botón cuando se abra el popup
@@ -310,14 +319,14 @@ export class MapComponent implements AfterViewInit {
       });
 
     // Mover el mapa hacia el feature seleccionado
-    this.map?.flyToBounds(this.buscarPolylayer.getBounds());
+    this.map?.fitBounds(this.buscarPolylayer.getBounds(),{ maxZoom: 14 });
 
     this.showOptions = false;
   }
 
   async getWFSgeojson() {
     try {
-      const response = await fetch("http://192.168.120.35/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson");
+      const response = await fetch("https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson");
       const data = await response.json();      
       if(data.features){
         var aux=[];
@@ -340,38 +349,55 @@ export class MapComponent implements AfterViewInit {
   highlightFeature(e:any) {
     const layer = e.target;
     layer.setStyle({
-        weight: 5,
-        color: '#f44336',
+        weight: 2,
+        opacity: 1,
+        color: '#0B5394',
         dashArray: '',
         fillOpacity: 0.7
     });
   }
-
+ 
   resetHighlight(e:any) {
     const layer = e.target;
     layer.setStyle({
+      fillColor: "#2986CC",
         weight: 2,
-        color: 'white',
+        opacity: 0.7,
+        color: "#2986CC",
         dashArray: '3',
-        fillOpacity: 0.7
+        fillOpacity: 0.5
     });
   }
 
   geojsonWFSstyle(feature:any) {
     return {
-        fillColor: '#f44336',
+      fillColor: "#2986CC",
         weight: 2,
-        opacity: 1,
-        color: 'white',
+        opacity: 0.7,
+        color: "#2986CC",
         dashArray: '3',
-        fillOpacity: 0.7
+        fillOpacity: 0.5
+    };
+  }
+  geojsonWFSstyle2(feature:any) {
+    return {
+      weight: 4,
+      color: '#CC0000',
+      fillColor:'#CC0000',
+      dashArray: '',
+      fillOpacity: 0.7
     };
   }
   selectmap(e:any){
     this.opcionb=e;
     this.nuevoIncidente();
   }
-
+  nuevoFicha(){
+    const data = this.opcionb; // JSON que quieres enviar
+    this.modalService.dismissAll();
+    const modalRef = this.modalService.open(CreateFichaSectorialComponent, { centered: true });
+    modalRef.componentInstance.data = data; 
+  }
   nuevoIncidente() {
     const data = this.opcionb; // JSON que quieres enviar
     this.modalService.dismissAll();
@@ -380,6 +406,7 @@ export class MapComponent implements AfterViewInit {
   }
   mostrarficha=false;
   selectficha(e:any){
+    
     this.opcionb=e;
     this.fichaTecnica();
   }

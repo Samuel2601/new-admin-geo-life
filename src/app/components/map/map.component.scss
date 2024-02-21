@@ -67,7 +67,38 @@
   z-index: 1000;
 }
 
+#indexficha{
+  position: absolute;
+  padding: 0px;
+  border: 0px solid black;
+  z-index: 1000;
+  bottom: 0;
+  @media (max-width: 767px) { // Estilos para dispositivos móviles
+    width: 100% !important;
+    bottom: 0;
+    --bs-gutter-x: 0rem !important;
+  }
+
+  @media (min-width: 768px) { // Estilos para escritorio
+    width: 90% !important;
+    --bs-gutter-x: 0.5rem !important; // Establecer el espacio entre columnas de Bootstrap
+  }
+}
+
 .container {
   height: 100vh; /* Altura total de la ventana */
   z-index: 1000;
+}
+
+#listarficha {
+  @media (max-width: 767px) { // Estilos para dispositivos móviles
+    width: 100%;
+    bottom: 0;
+    --bs-gutter-x: 0rem;
+  }
+
+  @media (min-width: 768px) { // Estilos para escritorio
+    width: 97%;
+    --bs-gutter-x: 1.5rem; // Establecer el espacio entre columnas de Bootstrap
+  }
 }

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CreateService } from 'src/app/services/create.service';
 import { ListService } from 'src/app/services/list.service';
-
+import { AdminService } from 'src/app/services/admin.service';
 @Component({
   selector: 'app-create-ficha-sectorial',
   templateUrl: './create-ficha-sectorial.component.html',
@@ -15,7 +15,7 @@ export class CreateFichaSectorialComponent implements OnInit {
   actividadesProyecto:any=[];
   model: boolean=true;
   data:any
-  constructor(private fb: FormBuilder,private createService:CreateService,private router: Router,private listarService:ListService){
+  constructor(private fb: FormBuilder,private createService:CreateService,private router: Router,private listarService:ListService,private adminservice:AdminService){
     this.fichaSectorialForm = this.fb.group({
       descripcion: ['', Validators.required],
       encargado: ['', Validators.required],
@@ -37,6 +37,18 @@ export class CreateFichaSectorialComponent implements OnInit {
     } else {
       this.router.navigate(['/home']);
     }
+    const ident=this.adminservice.identity(sessionStorage.getItem('token'));
+    if (ident) {
+      const indentr = this.fichaSectorialForm.get('encargado');
+      if (indentr) {
+        indentr.setValue(ident);
+      } else {
+        console.error('El control "direccion_geo" no está definido en el formulario.');
+      }
+    } else {
+      this.router.navigate(['/inicio']);
+    }
+
     this.router.events.subscribe((val) => {
       // Verificar la ruta actual y ajustar el valor de model
       if (this.router.url === '/create-ficha-sectorial') {
@@ -50,7 +62,7 @@ export class CreateFichaSectorialComponent implements OnInit {
   }
   listartEstados(){
     const token = sessionStorage.getItem('token');
-    this.listarService.listarEstadosIncidentes(token).subscribe(response=>{
+    this.listarService.listarEstadosActividadesProyecto(token).subscribe(response=>{
       console.log(response);
       if(response.data.length>0){
         this.estadosActividadProyecto=response.data;
@@ -91,6 +103,8 @@ export class CreateFichaSectorialComponent implements OnInit {
           console.error(error);
         });
       }
+    }else{
+      console.log(this.fichaSectorialForm.valid);
     }
   }
 }

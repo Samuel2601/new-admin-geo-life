@@ -1,21 +1,33 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ListService } from 'src/app/services/list.service';
 import { IndexEstadoActividadProyectoComponent } from '../../estado-actividad-proyecto/index-estado-actividad-proyecto/index-estado-actividad-proyecto.component';
 import { IndexActividadProyectoComponent } from '../../actividad-proyecto/index-actividad-proyecto/index-actividad-proyecto.component';
+import { HelperService } from 'src/app/services/helper.service';
 @Component({
   selector: 'app-index-ficha-sectorial',
   templateUrl: './index-ficha-sectorial.component.html',
   styleUrl: './index-ficha-sectorial.component.scss'
 })
-export class IndexFichaSectorialComponent implements OnInit{
+export class IndexFichaSectorialComponent implements OnInit,OnChanges {
+
   @Input() filtro: string | undefined;
   @Input() valor: number | undefined;
   @Input() modal: boolean = false;
 
-  fichasectorial:any={};
-  constructor(private listService:ListService,private modalService: NgbModal){
-
+  deshabilitarMapaDesdeIndexFichaSectorial() {
+    this.heleperservice.deshabilitarMapa();
+  }
+  
+  fichasectorial:any=[];
+  constructor(private listService:ListService,private modalService: NgbModal,private heleperservice:HelperService){
+  
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['filtro'] || changes['valor']){
+      this.listarficha();
+      this.height = 300;
+    }
   }
   ngOnInit(): void {
     this.listarficha();
@@ -87,6 +99,10 @@ export class IndexFichaSectorialComponent implements OnInit{
     document.addEventListener('touchmove', mouseMoveListener);
     document.addEventListener('mouseup', mouseUpListener);
     document.addEventListener('touchend', mouseUpListener);
+  }
+
+  cerrarmodal() {
+    
   }
   
 }

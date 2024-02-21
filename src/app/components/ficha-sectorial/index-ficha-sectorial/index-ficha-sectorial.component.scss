@@ -1,0 +1,13 @@
+/* Estilos para el encabezado fijo de la tabla */
+.table-fixed thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #fff; /* Color de fondo del encabezado */
+}
+
+/* Estilos para las celdas de la tabla */
+.table-fixed td {
+    position: relative;
+    z-index: 0;
+}

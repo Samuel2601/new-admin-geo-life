@@ -1,19 +1,31 @@
-import { Component, AfterViewInit, OnInit, HostListener } from '@angular/core';
+import { Component, AfterViewInit, OnInit, HostListener, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { LatLng, geoJSON, Map, tileLayer, control, layerGroup, featureGroup, LeafletMouseEvent } from 'leaflet';
 import { Location, LocationStrategy, PathLocationStrategy, PopStateEvent } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { CreateIncidentesDenunciaComponent } from '../incidentes-denuncia/create-incidentes-denuncia/create-incidentes-denuncia.component';
 import { CreateFichaSectorialComponent } from '../ficha-sectorial/create-ficha-sectorial/create-ficha-sectorial.component';
+import { HelperService } from 'src/app/services/helper.service';
+import iziToast from 'izitoast';
+import { IndexFichaSectorialComponent } from '../ficha-sectorial/index-ficha-sectorial/index-ficha-sectorial.component';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements OnInit,AfterViewInit {
+Incidente() {
+throw new Error('Method not implemented.');
+}
+  
   public map: Map|undefined ;
-  constructor(private modalService: NgbModal){
+  constructor(private modalService: NgbModal,private helperService:HelperService){
 
+  }
+  ngOnInit(): void {
+    this.helperService.deshabilitarMapa$.subscribe(() => {
+      this.handleClick();
+    });
   }
   
   ngAfterViewInit(): void {
@@ -161,6 +173,12 @@ export class MapComponent implements AfterViewInit {
       maxZoom: 20,
       subdomains:['mt0','mt1','mt2','mt3']
     }).addTo(this.map);
+    if(!googleStreets){
+      iziToast.error({
+        title:'Error',
+        message:'Sin Conexión a Google'
+      })
+    }
     this.getWFSgeojson();
     //this.reloadmap();
     // Crear la capa de búsqueda
@@ -323,10 +341,11 @@ export class MapComponent implements AfterViewInit {
 
     this.showOptions = false;
   }
-
+  urlgeoser="https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson";
+  urlgeolocal="http://192.168.120.35/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson";
   async getWFSgeojson() {
     try {
-      const response = await fetch("https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson");
+      const response = await fetch(this.urlgeoser);
       const data = await response.json();      
       if(data.features){
         var aux=[];
@@ -336,7 +355,12 @@ export class MapComponent implements AfterViewInit {
       }
       return data;
     } catch (error) {
-      console.error('Error fetching WFS geojson:', error);
+      iziToast.error({
+        title:'Error:',
+        position:'bottomRight',
+        message:'Sin Conexión a Geoserver'
+      });
+      console.log('Error fetching WFS geojson:', error);
       return null;
     }
   }
@@ -415,7 +439,36 @@ export class MapComponent implements AfterViewInit {
     if(this.opcionb){
       this.mostrarficha=true;
     } 
-    
+    if(this.map){
+      if(this.mostrarficha){
+        console.log('DEShabilitar');
+        // Deshabilitar interacción con el mapa
+        this.map.dragging.disable();
+        this.map.scrollWheelZoom.disable();
+      }else{
+        // Habilitar interacción con el mapa
+        //this.map.dragging.enable();
+        //this.map.scrollWheelZoom.enable();          
+      }  
+    }   
   }
-  
+
+  deshabilitarArrastreZoom() {
+    if(this.map){
+      console.log('habilitar');
+      this.map.dragging.disable();
+      this.map.scrollWheelZoom.disable();
+    }
+  } 
+  handleClick() {
+    this.mostrarficha=false;
+    if (this.map) {
+      console.log('deshabilitar');
+      this.map.dragging.enable();
+      this.map.scrollWheelZoom.enable();
+      
+    }
+  } 
+
+
 }

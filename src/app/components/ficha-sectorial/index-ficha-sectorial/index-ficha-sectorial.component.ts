@@ -18,7 +18,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   deshabilitarMapaDesdeIndexFichaSectorial() {
     this.heleperservice.deshabilitarMapa();
   }
-  
+  load_lista=true;
   fichasectorial:any=[];
   constructor(private listService:ListService,private modalService: NgbModal,private heleperservice:HelperService){
   
@@ -33,23 +33,36 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
     this.listarficha();
   }
 
+  isMobil() {
+    const screenWidth = window.innerWidth;
+    return screenWidth <= 768; // Cambia este valor según el ancho que consideres como límite para dispositivos móviles
+  }
+  openModal(content: any) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
   listarficha(){
+    this.load_lista=true;
     const token=sessionStorage.getItem('token');
     if(this.filtro&&this.valor){
       this.listService.listarFichaSectorial(token,this.filtro,this.valor).subscribe(response=>{
         console.log(response);
         if(response.data){
           this.fichasectorial=response.data;
+          this.load_lista=false;
         }
       },error=>{
         console.error(error);
+        this.load_lista=false;
       });
     }else{
       this.listService.listarFichaSectorial(token).subscribe(response=>{
         console.log(response);
         this.fichasectorial=response.data;
+        this.load_lista=false;
       },error=>{
         console.error(error);
+        this.load_lista=false;
       });
     }
     

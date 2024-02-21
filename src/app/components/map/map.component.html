@@ -1,39 +1,43 @@
-<div #mapContainer id="formulario" class="formulario-flotante" style="margin-left: 0%" >
-    <div class="input-group mb-3">
-        <button class="btn btn-primary" type="button" id="button-addon1" (click)="reloadmap()"><i class="bi bi-eye-fill"></i></button>
-        <input class="form-control" type="text" placeholder="Buscar un barrio" aria-label="Number" [formControl]="myControl" (input)="filterOptions($event.target)" (blur)="hideOptions()">        
-    
-    </div>
-    <ul *ngIf="lista_feature.length > 0 && showOptions" class="options-list list-group">
-        <ng-container *ngFor="let option of filter">
-            <li class="list-group-item" (click)="buscar(option)" *ngIf="option.properties.nombre">{{ option.properties.nombre }}</li>
-        </ng-container>
-    </ul>
-    <div class="dropdown d-md-inline-block" *ngIf="opcionb">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="bi bi-journal-bookmark-fill"></i> Fichas
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="javascript:void(0)" (click)="fichaTecnica()">Fichas</a>
-            <a class="dropdown-item" href="javascript:void(0)" (click)="nuevoFicha()">Nueva Ficha</a>
-        </div>
-    </div>
-
-    <div class="dropdown d-md-inline-block" *ngIf="opcionb">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="bi bi-journal-bookmark-fill"></i> Incidentes
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="javascript:void(0)" (click)="Incidente()">Incidente</a>
-            <a class="dropdown-item" href="javascript:void(0)" (click)="nuevoIncidente()">Nuevo Incidente</a>
-        </div>
-    </div>
-    
-      
+<div class="main-content"id="mapid" style="min-height: -webkit-fill-available;">
+    <div #mapContainer id="formulario" class="formulario-flotante" style="margin-left: 0%" >
+        <div class="input-group mb-3">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input class="form-control" type="text" placeholder="Buscar un barrio" aria-label="Number" [formControl]="myControl" (input)="filterOptions($event.target)" (blur)="hideOptions()">        
         
-</div>
-
-<div #mapContainer2 class="container" id="listarficha" *ngIf="mostrarficha"  >
-    <app-index-ficha-sectorial id="indexficha"  [filtro]="'direccion_geo'" [valor]="opcionb.properties.nombre" [modal]="true">
-    </app-index-ficha-sectorial>
+            <button class="btn btn-primary" type="button" id="button-addon1" (click)="reloadmap()"><i class="bi bi-eye-fill"></i></button>
+           
+        </div>
+        <ul *ngIf="lista_feature.length > 0 && showOptions" class="options-list list-group">
+            <ng-container *ngFor="let option of filter">
+                <li class="list-group-item" (click)="buscar(option)" *ngIf="option.properties.nombre">{{ option.properties.nombre }}</li>
+            </ng-container>
+        </ul>
+        <div class="dropdown d-md-inline-block" *ngIf="opcionb">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="bi bi-journal-bookmark-fill"></i> Fichas
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="javascript:void(0)" (click)="fichaTecnica()">Fichas</a>
+                <a class="dropdown-item" href="javascript:void(0)" (click)="nuevoFicha()">Nueva Ficha</a>
+            </div>
+        </div>
+    
+        <div class="dropdown d-md-inline-block" *ngIf="opcionb">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="bi bi-journal-bookmark-fill"></i> Incidentes
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="javascript:void(0)" (click)="Incidente()">Incidente</a>
+                <a class="dropdown-item" href="javascript:void(0)" (click)="nuevoIncidente()">Nuevo Incidente</a>
+            </div>
+        </div>
+        
+          
+            
+    </div>
+    
+    <div #mapContainer2 class="container" id="listarficha" *ngIf="mostrarficha"  >
+        <app-index-ficha-sectorial class="container" id="indexficha"  [filtro]="'direccion_geo'" [valor]="opcionb.properties.nombre" [modal]="true">
+        </app-index-ficha-sectorial>
+    </div>
 </div>

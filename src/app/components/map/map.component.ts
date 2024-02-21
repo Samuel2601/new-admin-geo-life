@@ -166,7 +166,7 @@ throw new Error('Method not implemented.');
 
 
   geoserve(){
-    this.map = new Map('mapid').setView([0.977035, -79.655415], 13);
+    this.map = new Map('mapid').setView([0.977035, -79.655415], 15);
     this.map.addLayer(this.wfsSelangor);
 
     const googleStreets = tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
@@ -184,7 +184,7 @@ throw new Error('Method not implemented.');
     // Crear la capa de búsqueda
     this.busquedaLayer = featureGroup().addTo(this.map);
 
-    //control.layers({googleStreets}, {'Barrios':this.wfsSelangor,'Búsqueda': this.busquedaLayer}).addTo(this.map);
+    control.layers({googleStreets}, {'Barrios':this.wfsSelangor,'Búsqueda': this.busquedaLayer}).addTo(this.map);
   }
   lista_feature:any=[];
   bton:any
@@ -337,7 +337,7 @@ throw new Error('Method not implemented.');
       });
 
     // Mover el mapa hacia el feature seleccionado
-    this.map?.fitBounds(this.buscarPolylayer.getBounds(),{ maxZoom: 14 });
+    this.map?.fitBounds(this.buscarPolylayer.getBounds(),{ maxZoom: 15 });
 
     this.showOptions = false;
   }

@@ -53,11 +53,11 @@
 
 .formulario-flotante {
   position: absolute;
-  top: 75px; /* Ajusta la posición vertical según tus necesidades */
-  left: 40px; /* Ajusta la posición horizontal según tus necesidades */
+  top: 24px; /* Ajusta la posición vertical según tus necesidades */
+  left: 55px; /* Ajusta la posición horizontal según tus necesidades */
   z-index: 1000; /* Asegura que el formulario esté por encima del mapa */
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+ // box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 #formulario {
@@ -73,32 +73,41 @@
   border: 0px solid black;
   z-index: 1000;
   bottom: 0;
+  height: 100px;
   @media (max-width: 767px) { // Estilos para dispositivos móviles
-    width: 100% !important;
-    bottom: 0;
+    //width: 100% !important;
     --bs-gutter-x: 0rem !important;
   }
 
   @media (min-width: 768px) { // Estilos para escritorio
-    width: 90% !important;
+   // width: 90% !important;
     --bs-gutter-x: 0.5rem !important; // Establecer el espacio entre columnas de Bootstrap
   }
 }
 
 .container {
-  height: 100vh; /* Altura total de la ventana */
+  height: -webkit-fill-available; /* Altura total de la ventana */
   z-index: 1000;
 }
 
 #listarficha {
   @media (max-width: 767px) { // Estilos para dispositivos móviles
-    width: 100%;
+    //width: 100%;
     bottom: 0;
     --bs-gutter-x: 0rem;
   }
 
   @media (min-width: 768px) { // Estilos para escritorio
-    width: 97%;
+   // width: 97%;
     --bs-gutter-x: 1.5rem; // Establecer el espacio entre columnas de Bootstrap
+  }
+}
+.container{
+  @media (min-width:1400px) {
+      max-width: 1140px !important;
+  }
+    @media (min-width:1400px) {
+    
+    max-width: -webkit-fill-available;
   }
 }

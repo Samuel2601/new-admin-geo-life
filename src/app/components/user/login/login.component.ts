@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import iziToast from 'izitoast';
@@ -9,9 +9,11 @@ import { AdminService } from 'src/app/services/admin.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
   public loginForm: FormGroup|any;
   showPassword = false;
+  height: number=700;
+
 
   constructor(private router: Router,
     public formBuilder: FormBuilder,
@@ -19,6 +21,10 @@ export class LoginComponent {
     ) { }
 
   async ngOnInit() {
+    this.setHeight();
+    window.addEventListener('resize', () => {
+      this.setHeight();
+    });
     this.loginForm = this.formBuilder.group({
       correo: [
         '',
@@ -35,6 +41,10 @@ export class LoginComponent {
       ]],
     });
   }
+  setHeight(): void {
+    this.height = window.innerHeight;
+  }
+
   async ionViewWillEnter() {
 
   }

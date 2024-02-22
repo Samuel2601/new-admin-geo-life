@@ -15,6 +15,9 @@ export class IndexEstadoActividadProyectoComponent implements OnInit{
   constructor(private modalService: NgbModal,private router: Router,private listService:ListService){
    
   }
+  cerrarModal() {
+    this.modalService.dismissAll();
+}
   ngOnInit(): void {
     this.router.events.subscribe((val) => {
       // Verificar la ruta actual y ajustar el valor de model

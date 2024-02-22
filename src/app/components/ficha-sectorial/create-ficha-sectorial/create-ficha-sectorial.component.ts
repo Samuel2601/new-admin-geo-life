@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CreateService } from 'src/app/services/create.service';
 import { ListService } from 'src/app/services/list.service';
 import { AdminService } from 'src/app/services/admin.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-create-ficha-sectorial',
   templateUrl: './create-ficha-sectorial.component.html',
@@ -15,7 +16,7 @@ export class CreateFichaSectorialComponent implements OnInit {
   actividadesProyecto:any=[];
   model: boolean=true;
   data:any
-  constructor(private fb: FormBuilder,private createService:CreateService,private router: Router,private listarService:ListService,private adminservice:AdminService){
+  constructor(private modalService: NgbModal,private fb: FormBuilder,private createService:CreateService,private router: Router,private listarService:ListService,private adminservice:AdminService){
     this.fichaSectorialForm = this.fb.group({
       descripcion: ['', Validators.required],
       encargado: ['', Validators.required],
@@ -82,6 +83,9 @@ export class CreateFichaSectorialComponent implements OnInit {
     },error=>{
       console.error(error);
     });
+  }
+  DimissModal(){
+    this.modalService.dismissAll();
   }
 
   abrirModal() {

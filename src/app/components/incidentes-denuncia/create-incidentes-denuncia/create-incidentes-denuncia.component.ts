@@ -4,18 +4,19 @@ import { CreateService } from 'src/app/services/create.service';
 import { ListService } from 'src/app/services/list.service';
 import { AdminService } from 'src/app/services/admin.service';
 import { Router } from '@angular/router';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-create-incidentes-denuncia',
   templateUrl: './create-incidentes-denuncia.component.html',
   styleUrl: './create-incidentes-denuncia.component.scss'
 })
 export class CreateIncidentesDenunciaComponent implements OnInit{
+
   nuevoIncidenteDenuncia:any={};
   categorias: any[] =[];
   subcategorias: any[] =[];
   model: boolean=true;
-  constructor(private fb: FormBuilder,private createService:CreateService,public activeModal: NgbActiveModal,private router: Router,private listService: ListService,private adminservice:AdminService){
+  constructor(private fb: FormBuilder,private createService:CreateService,public activeModal: NgbActiveModal,private router: Router,private listService: ListService,private adminservice:AdminService,private modalService: NgbModal){
     this.nuevoIncidenteDenuncia = this.fb.group({
       categoria: ['', Validators.required],
       subcategoria: ['', Validators.required],
@@ -23,6 +24,9 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     });
   }
   data:any
+  DimissModal() {
+    this.modalService.dismissAll();
+  }
   ngOnInit(): void {
     if (this.data) {
       this.nuevoIncidenteDenuncia.direccion_geo = this.data.properties.nombre;

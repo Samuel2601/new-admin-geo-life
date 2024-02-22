@@ -9,7 +9,7 @@
         </div>
         <ul *ngIf="lista_feature.length > 0 && showOptions" class="options-list list-group">
             <ng-container *ngFor="let option of filter">
-                <li class="list-group-item" (click)="buscar(option)" *ngIf="option.properties.nombre">{{ option.properties.nombre }}</li>
+                <li class="list-group-item" (click)="buscar(option)" (touchend)="buscar(option)" *ngIf="option.properties.nombre">{{ option.properties.nombre }}</li>
             </ng-container>
         </ul>
         <div class="dropdown d-md-inline-block" *ngIf="opcionb">

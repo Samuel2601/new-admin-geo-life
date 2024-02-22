@@ -35,7 +35,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
 
   isMobil() {
     const screenWidth = window.innerWidth;
-    return screenWidth <= 768; // Cambia este valor según el ancho que consideres como límite para dispositivos móviles
+    return screenWidth < 768; // Cambia este valor según el ancho que consideres como límite para dispositivos móviles
   }
   openModal(content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
@@ -116,6 +116,30 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
 
   cerrarmodal() {
     
+  }
+  private initialTouchY: number=0;
+  private isDragging: boolean = false;
+
+  onTouchStart(event: TouchEvent) {
+    this.initialTouchY = event.touches[0].clientY;
+    this.isDragging = true;
+  }
+
+  onTouchMove(event: TouchEvent) {
+    if (!this.isDragging) {
+      return;
+    }
+
+    // Calcula la distancia vertical del arrastre
+    const deltaY = event.touches[0].clientY - this.initialTouchY;
+
+    // Realiza acciones según la distancia vertical
+    // Por ejemplo, cambiar la altura del elemento
+    // o realizar alguna otra acción de acuerdo a tu necesidad
+  }
+
+  onTouchEnd() {
+    this.isDragging = false;
   }
   
 }

@@ -6,3 +6,9 @@
 .btn {
     margin-top: 0% !important;
 }
+@media only screen and (max-width: 429px) {
+    .leaflet-top.leaflet-right {
+      top: 60px !important;
+    }
+  }
+  

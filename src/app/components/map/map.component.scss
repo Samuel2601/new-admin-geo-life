@@ -77,11 +77,13 @@
   @media (max-width: 767px) { // Estilos para dispositivos móviles
     //width: 100% !important;
     --bs-gutter-x: 0rem !important;
+    margin-left: -16px !important;
   }
 
   @media (min-width: 768px) { // Estilos para escritorio
    // width: 90% !important;
     --bs-gutter-x: 0.5rem !important; // Establecer el espacio entre columnas de Bootstrap
+  
   }
 }
 
@@ -111,3 +113,4 @@
     max-width: -webkit-fill-available;
   }
 }
+

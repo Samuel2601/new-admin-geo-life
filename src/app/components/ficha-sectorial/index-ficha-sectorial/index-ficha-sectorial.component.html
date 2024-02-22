@@ -1,7 +1,10 @@
 <ng-container *ngIf="modal">
   <div class="card" [style.height.px]="height" style="min-height: auto; position: absolute; bottom: 0;">
     
-    <div class="card-header" (mousedown)="startResize($event)" (touchstart)="startResize($event)">      
+    <div class="card-header" (mousedown)="startResize($event)" (touchstart)="startResize($event)"
+    (touchstart)="onTouchStart($event)" 
+    (touchmove)="onTouchMove($event)" 
+    (touchend)="onTouchEnd()">      
       <div class="row">
         <div class="col-lg-7">
           <h2>Listado de Ficha Técnica: {{valor}}</h2>
@@ -38,7 +41,7 @@
                       <td *ngIf="!isMobil()">{{ ficha.fecha_evento | date }}</td>
                       <td *ngIf="!isMobil()">{{ ficha.observacion }}</td>
                       <td *ngIf="isMobil()">
-                        <button type="button" class="btn btn-primary" (click)="openModal(modalContent)">ver</button></td>
+                        <button type="button" class="btn btn-primary" (click)="openModal(modalContent)"><i class="bi bi-eye-fill"></i></button></td>
                       <!-- Agrega el modal al final del componente -->
                       <ng-template #modalContent let-modal>
                         <div class="modal-content">

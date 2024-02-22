@@ -406,8 +406,8 @@ throw new Error('Method not implemented.');
   geojsonWFSstyle2(feature:any) {
     return {
       weight: 4,
-      color: '#CC0000',
-      fillColor:'#CC0000',
+      color: '#0a558d',
+      fillColor:'#0a558d',
       dashArray: '',
       fillOpacity: 0.7
     };

@@ -7,8 +7,13 @@
     margin-top: 0% !important;
 }
 @media only screen and (max-width: 429px) {
-    .leaflet-top.leaflet-right {
-      top: 60px !important;
+    .leaflet-top {
+      top: auto !important;
+      bottom: 20px !important;
+      z-index: 999 !important;
+    }
+    .leaflet-bottom{
+      z-index: 998 !important;
     }
   }
   

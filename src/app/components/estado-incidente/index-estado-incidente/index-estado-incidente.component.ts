@@ -5,6 +5,7 @@ import { ListService } from 'src/app/services/list.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateEstadoIncidenteComponent } from '../create-estado-incidente/create-estado-incidente.component';
+import iziToast from 'izitoast';
 
 @Component({
   selector: 'app-index-estado-incidente',
@@ -14,6 +15,7 @@ import { CreateEstadoIncidenteComponent } from '../create-estado-incidente/creat
 export class IndexEstadoIncidenteComponent implements OnInit {
   incidentesDenuncias: any[] = [];
   model: boolean=true;
+  load_lista:boolean=true;
   constructor(private fb: FormBuilder,private listarService:ListService,private router: Router,private modalService: NgbModal){
 
   }
@@ -29,12 +31,26 @@ export class IndexEstadoIncidenteComponent implements OnInit {
     this.listartEstados();
   }
   listartEstados(){
+    this.load_lista=true;
     const token = sessionStorage.getItem('token');
+    if(!token){
+      throw this.router.navigate(["/inicio"]);
+    }
     this.listarService.listarEstadosIncidentes(token).subscribe(response=>{
       console.log(response);
       this.incidentesDenuncias=response.data;
+      this.load_lista=false;
     },error=>{
       console.error(error);
+      this.load_lista=false;
+      if(error.error.message=='InvalidToken'){
+        this.router.navigate(["/inicio"]);
+      }else{
+        iziToast.error({
+          title:'Error',
+          message:'Sin Conexión a la Base de Datos'
+        });
+      }      
     });
   }
   abrirSegundoModal() {

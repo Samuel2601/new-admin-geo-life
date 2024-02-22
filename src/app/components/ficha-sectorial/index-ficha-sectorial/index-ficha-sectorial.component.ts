@@ -4,6 +4,8 @@ import { ListService } from 'src/app/services/list.service';
 import { IndexEstadoActividadProyectoComponent } from '../../estado-actividad-proyecto/index-estado-actividad-proyecto/index-estado-actividad-proyecto.component';
 import { IndexActividadProyectoComponent } from '../../actividad-proyecto/index-actividad-proyecto/index-actividad-proyecto.component';
 import { HelperService } from 'src/app/services/helper.service';
+import iziToast from 'izitoast';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-index-ficha-sectorial',
   templateUrl: './index-ficha-sectorial.component.html',
@@ -20,7 +22,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   }
   load_lista=true;
   fichasectorial:any=[];
-  constructor(private listService:ListService,private modalService: NgbModal,private heleperservice:HelperService){
+  constructor(private router: Router,private listService:ListService,private modalService: NgbModal,private heleperservice:HelperService){
   
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -44,6 +46,9 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   listarficha(){
     this.load_lista=true;
     const token=sessionStorage.getItem('token');
+    if(!token){
+      throw this.router.navigate(["/inicio"]);
+    }
     if(this.filtro&&this.valor){
       this.listService.listarFichaSectorial(token,this.filtro,this.valor).subscribe(response=>{
         console.log(response);
@@ -54,6 +59,14 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
       },error=>{
         console.error(error);
         this.load_lista=false;
+        if(error.error.message=='InvalidToken'){
+          this.router.navigate(["/inicio"]);
+        }else{
+          iziToast.error({
+            title:'Error',
+            message:'Sin Conexión a la Base de Datos'
+          });
+        }  
       });
     }else{
       this.listService.listarFichaSectorial(token).subscribe(response=>{

@@ -22,6 +22,9 @@ export class CreateCategoriaComponent implements OnInit{
   registrarCategoria(){
     if (this.categoriaForm.valid) {
       const token = sessionStorage.getItem('token'); // Reemplaza 'tu_token' por el token real
+      if(!token){
+        throw this.router.navigate(["/inicio"]);
+      }
       const data = {
         nombre: this.categoriaForm.value.nombre,
         descripcion: this.categoriaForm.value.descripcion

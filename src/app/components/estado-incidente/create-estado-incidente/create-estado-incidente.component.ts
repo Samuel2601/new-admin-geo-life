@@ -38,6 +38,9 @@ export class CreateEstadoIncidenteComponent implements OnInit {
   registrarEstadoIncidente() {
     if (this.estadoIncidenteForm?.valid) {
       const token = sessionStorage.getItem('token');
+      if(!token){
+        throw this.router.navigate(["/inicio"]);
+      }
       if (token && this.estadoIncidenteForm.value) {
         this.createService.registrarEstadoIncidente(token, this.estadoIncidenteForm.value).subscribe(response => {
           console.log(response);

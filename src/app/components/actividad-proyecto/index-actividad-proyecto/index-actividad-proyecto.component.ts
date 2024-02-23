@@ -31,6 +31,9 @@ export class IndexActividadProyectoComponent implements OnInit {
   }
   listarActividadProyecto(){
     const token=sessionStorage.getItem('token');
+    if(!token){
+      throw this.router.navigate(["/inicio"]);
+    }
     this.listService.listarTiposActividadesProyecto(token).subscribe(response=>{
       console.log(response);
       if(response.data){

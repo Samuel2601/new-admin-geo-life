@@ -19,6 +19,9 @@ export class IndexCategoriaComponent {
 
   listarCategorias(): void {
     const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
+    if(!token){
+      throw this.router.navigate(["/inicio"]);
+    }
     this.listService.listarCategorias(token).subscribe(
       response => {
         this.categorias = response.data;

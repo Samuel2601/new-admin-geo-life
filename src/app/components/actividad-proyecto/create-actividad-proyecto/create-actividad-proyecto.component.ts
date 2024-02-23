@@ -30,6 +30,9 @@ export class CreateActividadProyectoComponent {
   registrarActividadP() {
     if (this.estadoIncidenteForm.valid) {
         const token = sessionStorage.getItem('token');
+        if(!token){
+          throw this.router.navigate(["/inicio"]);
+        }
         this.createService.registrarTipoActividadProyecto(token, this.estadoIncidenteForm.value).subscribe(response => {
             console.log(response);
             if(response.data){

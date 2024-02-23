@@ -64,6 +64,9 @@ export class CreateFichaSectorialComponent implements OnInit {
   }
   listartEstados(){
     const token = sessionStorage.getItem('token');
+    if(!token){
+      throw this.router.navigate(["/inicio"]);
+    }
     this.listarService.listarEstadosActividadesProyecto(token).subscribe(response=>{
       console.log(response);
       if(response.data.length>0){
@@ -84,6 +87,9 @@ export class CreateFichaSectorialComponent implements OnInit {
 
   listarActividadProyecto(){
     const token=sessionStorage.getItem('token');
+    if(!token){
+      throw this.router.navigate(["/inicio"]);
+    }
     this.listarService.listarTiposActividadesProyecto(token).subscribe(response=>{
       console.log(response);
       if(response.data.length>0){
@@ -139,6 +145,10 @@ export class CreateFichaSectorialComponent implements OnInit {
             });
           } 
         });
+      }else{
+        if(!token){
+          throw this.router.navigate(["/inicio"]);
+        }
       }
     }else{
       console.log(this.fichaSectorialForm.valid);

@@ -27,7 +27,8 @@
                 </div>
                 <div class="mb-3">
                   <label for="foto" class="form-label">Foto</label>
-                  <input type="file" id="foto" name="foto" class="form-control-file" (change)="onFileSelected($event)">
+                  <input type="file" *ngIf="!isMobil()" id="foto" name="foto" class="form-control-file" (change)="onFileSelected($event)" >
+                  <button class="btn btn-primary" *ngIf="isMobil()" (click)="tomarFoto()"> Subir</button>
                 </div>
                 <div *ngIf="imagenSeleccionada">
                   <img [src]="imagenSeleccionada" alt="Imagen seleccionada" class="img-fluid">

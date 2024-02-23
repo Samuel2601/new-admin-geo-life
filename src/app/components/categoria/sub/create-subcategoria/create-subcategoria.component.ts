@@ -25,6 +25,9 @@ export class CreateSubcategoriaComponent implements OnInit{
   
   listarCategorias() {
     const token = sessionStorage.getItem('token'); // Reemplaza 'tu_token' por el token real
+    if(!token){
+      throw this.router.navigate(["/inicio"]);
+    }
     this.listService.listarCategorias(token).subscribe(response => {
       this.categorias = response.data;
       console.log(response)
@@ -33,6 +36,9 @@ export class CreateSubcategoriaComponent implements OnInit{
   registrarSubcategoria() {
     if (this.subcategoriaForm.valid) {
       const token = sessionStorage.getItem('token'); // Reemplaza 'tu_token' por el token real
+      if(!token){
+        throw this.router.navigate(["/inicio"]);
+      }
       const data = {
         categoria: this.subcategoriaForm.value.categoria,
         nombre: this.subcategoriaForm.value.nombre,

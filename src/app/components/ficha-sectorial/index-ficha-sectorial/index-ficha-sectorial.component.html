@@ -83,6 +83,7 @@
   </div>  
   </div>
 </ng-container>
+
 <ng-container *ngIf="!modal">
   <div class="wrapper">
     <div class="sidebar" data-color="danger" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
@@ -115,6 +116,7 @@
                               <th scope="col">Descripción</th>
                               <th scope="col">Encargado</th>
                               <th scope="col">Estado</th>
+                              <th scope="col">Dirección</th>
                               <th scope="col">Fecha Evento</th>
                               <th scope="col">Observación</th>
                           </tr>
@@ -125,6 +127,7 @@
                               <td>{{ ficha.descripcion }}</td>
                               <td>{{ ficha.encargado.nombres }}</td>
                               <td>{{ ficha.estado.nombre }}</td>
+                              <td>{{ ficha.direccion_geo }}</td>
                               <td>{{ ficha.fecha_evento | date }}</td>
                               <td>{{ ficha.observacion }}</td>
                           </tr>

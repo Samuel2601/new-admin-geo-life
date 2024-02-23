@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ListService } from 'src/app/services/list.service';
 import { CreateService } from 'src/app/services/create.service';
+import iziToast from 'izitoast';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-create-subcategoria',
   templateUrl: './create-subcategoria.component.html',
@@ -10,7 +12,7 @@ import { CreateService } from 'src/app/services/create.service';
 export class CreateSubcategoriaComponent implements OnInit{
   categorias: any[] = [];
   subcategoriaForm: FormGroup;
-  constructor(private fb: FormBuilder,private listService: ListService, private createService:CreateService){
+  constructor(private fb: FormBuilder,private listService: ListService, private createService:CreateService,private router: Router){
     this.subcategoriaForm = this.fb.group({
       categoria: ['', Validators.required],
       nombre: ['', Validators.required],
@@ -38,6 +40,15 @@ export class CreateSubcategoriaComponent implements OnInit{
       };
       this.createService.registrarSubcategoria(token, data).subscribe(response => {
         console.log(response);
+        if(response.data){
+          iziToast.success({
+            title:'Listo',
+            message:'Ingresado correctamente'
+          });
+          setTimeout(() => {
+            this.router.navigate(["/home"]);
+          }, 2000);
+        }
         // Aquí puedes manejar la respuesta del servidor, como mostrar un mensaje de éxito o redirigir a otra página
       });
     } else {

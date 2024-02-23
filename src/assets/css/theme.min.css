@@ -13849,7 +13849,7 @@
   .dropdown-menu a:focus,
   .dropdown-menu a:active {
     box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(156, 39, 176, 0.4);
-    background-color: #9c27b0;
+    background-color: #51af57;
     color: #FFFFFF;
   }
   .dropdown-toggle.bmd-btn-icon::after, .dropdown-toggle.bmd-btn-fab::after {
@@ -14380,7 +14380,7 @@
     box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(255, 152, 0, 0.4);
   }
   .sidebar[data-color=danger] li.active > a {
-    background-color: #f44336;
+    background-color: #4caf50; /*#f44336;*/
     box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 67, 54, 0.4);
   }
   .sidebar[data-color=rose] li.active > a {

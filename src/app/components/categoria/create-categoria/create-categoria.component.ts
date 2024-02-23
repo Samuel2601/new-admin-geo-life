@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import iziToast from 'izitoast';
 import { CreateService } from 'src/app/services/create.service';
 @Component({
   selector: 'app-create-categoria',
@@ -8,7 +10,7 @@ import { CreateService } from 'src/app/services/create.service';
 })
 export class CreateCategoriaComponent implements OnInit{
   categoriaForm: FormGroup;
-  constructor(private fb: FormBuilder,private createService:CreateService){
+  constructor(private fb: FormBuilder,private createService:CreateService,private router: Router){
     this.categoriaForm = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required]
@@ -26,6 +28,15 @@ export class CreateCategoriaComponent implements OnInit{
       };
       this.createService.registrarCategoria(token, data).subscribe(response => {
         console.log(response);
+        if(response.data){
+          iziToast.success({
+            title:'Listo',
+            message:'Ingresado correctamente'
+          });
+          setTimeout(() => {
+            this.router.navigate(["/home"]);
+          }, 2000);
+        }
         // Aquí puedes manejar la respuesta del servidor, como mostrar un mensaje de éxito o redirigir a otra página
       });
     } else {

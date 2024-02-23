@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import iziToast from 'izitoast';
 import { CreateService } from 'src/app/services/create.service';
 
 @Component({
@@ -40,6 +41,15 @@ export class CreateEstadoIncidenteComponent implements OnInit {
       if (token && this.estadoIncidenteForm.value) {
         this.createService.registrarEstadoIncidente(token, this.estadoIncidenteForm.value).subscribe(response => {
           console.log(response);
+          if(response.data){
+            iziToast.success({
+              title:'Listo',
+              message:'Ingresado correctamente'
+            });
+            setTimeout(() => {
+              this.router.navigate(["/home"]);
+            }, 2000);
+          }
         }, error => {
           // Manejar errores
           console.error(error);

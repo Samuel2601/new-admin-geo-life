@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import iziToast from 'izitoast';
 import { CreateService } from 'src/app/services/create.service';
 
 @Component({
@@ -31,6 +32,15 @@ export class CreateActividadProyectoComponent {
         const token = sessionStorage.getItem('token');
         this.createService.registrarTipoActividadProyecto(token, this.estadoIncidenteForm.value).subscribe(response => {
             console.log(response);
+            if(response.data){
+              iziToast.success({
+                title:'Listo',
+                message:'Ingresado correctamente'
+              });
+              setTimeout(() => {
+                this.router.navigate(["/home"]);
+              }, 2000);
+            }
         }, error => {
             console.error(error);
         });

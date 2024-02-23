@@ -76,6 +76,14 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
       },error=>{
         console.error(error);
         this.load_lista=false;
+        if(error.error.message=='InvalidToken'){
+            this.router.navigate(["/inicio"]);
+          }else{
+            iziToast.error({
+              title:'Error',
+              message:'Sin Conexión a la Base de Datos'
+            });
+          }
       });
     }
     

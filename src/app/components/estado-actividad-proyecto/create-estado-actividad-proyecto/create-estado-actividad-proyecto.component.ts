@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CreateService } from 'src/app/services/create.service';
 import { Router } from '@angular/router';
+import iziToast from 'izitoast';
 
 @Component({
   selector: 'app-create-estado-actividad-proyecto',
@@ -39,6 +40,15 @@ export class CreateEstadoActividadProyectoComponent implements OnInit {
       const token = sessionStorage.getItem('token');
       this.createService.registrarEstadoActividadProyecto(token,this.estadoIncidenteForm.value).subscribe(response=>{
         console.log(response);
+        if(response.data){
+          iziToast.success({
+            title:'Listo',
+            message:'Ingresado correctamente'
+          });
+          setTimeout(() => {
+            this.router.navigate(["/home"]);
+          }, 2000);
+        }
       },error=>{
         console.error(error);
       });

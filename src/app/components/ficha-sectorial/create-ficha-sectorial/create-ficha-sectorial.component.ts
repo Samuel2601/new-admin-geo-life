@@ -5,6 +5,7 @@ import { CreateService } from 'src/app/services/create.service';
 import { ListService } from 'src/app/services/list.service';
 import { AdminService } from 'src/app/services/admin.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import iziToast from 'izitoast';
 @Component({
   selector: 'app-create-ficha-sectorial',
   templateUrl: './create-ficha-sectorial.component.html',
@@ -70,6 +71,14 @@ export class CreateFichaSectorialComponent implements OnInit {
       }
     },error=>{
       console.error(error);
+      if(error.error.message=='InvalidToken'){
+        this.router.navigate(["/inicio"]);
+      }else{
+        iziToast.error({
+          title:'Error',
+          message:'Sin Conexión a la Base de Datos'
+        });
+      }
     });
   }
 
@@ -82,6 +91,14 @@ export class CreateFichaSectorialComponent implements OnInit {
       }
     },error=>{
       console.error(error);
+      if(error.error.message=='InvalidToken'){
+        this.router.navigate(["/inicio"]);
+      }else{
+        iziToast.error({
+          title:'Error',
+          message:'Sin Conexión a la Base de Datos'
+        });
+      }
     });
   }
   DimissModal(){
@@ -102,9 +119,25 @@ export class CreateFichaSectorialComponent implements OnInit {
       if (token && this.fichaSectorialForm.value) {
         this.createService.registrarActividadProyecto(token, this.fichaSectorialForm.value).subscribe(response => {
           console.log(response);
+          if(response.data){
+            iziToast.success({
+              title:'Listo',
+              message:'Ingresado correctamente'
+            });
+            setTimeout(() => {
+              this.router.navigate(["/home"]);
+            }, 2000);
+          }
         }, error => {
-          // Manejar errores
           console.error(error);
+          if(error.error.message=='InvalidToken'){
+            this.router.navigate(["/inicio"]);
+          }else{
+            iziToast.error({
+              title:'Error',
+              message:'Sin Conexión a la Base de Datos'
+            });
+          } 
         });
       }
     }else{

@@ -1,5 +1,5 @@
-<div class="main-content"id="mapid" style="min-height: -webkit-fill-available;">
-    <div #mapContainer id="formulario" class="formulario-flotante" style="margin-left: 0%" >
+<div class="main-content"id="mapid" style="min-height: -webkit-fill-available;" >
+    <div #mapContainer id="formulario" class="formulario-flotante" style="margin-left: 0%" (click)="stopPropagation($event)">
         <div class="input-group mb-3">
             <span class="input-group-text" style="background-color: white;"><i class="bi bi-search"></i></span>
             <input class="form-control" type="text" placeholder="Buscar un barrio" aria-label="Number" [formControl]="myControl" (input)="filterOptions($event.target)" (blur)="hideOptions()">        
@@ -36,8 +36,27 @@
             
     </div>
     
-    <div #mapContainer2 class="container" id="listarficha" *ngIf="mostrarficha"  >
+    <div #mapContainer2 class="container" id="listarficha" *ngIf="mostrarficha" (click)="stopPropagation($event)" >
         <app-index-ficha-sectorial class="container" id="indexficha"  [filtro]="'direccion_geo'" [valor]="opcionb.properties.nombre" [modal]="true">
         </app-index-ficha-sectorial>
     </div>
+    <!-- Modal -->
+    <ng-template #modalContent let-modal>
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Seleccionar Ubicación</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modal.dismiss()"></button>
+            </div>
+            <div class="modal-body">
+                ¿Desea seleccionar una capa georeferenciada? o definir una latitud y longitud exacta?
+            </div>
+            <div class="modal-footer">
+                
+            <button type="button" class="btn btn-primary" (click)="modal.close('barrio')">Barrio</button>
+            <button type="button" class="btn btn-secondary" (click)="modal.close('coordenadas')" data-bs-dismiss="modal">Coordenadas</button>
+            </div>
+        </div>
+      </ng-template>
+    
 </div>
+

@@ -12,6 +12,12 @@ import iziToast from 'izitoast';
   styleUrl: './index-incidentes-denuncia.component.scss'
 })
 export class IndexIncidentesDenunciaComponent implements OnInit{
+  checkstatus=[
+    'danger',
+    'warning',
+    'danger',
+    'success'];
+  
   @ViewChild('content') modalContent: TemplateRef<any> | undefined;
   incidentesDenuncias=[];
   public url = GLOBAL.url;

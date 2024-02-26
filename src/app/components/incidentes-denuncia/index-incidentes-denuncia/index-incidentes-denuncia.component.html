@@ -77,8 +77,9 @@
                       <td>
                         <p-cellEditor>
                           <ng-template pTemplate="output">
+                            <span [ngClass]="'badge text-bg-' + checkstatus[incidenteDenuncia.estado.orden]"></span>
                             {{incidenteDenuncia.estado.nombre}}
-                          </ng-template>
+                          </ng-template>                          
                         </p-cellEditor>
                       </td>
                       <td>

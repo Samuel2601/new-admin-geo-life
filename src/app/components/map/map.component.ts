@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, OnInit, HostListener, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
-import { LatLng, geoJSON, Map, tileLayer, control, layerGroup, featureGroup, LeafletMouseEvent } from 'leaflet';
+import { LatLng, geoJSON, Map, tileLayer, control, layerGroup, featureGroup, LeafletMouseEvent, LeafletEventHandlerFn, marker, Marker, icon} from 'leaflet';
 import { Location, LocationStrategy, PathLocationStrategy, PopStateEvent } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
@@ -8,15 +8,19 @@ import { CreateFichaSectorialComponent } from '../ficha-sectorial/create-ficha-s
 import { HelperService } from 'src/app/services/helper.service';
 import iziToast from 'izitoast';
 import { IndexFichaSectorialComponent } from '../ficha-sectorial/index-ficha-sectorial/index-ficha-sectorial.component';
+import * as $ from 'jquery';
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit,AfterViewInit {
-Incidente() {
-throw new Error('Method not implemented.');
-}
+  @ViewChild('modalContent') modal: ElementRef |undefined;
+
+  Incidente() {
+  throw new Error('Method not implemented.');
+  }
   
   public map: Map|undefined ;
   constructor(private modalService: NgbModal,private helperService:HelperService){
@@ -30,6 +34,23 @@ throw new Error('Method not implemented.');
   
   ngAfterViewInit(): void {
     this.geoserve();
+    let containers = document.querySelectorAll('.leaflet-control-container');
+    containers.forEach(container => {
+      container.addEventListener('click', (event) => {
+        event.stopPropagation();
+        // Aquí va el código que quieres ejecutar al hacer clic en los elementos
+        console.log('Elemento clickeado:', container);
+      });
+    });
+    
+    containers = document.querySelectorAll('.leaflet-popup');
+    containers.forEach(container => {
+      container.addEventListener('click', (event) => {
+        event.stopPropagation();
+        // Aquí va el código que quieres ejecutar al hacer clic en los elementos
+        console.log('Elemento clickeado:', container);
+      });
+    });
   }
 
   ngOnDestroy() {
@@ -136,44 +157,85 @@ throw new Error('Method not implemented.');
   capasInteractivas: any[] = [];
   editing:boolean=false;
 
-  clicmap(){
-    if(this.map){
-      if(!this.editing){
-        // Desactivar capas superpuestas
-        this.map.eachLayer((layer) => {
-          if(layer !== this.wfsSelangor){
-            this.map?.removeLayer(layer);
-          }
-        });
-
-        this.map.on('click', (e: LeafletMouseEvent) => {
-          console.log('Latitud:', e.latlng.lat);
-          console.log('Longitud:', e.latlng.lng);
-          this.latitud = e.latlng.lat;
-          this.longitud = e.latlng.lng;
-
-          // Volver a agregar las capas superpuestas
-          this.capasInteractivas.forEach((capa) => {
-            this.map?.addLayer(capa);
-          });
-        });
-        //this.reloadmap();
-      } else {
-        this.map.off('click'); // Desactivar el evento de clic en el mapa mientras se está editando
-      }
-    }   
+  onDragStart() {
+    this.editing=false;
+    console.log('Inicio de arrastre');
   }
+  
+  onDragEnd() {
+    this.editing=true;
+    console.log('Fin de arrastre');
+  }  
+  
+  stopPropagation(event: MouseEvent) {
+    event.stopPropagation();
+  }
+  
+  onClickHandler = async (e: any) => {
+    console.log('Latitud:', e.latlng.lat);
+      console.log('Longitud:', e.latlng.lng);
+      this.latitud = e.latlng.lat;
+      this.longitud = e.latlng.lng;
+      this.myControl.setValue((this.latitud+';'+this.longitud).toString());
+  };
+
+  abrirModalSeleccion(): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      if (this.modal) {
+        this.modalService.open(this.modal).result.then((result) => {
+          resolve(result);
+        }).catch(() => {
+          resolve(''); // Si se cierra el modal sin seleccionar, se resuelve como false
+        });
+      } else {
+        reject('Modal no encontrado');
+      }
+    });
+    }
+  onClickHandlerMap= async (e: any) =>{
+    if (!this.editing){
+      if(this.map){
+        console.log('Latitud:', e.latlng.lat);
+        console.log('Longitud:', e.latlng.lng);
+        this.latitud = e.latlng.lat;
+        this.longitud = e.latlng.lng;
+        this.myControl.setValue((this.latitud+';'+this.longitud).toString());
+        // Eliminar todas las marcas existentes en el mapa
+          this.map.eachLayer((layer) => {
+            if (layer instanceof Marker && this.map) {
+                this.map.removeLayer(layer);
+            }
+        });
+        // Crea un marcador en las coordenadas especificadas
+        const mark = marker([this.latitud, this.longitud], { icon: this.redIcon }).addTo(this.map);
+        // Si deseas añadir un popup al marcador
+        mark.bindPopup('Lugar seleccionado').openPopup();
+        this.map.flyTo([this.latitud, this.longitud], 20);
+      }
+
+  }
+}
+  
 
 
+  googleStreets:any
   geoserve(){
     this.map = new Map('mapid').setView([0.977035, -79.655415], 15);
+    // Agregar evento de inicio de dibujo al mapa
+    this.map.on('dragstart', this.onDragStart);
+
+    // Agregar evento de fin de dibujo al mapa
+    this.map.on('dragend', this.onDragEnd);
+    // Agregar el evento de clic al mapa con el handler definido anteriormente
+    this.map.on('click', this.onClickHandlerMap);
+
     this.map.addLayer(this.wfsSelangor);
 
-    const googleStreets = tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+    this.googleStreets = tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
       maxZoom: 20,
       subdomains:['mt0','mt1','mt2','mt3']
     }).addTo(this.map);
-    if(!googleStreets){
+    if(!this.googleStreets){
       iziToast.error({
         title:'Error',
         message:'Sin Conexión a Google'
@@ -183,8 +245,8 @@ throw new Error('Method not implemented.');
     //this.reloadmap();
     // Crear la capa de búsqueda
     this.busquedaLayer = featureGroup().addTo(this.map);
-
-    control.layers({googleStreets}, {'Barrios':this.wfsSelangor,'Búsqueda': this.busquedaLayer}).addTo(this.map);
+    const google=this.googleStreets;
+    control.layers({google}, {'Barrios':this.wfsSelangor,'Búsqueda': this.busquedaLayer}).addTo(this.map);
   }
   lista_feature:any=[];
   bton:any
@@ -199,6 +261,20 @@ throw new Error('Method not implemented.');
         <strong>Buscar Ficha Técnicas</strong>
     </button>
   </li> */
+  color = 'red'; // Cambia 'red' por el color deseado
+  iconUrl = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" fill="${this.color}" width="14" height="14">
+  <path d="M0 0h24v24H0z" fill="none"/>
+  <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+  </svg>`;
+
+  redIcon = icon({
+    iconUrl: this.iconUrl,
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
   reloadmap() {
     this.wfsPolylayer = [];
     this.wfsSelangor.clearLayers();
@@ -207,30 +283,46 @@ throw new Error('Method not implemented.');
             onEachFeature: (e, t) => {
                 t.on({ mouseover: this.highlightFeature, mouseout: this.resetHighlight });
                 t.bindPopup(`
-                  <div style="font-family: Arial, sans-serif; font-size: 14px;">
+                  <div style="font-family: Arial, sans-serif; font-size: 14px;" (click)="stopPropagation($event)">
                       <b>${e.properties.nombre}</b>
                       <ul style="list-style-type: none; padding-left: 0;">
                           <li><strong>Parroquia:</strong> ${e.properties.parr}</li>                          
                       </ul>
                   </div>
                 `);
-                if(this.bton){
+                 /*if(this.bton){
                   this.bton.removeEventListener('click', () => {
                     this.selectmap(e);
                   });
-                }
-                // Agrega un event listener al botón cuando se abra el popup
-                t.on('popupopen', (popupEvent) => {
-                 
-                  this.buscar(e); // seleccionar barrio con un click en el mapa
-                    this.bton = document.getElementById('incidenteButton');
-                    if (this.bton) {
-                        this.bton.addEventListener('click', () => {
-                            this.selectmap(e);
-                        });
-                    }
-                });
-                // Elimina el event listener cuando se cierre el popup
+                }*/
+                t.on('click', this.onClickHandler);
+               // Agrega un event listener al botón cuando se abra el popup
+                t.on('popupopen', async (popupEvent) => {
+                  if (!this.editing){
+                    if(this.map){
+                      let res=await this.abrirModalSeleccion();
+                      // Eliminar todas las marcas existentes en el mapa
+                      this.map.eachLayer((layer) => {
+                        if (layer instanceof Marker && this.map) {
+                            this.map.removeLayer(layer);
+                        }
+                       });
+                      if(res=='barrio'){
+                        this.buscar(e);// seleccionar barrio con un click en el mapa
+                      }
+                      else if(res=='coordenadas'){
+                                               
+                          // Crea un marcador en las coordenadas especificadas
+                          const mark = marker([this.latitud, this.longitud], { icon: this.redIcon }).addTo(this.map);
+                          // Si deseas añadir un popup al marcador
+                          mark.bindPopup('Lugar seleccionado').openPopup();
+                          this.map.flyTo([this.latitud, this.longitud], 20);
+                        
+                      }
+                    }                   
+                  }});
+
+               /* // Elimina el event listener cuando se cierre el popup
                 t.on('popupclose', (popupEvent) => {
                   let bton = document.getElementById('incidenteButton');
                   if (bton) {
@@ -260,7 +352,8 @@ throw new Error('Method not implemented.');
                           this.selectficha(e);
                       });
                   }
-                });             
+                }); */   
+
             },
             style: this.geojsonWFSstyle,
         }).addTo(this.wfsSelangor));
@@ -288,54 +381,44 @@ throw new Error('Method not implemented.');
     this.buscarPolylayer = geoJSON(opcion, {
       style: this.geojsonWFSstyle2,
     }).bindPopup(`
-      <div style="font-family: Arial, sans-serif; font-size: 14px;">
+      <div style="font-family: Arial, sans-serif; font-size: 14px;" (click)="stopPropagation($event)">
         <b>${opcion.properties.nombre}</b>
         <ul style="list-style-type: none; padding-left: 0;">
           <li><strong>Parriquia:</strong> ${opcion.properties.parr}</li>
         </ul>
       </div>
     `).addTo(this.busquedaLayer);
-    
-    let incidenteButton:any;
-    let fichaButton:any;
-    // Agregar un event listener al botón cuando se abra el popup
-      this.buscarPolylayer.on('popupopen', (popupEvent:any) => {
-        incidenteButton = document.getElementById('incidenteButton');
-        if (incidenteButton) {
-            incidenteButton.addEventListener('click', () => {
-              this.nuevoIncidente();// Aquí puedes realizar la acción que necesites al hacer clic en el botón
-            });
+    this.buscarPolylayer.on('click', this.onClickHandler);
+    // Agrega un event listener al botón cuando se abra el popup
+    this.buscarPolylayer.on('popupopen', async (popupEvent:any) => {
+      // console.log(e);
+      if (!this.editing){
+        if(this.map){
+          let res=await this.abrirModalSeleccion();
+          if(res=='barrio'){
+            this.map.eachLayer((layer) => {
+              if (layer instanceof Marker && this.map) {
+                  this.map.removeLayer(layer);
+              }
+             });
+             this.myControl.setValue(this.opcionb.properties.nombre);
+          }else if(res=='coordenadas'){
+            
+              // Eliminar todas las marcas existentes en el mapa
+                this.map.eachLayer((layer) => {
+                  if (layer instanceof Marker && this.map) {
+                      this.map.removeLayer(layer);
+                  }
+              });
+              // Crea un marcador en las coordenadas especificadas
+              const mark = marker([this.latitud, this.longitud], { icon: this.redIcon }).addTo(this.map);
+              // Si deseas añadir un popup al marcador
+              mark.bindPopup('Lugar seleccionado').openPopup();
+              this.map.flyTo([this.latitud, this.longitud], 20);
+            
+          }
         }
-      });
-
-      // Eliminar el event listener cuando se cierre el popup
-      this.buscarPolylayer.on('popupclose', (popupEvent:any) => {
-        if (incidenteButton) {
-            incidenteButton.removeEventListener('click', () => {
-              this.nuevoIncidente();// Aquí puedes realizar la acción que necesites al hacer clic en el botón
-            });
-        }
-      });
-
-      // Agregar un event listener al botón cuando se abra el popup
-      this.buscarPolylayer.on('popupopen', (popupEvent:any) => {
-        fichaButton = document.getElementById('fichaButton');
-        if (fichaButton) {
-          fichaButton.addEventListener('click', () => {
-              this.fichaTecnica();// Aquí puedes realizar la acción que necesites al hacer clic en el botón
-            });
-        }
-      });
-
-      // Eliminar el event listener cuando se cierre el popup
-      this.buscarPolylayer.on('popupclose', (popupEvent:any) => {
-        if (fichaButton) {
-          fichaButton.removeEventListener('click', () => {
-              this.fichaTecnica();// Aquí puedes realizar la acción que necesites al hacer clic en el botón
-            });
-        }
-      });
-
+      }});
     // Mover el mapa hacia el feature seleccionado
     this.map?.fitBounds(this.buscarPolylayer.getBounds(),{ maxZoom: 15 });
 
@@ -414,7 +497,7 @@ throw new Error('Method not implemented.');
   }
   selectmap(e:any){
     this.opcionb=e;
-    this.nuevoIncidente();
+   // this.nuevoIncidente();
   }
   nuevoFicha(){
     const data = this.opcionb; // JSON que quieres enviar
@@ -432,6 +515,7 @@ throw new Error('Method not implemented.');
   selectficha(e:any){
     
     this.opcionb=e;
+    console.log(this.opcionb);
     this.fichaTecnica();
   }
   fichaTecnica(){

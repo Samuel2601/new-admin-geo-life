@@ -9,7 +9,6 @@ import { Plugins, Capacitor } from '@capacitor/core';
 import iziToast from 'izitoast';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
-
 const { Geolocation } = Plugins;
 @Component({
   selector: 'app-create-incidentes-denuncia',
@@ -99,10 +98,23 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
         this.model = true; // En cualquier otra ruta, model es true
       }
     });
-    this.checkPermissions();
-    
+    this.getLocation();
     console.log(this.data);
     this.listarCategorias();
+  }
+  getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          alert('Latitude: ' + position.coords.latitude + ', Longitude: ' + position.coords.longitude);
+        },
+        (error) => {
+          console.error('Error getting location: ' + error.message);
+        }
+      );
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+    }
   }
   selectcategoria(target:any){
     const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación

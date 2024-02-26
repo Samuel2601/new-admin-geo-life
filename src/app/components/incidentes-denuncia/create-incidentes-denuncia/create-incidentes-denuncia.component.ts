@@ -49,40 +49,32 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     }
   }
   async tomarFoto() {
-    const foto = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: true,
-      resultType: CameraResultType.Uri,
-      source: CameraSource.Prompt // Puedes cambiar a CameraSource.Photos si prefieres seleccionar desde la galería
+    const image:any = await Camera.getPhoto({
+      quality: 100,
+      allowEditing: false,
+      resultType: CameraResultType.Base64,
+      source: CameraSource.Prompt,
+      promptLabelPhoto: 'Tomar foto',
+      promptLabelPicture: 'Seleccionar de la galería',
     });
   
-    // La foto está disponible en 'foto'
-    if (foto) {
-      // Usa la URI de la foto para mostrarla en tu aplicación
-      //this.file = foto.webPath;
-      this.imagenSeleccionada = foto.webPath;
-      console.log(foto);
-      this.file = foto.webPath;
-    //  await this.enviarArchivo(foto.path); 
+    this.imagenSeleccionada = `data:image/jpeg;base64,${image.base64String}`;
+    this.file = this.base64ToFile(image.base64String, 'imagen.jpg');
+  }
+  
+  base64ToFile(dataURI: string, fileName: string): File {
+    const byteString = atob(dataURI.split(',')[1]);
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const int8Array = new Uint8Array(arrayBuffer);
+  
+    for (let i = 0; i < byteString.length; i++) {
+      int8Array[i] = byteString.charCodeAt(i);
     }
+  
+    const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
+    return new File([blob], fileName, { type: 'image/jpeg' });
   }
-  async enviarArchivo(webPath: any) {
-    const path = webPath;
-    const contenido = await Filesystem.readFile({ path });
   
-    // Obtener la extensión del archivo de manera más segura
-    const ext = path.split('.').pop(); // Obtener la última parte después de un punto
-  
-    // Convierte el contenido en un Blob
-    const blob = new Blob([contenido.data], { type: `image/${ext}` });
-  
-    // Guarda el Blob en this.file
-    this.file = blob;
-    console.log(path);
-    console.log(ext);
-    console.log(blob);
-    // Aquí debes hacer tu solicitud HTTP
-  }
   
   ngOnInit(): void {
     if (this.data) {
@@ -98,7 +90,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
         this.model = true; // En cualquier otra ruta, model es true
       }
     });
-    this.getLocation();
+    //this.getLocation();
     console.log(this.data);
     this.listarCategorias();
   }
@@ -176,27 +168,23 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
 
 
   onFileSelected(event: any): void {
-    if (this.isMobil()) {
-      this.tomarFoto();
-    } else {
-      const file: File = event.target.files[0];
-      if (file) {
-        if (!file.type.startsWith('image/')) {
-          alert('Por favor, seleccione un archivo de imagen.');
-            return;
-        }
-        if (file.size > 4 * 1024 * 1024) {
-          alert('Por favor, seleccione un archivo de imagen que sea menor a 4MB.');
+    const file: File = event.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor, seleccione un archivo de imagen.');
           return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.imagenSeleccionada = reader.result;
-        };
-        reader.readAsDataURL(file);
-        this.file=file;
       }
+      if (file.size > 4 * 1024 * 1024) {
+        alert('Por favor, seleccione un archivo de imagen que sea menor a 4MB.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagenSeleccionada = reader.result;
+      };
+      reader.readAsDataURL(file);
+      this.file=file;
     }
   }
 
@@ -207,29 +195,58 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     this.nuevoIncidenteDenuncia.ciudadano=this.adminservice.identity(token);
     
     console.log(this.nuevoIncidenteDenuncia);
-    this.createService.registrarIncidenteDenuncia(token, this.nuevoIncidenteDenuncia,this.file).subscribe(response => {
-      // Manejar la respuesta del servidor
-      console.log(response);
-      if(response.data){
-        iziToast.success({
-          title:'Listo',
-          message:'Ingresado correctamente'
-        });
-        setTimeout(() => {
-          this.router.navigate(["/home"]);
-        }, 2000);
-      }
-    }, error => {
-      // Manejar errores
-      console.error(error);
-      if(error.error.message=='InvalidToken'){
-        this.router.navigate(["/inicio"]);
-      }else{
-        iziToast.error({
-          title:'Error',
-          message:'Sin Conexión a la Base de Datos'
-        });
-      }
-    });
+    if(this.isMobil()){      
+      this.createService.registrarIncidenteDenunciaAPP(token, this.nuevoIncidenteDenuncia,this.file).subscribe(response => {
+        // Manejar la respuesta del servidor
+        console.log(response);
+        if(response.data){
+          iziToast.success({
+            title:'Listo',
+            message:'Ingresado correctamente'
+          });
+          setTimeout(() => {
+            this.router.navigate(["/home"]);
+          }, 2000);
+        }
+      }, error => {
+        // Manejar errores
+        console.error(error);
+        if(error.error.message=='InvalidToken'){
+          this.router.navigate(["/inicio"]);
+        }else{
+          iziToast.error({
+            title:'Error',
+            message:'Sin Conexión a la Base de Datos'
+          });
+        }
+      });
+    }else{
+      this.createService.registrarIncidenteDenuncia(token, this.nuevoIncidenteDenuncia,this.file).subscribe(response => {
+        // Manejar la respuesta del servidor
+        console.log(response);
+        if(response.data){
+          iziToast.success({
+            title:'Listo',
+            message:'Ingresado correctamente'
+          });
+          setTimeout(() => {
+            this.router.navigate(["/home"]);
+          }, 2000);
+        }
+      }, error => {
+        // Manejar errores
+        console.error(error);
+        if(error.error.message=='InvalidToken'){
+          this.router.navigate(["/inicio"]);
+        }else{
+          iziToast.error({
+            title:'Error',
+            message:'Sin Conexión a la Base de Datos'
+          });
+        }
+      });
+    }
+   
+
   }
 }

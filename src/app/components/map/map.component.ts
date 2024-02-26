@@ -9,7 +9,7 @@ import { HelperService } from 'src/app/services/helper.service';
 import iziToast from 'izitoast';
 import { IndexFichaSectorialComponent } from '../ficha-sectorial/index-ficha-sectorial/index-ficha-sectorial.component';
 import * as $ from 'jquery';
-
+import * as turf from '@turf/turf';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -17,7 +17,7 @@ import * as $ from 'jquery';
 })
 export class MapComponent implements OnInit,AfterViewInit {
   @ViewChild('modalContent') modal: ElementRef |undefined;
-
+  @ViewChild('modalContentUbicacion') modalubicacion: ElementRef |undefined;
   Incidente() {
   throw new Error('Method not implemented.');
   }
@@ -30,9 +30,10 @@ export class MapComponent implements OnInit,AfterViewInit {
     this.helperService.deshabilitarMapa$.subscribe(() => {
       this.handleClick();
     });
+    
   }
   
-  ngAfterViewInit(): void {
+  async ngAfterViewInit(): Promise<void> {
     this.geoserve();
     let containers = document.querySelectorAll('.leaflet-control-container');
     containers.forEach(container => {
@@ -50,6 +51,23 @@ export class MapComponent implements OnInit,AfterViewInit {
         // Aquí va el código que quieres ejecutar al hacer clic en los elementos
         console.log('Elemento clickeado:', container);
       });
+    });
+    if(await this.abrirModalUbicacion()){
+      this.getLocation();
+    }
+
+  }
+  abrirModalUbicacion(): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      if (this.modal) {
+        this.modalService.open(this.modalubicacion).result.then((result) => {
+          resolve(result);
+        }).catch(() => {
+          resolve(false); // Si se cierra el modal sin seleccionar, se resuelve como false
+        });
+      } else {
+        reject('Modal no encontrado');
+      }
     });
   }
 
@@ -191,7 +209,7 @@ export class MapComponent implements OnInit,AfterViewInit {
         reject('Modal no encontrado');
       }
     });
-    }
+  }
   onClickHandlerMap= async (e: any) =>{
     if (!this.editing){
       if(this.map){
@@ -434,6 +452,7 @@ export class MapComponent implements OnInit,AfterViewInit {
         var aux=[];
         aux.push(data.features);
         this.lista_feature=aux[0];
+        console.log(this.lista_feature);
         this.filter = this.lista_feature;
       }
       return data;
@@ -447,6 +466,44 @@ export class MapComponent implements OnInit,AfterViewInit {
       return null;
     }
   }
+  getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          //alert('Latitude: ' + position.coords.latitude + ', Longitude: ' + position.coords.longitude);
+          const puntoUsuario = turf.point([position.coords.longitude,position.coords.latitude]);
+          console.log(position.coords.longitude,position.coords.latitude);
+          this.latitud=position.coords.latitude;
+          this.longitud=position.coords.longitude;
+          if(this.map){
+             // Crea un marcador en las coordenadas especificadas
+             const mark = marker([position.coords.latitude, position.coords.longitude], { icon: this.redIcon }).addTo(this.map);
+             // Si deseas añadir un popup al marcador
+             mark.bindPopup('Lugar seleccionado').openPopup();
+             this.map.flyTo([position.coords.latitude, position.coords.longitude], 20);
+          }
+          for (const feature of this.lista_feature) {
+            if(feature.geometry&&feature.geometry.coordinates&&feature.geometry.coordinates[0]&&feature.geometry.coordinates[0][0].length>4){
+              const poligono = turf.polygon(feature.geometry.coordinates[0]);
+              
+              if (turf.booleanContains(poligono, puntoUsuario)) {
+                console.log('El usuario está dentro del polígono:', feature);
+                this.buscar(feature);
+                break; // Si solo quieres saber en qué polígono está, puedes detener el bucle aquí
+              }
+            }
+           
+          }
+        },
+        (error) => {
+          console.error('Error getting location: ' + error.message);
+        }
+      );
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+    }
+  }
+
   isMobile(): boolean {
       const screenWidth = window.innerWidth;
       return screenWidth < 768; // Cambia este valor según la definición de móvil en Bootstrap

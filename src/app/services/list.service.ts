@@ -13,7 +13,7 @@ export class ListService {
 		this.url = GLOBAL.url+'list/';
 	}
   
-  listarUsuarios(token: any, campo?: string, valor?: string): Observable<any> {
+  listarUsuarios(token: any, campo?: string, valor?: any): Observable<any> {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: token,
@@ -35,7 +35,7 @@ export class ListService {
     return this.http.get(this.url + 'listar_ficha_sectorial',  { headers: headers, params: params });
   }
 
-  listarIncidentesDenuncias(token: any, campo?: string, valor?: string): Observable<any> {
+  listarIncidentesDenuncias(token: any, campo?: string, valor?: any): Observable<any> {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: token,
@@ -45,7 +45,7 @@ export class ListService {
         .set('valor', valor||'');
     return this.http.get(this.url + 'listar_incidentes_denuncias',  { headers: headers, params: params });
   }
-  listarCategorias(token: any, campo?: string, valor?: string): Observable<any> {
+  listarCategorias(token: any, campo?: string, valor?: any): Observable<any> {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: token,
@@ -57,7 +57,7 @@ export class ListService {
   }
   
 
-  listarSubcategorias(token: any, campo?: string, valor?: string): Observable<any> {
+  listarSubcategorias(token: any, campo?: string, valor?: any): Observable<any> {
     let headers = new HttpHeaders({
         'Content-Type': 'application/json',
         Authorization: token,
@@ -68,7 +68,7 @@ export class ListService {
     return this.http.get(this.url + 'listar_subcategorias', { headers: headers, params: params });
 }
 
-  listarEncargadosCategorias(token: any, campo?: string, valor?: string): Observable<any> {
+  listarEncargadosCategorias(token: any, campo?: string, valor?: any): Observable<any> {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: token,
@@ -79,7 +79,7 @@ export class ListService {
     return this.http.get(this.url + 'listar_encargados_categorias', { headers: headers, params: params });
   }
 
-  listarRolesUsuarios(token: any, campo?: string, valor?: string): Observable<any> {
+  listarRolesUsuarios(token: any, campo?: string, valor?: any): Observable<any> {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: token,

@@ -18,9 +18,7 @@ import * as turf from '@turf/turf';
 export class MapComponent implements OnInit,AfterViewInit {
   @ViewChild('modalContent') modal: ElementRef |undefined;
   @ViewChild('modalContentUbicacion') modalubicacion: ElementRef |undefined;
-  Incidente() {
-  throw new Error('Method not implemented.');
-  }
+
   
   public map: Map|undefined ;
   constructor(private modalService: NgbModal,private helperService:HelperService){
@@ -52,9 +50,6 @@ export class MapComponent implements OnInit,AfterViewInit {
         console.log('Elemento clickeado:', container);
       });
     });
-    if(await this.abrirModalUbicacion()){
-      this.getLocation();
-    }
 
   }
   abrirModalUbicacion(): Promise<boolean> {
@@ -228,7 +223,19 @@ export class MapComponent implements OnInit,AfterViewInit {
         const mark = marker([this.latitud, this.longitud], { icon: this.redIcon }).addTo(this.map);
         // Si deseas añadir un popup al marcador
         mark.bindPopup('Lugar seleccionado').openPopup();
-        this.map.flyTo([this.latitud, this.longitud], 20);
+        this.map.flyTo([this.latitud, this.longitud], 14);
+        const puntoUsuario = turf.point([this.longitud,this.latitud]);
+        for (const feature of this.lista_feature) {
+          if(feature.geometry&&feature.geometry.coordinates&&feature.geometry.coordinates[0]&&feature.geometry.coordinates[0][0].length>4){
+            const poligono = turf.polygon(feature.geometry.coordinates[0]);
+            
+            if (turf.booleanContains(poligono, puntoUsuario)) {
+              console.log('El usuario está dentro del polígono:', feature);
+              await this.buscar(feature);
+              break; // Si solo quieres saber en qué polígono está, puedes detener el bucle aquí
+            }
+          }           
+        }
       }
 
   }
@@ -313,9 +320,11 @@ export class MapComponent implements OnInit,AfterViewInit {
                     this.selectmap(e);
                   });
                 }*/
-                t.on('click', this.onClickHandler);
+                //t.on('click', this.onClickHandler);
                // Agrega un event listener al botón cuando se abra el popup
                 t.on('popupopen', async (popupEvent) => {
+                  this.buscar(e);// seleccionar barrio con un click en el mapa
+/*
                   if (!this.editing){
                     if(this.map){
                       let res=await this.abrirModalSeleccion();
@@ -338,7 +347,8 @@ export class MapComponent implements OnInit,AfterViewInit {
                         
                       }
                     }                   
-                  }});
+                  }*/
+                });
 
                /* // Elimina el event listener cuando se cierre el popup
                 t.on('popupclose', (popupEvent) => {
@@ -389,8 +399,9 @@ export class MapComponent implements OnInit,AfterViewInit {
               </button>
           </li>
  */
-  
-  buscar(opcion:any){      
+  isLongPress = false;
+  longPressTimeout: any;
+  async buscar(opcion:any){      
     this.opcionb=opcion; 
     this.myControl.setValue(this.opcionb.properties.nombre);
     this.buscarPolylayer=[];
@@ -406,9 +417,30 @@ export class MapComponent implements OnInit,AfterViewInit {
         </ul>
       </div>
     `).addTo(this.busquedaLayer);
-    this.buscarPolylayer.on('click', this.onClickHandler);
+    this.buscarPolylayer.on('mousedown', (e:any) => {
+      this.longPressTimeout = setTimeout(() => {
+        // Aquí puedes llamar a tu función para manejar el clic sostenido
+        this.onClickHandlerMap(e);
+      }, 500); // Tiempo en milisegundos para considerar como clic sostenido
+    });
+    this.buscarPolylayer.on('mouseup', () => {
+      clearTimeout(this.longPressTimeout);
+    });
+
+    this.buscarPolylayer.on('touchstart', (e:any) => {
+      this.longPressTimeout = setTimeout(() => {
+        // Aquí puedes llamar a tu función para manejar el clic sostenido
+        this.onClickHandlerMap(e);
+      }, 1000); // Tiempo en milisegundos para considerar como clic sostenido
+    });
+    
+    this.buscarPolylayer.on('touchend', () => {
+      clearTimeout(this.longPressTimeout);
+    });
+
+    this.buscarPolylayer.on('dblclick', this.onClickHandlerMap);
     // Agrega un event listener al botón cuando se abra el popup
-    this.buscarPolylayer.on('popupopen', async (popupEvent:any) => {
+    /*this.buscarPolylayer.on('popupopen', async (popupEvent:any) => {
       // console.log(e);
       if (!this.editing){
         if(this.map){
@@ -436,9 +468,9 @@ export class MapComponent implements OnInit,AfterViewInit {
             
           }
         }
-      }});
+      }});*/
     // Mover el mapa hacia el feature seleccionado
-    this.map?.fitBounds(this.buscarPolylayer.getBounds(),{ maxZoom: 15 });
+    this.map?.fitBounds(this.buscarPolylayer.getBounds(),{ maxZoom: 20 });
 
     this.showOptions = false;
   }
@@ -466,10 +498,10 @@ export class MapComponent implements OnInit,AfterViewInit {
       return null;
     }
   }
-  getLocation() {
+  async getLocation() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
+        navigator.geolocation.getCurrentPosition(
+        async (position) => {
           //alert('Latitude: ' + position.coords.latitude + ', Longitude: ' + position.coords.longitude);
           const puntoUsuario = turf.point([position.coords.longitude,position.coords.latitude]);
           console.log(position.coords.longitude,position.coords.latitude);
@@ -488,11 +520,10 @@ export class MapComponent implements OnInit,AfterViewInit {
               
               if (turf.booleanContains(poligono, puntoUsuario)) {
                 console.log('El usuario está dentro del polígono:', feature);
-                this.buscar(feature);
+                await this.buscar(feature);
                 break; // Si solo quieres saber en qué polígono está, puedes detener el bucle aquí
               }
-            }
-           
+            }           
           }
         },
         (error) => {
@@ -503,13 +534,10 @@ export class MapComponent implements OnInit,AfterViewInit {
       console.error('Geolocation is not supported by this browser.');
     }
   }
-
   isMobile(): boolean {
       const screenWidth = window.innerWidth;
       return screenWidth < 768; // Cambia este valor según la definición de móvil en Bootstrap
   }
-
-
   highlightFeature(e:any) {
     const layer = e.target;
     layer.setStyle({
@@ -519,8 +547,7 @@ export class MapComponent implements OnInit,AfterViewInit {
         dashArray: '',
         fillOpacity: 0.7
     });
-  }
- 
+  } 
   resetHighlight(e:any) {
     const layer = e.target;
     layer.setStyle({
@@ -532,7 +559,6 @@ export class MapComponent implements OnInit,AfterViewInit {
         fillOpacity: 0.5
     });
   }
-
   geojsonWFSstyle(feature:any) {
     return {
       fillColor: "#2986CC",
@@ -562,11 +588,53 @@ export class MapComponent implements OnInit,AfterViewInit {
     const modalRef = this.modalService.open(CreateFichaSectorialComponent, { centered: true });
     modalRef.componentInstance.data = data; 
   }
-  nuevoIncidente() {
-    const data = this.opcionb; // JSON que quieres enviar
-    this.modalService.dismissAll();
-    const modalRef = this.modalService.open(CreateIncidentesDenunciaComponent, { centered: true });
-    modalRef.componentInstance.data = data; 
+  async nuevoIncidente() {
+    if(await this.abrirModalUbicacion()){
+       await this.getLocation();
+       setTimeout(() => {        
+       const data = this.opcionb; // JSON que quieres enviar
+       this.modalService.dismissAll();
+       const modalRef = this.modalService.open(CreateIncidentesDenunciaComponent, { centered: true });
+       modalRef.componentInstance.data = data; 
+       }, 1000);
+    }else{
+      const data = this.opcionb; // JSON que quieres enviar
+      this.modalService.dismissAll();
+      const modalRef = this.modalService.open(CreateIncidentesDenunciaComponent, { centered: true });
+      modalRef.componentInstance.data = data; 
+    }
+    
+    /*this.buscarPolylayer.on('popupopen', async (popupEvent:any) => {
+      // console.log(e);
+      if (!this.editing){
+        if(this.map){
+          let res=await this.abrirModalSeleccion();
+          if(res=='barrio'){
+            this.map.eachLayer((layer) => {
+              if (layer instanceof Marker && this.map) {
+                  this.map.removeLayer(layer);
+              }
+             });
+             this.myControl.setValue(this.opcionb.properties.nombre);
+          }else if(res=='coordenadas'){
+            
+              // Eliminar todas las marcas existentes en el mapa
+                this.map.eachLayer((layer) => {
+                  if (layer instanceof Marker && this.map) {
+                      this.map.removeLayer(layer);
+                  }
+              });
+              // Crea un marcador en las coordenadas especificadas
+              const mark = marker([this.latitud, this.longitud], { icon: this.redIcon }).addTo(this.map);
+              // Si deseas añadir un popup al marcador
+              mark.bindPopup('Lugar seleccionado').openPopup();
+              this.map.flyTo([this.latitud, this.longitud], 20);
+            
+          }
+        }
+      }});
+      */
+
   }
   mostrarficha=false;
   selectficha(e:any){
@@ -577,6 +645,7 @@ export class MapComponent implements OnInit,AfterViewInit {
   }
   fichaTecnica(){
     this.mostrarficha=false;
+    this.mostrarincidente=false;
     if(this.opcionb){
       this.mostrarficha=true;
     } 
@@ -603,13 +672,32 @@ export class MapComponent implements OnInit,AfterViewInit {
   } 
   handleClick() {
     this.mostrarficha=false;
+    this.mostrarincidente=false;
     if (this.map) {
-      console.log('deshabilitar');
+      console.log('habilitar');
       this.map.dragging.enable();
       this.map.scrollWheelZoom.enable();
       
     }
   } 
-
-
+  mostrarincidente=false;
+  incidente() {
+    this.mostrarficha=false;
+    this.mostrarincidente=false;
+    if(this.opcionb){
+      this.mostrarincidente=true;
+    } 
+    if(this.map){
+      if(this.mostrarincidente){
+        console.log('DEShabilitar');
+        // Deshabilitar interacción con el mapa
+        this.map.dragging.disable();
+        this.map.scrollWheelZoom.disable();
+      }else{
+        // Habilitar interacción con el mapa
+        //this.map.dragging.enable();
+        //this.map.scrollWheelZoom.enable();          
+      }  
+    }
+  }
 }

@@ -86,8 +86,6 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
           }
       });
     }
-    
-
   }
   llamarmodal2(){
     this.modalService.dismissAll();

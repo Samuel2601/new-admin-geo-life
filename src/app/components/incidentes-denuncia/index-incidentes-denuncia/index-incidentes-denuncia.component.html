@@ -1,152 +1,197 @@
-<div class="wrapper">
-    <div class="sidebar" data-color="danger" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
-      <app-sidebar></app-sidebar>
-      <div class="sidebar-background" style="background-image: url(./assets/img/sidebar-4.jpg)"></div>
-    </div>
-    <div class="main-panel">
-      <app-navbar></app-navbar>
-      <div class="main-content">
-        <div class="container-fluid">
-          <div class="card">
-            <div class="card-header">
-              <div class="row">
-                <div class="col-lg-auto">
-                  <h2>Listado de Incidentes y Denuncias</h2>
-                </div>
-                <div class="col-sm-auto">
-                  <a class="btn btn-primary float-end" (click)="llamarmodal()"><i class="bi bi-stack"></i></a>     
-                </div>
-              </div>
-            </div>
-            <div class="card-body">
-              <p-toast></p-toast>
-              <div class="table-responsive-sm">
-                <p-table class="table table-sm align-middle table-striped table-hover" [value]="incidentesDenuncias" dataKey="_id" editMode="row" [tableStyle]="{'min-width': '50rem'}">
-                  <ng-template pTemplate="header">
+  <ng-container *ngIf="modal">
+    <div class="card" [style.height.px]="height" style="min-height: auto; position: absolute; bottom: 0;">
+      
+      <div class="card-header position-relative" (mousedown)="startResize($event)" (touchstart)="startResize($event)"
+        (touchstart)="onTouchStart($event)" 
+        (touchmove)="onTouchMove($event)" 
+        (touchend)="onTouchEnd()">      
+        <div class="row">
+          <div class="col-lg-7">
+            <h2>Listado de Incidentes/Deuncias: {{valor}}</h2>          
+          </div>
+          <div class="col-sm-3">                 
+            <a class="btn btn-primary float-end" (click)="llamarmodal()"><i class="bi bi-substack"></i></a>  
+          </div>
+          <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close" (click)="deshabilitarMapaDesdeIndexFichaSectorial()"></button>
+        </div>
+      </div>
+  
+      <div class="card-body">
+        <p-toast></p-toast>
+        <div  *ngIf="incidentesDenuncias.length>0&&!load_lista" class="table-responsive-lg" [style.height.px]="height-150" style="min-height: fit-content; overflow-y: auto;">
+            <table class="table table-lg align-middle table-striped table-hover table-fixed">
+                <thead>
                     <tr>
-                      <th scope="col">Categoría</th>
-                      <th scope="col">Subcategoría</th>
-                      <th scope="col">Descripción</th>
-                      <th scope="col">Dirección</th>
-                      <th scope="col">Ciudadano</th>
-                      <th scope="col">Estado</th>
-                      <th scope="col">Respuesta</th>
-                      <th scope="col">Encargado</th>
-                      <th scope="col">Foto</th>
-                      <th scope="col"></th>
+                        <th scope="col" *ngIf="!isMobil()">Categoría</th>
+                        <th scope="col" *ngIf="!isMobil()">Subcategoría</th>
+                        <th scope="col" *ngIf="isMobil()">Categoria/subcategoría</th>
+
+                        <th scope="col" *ngIf="!isMobil()">Descripción</th>
+                        <th scope="col">Dirección</th>
+                        <th scope="col">Ciudadano</th>
+                        <th scope="col">Estado</th>
+
+                        <th scope="col" *ngIf="!isMobil()">Respuesta</th>
+                        <th scope="col" *ngIf="!isMobil()">Encargado</th>
+                        <th scope="col">Foto</th>
                     </tr>
-                  </ng-template>
-                  <ng-template pTemplate="body" let-incidenteDenuncia let-editing="editing" let-ri="rowIndex">
-                    <tr [pEditableRow]="incidenteDenuncia">
-                      <td>
-                        <p-cellEditor>
-                          <ng-template pTemplate="output">
-                            {{incidenteDenuncia.categoria.nombre}}
-                          </ng-template>
-                        </p-cellEditor>
-                      </td>
-                      <td>
-                        <p-cellEditor>
-                          <ng-template pTemplate="output">
-                            {{incidenteDenuncia.subcategoria.nombre}}
-                          </ng-template>
-                        </p-cellEditor>
-                      </td>
-                      <td>
-                        <p-cellEditor>
-                          <ng-template pTemplate="output">
-                            {{incidenteDenuncia.descripcion}}
-                          </ng-template>
-                        </p-cellEditor>
-                      </td>
-                      <td>
-                        <p-cellEditor>
-                          <ng-template pTemplate="output">
-                            {{incidenteDenuncia.direccion_geo}}
-                          </ng-template>
-                        </p-cellEditor>
-                        <!-- Aquí debes colocar un select con las direcciones geográficas -->
-                      </td>
-                      <td>
-                        <p-cellEditor>
-                          <ng-template pTemplate="output">
-                            {{incidenteDenuncia.ciudadano.nombres}}
-                          </ng-template>
-                        </p-cellEditor>
-                      </td>
-                      <td>
-                        <p-cellEditor>
-                          <ng-template pTemplate="output">
-                            <span [ngClass]="'badge text-bg-' + checkstatus[incidenteDenuncia.estado.orden]"></span>
-                            {{incidenteDenuncia.estado.nombre}}
-                          </ng-template>                          
-                        </p-cellEditor>
-                      </td>
-                      <td>
-                        <p-cellEditor>
-                          <ng-template pTemplate="output">
-                            {{incidenteDenuncia.encargado}}
-                          </ng-template>
-                        </p-cellEditor>
-                      </td>
-                      <td>
-                        <!-- Aquí debes colocar un select con los encargados -->
-                      </td>
-                      <td>
-                        <p-cellEditor>
-                          <ng-template pTemplate="output">
-                            <img
-                              [src]="url + 'helper/obtener_portada/' + incidenteDenuncia.foto"
-                              class="navbar-brand-img mx-auto"
-                              style="max-height: 4rem !important; cursor: pointer;"
-                              alt="..."
-                              (click)="openModal(url + 'helper/obtener_portada/' + incidenteDenuncia.foto)"
-                            />
-                          </ng-template>
-                        </p-cellEditor>
-                      </td>
-                      <ng-template #content let-modal>
-                        <div class="modal-header">
-                          <h4 class="modal-title">Imagen</h4>
-                          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <img [src]="imagenModal" class="img-fluid" alt="Imagen" />
-                        </div>
-                      </ng-template>
-                      <td>
+                </thead>
+                <tbody >
+                    <tr *ngFor="let ficha of incidentesDenuncias">
+                        <td  *ngIf="!isMobil()">{{ ficha.categoria.nombre }}</td>
+                        <td *ngIf="!isMobil()">{{ ficha.subcategoria.nombre }}</td>
+                        <td *ngIf="isMobil()">{{ ficha.categoria.nombre }} <br> {{ ficha.subcategoria.nombre }}</td>
+
+                        <td *ngIf="!isMobil()">{{ ficha.descripcion }}</td>
+                        <td>{{ ficha.direccion_geo }}</td>
+                        <td> {{ficha.ciudadano.nombres}}</td>
+                        <td> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]"></span>
+                          {{ficha.estado.nombre}} </td>
+
+                        <td *ngIf="!isMobil()"> <ng-container *ngIf="ficha.respuesta">{{ ficha.respuesta }}</ng-container> <ng-container *ngIf="!ficha.respuesta">--</ng-container> </td>
+                        <td *ngIf="!isMobil()"><ng-container *ngIf="ficha.encargado">{{ ficha.encargado.nombres }}</ng-container> <ng-container *ngIf="!ficha.encargado">--</ng-container> </td>
+                        <img [src]="url + 'helper/obtener_portada/' + ficha.foto" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." (click)="openModalimagen(url + 'helper/obtener_portada/' + ficha.foto)" />
+                        <td *ngIf="isMobil()">
+                          <button type="button" class="btn btn-primary" (click)="openModal(modalContent)"><i class="bi bi-eye-fill"></i></button>
+                        </td>
+                        <!-- Agrega el modal al final del componente -->
+                        <ng-template #modalContent let-modal>
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h4 class="modal-title" id="modal-basic-title">Detalles de la Ficha Sectorial</h4>
+                              <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+                            </div>
+                            <div class="modal-body">
+                              <!-- Contenido del modal -->
+                              <p><strong>Categoría:</strong> {{ ficha.categoria.nombre }}</p>
+                              <p><strong>Subcategoría:</strong> {{ ficha.subcategoria.nombre }}</p>
+                              <p><strong>Dirección Geográfica:</strong> {{ ficha.direccion_geo }}</p>
+                              <p><strong>Ciudadano:</strong> {{ ficha.ciudadano.nombres }}</p>
+                              <p><strong>Estado:</strong> {{ ficha.estado }}</p>
+                              <p><strong>Respuesta:</strong> {{ ficha.respuesta }}</p>
+                              <p><strong>Descripción:</strong> {{ ficha.descripcion }}</p>
+                              <p><strong>Encargado:</strong> {{ ficha.encargado.nombres }}</p>
+                              <p><strong>Foto:</strong><img [src]="url + 'helper/obtener_portada/' + ficha.foto" class="img-fluid" alt="Imagen" /></p>
+                              
+                          </div>
+                          
+                          </div>
+                        </ng-template>
                         
-                      </td>
                     </tr>
-                  </ng-template>
-                </p-table>
+                </tbody>
+            </table>          
+        </div>
+        <div class="alert alert-info" role="alert" *ngIf="incidentesDenuncias.length==0&&!load_lista">
+          No se han realizado registros de esta ubicación
+        </div>
+        <div class="card-body" aria-hidden="true" *ngIf="load_lista">
+          <h5 class="card-title placeholder-glow">
+            <span class="placeholder col-6"></span>
+          </h5>
+          <p class="card-text placeholder-glow">
+            <span class="placeholder col-7"></span>
+            <span class="placeholder col-4"></span>
+            <span class="placeholder col-4"></span>
+            <span class="placeholder col-6"></span>
+            <span class="placeholder col-8"></span>
+          </p>
+        </div>
+    </div>  
+    </div>
+  </ng-container>
+  
+  <ng-container *ngIf="!modal">
+    <div class="wrapper">
+      <div class="sidebar" data-color="danger" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
+        <app-sidebar></app-sidebar>
+        <div class="sidebar-background" style="background-image: url(./assets/img/sidebar-4.jpg)"></div>
+      </div>
+      <div class="main-panel">
+        <app-navbar></app-navbar>
+        <div class="main-content">
+          <div class="container-fluid">
+            <div class="card">
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-lg-auto">
+                    <h2>Listado de Ficha Técnica</h2>
+                  </div>
+                  <div class="col-sm-auto">
+                    <a class="btn btn-primary float-end" (click)="llamarmodal()"><i class="bi bi-substack"></i></a>
+                  </div>
+                </div>
               </div>
+              <div class="card-body">
+                <p-toast></p-toast>
+                <div  *ngIf="incidentesDenuncias.length>0&&!load_lista" class="table-responsive-lg" style="min-height: fit-content; overflow-y: auto;">
+                    <table class="table table-lg align-middle table-striped table-hover table-fixed" style="display: block;">
+                        <thead>
+                            <tr>
+                              <th scope="col">Categoría</th>
+                              <th scope="col">Subcategoría</th>
+                              <th scope="col">Descripción</th>
+                              <th scope="col">Dirección</th>
+                              <th scope="col">Ciudadano</th>
+                              <th scope="col">Estado</th>
+                              <th scope="col">Respuesta</th>
+                              <th scope="col">Encargado</th>
+                              <th scope="col">Foto</th>
+                              <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            <tr *ngFor="let incidenteDenuncia  of incidentesDenuncias">
+                              <td>{{ incidenteDenuncia.categoria.nombre }}</td>
+                              <td>{{ incidenteDenuncia.subcategoria.nombre }}</td>
+                              <td>{{ incidenteDenuncia.descripcion }}</td>
+                              <td>{{ incidenteDenuncia.direccion_geo }}</td>
+                              <td>{{ incidenteDenuncia.ciudadano.nombres }}</td>
+                              <td>
+                                <span [ngClass]="'badge text-bg-' + checkstatus[incidenteDenuncia.estado.orden]"></span>{{ incidenteDenuncia.estado.nombre }}</td>
+                              <td>{{ incidenteDenuncia.respuesta }}</td>
+                              <td>{{ incidenteDenuncia.encargado }}</td>
+                              <td><img [src]="url + 'helper/obtener_portada/' + incidenteDenuncia.foto" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." (click)="openModalimagen(url + 'helper/obtener_portada/' + incidenteDenuncia.foto)" /></td>
+                              <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="alert alert-info" role="alert" *ngIf="incidentesDenuncias.length==0&&!load_lista">
+                  No se han realizado registros de esta ubicación
+                </div>
+                <div class="card-body" aria-hidden="true" *ngIf="load_lista">
+                  <h5 class="card-title placeholder-glow">
+                    <span class="placeholder col-6"></span>
+                  </h5>
+                  <p class="card-text placeholder-glow">
+                    <span class="placeholder col-7"></span>
+                    <span class="placeholder col-4"></span>
+                    <span class="placeholder col-4"></span>
+                    <span class="placeholder col-6"></span>
+                    <span class="placeholder col-8"></span>
+                  </p>
+                </div>
+            </div>
             </div>
           </div>
-        </div>
-      </div>      
-      <div>
-        <app-footer></app-footer>
-      </div>
-    </div>
-  </div>
+        </div> 
   
-
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Modal 1</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <app-index-estado-incidente></app-index-estado-incidente>
-      <div class="modal-footer">
-        <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Open second modal</button>
+        <div>
+          <app-footer></app-footer>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+  </ng-container>
+  
+  <ng-template #contentimage let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Imagen</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <img [src]="imagenModal" class="img-fluid" alt="Imagen" />
+    </div>
+  </ng-template>

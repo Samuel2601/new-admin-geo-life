@@ -194,58 +194,31 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     
     this.nuevoIncidenteDenuncia.ciudadano=this.adminservice.identity(token);
     
-    console.log(this.nuevoIncidenteDenuncia);
-    if(this.isMobil()){      
-      this.createService.registrarIncidenteDenunciaAPP(token, this.nuevoIncidenteDenuncia,this.file).subscribe(response => {
-        // Manejar la respuesta del servidor
-        console.log(response);
-        if(response.data){
-          iziToast.success({
-            title:'Listo',
-            message:'Ingresado correctamente'
-          });
-          setTimeout(() => {
-            this.router.navigate(["/home"]);
-          }, 2000);
-        }
-      }, error => {
-        // Manejar errores
-        console.error(error);
-        if(error.error.message=='InvalidToken'){
-          this.router.navigate(["/inicio"]);
-        }else{
-          iziToast.error({
-            title:'Error',
-            message:'Sin Conexión a la Base de Datos'
-          });
-        }
-      });
-    }else{
-      this.createService.registrarIncidenteDenuncia(token, this.nuevoIncidenteDenuncia,this.file).subscribe(response => {
-        // Manejar la respuesta del servidor
-        console.log(response);
-        if(response.data){
-          iziToast.success({
-            title:'Listo',
-            message:'Ingresado correctamente'
-          });
-          setTimeout(() => {
-            this.router.navigate(["/home"]);
-          }, 2000);
-        }
-      }, error => {
-        // Manejar errores
-        console.error(error);
-        if(error.error.message=='InvalidToken'){
-          this.router.navigate(["/inicio"]);
-        }else{
-          iziToast.error({
-            title:'Error',
-            message:'Sin Conexión a la Base de Datos'
-          });
-        }
-      });
-    }
+    console.log(this.nuevoIncidenteDenuncia,this.file);
+    this.createService.registrarIncidenteDenuncia(token, this.nuevoIncidenteDenuncia,this.file).subscribe(response => {
+      // Manejar la respuesta del servidor
+      console.log(response);
+      if(response.data){
+        iziToast.success({
+          title:'Listo',
+          message:'Ingresado correctamente'
+        });
+        setTimeout(() => {
+          this.router.navigate(["/home"]);
+        }, 2000);
+      }
+    }, error => {
+      // Manejar errores
+      console.error(error);
+      if(error.error.message=='InvalidToken'){
+        this.router.navigate(["/inicio"]);
+      }else{
+        iziToast.error({
+          title:'Error',
+          message: error
+        });
+      }
+    });
    
 
   }

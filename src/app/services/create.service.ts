@@ -43,7 +43,7 @@ export class CreateService {
   }
   registrarIncidenteDenunciaAPP(token: any, data: any, foto:any): Observable<any> {
     let headers = new HttpHeaders({
-      Authorization: token,
+      Authorization: token
     });    
     const formData = new FormData();
     formData.append('categoria', data.categoria);

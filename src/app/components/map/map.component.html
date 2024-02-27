@@ -27,7 +27,7 @@
                 <i class="bi bi-journal-bookmark-fill"></i> Incidentes
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="javascript:void(0)" (click)="Incidente()">Incidente</a>
+                <a class="dropdown-item" href="javascript:void(0)" (click)="incidente()">Incidente</a>
                 <a class="dropdown-item" href="javascript:void(0)" (click)="nuevoIncidente()">Nuevo Incidente</a>
             </div>
         </div>
@@ -39,6 +39,10 @@
     <div #mapContainer2 class="container" id="listarficha" *ngIf="mostrarficha" (click)="stopPropagation($event)" >
         <app-index-ficha-sectorial class="container" id="indexficha"  [filtro]="'direccion_geo'" [valor]="opcionb.properties.nombre" [modal]="true">
         </app-index-ficha-sectorial>
+    </div>
+    <div #mapContainer2 class="container" id="listarficha" *ngIf="mostrarincidente" (click)="stopPropagation($event)" >
+        <app-index-incidentes-denuncia class="container" id="indexficha"  [filtro]="'direccion_geo'" [valor]="opcionb.properties.nombre" [modal]="true">
+        </app-index-incidentes-denuncia>
     </div>
     <!-- Modal -->
     <ng-template #modalContent let-modal>

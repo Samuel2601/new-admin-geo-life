@@ -58,8 +58,8 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
       promptLabelPicture: 'Seleccionar de la galería',
     });
   
-    this.imagenSeleccionada = `data:image/jpeg;base64,${image.base64String}`;
-    this.file = this.base64ToFile(image.base64String, 'imagen.jpg');
+    this.imagenesSeleccionadas.push( `data:image/jpeg;base64,${image.base64String}`);
+    this.file.push(this.base64ToFile(image.base64String, 'imagen.jpg'));
   }
   
   base64ToFile(dataURI: string, fileName: string): File {
@@ -163,8 +163,9 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     return Capacitor.isNativePlatform();
   }
 
-  imagenSeleccionada: any;
-  public file: any = undefined;
+  imagenesSeleccionadas:Array<any>=[];
+  load_carrusel=false;
+  public file:Array<any> = [];
 
 
   onFileSelected(event: any): void {
@@ -181,10 +182,39 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
 
       const reader = new FileReader();
       reader.onload = () => {
-        this.imagenSeleccionada = reader.result;
+        this.imagenesSeleccionadas.push(reader.result);
       };
       reader.readAsDataURL(file);
-      this.file=file;
+      this.file.push(file);
+    }
+  }
+
+  onFilesSelected(event: any): void {
+    this.load_carrusel=false;
+    const files: FileList = event.target.files;
+    console.log(files);
+    if (files && files.length > 0) {
+      for (let i = 0; i < Math.min(files.length, 3); i++) {
+        const file = files[i];
+        if (!file.type.startsWith('image/')) {
+          alert('Por favor, seleccione archivos de imagen.');
+          return;
+        }
+        if (file.size > 4 * 1024 * 1024) {
+          alert('Por favor, seleccione archivos de imagen que sean menores a 4MB.');
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.imagenesSeleccionadas.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+        this.file.push(file);        
+      }
+      setTimeout(() => {        
+      this.load_carrusel=true;
+      }, 1000);
     }
   }
 
@@ -194,7 +224,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     
     this.nuevoIncidenteDenuncia.ciudadano=this.adminservice.identity(token);
     
-    console.log(this.nuevoIncidenteDenuncia,this.file);
+    console.log(this.file);
     this.createService.registrarIncidenteDenuncia(token, this.nuevoIncidenteDenuncia,this.file).subscribe(response => {
       // Manejar la respuesta del servidor
       console.log(response);

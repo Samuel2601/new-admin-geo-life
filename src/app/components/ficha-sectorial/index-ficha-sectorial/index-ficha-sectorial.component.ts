@@ -17,7 +17,8 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   @Input() valor: number | undefined;
   @Input() modal: boolean = false;
 
-  deshabilitarMapaDesdeIndexFichaSectorial() {
+  deshabilitarMapaDesdeIndexFichaSectorial(event: MouseEvent) {
+    this.stopPropagation(event);
     this.heleperservice.deshabilitarMapa();
   }
   load_lista=true;
@@ -94,6 +95,9 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   llamarmodal(){
     this.modalService.dismissAll();
     this.modalService.open(IndexEstadoActividadProyectoComponent, { centered: true });
+  }
+  stopPropagation(event: MouseEvent) {
+    event.stopPropagation();
   }
 
   width = 200; // Ancho inicial de la componente

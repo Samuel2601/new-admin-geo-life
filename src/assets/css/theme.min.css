@@ -14457,6 +14457,13 @@
     margin-top: 70px;
     padding: 30px 15px;
     min-height: calc(100vh - 123px);
+    
+  }
+  @media (max-width: 767.98px) { 
+    
+    .main-panel .main-content {
+      bottom: 70px !important;
+    }
   }
   .main-panel .footer {
     border-top: 1px solid #e7e7e7;

@@ -4,13 +4,25 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 
 declare var $: any;
+declare interface RouteInfo {
+  path: string;
+  title: string;
+  icon: string;
+  class: string;
+}
+export const ROUTES2: RouteInfo[] = [
+  { path: '/categorias', title: 'Categorias',  icon:'content_paste', class: '' },
+  { path: '/home', title: 'Maps',  icon:'location_on', class: '' },
+  { path: '/incidentes-denuncia', title: 'Incidentes/Decuncias',  icon:'library_books', class: '' },
+  { path: '/fichas-sectoriales', title: 'Ficha Sectorial',  icon:'bubble_chart', class: '' },
+];
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  private listTitles: any[] = [];
+  listTitles: any[] = [];
   public mobile_menu_visible = false;
   private toggleButton: HTMLElement | null = null;
   private sidebarVisible = false;
@@ -35,9 +47,12 @@ export class NavbarComponent implements OnInit {
     const currentUrl = this.router.url;
     this.title = this.titleMap[currentUrl] || 'Título predeterminado';
   }
+  isActive(menuItem: any): boolean {
+    return this.router.url === menuItem.path;
+  }
   
   ngOnInit(): void {    
-    this.listTitles = ROUTES.filter((listTitle: any) => listTitle);
+    this.listTitles = ROUTES2.filter((listTitle: any) => listTitle);
     this.toggleButton = this.element.nativeElement.querySelector('.navbar-toggler');
     this.router.events.subscribe(() => {
       this.sidebarClose();

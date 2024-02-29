@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class CreateSubcategoriaComponent implements OnInit{
   categorias: any[] = [];
-  subcategoriaForm: FormGroup;
+  subcategoriaForm:any={};
   constructor(private fb: FormBuilder,private listService: ListService, private createService:CreateService,private router: Router){
     this.subcategoriaForm = this.fb.group({
       categoria: ['', Validators.required],
@@ -30,7 +30,7 @@ export class CreateSubcategoriaComponent implements OnInit{
     }
     this.listService.listarCategorias(token).subscribe(response => {
       this.categorias = response.data;
-      console.log(response)
+      console.log(response);
     });
   }
   registrarSubcategoria() {
@@ -39,12 +39,8 @@ export class CreateSubcategoriaComponent implements OnInit{
       if(!token){
         throw this.router.navigate(["/inicio"]);
       }
-      const data = {
-        categoria: this.subcategoriaForm.value.categoria,
-        nombre: this.subcategoriaForm.value.nombre,
-        descripcion: this.subcategoriaForm.value.descripcion
-      };
-      this.createService.registrarSubcategoria(token, data).subscribe(response => {
+      console.log(this.subcategoriaForm);
+      /*this.createService.registrarSubcategoria(token, this.subcategoriaForm).subscribe(response => {
         console.log(response);
         if(response.data){
           iziToast.success({
@@ -56,7 +52,7 @@ export class CreateSubcategoriaComponent implements OnInit{
           }, 2000);
         }
         // Aquí puedes manejar la respuesta del servidor, como mostrar un mensaje de éxito o redirigir a otra página
-      });
+      });*/
     } else {
       // Aquí puedes mostrar un mensaje de error o realizar alguna otra acción si el formulario no es válido
     }

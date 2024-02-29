@@ -1,8 +1,12 @@
-<div class="main-content"id="mapid" style="min-height: -webkit-fill-available;" >
+<div class="main-content "id="mapid" style="min-height: -webkit-fill-available;" >
     <div #mapContainer id="formulario" class="formulario-flotante" style="margin-left: 0%" (click)="stopPropagation($event)">
         <div class="input-group mb-3">
-            <span class="input-group-text" style="background-color: white;" (click)="getLocation()"><i class="bi bi-search"></i></span>
-            <input class="form-control" type="text" placeholder="Buscar un barrio" aria-label="Number" [formControl]="myControl" (input)="filterOptions($event.target)" (blur)="hideOptions()">        
+            <span class="input-group-text" style="background-color: white;" (mouseenter)="showCrosshair = true" (mouseleave)="showCrosshair = false" (click)="getLocation()">
+                <i *ngIf="!showCrosshair" class="bi bi-search"></i>
+                <i *ngIf="showCrosshair" class="bi bi-crosshair"></i>
+              </span>
+              
+            <input class="form-control" type="text" placeholder="Buscar un barrio" aria-label="Number" [formControl]="myControl" (input)="filterOptions($event.target)" (blur)="hideOptions()" (mousedown)="stopPropagation($event)">        
         
             <button class="btn btn-primary" type="button" id="button-addon1" (click)="reloadmap()"><i class="bi bi-eye-fill"></i></button>
            
@@ -63,6 +67,23 @@
       </ng-template>
 
       <ng-template #modalContentUbicacion let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title">Confirmar ubicación</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ¿Desea usar su ubicación actual?
+        </div>
+        <div class="modal-footer">
+            
+          <button type="button" class="btn btn-primary" (click)="modal.close(true)">Aceptar</button>
+          <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancelar</button>
+        </div>
+      </ng-template>
+
+      <ng-template #modalCambiodeUbicacion let-modal>
         <div class="modal-header">
           <h4 class="modal-title">Confirmar ubicación</h4>
           <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">

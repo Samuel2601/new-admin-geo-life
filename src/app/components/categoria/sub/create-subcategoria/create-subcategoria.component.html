@@ -22,17 +22,17 @@
                   <form [formGroup]="subcategoriaForm" (ngSubmit)="registrarSubcategoria()">
                     <div class="mb-3">
                       <label for="categoria" class="form-label">Categoría</label>
-                      <select id="categoria" class="form-control" formControlName="categoria">
+                      <select id="categoria" class="form-select" formControlName="categoria" [(ngModel)]="subcategoriaForm.categoria" required>
                         <option *ngFor="let categoria of categorias" [value]="categoria._id">{{ categoria.nombre }}</option>
                       </select>
                     </div>
                     <div class="mb-3">
                       <label for="nombre" class="form-label">Nombre</label>
-                      <input type="text" class="form-control" id="nombre" formControlName="nombre">
+                      <input type="text" class="form-control" id="nombre" formControlName="nombre"  [(ngModel)]="subcategoriaForm.nombre" required>
                     </div>
                     <div class="mb-3">
                       <label for="descripcion" class="form-label">Descripción</label>
-                      <textarea class="form-control" id="descripcion" formControlName="descripcion"></textarea>
+                      <textarea class="form-control" id="descripcion" formControlName="descripcion"  [(ngModel)]="subcategoriaForm.descripcion" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">
                       <i class="bi bi-save"></i> Guardar

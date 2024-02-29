@@ -18,8 +18,9 @@ import * as turf from '@turf/turf';
 export class MapComponent implements OnInit,AfterViewInit {
   @ViewChild('modalContent') modal: ElementRef |undefined;
   @ViewChild('modalContentUbicacion') modalubicacion: ElementRef |undefined;
+  @ViewChild('modalCambiodeUbicacion') modalcambioubicacion: ElementRef |undefined;
 
-  
+  showCrosshair: boolean = false;
   public map: Map|undefined ;
   constructor(private modalService: NgbModal,private helperService:HelperService){
 
@@ -56,6 +57,19 @@ export class MapComponent implements OnInit,AfterViewInit {
     return new Promise<boolean>((resolve, reject) => {
       if (this.modal) {
         this.modalService.open(this.modalubicacion).result.then((result) => {
+          resolve(result);
+        }).catch(() => {
+          resolve(false); // Si se cierra el modal sin seleccionar, se resuelve como false
+        });
+      } else {
+        reject('Modal no encontrado');
+      }
+    });
+  }
+  abrirCambiaraUbicacion(): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      if (this.modal) {
+        this.modalService.open(this.modalcambioubicacion).result.then((result) => {
           resolve(result);
         }).catch(() => {
           resolve(false); // Si se cierra el modal sin seleccionar, se resuelve como false
@@ -222,7 +236,7 @@ export class MapComponent implements OnInit,AfterViewInit {
         // Crea un marcador en las coordenadas especificadas
         const mark = marker([this.latitud, this.longitud], { icon: this.redIcon }).addTo(this.map);
         // Si deseas añadir un popup al marcador
-        mark.bindPopup('Lugar seleccionado').openPopup();
+        mark.bindPopup('Ubicación elegida').openPopup();
         this.map.flyTo([this.latitud, this.longitud], 14);
         const puntoUsuario = turf.point([this.longitud,this.latitud]);
         for (const feature of this.lista_feature) {
@@ -257,12 +271,13 @@ export class MapComponent implements OnInit,AfterViewInit {
     this.map.addLayer(this.wfsSelangor);
 
     this.googleStreets = tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
-      maxZoom: 20,
+      maxZoom: 25,
       subdomains:['mt0','mt1','mt2','mt3']
     }).addTo(this.map);
     if(!this.googleStreets){
       iziToast.error({
         title:'Error',
+        position:'bottomRight',
         message:'Sin Conexión a Google'
       })
     }
@@ -427,14 +442,16 @@ export class MapComponent implements OnInit,AfterViewInit {
       clearTimeout(this.longPressTimeout);
     });
 
-    this.buscarPolylayer.on('touchstart', (e:any) => {
+    this.buscarPolylayer.on('touch', (e:any) => {
+      console.log('touchstart');
       this.longPressTimeout = setTimeout(() => {
         // Aquí puedes llamar a tu función para manejar el clic sostenido
         this.onClickHandlerMap(e);
-      }, 1000); // Tiempo en milisegundos para considerar como clic sostenido
+      }, 500); // Tiempo en milisegundos para considerar como clic sostenido
     });
     
     this.buscarPolylayer.on('touchend', () => {
+      console.log('touchend');
       clearTimeout(this.longPressTimeout);
     });
 
@@ -470,7 +487,7 @@ export class MapComponent implements OnInit,AfterViewInit {
         }
       }});*/
     // Mover el mapa hacia el feature seleccionado
-    this.map?.fitBounds(this.buscarPolylayer.getBounds(),{ maxZoom: 20 });
+    this.map?.fitBounds(this.buscarPolylayer.getBounds());//{ maxZoom: 20 }
 
     this.showOptions = false;
   }
@@ -500,30 +517,39 @@ export class MapComponent implements OnInit,AfterViewInit {
   }
   async getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
+      let featureresult: any = undefined;
+      navigator.geolocation.getCurrentPosition(
         async (position) => {
-          //alert('Latitude: ' + position.coords.latitude + ', Longitude: ' + position.coords.longitude);
-          const puntoUsuario = turf.point([position.coords.longitude,position.coords.latitude]);
-          console.log(position.coords.longitude,position.coords.latitude);
-          this.latitud=position.coords.latitude;
-          this.longitud=position.coords.longitude;
-          if(this.map){
-             // Crea un marcador en las coordenadas especificadas
-             const mark = marker([position.coords.latitude, position.coords.longitude], { icon: this.redIcon }).addTo(this.map);
-             // Si deseas añadir un popup al marcador
-             mark.bindPopup('Lugar seleccionado').openPopup();
-             this.map.flyTo([position.coords.latitude, position.coords.longitude], 20);
+          const puntoUsuario = turf.point([position.coords.longitude, position.coords.latitude]);
+          console.log(position.coords.longitude, position.coords.latitude);
+          this.latitud = position.coords.latitude;
+          this.longitud = position.coords.longitude;
+          if (this.map) {
+            const mark = marker([position.coords.latitude, position.coords.longitude], { icon: this.redIcon }).addTo(this.map);
+            mark.bindPopup('Tu ubicación actual').openPopup();
+            this.map.flyTo([position.coords.latitude, position.coords.longitude]);//ZOOM 20
           }
+  
           for (const feature of this.lista_feature) {
-            if(feature.geometry&&feature.geometry.coordinates&&feature.geometry.coordinates[0]&&feature.geometry.coordinates[0][0].length>4){
+            if (feature.geometry && feature.geometry.coordinates && feature.geometry.coordinates[0] && feature.geometry.coordinates[0][0].length > 4) {
               const poligono = turf.polygon(feature.geometry.coordinates[0]);
-              
+  
               if (turf.booleanContains(poligono, puntoUsuario)) {
                 console.log('El usuario está dentro del polígono:', feature);
-                await this.buscar(feature);
-                break; // Si solo quieres saber en qué polígono está, puedes detener el bucle aquí
+                featureresult = feature;
+               // await this.buscar(feature);
+                break;
               }
-            }           
+            }
+          }
+          if (featureresult) {
+            if (this.opcionb) {
+              if (await this.abrirCambiaraUbicacion()) {
+                await this.buscar(featureresult);
+              }
+            }
+          } else {
+            iziToast.info({ title: 'Info', position: 'bottomRight', message: 'Perdón, no te encuentras en nuestros barrios registrados' });
           }
         },
         (error) => {
@@ -534,6 +560,7 @@ export class MapComponent implements OnInit,AfterViewInit {
       console.error('Geolocation is not supported by this browser.');
     }
   }
+  
   isMobile(): boolean {
       const screenWidth = window.innerWidth;
       return screenWidth < 768; // Cambia este valor según la definición de móvil en Bootstrap

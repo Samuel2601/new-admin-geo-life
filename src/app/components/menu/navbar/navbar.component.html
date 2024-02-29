@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-transparent  navbar-absolute fixed-top">
+<nav class=" d-none d-md-block navbar navbar-expand-lg navbar-transparent  navbar-absolute fixed-top">
     <div class="container-fluid">
         <div class="navbar-wrapper">
           <a class="navbar-brand" href="javascript:void(0)">{{title}}</a>
@@ -75,24 +75,17 @@
     </div>
 </nav>
   
-  <!-- Modal -->
-  <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Iniciar sesión</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="modal-login-content">
-            <app-login></app-login>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary">Iniciar sesión</button>
-        </div>
-      </div>
-    </div>
-  </div>
+
   
+<nav class="mobile d-md-none navbar navbar-expand-lg navbar-light bg-light fixed-bottom">
+  <div class="container-fluid">
+    <ul class="nav me-auto mb-2 mb-lg-0 justify-content-between" style="display: contents !important; ">
+      <li *ngFor="let menuItem of listTitles" class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+          <a class="nav-link text-center" [routerLink]="[menuItem.path]" style="color: #4caf50;">
+              <i class="material-icons">{{menuItem.icon}}</i>
+              <p *ngIf="isActive(menuItem)" class="mb-0">{{menuItem.title}}</p>
+          </a>
+      </li>
+    </ul>
+  </div>
+</nav>

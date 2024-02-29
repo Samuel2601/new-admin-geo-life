@@ -22,8 +22,12 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   @Input() valor: number | undefined;
   @Input() modal: boolean = false;
 
-  deshabilitarMapaDesdeIndexFichaSectorial() {
+  deshabilitarMapaDesdeIndexFichaSectorial(event: MouseEvent) {
+    this.stopPropagation(event);
     this.heleperservice.deshabilitarMapa();
+  }
+  stopPropagation(event: MouseEvent) {
+    event.stopPropagation();
   }
   
   width = 200; // Ancho inicial de la componente
@@ -166,9 +170,21 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   openModal(content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
-  openModalimagen(url: string) {
+  openModalimagen(url: any) {
     this.imagenModal = url;
+    this.imagenAMostrar = this.imagenModal[0];
     const modalRef = this.modalService.open(this.modalContent, { size: 'lg' });
   }
-
+  imagenAMostrar:any;
+  mostrarImagen(index: number) {
+    this.imagenAMostrar = this.imagenModal[index];
+    // Aquí agregamos la lógica para cambiar el índice activo del carrusel
+    document.querySelectorAll('.carousel-item').forEach((el, i) => {
+      if (i === index) {
+        el.classList.add('active');
+      } else {
+        el.classList.remove('active');
+      }
+    });
+  }
 }

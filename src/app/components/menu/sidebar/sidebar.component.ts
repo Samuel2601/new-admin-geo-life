@@ -17,6 +17,7 @@ export const ROUTES: RouteInfo[] = [
     { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' },
     { path: '/upgrade', title: 'Admin',  icon:'unarchive', class: 'active-pro' },
 ];
+
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',

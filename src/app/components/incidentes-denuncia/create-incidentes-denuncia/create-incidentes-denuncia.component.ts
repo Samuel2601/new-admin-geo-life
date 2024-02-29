@@ -190,9 +190,11 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
   }
 
   onFilesSelected(event: any): void {
-    this.load_carrusel=false;
+    this.load_carrusel = false;
     const files: FileList = event.target.files;
     console.log(files);
+    this.imagenesSeleccionadas=[];
+    this.selectedFiles=[];
     if (files && files.length > 0) {
       for (let i = 0; i < Math.min(files.length, 3); i++) {
         const file = files[i];
@@ -204,28 +206,89 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
           alert('Por favor, seleccione archivos de imagen que sean menores a 4MB.');
           return;
         }
-
+  
         const reader = new FileReader();
         reader.onload = (e: any) => {
           this.imagenesSeleccionadas.push(e.target.result);
         };
         reader.readAsDataURL(file);
-        this.file.push(file);        
+        this.selectedFiles.push(file);        
       }
       setTimeout(() => {        
+        this.load_carrusel = true;
+      }, 500);
+    }
+  }
+  
+
+selectedFiles: File[] = [];
+
+  async tomarFotoYEnviar(event: any) {
+    this.load_carrusel=false;
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Base64,
+      source: CameraSource.Prompt,
+      promptLabelPhoto:  'Seleccionar de la galería',
+      promptLabelPicture:'Tomar foto',
+    });
+    if (image && image.base64String && this.selectedFiles.length<3) {
+      
+        const byteCharacters = atob(image.base64String);
+        const byteNumbers = new Array(byteCharacters.length);
+    
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+    
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Puedes ajustar el tipo según el formato de tu imagen
+        let im =new File([blob], "prueba", { type: 'image/jpeg' });
+        this.selectedFiles.push(im); 
+
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.imagenesSeleccionadas.push(e.target.result);
+        };
+        reader.readAsDataURL(im);
+        this.load_carrusel=true;
+      if(this.selectedFiles.length==2){
+        iziToast.info({
+          title:'INFO:',
+          position:'bottomRight',
+          message:'Solo puede enviar 1 imangenes más'
+        });
+      }
+    } else {
+      iziToast.warning({
+        title:'Error:',
+        position:'bottomRight',
+        message:'Solo puede enviar 3 imangenes'
+      });
       this.load_carrusel=true;
-      }, 1000);
+      console.error('Error al obtener la cadena base64 de la imagen.');
     }
   }
 
-  
+  eliminarImagen(index: number) {
+    this.load_carrusel = false;
+    this.imagenesSeleccionadas.splice(index, 1);
+     // Eliminar la imagen del arreglo selectedFiles
+    this.selectedFiles.splice(index, 1);
+    console.log(this.selectedFiles,this.imagenesSeleccionadas);
+    setTimeout(() => {        
+      this.load_carrusel = true;
+    }, 500);
+  }
+  load_form=true;
   crearIncidenteDenuncia(): void {
+    this.load_form=false;
     const token = sessionStorage.getItem('token');
     
     this.nuevoIncidenteDenuncia.ciudadano=this.adminservice.identity(token);
     
-    console.log(this.file);
-    this.createService.registrarIncidenteDenuncia(token, this.nuevoIncidenteDenuncia,this.file).subscribe(response => {
+    this.createService.registrarIncidenteDenuncia(token, this.nuevoIncidenteDenuncia,this.selectedFiles).subscribe(response => {
       // Manejar la respuesta del servidor
       console.log(response);
       if(response.data){
@@ -233,6 +296,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
           title:'Listo',
           message:'Ingresado correctamente'
         });
+        this.DimissModal();
         setTimeout(() => {
           this.router.navigate(["/home"]);
         }, 2000);

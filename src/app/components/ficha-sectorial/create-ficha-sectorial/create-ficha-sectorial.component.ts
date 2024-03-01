@@ -29,6 +29,11 @@ export class CreateFichaSectorialComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+    const token = sessionStorage.getItem('token');
+    if(!token){
+      throw this.router.navigate(["/inicio"]);
+    }
+    
     if (this.data) {
       const direccionGeoControl = this.fichaSectorialForm.get('direccion_geo');
       if (direccionGeoControl) {

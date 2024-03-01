@@ -22,7 +22,6 @@ export class CreateService {
 
   registrarActividadProyecto(token: any, data: any,foto: File): Observable<any> {
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
       Authorization: token,
     });
     const formData = new FormData();
@@ -35,7 +34,7 @@ export class CreateService {
     formData.append('observacion', data.observacion);
     formData.append('foto', foto);
 
-    return this.http.post(this.url + 'registrar_actividad_proyecto', data, { headers: headers });
+    return this.http.post(this.url + 'registrar_actividad_proyecto', formData, { headers: headers });
   }
 
   registrarIncidenteDenuncia(token: any, data: any, fotos: File[]): Observable<any> {

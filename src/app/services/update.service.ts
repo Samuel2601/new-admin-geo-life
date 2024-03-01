@@ -12,12 +12,22 @@ export class UpdateService {
 	constructor(private http: HttpClient) {
 		this.url = GLOBAL.url+'update/';
 	}
-  actualizarUsuario(token: any, id: string, data: any): Observable<any> {
+  actualizarUsuario(token: any, id: string, data: any,file:any): Observable<any> {
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
       Authorization: token,
     });
-    return this.http.put(this.url + 'actualizar_usuario/' + id, data, { headers: headers });
+       
+    const formData = new FormData();
+    formData.append('cedula', data.cedula);
+    formData.append('correo', data.correo);
+    formData.append('estado', data.estado);
+    formData.append('nombres', data.nombres);
+    formData.append('password', data.password);
+    formData.append('rol_user', data.rol_user);
+    formData.append('telefono', data.telefono);
+    formData.append('foto', file);
+
+    return this.http.put(this.url + 'actualizar_usuario/' + id, formData, { headers: headers });
   }
 
   actualizarActividadProyecto(token: any, id: string, data: any): Observable<any> {

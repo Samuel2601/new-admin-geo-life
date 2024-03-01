@@ -38,6 +38,39 @@
           <label for="observacion" class="form-label">Observación</label>
           <textarea class="form-control" id="observacion" name="observacion" formControlName="observacion"></textarea>
         </div>
+
+        <div class="col-sm-5 col-md-6">
+          <div class="d-flex align-items-center">
+            <div class="w-50 h-50 rounded-circle overflow-hidden">
+              <img [src]="nombreArchivo ? nombreArchivo : './assets/icono.png'"
+                   width="150"
+                   height="150"
+                   alt="Your profile picture"
+                   class="rounded-circle img-fluid"
+                   style="aspect-ratio: 48 / 48; object-fit: cover;">
+            </div>
+            <div class="ms-3">
+              <label class="form-label" for="profile-picture">
+                Puedes actualizar tu foto de Perfil.
+                <div class="file-upload"
+                     (mouseenter)="activarHover()"
+                     (mouseleave)="desactivarHover()">
+                  <label for="profile-picture"
+                         class="file-upload-label"
+                         [class.hover]="hover">
+                    {{ archivoSeleccionado ? archivoSeleccionado.name : 'Arrastra o pulsa aquí para subir un archivo' }}
+                  </label>
+                  <input class="form-control file-upload-input"
+                         id="profile-picture"
+                         type="file"
+                         (change)="onFilesSelected($event)">
+                </div>
+              </label>
+              <small class="form-text">JPG, PNG, GIF. Peso máximo 4MB. <a href="#">Learn more</a></small>
+            </div>
+          </div>                  
+        </div> 
+        
         <button type="submit" class="btn btn-primary">
           <i class="bi bi-save"></i> Guardar
         </button>

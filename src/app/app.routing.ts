@@ -89,6 +89,8 @@ const appRoute: Routes = [
 	{ path: 'edit-permisos/:id', component: EditPermisosComponent },
 	{ path: 'create-permisos', component: CreatePermisosComponent },
 
+	{ path: 'user-profile', component: EditUsuarioComponent },
+
     /*{ path: '**', redirectTo: '/error' }*/
 ];
 

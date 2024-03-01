@@ -1,9 +1,8 @@
 export var GLOBAL = {
 	//url:'https://api.goldenincorp.com/api/',
-	//url: 'http://127.0.0.1:4201/api/',
-	//url:"https://k54bxbk9-4201.use2.devtunnels.ms/api/",
+	url: 'http://127.0.0.1:4201/api/',
 
-	url:'https://geoapi.esmeraldas.gob.ec/api/',
+	//url:'https://geoapi.esmeraldas.gob.ec/api/',
 	
 	//url: "https://api.pagosegbfcristorey.tk/api/",
 

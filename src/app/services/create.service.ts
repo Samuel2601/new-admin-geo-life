@@ -20,11 +20,21 @@ export class CreateService {
     return this.http.post(this.url + 'registrar_usuario', data, { headers: headers });
   }
 
-  registrarActividadProyecto(token: any, data: any): Observable<any> {
+  registrarActividadProyecto(token: any, data: any,foto: File): Observable<any> {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: token,
     });
+    const formData = new FormData();
+    formData.append('descripcion', data.descripcion);
+    formData.append('encargado', data.encargado);
+    formData.append('direccion_geo', data.direccion_geo);
+    formData.append('estado', data.estado);
+    formData.append('actividad', data.actividad);
+    formData.append('fecha_evento', data.fecha_evento);
+    formData.append('observacion', data.observacion);
+    formData.append('foto', foto);
+
     return this.http.post(this.url + 'registrar_actividad_proyecto', data, { headers: headers });
   }
 
@@ -44,19 +54,7 @@ export class CreateService {
     return this.http.post(this.url + 'registrar_incidente_denuncia', formData, { headers: headers });
   }
   
-  registrarIncidenteDenunciaAPP(token: any, data: any, foto:any): Observable<any> {
-    let headers = new HttpHeaders({
-      Authorization: token
-    });    
-    const formData = new FormData();
-    formData.append('categoria', data.categoria);
-    formData.append('subcategoria', data.subcategoria);
-    formData.append('ciudadano', data.ciudadano);
-    formData.append('descripcion', data.descripcion);
-    formData.append('direccion_geo', data.direccion_geo);
-    formData.append('foto', foto);
-    return this.http.post(this.url + 'registrar_incidente_app', formData, { headers: headers });
-  }
+
 
   registrarCategoria(token: any, data: any): Observable<any> {
     let headers = new HttpHeaders({

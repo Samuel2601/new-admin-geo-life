@@ -11395,17 +11395,7 @@
   fieldset[disabled] .form-group.is-focused .form-check .form-check-label {
     color: rgba(0,0,0, 0.26);
   }
-  .form-check .form-check-input {
-    opacity: 0;
-    position: absolute;
-    margin: 0;
-    z-index: -1;
-    width: 0;
-    height: 0;
-    overflow: hidden;
-    left: 0;
-    pointer-events: none;
-  }
+
   .form-check .form-check-sign {
     vertical-align: middle;
     position: relative;
@@ -11529,7 +11519,7 @@
   }
   .form-check .form-check-label {
     cursor: pointer;
-    padding-left: 25px;
+    padding-left: 10px;
     position: relative;
   }
   .form-group.is-focused .form-check .form-check-label {
@@ -11568,12 +11558,7 @@
   .form-check .form-check-label .form-check-input:checked ~ .check:after {
     animation: rippleOff 500ms;
   }
-  .form-check .form-check-input {
-    opacity: 0;
-    height: 0;
-    width: 0;
-    overflow: hidden;
-  }
+
   .form-check .form-check-input:checked ~ .check, .form-check .form-check-input:checked ~ .circle {
     opacity: 1;
   }

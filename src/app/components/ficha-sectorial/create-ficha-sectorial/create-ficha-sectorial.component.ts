@@ -118,12 +118,48 @@ export class CreateFichaSectorialComponent implements OnInit {
   cerrarModal() {
     this.model = false; // Cambia model a false cuando se cierra el modal
   }
+  hover = false;
+  nombreArchivo: any;
+  archivoSeleccionado: File | any;
+
+  activarHover() {
+    this.hover = true;
+  }
+
+  desactivarHover() {
+    this.hover = false;
+  }
+  onFilesSelected(event: any): void {
+    const files: FileList = event.target.files;
+    console.log(files);
+    if (files && files.length > 0) {
+      for (let i = 0; i < Math.min(files.length, 3); i++) {
+        const file = files[i];
+        if (!file.type.startsWith('image/')) {
+          alert('Por favor, seleccione archivos de imagen.');
+          return;
+        }
+        if (file.size > 4 * 1024 * 1024) {
+          alert('Por favor, seleccione archivos de imagen que sean menores a 4MB.');
+          return;
+        }
+  
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.nombreArchivo=e.target.result;
+        };
+        reader.readAsDataURL(file);
+        console.log(file)
+        this.archivoSeleccionado=file;        
+      }
+    }
+  }
 
   registrarFichaSectorial() {
     if (this.fichaSectorialForm?.valid) {
       const token = sessionStorage.getItem('token');
       if (token && this.fichaSectorialForm.value) {
-        this.createService.registrarActividadProyecto(token, this.fichaSectorialForm.value).subscribe(response => {
+        this.createService.registrarActividadProyecto(token, this.fichaSectorialForm.value,this.archivoSeleccionado).subscribe(response => {
           console.log(response);
           if(response.data){
             iziToast.success({

@@ -121,6 +121,7 @@
                             <th scope="col">Dirección</th>
                             <th scope="col">Fecha Evento</th>
                             <th scope="col">Observación</th>
+                            <th scope="col">Foto</th>
                         </tr>
                     </thead>
                     <tbody >
@@ -132,6 +133,9 @@
                             <td>{{ ficha.direccion_geo }}</td>
                             <td>{{ ficha.fecha_evento | date }}</td>
                             <td>{{ ficha.observacion }}</td>
+                            <td *ngIf="!isMobil()" (click)="stopPropagation($event)" >
+                              <img [src]="url + 'helper/obtener_portada_ficha/' + ficha.foto" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." />
+                            </td>
                         </tr>
                     </tbody>
                 </table>

@@ -40,6 +40,9 @@
                       <td>{{ ficha.estado.nombre }}</td>
                       <td *ngIf="!isMobil()">{{ ficha.fecha_evento | date }}</td>
                       <td *ngIf="!isMobil()">{{ ficha.observacion }}</td>
+                      <td *ngIf="!isMobil()" (click)="stopPropagation($event)" >
+                        <img [src]="url + 'helper/obtener_portada_ficha/' + ficha.foto" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." />
+                      </td>
                       <td *ngIf="isMobil()">
                         <button type="button" class="btn btn-primary" (click)="openModal(modalContent)"><i class="bi bi-eye-fill"></i></button></td>
                       <!-- Agrega el modal al final del componente -->

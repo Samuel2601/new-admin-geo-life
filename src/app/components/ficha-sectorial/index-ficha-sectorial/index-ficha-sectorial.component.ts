@@ -6,13 +6,14 @@ import { IndexActividadProyectoComponent } from '../../actividad-proyecto/index-
 import { HelperService } from 'src/app/services/helper.service';
 import iziToast from 'izitoast';
 import { Router } from '@angular/router';
+import { GLOBAL } from 'src/app/services/GLOBAL';
 @Component({
   selector: 'app-index-ficha-sectorial',
   templateUrl: './index-ficha-sectorial.component.html',
   styleUrl: './index-ficha-sectorial.component.scss'
 })
 export class IndexFichaSectorialComponent implements OnInit,OnChanges {
-
+  public url = GLOBAL.url;
   @Input() filtro: string | undefined;
   @Input() valor: number | undefined;
   @Input() modal: boolean = false;

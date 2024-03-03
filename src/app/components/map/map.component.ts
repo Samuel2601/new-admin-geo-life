@@ -323,8 +323,13 @@ export class MapComponent implements OnInit,AfterViewInit {
             onEachFeature: (e, t) => {
                 t.on({ mouseover: this.highlightFeature, mouseout: this.resetHighlight });
                 t.bindPopup(`
-                  <div style="font-family: Arial, sans-serif; font-size: 14px;" (click)="stopPropagation($event)">
-                      <b>${e.properties.nombre}</b>
+                <img src="./assets/img/sidebar-4.jpg" alt="Descripción de la imagen" class="imagen-popup" style="
+                      width: 100%;
+                      height: 100px;
+                      object-fit: cover;">
+                      <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
+                      
+                        <b style="text-align: center;">${e.properties.nombre}</b>
                       <ul style="list-style-type: none; padding-left: 0;">
                           <li><strong>Parroquia:</strong> ${e.properties.parr}</li>                          
                       </ul>
@@ -425,8 +430,13 @@ export class MapComponent implements OnInit,AfterViewInit {
     this.buscarPolylayer = geoJSON(opcion, {
       style: this.geojsonWFSstyle2,
     }).bindPopup(`
-      <div style="font-family: Arial, sans-serif; font-size: 14px;" (click)="stopPropagation($event)">
-        <b>${opcion.properties.nombre}</b>
+    <img src="./assets/img/sidebar-4.jpg" alt="Descripción de la imagen" class="imagen-popup" style="
+                      width: 100%;
+                      height: 100px;
+                      object-fit: cover;">
+      <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
+
+        <b style="text-align: center;">${opcion.properties.nombre}</b>
         <ul style="list-style-type: none; padding-left: 0;">
           <li><strong>Parriquia:</strong> ${opcion.properties.parr}</li>
         </ul>

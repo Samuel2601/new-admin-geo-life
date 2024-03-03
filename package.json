@@ -29,6 +29,7 @@
     "@capacitor/filesystem": "^5.2.1",
     "@capacitor/ios": "^5.7.0",
     "@ng-bootstrap/ng-bootstrap": "^16.0.0",
+    "@popperjs/core": "^2.11.8",
     "@turf/turf": "^6.5.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",

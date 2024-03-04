@@ -1,4 +1,4 @@
-package com.esmeraldas.app;
+package com.example.app;
 
 import com.getcapacitor.BridgeActivity;
 

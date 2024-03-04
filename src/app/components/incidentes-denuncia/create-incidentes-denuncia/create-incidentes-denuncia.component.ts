@@ -316,4 +316,15 @@ selectedFiles: File[] = [];
    
 
   }
+  hover = false;
+  nombreArchivo: any;
+  archivoSeleccionado: File | any;
+
+  activarHover() {
+    this.hover = true;
+  }
+
+  desactivarHover() {
+    this.hover = false;
+  }
 }

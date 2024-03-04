@@ -7,9 +7,10 @@
               </span>
               
             <input class="form-control" type="text" placeholder="Buscar un barrio" aria-label="Number" [formControl]="myControl" (input)="filterOptions($event.target)" (blur)="hideOptions()" (mousedown)="stopPropagation($event)">        
-        
-            <button class="btn btn-primary" type="button" id="button-addon1" (click)="reloadmap()"><i class="bi bi-eye-fill"></i></button>
-           
+            
+            <button class="btn btn-primary" type="button" id="button-addon1" (click)="reloadmap()"  ngbPopover="Barrios" ngbPopoverTrigger="mouseenter"><i class="bi bi-eye-fill"></i></button>
+            <button type="button" class="btn btn-primary" ngbPopover="Puntos Wifi" (click)="reloadWifi()" ngbPopoverTrigger="mouseenter" placement="right"><i class="bi bi-wifi"></i></button>
+
         </div>
         <ul *ngIf="lista_feature.length > 0 && showOptions" class="options-list list-group">
             <ng-container *ngFor="let option of filter">

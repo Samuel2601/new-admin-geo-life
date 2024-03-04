@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">admin</string>
     <string name="title_activity_main">admin</string>
-    <string name="package_name">com.esmeraldas.app</string>
-    <string name="custom_url_scheme">com.esmeraldas.app</string>
+    <string name="package_name">com.example.app</string>
+    <string name="custom_url_scheme">com.example.app</string>
 </resources>

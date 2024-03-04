@@ -2350,7 +2350,7 @@
   .form-control {
     display: block;
     width: 100%;
-    height: calc(1.5em + 0.875rem + 2px);
+    /*height: calc(1.5em + 0.875rem + 2px);*/
     padding: 0.4375rem 0;
     font-size: 1rem;
     font-weight: 400;
@@ -11614,7 +11614,7 @@
     background: no-repeat center bottom, center calc(100% - 1px);
     background-size: 0 100%, 100% 100%;
     border: 0;
-    height: 36px;
+    /*height: 36px;*/
     transition: background 0s ease-out;
     padding-left: 0;
     padding-right: 0;

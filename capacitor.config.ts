@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.esmeraldas.app',
+  appId: 'com.example.app',
   appName: 'admin',
   webDir: 'dist/admin',
   server: {

@@ -10,6 +10,9 @@ import iziToast from 'izitoast';
 import { IndexFichaSectorialComponent } from '../ficha-sectorial/index-ficha-sectorial/index-ficha-sectorial.component';
 import * as $ from 'jquery';
 import * as turf from '@turf/turf';
+import { NgbPopoverConfig } from '@ng-bootstrap/ng-bootstrap';
+import { CreateDireccionGeoComponent } from '../direccion-geo/create-direccion-geo/create-direccion-geo.component';
+import { GLOBAL } from 'src/app/services/GLOBAL';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -22,9 +25,14 @@ export class MapComponent implements OnInit,AfterViewInit {
 
   showCrosshair: boolean = false;
   public map: Map|undefined ;
-  constructor(private modalService: NgbModal,private helperService:HelperService){
-
+  wfsPolylayerWifi: any;
+  wfsSelangorWifi= featureGroup();
+  constructor(private modalService: NgbModal,private helperService:HelperService,config: NgbPopoverConfig){
+    // Configuración global de popovers
+    config.autoClose = 'outside';
+    config.triggers = 'mouseenter';
   }
+  url=GLOBAL.url;
   ngOnInit(): void {
     this.helperService.deshabilitarMapa$.subscribe(() => {
       this.handleClick();
@@ -83,7 +91,7 @@ export class MapComponent implements OnInit,AfterViewInit {
   ngOnDestroy() {
     this.map?.remove(); // Elimina el mapa al destruir el componente
   }
-   // Capas base
+   /* // Capas base
   private streetLayer = tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
   });
@@ -115,7 +123,7 @@ export class MapComponent implements OnInit,AfterViewInit {
       color: 'green'
     }
   };
- 
+
   inicio() {
     if (this.map) {
       this.map.remove();
@@ -155,7 +163,7 @@ export class MapComponent implements OnInit,AfterViewInit {
 
     // Establece la capa de calle como predeterminada
     this.streetLayer.addTo(this.map);
-  }
+  }*/
   myControl = new FormControl();
   public filter:any=[];
   
@@ -269,6 +277,7 @@ export class MapComponent implements OnInit,AfterViewInit {
     this.map.on('click', this.onClickHandlerMap);
 
     this.map.addLayer(this.wfsSelangor);
+    this.map.addLayer(this.wfsSelangorWifi);
 
     this.googleStreets = tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
       maxZoom: 25,
@@ -286,7 +295,7 @@ export class MapComponent implements OnInit,AfterViewInit {
     // Crear la capa de búsqueda
     this.busquedaLayer = featureGroup().addTo(this.map);
     const google=this.googleStreets;
-    control.layers({google}, {'Barrios':this.wfsSelangor,'Búsqueda': this.busquedaLayer}).addTo(this.map);
+    control.layers({google}, {'Barrios':this.wfsSelangor,'Puntos WIFI':this.wfsSelangorWifi,'Búsqueda': this.busquedaLayer}).addTo(this.map);
   }
   lista_feature:any=[];
   bton:any
@@ -315,6 +324,32 @@ export class MapComponent implements OnInit,AfterViewInit {
     popupAnchor: [1, -34],
     shadowSize: [41, 41]
   });
+  reloadWifi() {
+    this.wfsPolylayerWifi = [];
+    this.wfsSelangorWifi.clearLayers();
+    this.getWFSgeojsonWIFI().then((e) => {
+        (this.wfsPolylayer = geoJSON([e], {
+            pointToLayer: (feature, latlng) => {
+                return marker(latlng, {
+                    icon: icon({
+                        iconSize: [25, 41],
+                        iconAnchor: [13, 41],
+                        popupAnchor: [0, -41],
+                        iconUrl: "./assets/icon/router-fill.svg"
+                    })
+                }).bindPopup(`
+                <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px">
+                <b style="text-align: center;">${feature.properties.punto}</b></div>
+                `).on('click', () => {
+                  if(this.map){
+                    this.map.setView(latlng, 18); // Zoom al hacer clic en el marcador
+                  }
+                });
+            },
+        }).addTo(this.wfsSelangorWifi));
+    });
+}
+
   reloadmap() {
     this.wfsPolylayer = [];
     this.wfsSelangor.clearLayers();
@@ -323,10 +358,11 @@ export class MapComponent implements OnInit,AfterViewInit {
             onEachFeature: (e, t) => {
                 t.on({ mouseover: this.highlightFeature, mouseout: this.resetHighlight });
                 t.bindPopup(`
-                <img src="./assets/img/sidebar-4.jpg" alt="Descripción de la imagen" class="imagen-popup" style="
-                      width: 100%;
-                      height: 100px;
-                      object-fit: cover;">
+                <img src="${this.url}helper/obtener_portada_barrio/${e.id}" alt="Descripción de la imagen" class="imagen-popup" style="
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  ">
                       <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
                       
                         <b style="text-align: center;">${e.properties.nombre}</b>
@@ -430,18 +466,48 @@ export class MapComponent implements OnInit,AfterViewInit {
     this.buscarPolylayer = geoJSON(opcion, {
       style: this.geojsonWFSstyle2,
     }).bindPopup(`
-    <img src="./assets/img/sidebar-4.jpg" alt="Descripción de la imagen" class="imagen-popup" style="
-                      width: 100%;
-                      height: 100px;
-                      object-fit: cover;">
-      <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
-
-        <b style="text-align: center;">${opcion.properties.nombre}</b>
-        <ul style="list-style-type: none; padding-left: 0;">
-          <li><strong>Parriquia:</strong> ${opcion.properties.parr}</li>
-        </ul>
-      </div>
+    <img src="${this.url}helper/obtener_portada_barrio/${opcion.id}" alt="Descripción de la imagen" class="imagen-popup" style="
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  ">
+  <div class="leaflet-popup-content" style="width: 200px;">
+    <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
+      <b style="text-align: center;">${opcion.properties.nombre}</b>
+      <ul style="list-style-type: none; padding-left: 0;">
+        <li><strong>Parriquia:</strong> ${opcion.properties.parr}</li>
+        <li>
+          <button class="btn btn-secondary mt-3" id="fichaButton">
+            <strong><i class="bi bi-camera2"></i></strong>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
     `).addTo(this.busquedaLayer);
+
+     // Agrega un event listener al botón cuando se abra el popup
+     this.buscarPolylayer.on('popupopen', (e:any) => {
+      this.bton = document.getElementById('fichaButton');
+      if (this.bton) {
+          this.bton.addEventListener('click', () => {
+              this.modalCreateDirecion();
+            });
+        }
+        
+      
+        
+    });
+    // Elimina el event listener cuando se cierre el popup
+    this.buscarPolylayer.on('popupclose', (e:any) => {
+      let bton = document.getElementById('fichaButton');
+      if (bton) {
+          bton.removeEventListener('click', () => {
+              this.modalCreateDirecion();
+          });
+      }
+    });
+
     this.buscarPolylayer.on('mousedown', (e:any) => {
       this.longPressTimeout = setTimeout(() => {
         // Aquí puedes llamar a tu función para manejar el clic sostenido
@@ -497,11 +563,30 @@ export class MapComponent implements OnInit,AfterViewInit {
         }
       }});*/
     // Mover el mapa hacia el feature seleccionado
-    this.map?.fitBounds(this.buscarPolylayer.getBounds());//{ maxZoom: 20 }
+    this.map?.fitBounds(this.buscarPolylayer.getBounds(),{ maxZoom: 15 });//{ maxZoom: 20 }
 
     this.showOptions = false;
   }
+  
+  urlgeoserwifi="https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Apuntos-wifi&outputFormat=application%2Fjson";
+  async getWFSgeojsonWIFI() {
+    try {
+      const response = await fetch(this.urlgeoserwifi);
+      const data = await response.json();   
+      console.log(data);   
+      return data;
+    } catch (error) {
+      iziToast.error({
+        title:'Error:',
+        position:'bottomRight',
+        message:'Sin Conexión a Geoserver'
+      });
+      console.log('Error fetching WFS geojson:', error);
+      return null;
+    }
+  }
   urlgeoser="https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson";
+  
   urlgeolocal="http://192.168.120.35/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson";
   async getWFSgeojson() {
     try {
@@ -525,13 +610,22 @@ export class MapComponent implements OnInit,AfterViewInit {
       return null;
     }
   }
+  mostrarCreateDireccion=false;
+  modalCreateDirecion(){
+    this.mostrarficha=false;
+    this.mostrarincidente=false;
+    this.modalService.dismissAll();
+    const modalRef = this.modalService.open(CreateDireccionGeoComponent, { centered: true });
+    modalRef.componentInstance.valor = this.opcionb; 
+  }
+
   async getLocation() {
     if (navigator.geolocation) {
       let featureresult: any = undefined;
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const puntoUsuario = turf.point([position.coords.longitude, position.coords.latitude]);
-          console.log(position.coords.longitude, position.coords.latitude);
+          console.log(position,position.coords.longitude, position.coords.latitude);
           this.latitud = position.coords.latitude;
           this.longitud = position.coords.longitude;
           if (this.map) {
@@ -547,17 +641,15 @@ export class MapComponent implements OnInit,AfterViewInit {
               if (turf.booleanContains(poligono, puntoUsuario)) {
                 console.log('El usuario está dentro del polígono:', feature);
                 featureresult = feature;
-               // await this.buscar(feature);
+                await this.buscar(feature);
                 break;
               }
             }
           }
           if (featureresult) {
-            if (this.opcionb) {
-              if (await this.abrirCambiaraUbicacion()) {
-                await this.buscar(featureresult);
-              }
-            }
+           /*if (this.opcionb) {
+              await this.buscar(featureresult);
+            }*/
           } else {
             iziToast.info({ title: 'Info', position: 'bottomRight', message: 'Perdón, no te encuentras en nuestros barrios registrados' });
           }
@@ -609,8 +701,8 @@ export class MapComponent implements OnInit,AfterViewInit {
   geojsonWFSstyle2(feature:any) {
     return {
       weight: 4,
-      color: '#0a558d',
-      fillColor:'#0a558d',
+      color: '#f00',
+      fillColor:'#fff0',
       dashArray: '',
       fillOpacity: 0.7
     };

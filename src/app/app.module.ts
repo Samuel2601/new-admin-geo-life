@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import {MatIconModule} from '@angular/material/icon';
-
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { routing } from './app.routing';
 
@@ -305,6 +305,7 @@ import { MessageService } from 'primeng/api';
     CardModule,
     RippleModule,
     StyleClassModule,
+    NgbModule
   ],
   providers: [ MessageService],
   bootstrap: [AppComponent]

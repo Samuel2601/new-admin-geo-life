@@ -8,8 +8,10 @@
               
             <input class="form-control" type="text" placeholder="Buscar un barrio" aria-label="Number" [formControl]="myControl" (input)="filterOptions($event.target)" (blur)="hideOptions()" (mousedown)="stopPropagation($event)">        
             
-            <button class="btn btn-primary" type="button" id="button-addon1" (click)="reloadmap()"  ngbPopover="Barrios" ngbPopoverTrigger="mouseenter"><i class="bi bi-eye-fill"></i></button>
-            <button type="button" class="btn btn-primary" ngbPopover="Puntos Wifi" (click)="reloadWifi()" ngbPopoverTrigger="mouseenter" placement="right"><i class="bi bi-wifi"></i></button>
+            <button class="btn btn-primary" type="button" id="button-addon1" (click)="reloadmap()"  ngbPopover="Barrios" ngbPopoverTrigger="mouseenter"><i class="bi bi-eye-fill" *ngIf="!capaActiva"></i> <i class="bi bi-eye-slash-fill" *ngIf="capaActiva"></i></button>
+            <button type="button" class="btn btn-primary" ngbPopover="Puntos Wifi" (click)="reloadWifi()" ngbPopoverTrigger="mouseenter" ><i class="bi bi-wifi" *ngIf="!capaActivaWIFI"></i> <i class="bi bi-wifi-off" *ngIf="capaActivaWIFI"></i></button>
+            <button class="btn btn-primary" (click)="activarPopups()" *ngIf="!capaActivaWIFI && !isMobile()"><i class="bi bi-caret-right"></i></button>
+
 
         </div>
         <ul *ngIf="lista_feature.length > 0 && showOptions" class="options-list list-group">
@@ -32,7 +34,7 @@
                 <i class="bi bi-journal-bookmark-fill"></i> Incidentes
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="javascript:void(0)" (click)="incidente()">Incidente</a>
+                <a class="dropdown-item" href="javascript:void(0)" (click)="incidente()">Incidentes</a>
                 <a class="dropdown-item" href="javascript:void(0)" (click)="nuevoIncidente()">Nuevo Incidente</a>
             </div>
         </div>

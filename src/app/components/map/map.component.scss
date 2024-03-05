@@ -59,7 +59,7 @@
  // box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   @media (max-width: 429px) { // Estilos para dispositivos móviles
     top: 24px; /* Ajusta la posición vertical según tus necesidades */
-    left: 10%; /* Ajusta la posición horizontal según tus necesidades */
+    left:auto; /* Ajusta la posición horizontal según tus necesidades */
   }
 
   @media (min-width: 430px) { // Estilos para escritorio

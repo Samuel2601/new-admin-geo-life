@@ -11,10 +11,11 @@ declare interface RouteInfo {
   class: string;
 }
 export const ROUTES2: RouteInfo[] = [
-  { path: '/categorias', title: 'Categorias',  icon:'content_paste', class: '' },
+  { path: '/categorias', title: 'Categorias',  icon:'content_paste', class: '' },  
+  { path: '/incidentes-denuncia', title: 'Incidentes',  icon:'library_books', class: '' },
   { path: '/home', title: 'Maps',  icon:'location_on', class: '' },
-  { path: '/incidentes-denuncia', title: 'Incidentes/Decuncias',  icon:'library_books', class: '' },
-  { path: '/fichas-sectoriales', title: 'Ficha Sectorial',  icon:'bubble_chart', class: '' },
+  { path: '/fichas-sectoriales', title: 'Fichas',  icon:'bubble_chart', class: '' },
+  { path: '/user-profile', title: 'Perfil',  icon:'person', class: '' },
 ];
 @Component({
   selector: 'app-navbar',

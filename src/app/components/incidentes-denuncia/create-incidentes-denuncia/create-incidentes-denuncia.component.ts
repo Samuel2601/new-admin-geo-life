@@ -36,6 +36,9 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     });
   }
   data:any
+  direccion:any
+  geolocation:any;
+  mostrar:boolean=true;
   DimissModal() {
     this.modalService.dismissAll();
   }
@@ -74,9 +77,23 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
     return new File([blob], fileName, { type: 'image/jpeg' });
   }
-  
+  obtenerDireccion(latitud:any, longitud:any) {
+    const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitud}&lon=${longitud}&format=json`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+             this.geolocation = data;
+            console.log('Dirección:', data,data.display_name);
+            return data;
+        })
+        .catch(error => {
+            console.error('Error al realizar la solicitud:', error);
+        });
+  }
   
   ngOnInit(): void {
+   
     if (this.data) {
       this.nuevoIncidenteDenuncia.direccion_geo = this.data.properties.nombre;
     } else {
@@ -92,6 +109,8 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     });
     //this.getLocation();
     console.log(this.data);
+    console.log(this.direccion);
+    this.obtenerDireccion(this.direccion.latitud,this.direccion.longitud);
     this.listarCategorias();
   }
   getLocation() {
@@ -144,6 +163,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
       response => {
         this.categorias = response.data;
         console.log(response.data);
+        this.mostrar=false;
       },
       error => {
         console.log(error);
@@ -296,10 +316,7 @@ selectedFiles: File[] = [];
           title:'Listo',
           message:'Ingresado correctamente'
         });
-        this.DimissModal();
-        setTimeout(() => {
-          this.router.navigate(["/home"]);
-        }, 2000);
+        this.modalService.dismissAll();
       }
     }, error => {
       // Manejar errores

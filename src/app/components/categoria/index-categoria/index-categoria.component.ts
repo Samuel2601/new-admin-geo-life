@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ListService } from 'src/app/services/list.service';
+import { UpdateService } from 'src/app/services/update.service';
 
 @Component({
   selector: 'app-index-categoria',
@@ -8,10 +9,11 @@ import { ListService } from 'src/app/services/list.service';
   styleUrl: './index-categoria.component.scss'
 })
 export class IndexCategoriaComponent {
-  categorias=[];
+  categorias:any[]=[];
+  constcategorias=[];
   clonedProducts: { [s: string]: any } = {};
 
-  constructor(private listService: ListService,private router: Router) { }
+  constructor(private listService: ListService,private router: Router, private updateservice:UpdateService) { }
 
   ngOnInit(): void {
     this.listarCategorias();
@@ -24,6 +26,7 @@ export class IndexCategoriaComponent {
     }
     this.listService.listarCategorias(token).subscribe(
       response => {
+        this.constcategorias=response.data;
         this.categorias = response.data;
         console.log(response.data);
       },
@@ -42,13 +45,18 @@ export class IndexCategoriaComponent {
   onRowEditSave(categoria: any) {
     // Guardar los cambios de la categoría
     console.log('Guardar cambios de la categoría:', categoria);
+    const token = sessionStorage.getItem('token');
+    this.updateservice.actualizarCategoria(token,categoria._id,categoria).subscribe(response=>{console.log(response)},error=>{
+      console.log(error);
+    });
 
   }
 
   onRowEditCancel(categoria: any, rowIndex: number) {
     // Cancelar la edición de la categoría
+    this.categorias[rowIndex]=this.clonedProducts[categoria._id];
     console.log('Cancelar edición de la categoría:', categoria);
-
+    
   }
 
   verSubcategorias(id: any) {

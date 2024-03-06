@@ -34,6 +34,7 @@
     "@turf/turf": "^6.5.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "browser-image-compression": "^2.0.2",
     "chart.js": "^4.4.2",
     "izitoast": "^1.4.0",
     "jquery": "^3.7.1",

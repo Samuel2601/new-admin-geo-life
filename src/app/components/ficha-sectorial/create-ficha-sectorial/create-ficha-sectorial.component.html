@@ -4,7 +4,8 @@
       <h2 class="modal-title">Nueva Ficha Sectorial</h2>
       <button type="button" class="btn-close" aria-label="Close" (click)="DimissModal()"></button>
     </div>
-    <div class="modal-body">
+
+     <div class="modal-body">
       <p-toast></p-toast>
       <form [formGroup]="fichaSectorialForm" (ngSubmit)="registrarFichaSectorial()">
         <div class="mb-3">
@@ -41,14 +42,6 @@
 
         <div class="mb-3">
           <div class="d-flex align-items-center">
-            <div class="w-50 h-50  overflow-hidden">
-              <img [src]="nombreArchivo ? nombreArchivo : './assets/icono.png'"
-                   width="150"
-                   height="150"
-                   alt="Your profile picture"
-                   class=" img-fluid"
-                   style="aspect-ratio: 48 / 48; object-fit: cover; border-radius: 17% !important;">
-            </div>
             <div class="ms-3">
               <label class="form-label" for="profile-picture">
                 Puedes actualizar tu foto de Perfil.
@@ -63,13 +56,32 @@
                   <input class="form-control file-upload-input"
                          id="profile-picture"
                          type="file"
-                         (change)="onFilesSelected($event)">
+                         (change)="onFilesSelected($event)" multiple>
                 </div>
               </label>
               <small class="form-text">JPG, PNG, GIF. Peso máximo 4MB. <a href="#">Learn more</a></small>
             </div>
           </div>                  
         </div> 
+        <div class="mb-3">
+          <div id="carouselExample" class="card-img-top carousel slide carousel-fade" *ngIf="load_carrusel&&load_form" style="max-height: 200px; display: flex; align-items: center; justify-content: center;margin-bottom: 30px;
+          margin-top: 30px;">
+                  <div class="carousel-inner" style="max-height: 200px;">
+                    <div *ngFor="let imagen of imagenesSeleccionadas; let i = index" class="carousel-item"  [class.active]="i === 0">
+                      <img [src]="imagen" alt="Imagen seleccionada" class="d-block w-100" (click)="eliminarImagen(i)" (touchend)="eliminarImagen(i)" title="Eliminar" style="position:relative;">
+                    </div>
+                  </div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: #198754;"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: #198754;"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+        </div>
+    
 
         <button type="submit" class="btn btn-primary">
           <i class="bi bi-save"></i> Guardar

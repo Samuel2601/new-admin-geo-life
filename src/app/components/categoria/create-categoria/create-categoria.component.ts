@@ -37,7 +37,7 @@ export class CreateCategoriaComponent implements OnInit{
             message:'Ingresado correctamente'
           });
           setTimeout(() => {
-            this.router.navigate(["/home"]);
+            this.router.navigate(["/categorias"]);
           }, 2000);
         }
         // Aquí puedes manejar la respuesta del servidor, como mostrar un mensaje de éxito o redirigir a otra página

@@ -134,9 +134,16 @@ export class CreateFichaSectorialComponent implements OnInit {
   desactivarHover() {
     this.hover = false;
   }
+  imagenesSeleccionadas:Array<any>=[];
+  load_carrusel=false;
+  public file:Array<any> = [];
+  selectedFiles: File[] = [];
   onFilesSelected(event: any): void {
+    this.load_carrusel = false;
     const files: FileList = event.target.files;
     console.log(files);
+    this.imagenesSeleccionadas=[];
+    this.selectedFiles=[];
     if (files && files.length > 0) {
       for (let i = 0; i < Math.min(files.length, 3); i++) {
         const file = files[i];
@@ -151,20 +158,35 @@ export class CreateFichaSectorialComponent implements OnInit {
   
         const reader = new FileReader();
         reader.onload = (e: any) => {
-          this.nombreArchivo=e.target.result;
+          this.imagenesSeleccionadas.push(e.target.result);
         };
         reader.readAsDataURL(file);
-        console.log(file)
-        this.archivoSeleccionado=file;        
+        this.selectedFiles.push(file);        
       }
+      setTimeout(() => {        
+        this.load_carrusel = true;
+      }, 500);
     }
   }
+  
+  eliminarImagen(index: number) {
+    this.load_carrusel = false;
+    this.imagenesSeleccionadas.splice(index, 1);
+     // Eliminar la imagen del arreglo selectedFiles
+    this.selectedFiles.splice(index, 1);
+    console.log(this.selectedFiles,this.imagenesSeleccionadas);
+    setTimeout(() => {        
+      this.load_carrusel = true;
+    }, 500);
+  }
+  load_form=true;
 
   registrarFichaSectorial() {
+    this.load_form=false;
     if (this.fichaSectorialForm?.valid) {
       const token = sessionStorage.getItem('token');
       if (token && this.fichaSectorialForm.value) {
-        this.createService.registrarActividadProyecto(token, this.fichaSectorialForm.value,this.archivoSeleccionado).subscribe(response => {
+        this.createService.registrarActividadProyecto(token, this.fichaSectorialForm.value,this.selectedFiles).subscribe(response => {
           console.log(response);
           if(response.data){
             iziToast.success({

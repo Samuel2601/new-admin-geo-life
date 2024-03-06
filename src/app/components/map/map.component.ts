@@ -231,6 +231,9 @@ export class MapComponent implements OnInit,AfterViewInit {
   }
 
   async buscarfeature(latitud:any, longitud:any){
+    if(this.lista_feature.length==0){
+      await this.getWFSgeojson(this.urlgeoser);
+    }
     const puntoUsuario = turf.point([longitud, latitud]);
     for (const feature of this.lista_feature) {
       if (feature.geometry && feature.geometry.coordinates && feature.geometry.coordinates[0] && feature.geometry.coordinates[0][0].length > 4) {
@@ -253,12 +256,38 @@ export class MapComponent implements OnInit,AfterViewInit {
         .then(response => response.json())
         .then(data => {
             const direccion = data.display_name;
-            console.log('Dirección:', direccion);
+            console.log('Dirección:', data,data.display_name);
+            this.obtenerLatLong(data.addresss);
+            return data.address;
+            
         })
         .catch(error => {
             console.error('Error al realizar la solicitud:', error);
         });
   }
+
+  async obtenerLatLong(direccion: string) {
+    // Delimitar la búsqueda a Ecuador y a la provincia de Esmeraldas
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(direccion)}, Esmeraldas, Ecuador&format=json`;
+
+    return fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length > 0) {
+                const latitud = data[0].lat;
+                const longitud = data[0].lon;
+                console.log('Latitud:', latitud, 'Longitud:', longitud);
+                this.marcarlugar(latitud,longitud);
+                return { latitud, longitud };
+            } else {
+                throw new Error('No se encontraron resultados para la dirección proporcionada.');
+            }
+        })
+        .catch(error => {
+            console.error('Error al realizar la solicitud:', error);
+            throw error;
+        });
+}
 
   isMobile(): boolean {
     const screenWidth = window.innerWidth;
@@ -311,7 +340,7 @@ export class MapComponent implements OnInit,AfterViewInit {
     console.log('Fin de arrastre');
   }  
   
-  stopPropagation(event: MouseEvent) {
+  stopPropagation(event: Event) {
     event.stopPropagation();
   }
   
@@ -489,6 +518,7 @@ export class MapComponent implements OnInit,AfterViewInit {
                   </ul>
                 </div>
               `);
+              t.bindTooltip(e.properties.nombre);
               t.on('popupopen', async (popupEvent) => {
                 this.buscar(e); // seleccionar barrio con un click en el mapa
               });
@@ -514,6 +544,7 @@ export class MapComponent implements OnInit,AfterViewInit {
       if(this.lista_feature.length==0){
         this.guardarfeature(data);
       }
+      console.log(data);
       return data;
     } catch (error) {
       iziToast.error({
@@ -609,8 +640,9 @@ export class MapComponent implements OnInit,AfterViewInit {
 
   //UBICACIÓN GPS
   async getLocation() {
-    const permission = await Geolocation['requestPermissions']();
-    console.log(permission);
+    if(this.isMobile()){
+      const permission = await Geolocation['requestPermissions']();
+    }
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {          
@@ -640,9 +672,11 @@ export class MapComponent implements OnInit,AfterViewInit {
   }
   async nuevoIncidente() {
     const data = this.opcionb; // JSON que quieres enviar
-    this.modalService.dismissAll();
+    this.modalService.dismissAll();    
     const modalRef = this.modalService.open(CreateIncidentesDenunciaComponent, { centered: true });
     modalRef.componentInstance.data = data; 
+    modalRef.componentInstance.direccion={latitud:this.latitud,longitud:this.longitud}
+    
   }
 
   //LISTAR FICHA E INCIDENTE

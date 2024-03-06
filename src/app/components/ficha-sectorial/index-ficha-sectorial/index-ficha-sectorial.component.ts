@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ListService } from 'src/app/services/list.service';
 import { IndexEstadoActividadProyectoComponent } from '../../estado-actividad-proyecto/index-estado-actividad-proyecto/index-estado-actividad-proyecto.component';
@@ -17,7 +17,8 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   @Input() filtro: string | undefined;
   @Input() valor: number | undefined;
   @Input() modal: boolean = false;
-
+  @ViewChild('contentimage') modalContent: TemplateRef<any> | undefined;
+  
   deshabilitarMapaDesdeIndexFichaSectorial(event: MouseEvent) {
     this.stopPropagation(event);
     this.heleperservice.deshabilitarMapa();
@@ -166,4 +167,24 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
     this.isDragging = false;
   }
   
+  imagenModal: string='';
+
+  openModalimagen(url: any) {
+    this.imagenModal = url;
+    this.imagenAMostrar = this.imagenModal[0];
+    const modalRef = this.modalService.open(this.modalContent, { size: 'lg' });
+  }
+  imagenAMostrar:any;
+  mostrarImagen(index: number) {
+    this.imagenAMostrar = this.imagenModal[index];
+    // Aquí agregamos la lógica para cambiar el índice activo del carrusel
+    document.querySelectorAll('.carousel-item').forEach((el, i) => {
+      if (i === index) {
+        el.classList.add('active');
+      } else {
+        el.classList.remove('active');
+      }
+    });
+  }
+
 }

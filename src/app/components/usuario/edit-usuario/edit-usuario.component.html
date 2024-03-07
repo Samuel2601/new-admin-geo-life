@@ -59,7 +59,7 @@
             <label class="form-label " for="name">
               Nombres
             </label>
-            <input class="form-control" id="name" type="text" [(ngModel)]="datauser.nombres" placeholder="Ingresa tus nombres" disabled="true">
+            <input class="form-control" id="name" type="text" [(ngModel)]="datauser.nombres" placeholder="Ingresa tus nombres" [disabled]="editing">
           </div>
         </div>
         <div class="row">
@@ -91,7 +91,7 @@
             <label class="form-label" for="dni">
               Cédula
             </label>
-            <input class="form-control" id="cedula" type="text" [(ngModel)]="datauser.cedula" placeholder="Ingresa tu Cédula" disabled="true">
+            <input class="form-control" id="cedula" type="text" [(ngModel)]="datauser.cedula" placeholder="Ingresa tu Cédula" [disabled]="editing">
           </div>
         </div>             
       </div>

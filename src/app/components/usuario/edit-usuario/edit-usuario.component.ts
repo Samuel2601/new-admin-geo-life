@@ -13,7 +13,7 @@ import { UpdateService } from 'src/app/services/update.service';
 export class EditUsuarioComponent implements OnInit, AfterViewInit{
   datauser:any;
   modal:boolean=true;
-  editing:boolean=false;
+  editing:boolean=true;
   constructor(
     private _route: ActivatedRoute,
     private router:Router,
@@ -27,11 +27,11 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
         this.id = params['id'];
       }
       if(this.id != this.adminservice.identity(this.token)){
-        this.editing=true;
+        this.editing=false;
       }
       if(!this.id){
        this.id= this.adminservice.identity(this.token);
-       this.editing=false;
+       this.editing=true;
       }
         this.obteneruser(this.id);
       

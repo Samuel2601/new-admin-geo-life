@@ -45,7 +45,7 @@ import { CreateDireccionGeoComponent } from './components/direccion-geo/create-d
 import { IndexPermisosComponent } from './components/permisos/index-permisos/index-permisos.component';
 import { EditPermisosComponent } from './components/permisos/edit-permisos/edit-permisos.component';
 import { CreatePermisosComponent } from './components/permisos/create-permisos/create-permisos.component';
-
+import { AdminComponent } from './components/admin/admin.component';
 
 const appRoute: Routes = [
 	{ path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -58,7 +58,7 @@ const appRoute: Routes = [
 	{ path: 'create-subcategoria', component:CreateSubcategoriaComponent },
 	
 	// Agregar las rutas para los otros componentes
-	{ path: 'usuarios', component: IndexUsuarioComponent },
+	{ path: 'administracion', component: AdminComponent },
 	{ path: 'edit-usuario/:id', component: EditUsuarioComponent },
 	{ path: 'create-usuario', component: CreateUsuarioComponent },
 	{ path: 'fichas-sectoriales', component: IndexFichaSectorialComponent },

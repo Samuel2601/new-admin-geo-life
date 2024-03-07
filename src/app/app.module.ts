@@ -59,6 +59,8 @@ import { IndexPermisosComponent } from './components/permisos/index-permisos/ind
 import { EditPermisosComponent } from './components/permisos/edit-permisos/edit-permisos.component';
 import { CreatePermisosComponent } from './components/permisos/create-permisos/create-permisos.component';
 
+import { AdminComponent } from './components/admin/admin.component';
+
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 // Import PrimeNG modules
@@ -203,7 +205,8 @@ import { MessageService } from 'primeng/api';
     CreateDireccionGeoComponent,
     EditPermisosComponent,
     IndexPermisosComponent,
-    CreatePermisosComponent
+    CreatePermisosComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,

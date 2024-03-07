@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FilterService } from '../../../services/filter.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminService } from 'src/app/services/admin.service';
@@ -10,28 +10,49 @@ import { UpdateService } from 'src/app/services/update.service';
   templateUrl: './edit-usuario.component.html',
   styleUrl: './edit-usuario.component.scss'
 })
-export class EditUsuarioComponent implements OnInit{
+export class EditUsuarioComponent implements OnInit, AfterViewInit{
   datauser:any;
+  modal:boolean=true;
+  editing:boolean=false;
   constructor(
     private _route: ActivatedRoute,
     private router:Router,
     private _filterservice: FilterService,
     private adminservice:AdminService,
     private updateservice:UpdateService){ }
-  token = sessionStorage.getItem('token');
-  private id:any
-  ngOnInit(): void {
-    if(!this.token){
-      this.router.navigate(["/inicio"]);
-    }
+
+  ngAfterViewInit(): void {
     this._route.params.subscribe((params) => {
-			this.id = params['id'];
+      if(params['id']){
+        this.id = params['id'];
+      }
+      if(this.id != this.adminservice.identity(this.token)){
+        this.editing=true;
+      }
       if(!this.id){
-       this.id= this.adminservice.identity(this.token)
+       this.id= this.adminservice.identity(this.token);
+       this.editing=false;
       }
         this.obteneruser(this.id);
       
     });
+  }
+
+  token = sessionStorage.getItem('token');
+  id:any
+  ngOnInit(): void {
+    this.router.events.subscribe((val) => {
+      // Verificar la ruta actual y ajustar el valor de model
+      if (this.router.url === '/user-profile') {
+        this.modal = false; // Si la ruta es /create-estado-incidente, model es false
+      } else {
+        this.modal = true; // En cualquier otra ruta, model es true
+      }
+    });
+    if(!this.token){
+      this.router.navigate(["/inicio"]);
+    }
+
   }
   
   obteneruser(id:any){    

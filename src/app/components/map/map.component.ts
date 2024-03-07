@@ -17,6 +17,14 @@ import { GLOBAL } from 'src/app/services/GLOBAL';
 import { from } from 'rxjs';
 import { Plugins } from '@capacitor/core';
 const { Geolocation } = Plugins;
+import 'jquery.finger';
+declare global {
+  interface JQueryStatic {
+      Finger: any;
+  }
+}
+
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -222,13 +230,21 @@ export class MapComponent implements OnInit,AfterViewInit {
     }, 200);
   }
 
-  marcarlugar(latitud:any, longitud:any){
+  marcarlugar(latitud:any, longitud:any,message:string){
     if (this.map) {
+      // Borra todas las marcas existentes en el mapa
+      this.map.eachLayer((layer) => {
+          if (layer instanceof L.Marker) {
+              this.map?.removeLayer(layer);
+          }
+      });
+
+      // Añade la nueva marca al mapa
       const mark = L.marker([latitud, longitud], { icon: this.redIcon }).addTo(this.map);
-      mark.bindPopup('Tu ubicación actual').openPopup();
+      mark.bindPopup(message).openPopup();
       this.map.flyTo([latitud, longitud]);//ZOOM 20
     }
-  }
+}
 
   async buscarfeature(latitud:any, longitud:any){
     if(this.lista_feature.length==0){
@@ -257,7 +273,7 @@ export class MapComponent implements OnInit,AfterViewInit {
         .then(data => {
             const direccion = data.display_name;
             console.log('Dirección:', data,data.display_name);
-            this.obtenerLatLong(data.addresss);
+            //this.obtenerLatLong(data.addresss);
             return data.address;
             
         })
@@ -277,7 +293,7 @@ export class MapComponent implements OnInit,AfterViewInit {
                 const latitud = data[0].lat;
                 const longitud = data[0].lon;
                 console.log('Latitud:', latitud, 'Longitud:', longitud);
-                this.marcarlugar(latitud,longitud);
+                //this.marcarlugar(latitud,longitud);
                 return { latitud, longitud };
             } else {
                 throw new Error('No se encontraron resultados para la dirección proporcionada.');
@@ -332,12 +348,12 @@ export class MapComponent implements OnInit,AfterViewInit {
   //EVENTOS
   onDragStart() {
     this.editing=false;
-    console.log('Inicio de arrastre');
+    console.log('Inicio de arrastre',this.editing);
   }
   
   onDragEnd() {
     this.editing=true;
-    console.log('Fin de arrastre');
+    console.log('Fin de arrastre',this.editing);
   }  
   
   stopPropagation(event: Event) {
@@ -556,6 +572,7 @@ export class MapComponent implements OnInit,AfterViewInit {
       return null;
     }
   }
+  
 
   //BUSQUEDAS
   async buscar(opcion:any){      
@@ -598,6 +615,18 @@ export class MapComponent implements OnInit,AfterViewInit {
 
     // Elimina el event listener cuando se cierre el popup
     this.buscarPolylayer.on('popupclose', (e:any) => {
+
+      this.buscarPolylayer.on('click', (e:any) => {
+          console.log('tap');
+          console.log('Latitud:', e.latlng.lat);
+          console.log('Longitud:', e.latlng.lng);
+          this.latitud = e.latlng.lat;
+          this.longitud = e.latlng.lng;
+          this.map?.closePopup();
+          
+          this.marcarlugar(this.latitud,this.longitud,'Ubicación Seleccionada');
+      });
+
       let bton = document.getElementById('fichaButton');
       if (bton) {
           bton.removeEventListener('click', () => {
@@ -605,36 +634,40 @@ export class MapComponent implements OnInit,AfterViewInit {
           });
       }
     });
-
-    this.buscarPolylayer.on('mousedown', (e:any) => {
-      this.longPressTimeout = setTimeout(() => {
-        // Aquí puedes llamar a tu función para manejar el clic sostenido
+ 
+  /*
+    if(this.isMobile()){
+      this.buscarPolylayer.on('tap', (e:any) => {
+        console.log('tap');
         this.onClickHandlerMap(e);
-      }, 500); // Tiempo en milisegundos para considerar como clic sostenido
-    });
+      });
+    }else{
+      this.buscarPolylayer.on('mousedown', (e:any) => {
+        console.log('mousedown');
+        this.longPressTimeout = setTimeout(() => {
+          // Aquí puedes llamar a tu función para manejar el clic sostenido
+          this.onClickHandlerMap(e);
+          }, 500); // Tiempo en milisegundos para considerar como clic sostenido
+      });
+  
+      this.buscarPolylayer.on('mouseup', () => {
+        console.log('mouseup');
+        clearTimeout(this.longPressTimeout);
+      });
+  
+      this.buscarPolylayer.on('dblclick', (e:any) => {
+        console.log('dblclick');
+        this.onClickHandlerMap(e)
+      } );
+  
+    }
+*/
 
-    this.buscarPolylayer.on('mouseup', () => {
-      clearTimeout(this.longPressTimeout);
-    });
 
-    this.buscarPolylayer.on('touch', (e:any) => {
-      console.log('touchstart');
-      this.longPressTimeout = setTimeout(() => {
-        // Aquí puedes llamar a tu función para manejar el clic sostenido
-        this.onClickHandlerMap(e);
-      }, 500); // Tiempo en milisegundos para considerar como clic sostenido
-    });
-    
-    this.buscarPolylayer.on('touchend', () => {
-      console.log('touchend');
-      clearTimeout(this.longPressTimeout);
-    });
-
-    this.buscarPolylayer.on('dblclick', this.onClickHandlerMap);
 
     // Mover el mapa hacia el feature seleccionado
     this.map?.fitBounds(this.buscarPolylayer.getBounds(),{ maxZoom: 15 });//{ maxZoom: 20 }
-
+    
     this.showOptions = false;
   }
 
@@ -642,6 +675,8 @@ export class MapComponent implements OnInit,AfterViewInit {
   async getLocation() {
     if(this.isMobile()){
       const permission = await Geolocation['requestPermissions']();
+    }else{
+      iziToast.info({title:'Info',position:'topRight',message:'Tu ubicación puede ser no exacta'})
     }
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -650,7 +685,7 @@ export class MapComponent implements OnInit,AfterViewInit {
           this.latitud = position.coords.latitude;
           this.longitud = position.coords.longitude;
           await this.obtenerDireccion(this.latitud,this.longitud);   
-          this.marcarlugar(this.latitud,this.longitud);      
+          this.marcarlugar(this.latitud,this.longitud,'Ubicación actual');      
           await this.buscarfeature(this.latitud,this.longitud);
         },
         (error) => {

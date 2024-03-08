@@ -1,9 +1,11 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { FilterService } from '../../../services/filter.service';
+import { FilterService } from 'src/app/services/filter.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminService } from 'src/app/services/admin.service';
 import iziToast from 'izitoast';
 import { UpdateService } from 'src/app/services/update.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { GLOBAL } from 'src/app/services/GLOBAL';
 
 @Component({
   selector: 'app-edit-usuario',
@@ -14,12 +16,13 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
   datauser:any;
   modal:boolean=true;
   editing:boolean=true;
+  url=GLOBAL.url;
   constructor(
     private _route: ActivatedRoute,
     private router:Router,
     private _filterservice: FilterService,
     private adminservice:AdminService,
-    private updateservice:UpdateService){ }
+    private updateservice:UpdateService,private modalService: NgbModal){ }
 
   ngAfterViewInit(): void {
     this._route.params.subscribe((params) => {
@@ -85,6 +88,9 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
 
   desactivarHover() {
     this.hover = false;
+  }
+  DimissModal(){
+    this.modalService.dismissAll();
   }
 
   onFilesSelected(event: any): void {

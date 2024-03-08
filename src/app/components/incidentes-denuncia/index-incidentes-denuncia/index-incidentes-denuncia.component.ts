@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ListService } from 'src/app/services/list.service';
-import { IndexEstadoIncidenteComponent } from '../../estado-incidente/index-estado-incidente/index-estado-incidente.component';
+import { IndexEstadoIncidenteComponent } from '../estado-incidente/index-estado-incidente/index-estado-incidente.component';
 import { GLOBAL } from 'src/app/services/GLOBAL';
 import { Router } from '@angular/router';
 import iziToast from 'izitoast';

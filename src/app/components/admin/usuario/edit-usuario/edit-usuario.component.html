@@ -1,39 +1,36 @@
 
 <ng-container *ngIf="modal">
-  <div class="modal-fade border  text-dark shadow-sm w-100 max-w-3xl" *ngIf="datauser">
-    <div class="modal-body">
-      <div class="row g-0  text-sm-center-costum">
+  <div class="modal-content border  text-dark shadow-sm w-100 max-w-3xl" *ngIf="datauser">
+    <div class="modal-header">
+      <div class="row ">
         <div class="col-sm-6 col-md-8">
           <h3 class="modal-title">
             Editar Perfil
           </h3>
-          <p class="modal-text">
+          <p class="modal-text" *ngIf="editing">
             Puedes cambiar tu información personal.
-          </p>
-        </div>
-        <div class="col col-md-4 order-last">
-          <div class="form-check form-switch">
-            <label for="basic-url" class="form-label" style="margin-right: 50px;">Estado:</label>
-            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" [(ngModel)]="datauser.estado">
-            <label class="form-check-label" for="flexSwitchCheckChecked">{{datauser.estado}}</label>
-          </div>
+          </p>     
+          <p class="modal-text" *ngIf="!editing">
+            Formulario de actialización de datos de usuario
+          </p>      
         </div>
       </div>
+      <div class=" h-50 rounded-circle overflow-hidden">
+        <img [src]="nombreArchivo ? nombreArchivo : url + 'helper/obtener_portada_avatar/' + datauser.foto"
+             width="150"
+             height="150"
+             alt="Your profile picture"
+             class="rounded-circle img-fluid"
+             style="aspect-ratio: 48 / 48; object-fit: cover;">
+      </div>
+      <button type="button" class="btn-close" aria-label="Close" (click)="DimissModal()"></button>
     </div>
     <div class="modal-body">
       <div class="container">
         <div class="row gy-5 ">
           <div class="col-sm-5 col-md-6">
             <div class="d-flex align-items-center">
-              <div class="w-50 h-50 rounded-circle overflow-hidden">
-                <img [src]="nombreArchivo ? nombreArchivo : './assets/icono.png'"
-                     width="150"
-                     height="150"
-                     alt="Your profile picture"
-                     class="rounded-circle img-fluid"
-                     style="aspect-ratio: 48 / 48; object-fit: cover;">
-              </div>
-              <div class="ms-3">
+              <div class="row">
                 <label class="form-label" for="profile-picture">
                   Puedes actualizar tu foto de Perfil.
                   <div class="file-upload"
@@ -55,12 +52,20 @@
             </div>                  
           </div> 
            
-          <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0 align-self-center">
+          <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0 align-self-center" style="margin-top: 0px;">
+            <div class="form-check form-switch" style="padding-bottom: 15px;">
+              <label for="basic-url" class="form-label" style="margin-right: 50px;">Estado:</label>
+              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" [(ngModel)]="datauser.estado">
+              <label class="form-check-label" for="flexSwitchCheckChecked">{{datauser.estado}}</label>
+            </div>
+
             <label class="form-label " for="name">
               Nombres
             </label>
             <input class="form-control" id="name" type="text" [(ngModel)]="datauser.nombres" placeholder="Ingresa tus nombres" [disabled]="editing">
+           
           </div>
+
         </div>
         <div class="row">
           <div class="col-md-4 col-sm-auto me-auto">

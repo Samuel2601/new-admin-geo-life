@@ -6,5 +6,11 @@ import { Component } from '@angular/core';
   styleUrl: './create-permisos.component.scss'
 })
 export class CreatePermisosComponent {
+  nombreComponente:any;
+  rol:any;
+  permisos:any;
+  roles:any;
+  onCheckboxChange(envet:any){
 
+  }
 }

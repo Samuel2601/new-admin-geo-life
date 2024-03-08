@@ -149,6 +149,13 @@ export class CreateService {
     });
     return this.http.post(this.url + 'registrar_tipo_actividad_proyecto', data, { headers: headers });
   }
+  registrarPermiso(token: any, data: any): Observable<any> {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: token,
+    });
+    return this.http.post(this.url + 'registrar_permisos', data, { headers: headers });
+  }
 
   registrarDireccionGeo(token: any, data: any, foto: File): Observable<any> {
     let headers = new HttpHeaders({

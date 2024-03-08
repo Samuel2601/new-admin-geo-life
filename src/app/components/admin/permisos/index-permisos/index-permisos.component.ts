@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ListService } from 'src/app/services/list.service';
+import { CreatePermisosComponent } from '../create-permisos/create-permisos.component';
 
 @Component({
   selector: 'app-index-permisos',
@@ -9,16 +11,18 @@ import { ListService } from 'src/app/services/list.service';
 export class IndexPermisosComponent {
   permisos=[];
   clonedProducts: { [s: string]: any } = {};
+  roles:any
+  rolselect: string[] = [];
 
-  constructor(private listService: ListService) { }
+  constructor(private listService: ListService,private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.listarCategorias();
   }
-
+  token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
   listarCategorias(): void {
-    const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
-    this.listService.ListarPermisos(token).subscribe(
+     
+    this.listService.ListarPermisos(this.token).subscribe(
       response => {
         this.permisos = response.data;
         console.log(response.data);
@@ -28,6 +32,16 @@ export class IndexPermisosComponent {
       }
     );
   }
+  listarrol(){
+    this.listService.listarRolesUsuarios(this.token).subscribe(response=>{
+      this.roles=response.data;
+    });
+  }
+  newpermiso(){
+    this.modalService.dismissAll();
+    this.modalService.open(CreatePermisosComponent, { centered: true });
+  }
+
   editCategoriaId: any | null = null;
   onRowEditInit(categoria: any) {
     this.clonedProducts[categoria._id as string] = { ...categoria };
@@ -38,6 +52,10 @@ export class IndexPermisosComponent {
   onRowEditSave(categoria: any) {
     // Guardar los cambios de la categoría
     console.log('Guardar cambios de la categoría:', categoria);
+      // Agregar roles seleccionados al permiso
+  categoria.rolesPermitidos = this.roles.filter((rol:any) => this.rolselect.includes(rol._id));
+  
+  // Aquí debes guardar el permiso actualizado
 
   }
 

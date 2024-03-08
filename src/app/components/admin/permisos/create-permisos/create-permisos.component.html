@@ -1,33 +1,30 @@
-<form>
-    <div class="mb-3">
-      <label for="nombreComponente" class="form-label">Nombre del componente</label>
-      <input type="text" class="form-control" id="nombreComponente" name="nombreComponente" [(ngModel)]="nombreComponente" required>
-    </div>
-    <div class="mb-3">
-      <label for="rol" class="form-label">Rol</label>
-      <select class="form-select" id="rol" name="rol" [(ngModel)]="rol" required>
-        <option *ngFor="let rol of roles" [value]="rol._id">{{ rol.nombre }}</option>
-      </select>
-    </div>
-    <div class="mb-3">
-      <label for="permisos" class="form-label">Permisos</label>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="crear" name="permisos" value="crear" [(ngModel)]="permisos" (change)="onCheckboxChange($event)">
-        <label class="form-check-label" for="crear">Crear</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="editar" name="permisos" value="editar" [(ngModel)]="permisos" (change)="onCheckboxChange($event)">
-        <label class="form-check-label" for="editar">Editar</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="eliminar" name="permisos" value="eliminar" [(ngModel)]="permisos" (change)="onCheckboxChange($event)">
-        <label class="form-check-label" for="eliminar">Eliminar</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="ver" name="permisos" value="ver" [(ngModel)]="permisos" (change)="onCheckboxChange($event)">
-        <label class="form-check-label" for="ver">Ver</label>
-      </div>
-    </div>
-    <button type="submit" class="btn btn-primary">Guardar</button>
-  </form>
+
+<div class="modal-content">
+  <div class="modal-header">
+    <h2 class="modal-title">Nueva Permiso</h2>
+    <button type="button" class="btn-close" aria-label="Close" (click)="DimissModal()"></button>
+  </div>
   
+  <div class="modal-body">
+    <form>
+      <div class="mb-3">
+          <label for="componenteSelect" class="form-label">Seleccionar componente</label>
+          <select class="form-select" id="componenteSelect" name="componente" [(ngModel)]="newpermiso.nombreComponente" required>
+            <option value="" disabled selected>Seleccionar...</option>
+            <option *ngFor="let componente of componentes" [value]="componente"> {{ componente }}</option>
+          </select>
+        </div>
+        
+        <div class="mb-3">
+          <label for="rol" class="form-label">Rol</label>
+          <select class="form-select" id="rol" name="rol" [(ngModel)]="rol" (change)="addrol($event.target)" required>
+            <option *ngFor="let rol of roles" [value]="rol._id">{{ rol.nombre }}</option>
+          </select>
+        </div>
+        
+      <button type="submit" class="btn btn-primary" (click)="enviar()">Guardar</button>
+    </form>
+    
+  </div>
+</div>
+

@@ -5,6 +5,7 @@ import { GLOBAL } from 'src/app/services/GLOBAL';
 import { HelperService } from 'src/app/services/helper.service';
 import { ListService } from 'src/app/services/list.service';
 import { EditUsuarioComponent } from '../edit-usuario/edit-usuario.component';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-index-usuario',
@@ -110,8 +111,7 @@ export class IndexUsuarioComponent implements OnInit{
 
   
   isMobil() {
-    const screenWidth = window.innerWidth;
-    return screenWidth < 768; // Cambia este valor según el ancho que consideres como límite para dispositivos móviles
+    return Capacitor.isNativePlatform();
   }
   editrow(id:any){
     this.modalService.dismissAll();

@@ -8,22 +8,22 @@
     <div class="main-content">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-              <a class="nav-link" [class.active]="selected === 1" aria-current="page" href="javascript:void(0)" (click)="selected=1">Usuarios</a>
+              <a class="nav-link" *ngIf="check.IndexUsuarioComponent" [class.active]="selected === 'IndexUsuarioComponent'" aria-current="page" href="javascript:void(0)" (click)="selected='IndexUsuarioComponent'">Usuarios</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" [class.active]="selected === 2" href="javascript:void(0)" (click)="selected=2">Roles</a>
+              <a class="nav-link" *ngIf="check.IndexRolUserComponent" [class.active]="selected === 'IndexRolUserComponent' " href="javascript:void(0)" (click)="selected='IndexRolUserComponent'">Roles</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" [class.active]="selected === 3" href="javascript:void(0)" (click)="selected=3">Encargos</a>
+              <a class="nav-link" *ngIf="check.IndexEncargadoCategoriaComponent" [class.active]="selected === 'IndexEncargadoCategoriaComponent' " href="javascript:void(0)" (click)="selected='IndexEncargadoCategoriaComponent'">Encargos</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" [class.active]="selected === 4" href="javascript:void(0)" (click)="selected=4">Permisos</a>
+                <a class="nav-link" *ngIf="check.IndexPermisosComponent" [class.active]="selected === 'IndexPermisosComponent' " href="javascript:void(0)" (click)="selected='IndexPermisosComponent'">Permisos</a>
               </li>
           </ul>
-        <app-index-usuario *ngIf="selected==1"></app-index-usuario>
-        <app-index-rol-user *ngIf="selected==2"></app-index-rol-user>
-        <app-index-encargado-categoria *ngIf="selected==3"></app-index-encargado-categoria>
-        <app-index-permisos  *ngIf="selected==4"></app-index-permisos>
+        <app-index-usuario *ngIf="selected== 'IndexUsuarioComponent' &&check.IndexUsuarioComponent"></app-index-usuario>
+        <app-index-rol-user *ngIf="selected== 'IndexRolUserComponent' &&check.IndexRolUserComponent"></app-index-rol-user>
+        <app-index-encargado-categoria *ngIf="selected== 'IndexEncargadoCategoriaComponent' &&check.IndexEncargadoCategoriaComponent"></app-index-encargado-categoria>
+        <app-index-permisos  *ngIf="selected== 'IndexPermisosComponent' &&check.IndexPermisosComponent"></app-index-permisos>
 
     </div> 
 

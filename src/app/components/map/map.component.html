@@ -10,7 +10,7 @@
             
             <button class="btn btn-primary" type="button" id="button-addon1" (click)="reloadmap()"  ngbPopover="Barrios" ngbPopoverTrigger="mouseenter"><i class="bi bi-eye-fill" *ngIf="!capaActiva"></i> <i class="bi bi-eye-slash-fill" *ngIf="capaActiva"></i></button>
             <button type="button" class="btn btn-primary" ngbPopover="Puntos Wifi" (click)="reloadWifi()" ngbPopoverTrigger="mouseenter" ><i class="bi bi-wifi" *ngIf="!capaActivaWIFI"></i> <i class="bi bi-wifi-off" *ngIf="capaActivaWIFI"></i></button>
-            <button class="btn btn-primary" (click)="activarPopups()" *ngIf="!capaActivaWIFI && !isMobile()"><i class="bi bi-caret-right"></i></button>
+            <button class="btn btn-primary" (click)="activarPopups()" *ngIf="!capaActivaWIFI && !isMobil()"><i class="bi bi-caret-right"></i></button>
 
 
         </div>
@@ -19,13 +19,13 @@
                 <li class="list-group-item" (click)="buscar(option);stopPropagation($event)" (touch)="stopPropagation($event)" (touchend)="buscar(option)"    *ngIf="option.properties.nombre">{{ option.properties.nombre }}</li>
             </ng-container>
         </ul>
-        <div class="dropdown" *ngIf="opcionb" style="display: inline-block!important">
+        <div class="dropdown" *ngIf="opcionb&&(check.IndexFichaSectorialComponent||check.CreateFichaSectorialComponent)" style="display: inline-block!important" >
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="bi bi-journal-bookmark-fill"></i> Fichas
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="javascript:void(0)" (click)="fichaTecnica()">Fichas</a>
-                <a class="dropdown-item" href="javascript:void(0)" (click)="nuevoFicha()">Nueva Ficha</a>
+                <a class="dropdown-item" href="javascript:void(0)" *ngIf="check.IndexFichaSectorialComponent" (click)="fichaTecnica()">Fichas</a>
+                <a class="dropdown-item" href="javascript:void(0)" *ngIf="check.CreateFichaSectorialComponent" (click)="nuevoFicha()">Nueva Ficha</a>
             </div>
         </div>
     <!--d-md-inline-block-->
@@ -34,7 +34,7 @@
                 <i class="bi bi-journal-bookmark-fill"></i> Incidentes
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="javascript:void(0)" (click)="incidente()">Incidentes</a>
+                <a class="dropdown-item" href="javascript:void(0)" *ngIf="check.IndexIncidentesDenunciaComponent" (click)="incidente()">Incidentes</a>
                 <a class="dropdown-item" href="javascript:void(0)" (click)="nuevoIncidente()">Nuevo Incidente</a>
             </div>
         </div>

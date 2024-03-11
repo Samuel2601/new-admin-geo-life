@@ -14,9 +14,9 @@
         <div class="table-responsive-sm">
             <p-table class="table table-sm align-middle table-striped table-hover" [value]="encargadosCategoria" dataKey="_id" editMode="row" [tableStyle]="{'min-width': '50rem'}">
                 <ng-template pTemplate="header">
-                    <tr>
-                        <th scope="col">Encargado</th>
+                    <tr>                        
                         <th scope="col">Categoría</th>
+                        <th scope="col">Encargado</th>
                         <th scope="col"></th>
                     </tr>
                 </ng-template>
@@ -25,17 +25,19 @@
                         <td>
                             <p-cellEditor>
                                 <ng-template pTemplate="output">
-                                    {{ getNombreUsuario(encargadoCategoria.encargado) }}
+                                    {{encargadoCategoria.categoria.nombre}}
                                 </ng-template>
                             </p-cellEditor>
                         </td>
+
                         <td>
                             <p-cellEditor>
                                 <ng-template pTemplate="output">
-                                    {{ getNombreCategoria(encargadoCategoria.categoria) }}
+                                    <ng-container *ngFor="let item of encargadoCategoria.encargado">{{item.nombres}}</ng-container>
                                 </ng-template>
                             </p-cellEditor>
                         </td>
+                       
                         <td>
                             <div class="btn-group" role="group" aria-label="Acciones">
                                 <button *ngIf="!editing" pButton pRipple type="button" icon="bi bi-eye" class="p-button-rounded mr-2 p-button-text btn btn-info" (click)="verDetalles(encargadoCategoria)"></button>

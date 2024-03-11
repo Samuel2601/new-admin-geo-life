@@ -6,6 +6,7 @@ import { GLOBAL } from 'src/app/services/GLOBAL';
 import { Router } from '@angular/router';
 import iziToast from 'izitoast';
 import { HelperService } from 'src/app/services/helper.service';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-index-incidentes-denuncia',
@@ -93,8 +94,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   }
 
   isMobil() {
-    const screenWidth = window.innerWidth;
-    return screenWidth < 768; // Cambia este valor según el ancho que consideres como límite para dispositivos móviles
+    return Capacitor.isNativePlatform();
   }
 
   checkstatus=[
@@ -106,8 +106,19 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   @ViewChild('contentimage') modalContent: TemplateRef<any> | undefined;
   incidentesDenuncias:any=[];
 
-  ngOnInit(): void {
+
+  check:any={};
+  async ngOnInit(): Promise<void> {
+    try {
+      this.check.IndexEstadoIncidenteComponent = await this.heleperservice.checkPermiso('IndexEstadoIncidenteComponent') || false;
+      console.log(this.check);
+    } catch (error) {
+      console.error('Error al verificar permisos:', error);
+      this.router.navigate(['/error']);
+    }
+  
     this.listarIncidentesDenuncias();
+
   }
   llamarmodal(){
     this.modalService.dismissAll();
@@ -141,8 +152,9 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
           this.router.navigate(["/inicio"]);
         }else{
           iziToast.error({
-            title:'Error',
-            message:'Sin Conexión a la Base de Datos'
+            title: ('('+error.status+')').toString(),
+            position: 'bottomRight',
+            message: error.error.message,
           });
         }  
       });
@@ -158,8 +170,9 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
             this.router.navigate(["/inicio"]);
           }else{
             iziToast.error({
-              title:'Error',
-              message:'Sin Conexión a la Base de Datos'
+              title: ('('+error.status+')').toString(),
+              position: 'bottomRight',
+              message: error.error.message,
             });
           }
       });

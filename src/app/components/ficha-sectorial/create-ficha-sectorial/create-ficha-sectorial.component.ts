@@ -6,6 +6,7 @@ import { ListService } from 'src/app/services/list.service';
 import { AdminService } from 'src/app/services/admin.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import iziToast from 'izitoast';
+import { Capacitor } from '@capacitor/core';
 @Component({
   selector: 'app-create-ficha-sectorial',
   templateUrl: './create-ficha-sectorial.component.html',
@@ -83,8 +84,9 @@ export class CreateFichaSectorialComponent implements OnInit {
         this.router.navigate(["/inicio"]);
       }else{
         iziToast.error({
-          title:'Error',
-          message:'Sin Conexión a la Base de Datos'
+          title: ('('+error.status+')').toString(),
+          position: 'bottomRight',
+          message: error.error.message,
         });
       }
     });
@@ -106,8 +108,9 @@ export class CreateFichaSectorialComponent implements OnInit {
         this.router.navigate(["/inicio"]);
       }else{
         iziToast.error({
-          title:'Error',
-          message:'Sin Conexión a la Base de Datos'
+          title: ('('+error.status+')').toString(),
+          position: 'bottomRight',
+          message: error.error.message,
         });
       }
     });
@@ -134,6 +137,10 @@ export class CreateFichaSectorialComponent implements OnInit {
   desactivarHover() {
     this.hover = false;
   }
+  isMobil() {
+    return Capacitor.isNativePlatform();
+  }
+  
   imagenesSeleccionadas:Array<any>=[];
   load_carrusel=false;
   public file:Array<any> = [];
@@ -142,8 +149,10 @@ export class CreateFichaSectorialComponent implements OnInit {
     this.load_carrusel = false;
     const files: FileList = event.target.files;
     console.log(files);
-    this.imagenesSeleccionadas=[];
-    this.selectedFiles=[];
+    if(!this.isMobil()){
+      this.imagenesSeleccionadas=[];
+      this.selectedFiles=[];
+    }
     if (files && files.length > 0) {
       for (let i = 0; i < Math.min(files.length, 3); i++) {
         const file = files[i];
@@ -203,8 +212,9 @@ export class CreateFichaSectorialComponent implements OnInit {
             this.router.navigate(["/inicio"]);
           }else{
             iziToast.error({
-              title:'Error',
-              message:'Sin Conexión a la Base de Datos'
+              title: ('('+error.status+')').toString(),
+              position: 'bottomRight',
+              message: error.error.message,
             });
           } 
         });

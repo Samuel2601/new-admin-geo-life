@@ -1,21 +1,25 @@
 import { Component, ElementRef, OnInit} from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
+import { HelperService } from 'src/app/services/helper.service';
+import { Capacitor } from '@capacitor/core';
 declare const $: any;
 declare interface RouteInfo {
     path: string;
     title: string;
     icon: string;
     class: string;
+    component?:string;
+    status?:boolean;
 }
-export const ROUTES: RouteInfo[] = [
-    { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '' },
-    { path: '/user-profile', title: 'Perfil',  icon:'person', class: '' },
-    { path: '/categorias', title: 'Categorias',  icon:'content_paste', class: '' },
-    { path: '/incidentes-denuncia', title: 'Incidentes/Decuncias',  icon:'library_books', class: '' },
-    { path: '/fichas-sectoriales', title: 'Ficha Sectorial',  icon:'bubble_chart', class: '' },
-    { path: '/home', title: 'Maps',  icon:'location_on', class: '' },
-    { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' },
-    { path: '/administracion', title: 'Admin',  icon:'unarchive', class: 'active-pro' },
+export let ROUTES: RouteInfo[] = [
+  { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '', component: 'HomeComponent',status:true },
+  { path: '/user-profile', title: 'Perfil',  icon:'person', class: '', component: 'EditUsuarioComponent',status:true },
+  { path: '/categorias', title: 'Categorias',  icon:'content_paste', class: '', component: 'IndexCategoriaComponent',status:true },
+  { path: '/incidentes-denuncia', title: 'Incidentes/Decuncias',  icon:'library_books', class: '', component: 'IndexIncidentesDenunciaComponent',status:true },
+  { path: '/fichas-sectoriales', title: 'Fichas Sectoriales',  icon:'bubble_chart', class: '', component: 'IndexFichaSectorialComponent',status:true },
+  { path: '/home', title: 'Maps',  icon:'location_on', class: ''},
+  { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '', component: 'HomeComponent' ,status:true},
+  { path: '/administracion', title: 'Administración',  icon:'unarchive', class: 'active-pro', component: 'AdminComponent',status:true },
 ];
 
 @Component({
@@ -28,9 +32,14 @@ export class SidebarComponent implements OnInit {
   token=sessionStorage.getItem('token');
   private dropdownButton: HTMLElement | null = null;
   dropdownVisible: boolean=false;
-  constructor(private platform: Platform,private element: ElementRef) { }
+  constructor(private platform: Platform,private element: ElementRef,private heleperservice:HelperService) { }
 
   ngOnInit() {
+    ROUTES.forEach(async (element:any) => {
+      if(element.component){
+        element.status=await this.heleperservice.checkPermiso(element.component) || false;
+      }
+    });
     this.menuItems = ROUTES.filter(menuItem => menuItem);
     this.dropdownButton = this.element.nativeElement.querySelector('.dropdown-toggle');
   }
@@ -38,12 +47,8 @@ export class SidebarComponent implements OnInit {
   toggleDropdown(): void {
     this.dropdownVisible = !this.dropdownVisible;
   }
-  isMobileMenu():boolean{
-    if (!this.platform.isBrowser) {
-      return true;
-    } else {
-      return false;
-    }
+  isMobil() {
+    return Capacitor.isNativePlatform();
   }
   logout():void{
     sessionStorage.clear();

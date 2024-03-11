@@ -7,6 +7,7 @@ import { HelperService } from 'src/app/services/helper.service';
 import iziToast from 'izitoast';
 import { Router } from '@angular/router';
 import { GLOBAL } from 'src/app/services/GLOBAL';
+import { Capacitor } from '@capacitor/core';
 @Component({
   selector: 'app-index-ficha-sectorial',
   templateUrl: './index-ficha-sectorial.component.html',
@@ -34,13 +35,23 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
       this.height = 300;
     }
   }
-  ngOnInit(): void {
+  check:any={};
+  async ngOnInit(): Promise<void> {
+    try {
+      this.check.IndexEstadoActividadProyectoComponent = await this.heleperservice.checkPermiso('IndexEstadoActividadProyectoComponent') || false;
+      this.check.IndexActividadProyectoComponent = await this.heleperservice.checkPermiso('IndexActividadProyectoComponent')|| false;
+      console.log(this.check);
+    } catch (error) {
+      console.error('Error al verificar permisos:', error);
+      this.router.navigate(['/error']);
+    }
+  
     this.listarficha();
+
   }
 
   isMobil() {
-    const screenWidth = window.innerWidth;
-    return screenWidth < 768; // Cambia este valor según el ancho que consideres como límite para dispositivos móviles
+    return Capacitor.isNativePlatform();
   }
   openModal(content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
@@ -66,8 +77,9 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
           this.router.navigate(["/inicio"]);
         }else{
           iziToast.error({
-            title:'Error',
-            message:'Sin Conexión a la Base de Datos'
+            title: ('('+error.status+')').toString(),
+            position: 'bottomRight',
+            message: error.error.message,
           });
         }  
       });
@@ -83,8 +95,9 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
             this.router.navigate(["/inicio"]);
           }else{
             iziToast.error({
-              title:'Error',
-              message:'Sin Conexión a la Base de Datos'
+              title: ('('+error.status+')').toString(),
+              position: 'bottomRight',
+              message: error.error.message,
             });
           }
       });

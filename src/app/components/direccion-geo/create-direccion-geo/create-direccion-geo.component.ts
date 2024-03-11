@@ -123,8 +123,9 @@ export class CreateDireccionGeoComponent implements OnInit, AfterViewInit {
             this.router.navigate(["/inicio"]);
           }else{
             iziToast.error({
-              title:'Error',
-              message:error.error.message
+              title: ('('+error.status+')').toString(),
+              position: 'bottomRight',
+              message: error.error.message,
             });
           } 
         });

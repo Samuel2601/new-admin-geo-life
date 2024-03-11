@@ -10,6 +10,7 @@ import { routing } from './app.routing';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+
 import { HomeComponent } from './components/home/home.component';
 import { MapComponent } from './components/map/map.component';
 import { NavbarComponent } from './components/menu/navbar/navbar.component';

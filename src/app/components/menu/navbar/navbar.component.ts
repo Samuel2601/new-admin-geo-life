@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ROUTES } from '../sidebar/sidebar.component';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
+import { HelperService } from 'src/app/services/helper.service';
 
 declare var $: any;
 declare interface RouteInfo {
@@ -27,32 +28,33 @@ export class NavbarComponent implements OnInit {
   public mobile_menu_visible = false;
   private toggleButton: HTMLElement | null = null;
   private sidebarVisible = false;
-  public token = sessionStorage.getItem('token')||null;
+  public token = this.helper.token();
+  public dashboard:boolean=true;
 
-
-  constructor(private element: ElementRef,private router: Router, private route: ActivatedRoute) {
+  constructor(private element: ElementRef,private router: Router, private route: ActivatedRoute, private helper:HelperService) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
-      this.setTitle();
+      
     });
   }
   title: string='';
-  titleMap: { [key: string]: string } = {
-    '/home': 'Inicio',
-    '/categorias': 'Categorías',
-    '/subcategorias': 'Subcategorías',
-    // Agrega más rutas y títulos según sea necesario
-  };
+
   setTitle() {
     const currentUrl = this.router.url;
-    this.title = this.titleMap[currentUrl] || 'Título predeterminado';
+     // Obtener el elemento de la ruta que coincide con la URL actual
+    const route = ROUTES.find((element) => element.path === currentUrl);
+
+    // Devolver el título de la ruta si se encuentra, de lo contrario devolver un título predeterminado
+    return route ? route.title : 'Título predeterminado';
   }
   isActive(menuItem: any): boolean {
     return this.router.url === menuItem.path;
   }
   
-  ngOnInit(): void {    
+  async ngOnInit(): Promise<void> {    
+    this.dashboard=await this.helper.checkPermiso('DashBoardCompont');
+    this.title=this.setTitle();
     this.listTitles = ROUTES2.filter((listTitle: any) => listTitle);
     this.toggleButton = this.element.nativeElement.querySelector('.navbar-toggler');
     this.router.events.subscribe(() => {
@@ -70,13 +72,6 @@ export class NavbarComponent implements OnInit {
       $(modal).modal('hide');
     }
   }
-  asignarToken(): void {
-    const token = sessionStorage.getItem('token');
-    if (token) {
-      this.token = token;
-    }
-  }
-
   abrirModal(): void {
   }
   

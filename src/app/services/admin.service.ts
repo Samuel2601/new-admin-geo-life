@@ -27,31 +27,6 @@ export class AdminService {
 		});
 		return this._http.post(this.url + 'newpassword', data, { headers: headers });
 	}
-	
-	registrar_admin(data: any, file: any): Observable<any> {
-		let headers = new HttpHeaders({ Authorization: 'registroadmin' });
-		const fd = new FormData();
-		fd.append('titulo', data.titulo);
-		fd.append('pais', data.pais);
-		fd.append('provincia', data.provincia);
-		fd.append('canton', data.canton);
-		fd.append('parroquia', data.parroquia);
-		fd.append('calle1', data.calle1);
-		fd.append('calle2', data.calle2);
-		fd.append('codigopostal', data.codigopostal);
-		fd.append('referencia', data.referencia);
-		fd.append('telefonocon', data.telefonocon);
-		fd.append('telefonoinsti', data.telefonoinsti);
-		fd.append('nombres', data.nombres);
-		fd.append('apellidos', data.apellidos);
-		fd.append('email', data.email);
-		fd.append('password', data.passwordadmin);
-		fd.append('telefono', data.telefono);
-		fd.append('dni', data.dni);
-		fd.append('base', data.base);
-		fd.append('portada', file);
-		return this._http.post(this.url + 'registrar_admin', fd, { headers: headers });
-	}
 	listar_registro(token: any, desde: any, hasta: any): Observable<any> {
 		let headers = new HttpHeaders({
 		  'Content-Type': 'application/json',

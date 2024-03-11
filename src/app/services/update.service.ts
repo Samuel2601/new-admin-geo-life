@@ -109,4 +109,11 @@ export class UpdateService {
     });
     return this.http.put(this.url + 'actualizar_direccion_geo/' + id, data, { headers: headers });
   }
+  actualizarPermisos(token: any, id: string, data: any): Observable<any> {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: token,
+    });
+    return this.http.put(this.url + 'actualizar_permisos/' + id, data, { headers: headers });
+  }
 }

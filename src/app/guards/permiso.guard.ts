@@ -1,42 +1,45 @@
 // permiso.guard.ts
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { AdminService } from '../services/admin.service';
+import { HelperService } from '../services/helper.service';
+import { FilterService } from '../services/filter.service';
 import { Observable } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
-import { PermisoService } from '../services/permiso.service';
-import { ListService } from '../services/list.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PermisoGuard implements CanActivate {
 
-  constructor(private _router: Router,private permisoService: PermisoService,private _listService:ListService) {}
+  constructor(private adminService: AdminService , private router: Router,private helperService:HelperService,private filterService:FilterService) {}
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const permission = route.data['permission'];
-    return this._listService.ListarPermisos(sessionStorage.getItem('token')).pipe(
-      map((permisos) => {
-        console.log(permisos);
-        if(permisos.data.length>0){
-          const permisosComponente = permisos.data.find((p:any) => p.nombreComponente === permission.componente);
-          if (permisosComponente) {
-            this.permisoService.agregarPermiso(permission.componente, permisosComponente.rolesPermitidos);
-          }
-          const rolUsuario = this.permisoService.obtenerRolUsuario();
-          if (rolUsuario && this.permisoService.tienePermiso(permission.componente, permission.permiso)) {
-            return true;
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
+    const token = this.helperService.token();
+    const componente = route.data['componente'];
+    const rolUsuario = this.adminService.roluser(token); // Método para obtener el rol del usuario desde AuthService
+  
+    return new Observable<boolean>(observer => {
+      this.filterService.tienePermiso(token, componente, rolUsuario._id).subscribe(
+        response => {
+          if (response.data) {
+            observer.next(true);
+            observer.complete();
           } else {
-            //this._router.navigate(['/home']); // Redirigir a la página de inicio
-            return false;
+            this.router.navigate(['/error']); // Redirigir a /home si no tiene permiso
+            observer.next(false);
+            observer.complete();
           }
-        }else{
-          return true;
+        },
+        error => {
+          this.router.navigate(['/error']); // Redirigir a /home si hay un error
+          observer.next(false);
+          observer.complete();
         }
-        
-      })
-    );
+      );
+    });
   }
+  
+  
+
+  
 }

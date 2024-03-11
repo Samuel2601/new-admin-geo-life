@@ -1,58 +1,37 @@
-
-<div class="wrapper">
-    <div class="sidebar" data-color="danger" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
-      <app-sidebar></app-sidebar>
-      <div class="sidebar-background" style="background-image: url(./assets/img/sidebar-4.jpg)"></div>
-    </div>
-    <div class="main-panel">
-      <app-navbar></app-navbar>
-  
-        <div class="main-content">
-            <div class="container-fluid">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-auto">
-                                <h2>Nueva Sub-Categoría</h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <p-toast></p-toast>
-                        <div class="table-responsive-sm">
-                            <form [formGroup]="subcategoriaForm" (ngSubmit)="registrarEncargo()">
-                                <div class="mb-3">
-                                    <label for="categoria" class="form-label">Categoría</label>
-                                    <select id="categoria" class="form-control" formControlName="categoria">
-                                        <option *ngFor="let categoria of categorias" [value]="categoria._id">{{ categoria.nombre }}</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="encargados" class="form-label">Encargados</label>
-                                    <select id="encargados" class="form-control" (change)="agregarEncargado($event.target)" multiple>
-                                        <option *ngFor="let usuario of usuarios" [value]="usuario._id">{{ usuario.nombres }}</option>
-                                    </select>
-                                    <ul class="list-group mt-2">
-                                        <li class="list-group-item" *ngFor="let encargado of encargadosSeleccionados">
-                                            {{ encargado.nombres }}
-                                            <button type="button" class="btn btn-danger btn-sm ms-2" (click)="eliminarEncargado(encargado)">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-save"></i> Guardar
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-auto">
+                <h2>Nueva Encargado de Categoria</h2>
             </div>
         </div>
-      <div>
-        <app-footer></app-footer>
-      </div>
     </div>
-  </div>
-  
+    <div class="modal-body">
+        <p-toast></p-toast>
+        <div class="table-responsive-sm">
+            <div class="mb-3">
+                <label for="categoria" class="form-label">Categoría</label>
+                <select id="categoria" class="form-control" [(ngModel)]="categoriaselect">
+                    <option *ngFor="let categoria of categorias" [value]="categoria._id">{{ categoria.nombre }}</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="encargados" class="form-label">Encargados</label>
+                <select id="encargados" class="form-control" (change)="agregarEncargado($event.target)" multiple>
+                    <option *ngFor="let usuario of usuarios" [value]="usuario._id">{{ usuario.nombres }}</option>
+                </select>
+                <ul class="list-group mt-2">
+                    <li class="list-group-item" *ngFor="let encargado of encargadosSeleccionados">
+                        {{ userfilter(encargado).nombres }}
+                        <button type="button" class="btn btn-danger btn-sm ms-2" (click)="eliminarEncargado(encargado)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <button type="submit" class="btn btn-primary" (click)="registrarEncargo()">
+                <i class="bi bi-save"></i> Guardar
+            </button>
+        </div>
+    </div>
+</div>

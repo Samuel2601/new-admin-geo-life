@@ -1,5 +1,6 @@
 import { Component, AfterViewInit, OnInit, HostListener, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 //import { LatLng, geoJSON, Map, tileLayer, control, layerGroup, featureGroup, LeafletMouseEvent, LeafletEventHandlerFn, marker, Marker, icon} from 'leaflet';
+import { Router } from '@angular/router';
 import * as L from 'leaflet';
 import { Location, LocationStrategy, PathLocationStrategy, PopStateEvent } from '@angular/common';
 import { FormControl } from '@angular/forms';
@@ -8,14 +9,13 @@ import { CreateIncidentesDenunciaComponent } from '../incidentes-denuncia/create
 import { CreateFichaSectorialComponent } from '../ficha-sectorial/create-ficha-sectorial/create-ficha-sectorial.component';
 import { HelperService } from 'src/app/services/helper.service';
 import iziToast from 'izitoast';
-import { IndexFichaSectorialComponent } from '../ficha-sectorial/index-ficha-sectorial/index-ficha-sectorial.component';
 import * as $ from 'jquery';
 import * as turf from '@turf/turf';
 import { NgbPopoverConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CreateDireccionGeoComponent } from '../direccion-geo/create-direccion-geo/create-direccion-geo.component';
 import { GLOBAL } from 'src/app/services/GLOBAL';
 import { from } from 'rxjs';
-import { Plugins } from '@capacitor/core';
+import { Capacitor, Plugins } from '@capacitor/core';
 const { Geolocation } = Plugins;
 import 'jquery.finger';
 declare global {
@@ -84,19 +84,34 @@ export class MapComponent implements OnInit,AfterViewInit {
   urlgeolocal="http://192.168.120.35/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson";
 
   //CONSTRUCTOR
-  constructor(private modalService: NgbModal,private helperService:HelperService,config: NgbPopoverConfig){
+  constructor(private modalService: NgbModal,private helperService:HelperService,config: NgbPopoverConfig, private router: Router){
     // Configuración global de popovers
     config.autoClose = 'outside';
     config.triggers = 'mouseenter';
   }
 
   //IMPLEMENTOS
-  ngOnInit(): void {
+  check:any={};
+  async ngOnInit(): Promise<void> {
+    try {
+      this.check.IndexFichaSectorialComponent = await this.helperService.checkPermiso('IndexFichaSectorialComponent') || false;
+      this.check.IndexIncidentesDenunciaComponent = await this.helperService.checkPermiso('IndexIncidentesDenunciaComponent')|| false;
+      this.check.CreateIncidentesDenunciaComponent = await this.helperService.checkPermiso('CreateIncidentesDenunciaComponent')|| false;
+      this.check.CreateFichaSectorialComponent = await this.helperService.checkPermiso('CreateFichaSectorialComponent') || false;
+      this.check.CreateDireccionGeoComponent = await this.helperService.checkPermiso('CreateDireccionGeoComponent') || false;
+      
+      console.log(this.check);
+    } catch (error) {
+      console.error('Error al verificar permisos:', error);
+      this.router.navigate(['/error']);
+    }
+  
     this.helperService.deshabilitarMapa$.subscribe(() => {
       this.handleClick();
     });
-    
-  }  
+
+  }
+
   async ngAfterViewInit(): Promise<void> {
     this.geoserve();
     let containers = document.querySelectorAll('.leaflet-control-container');
@@ -305,10 +320,9 @@ export class MapComponent implements OnInit,AfterViewInit {
         });
 }
 
-  isMobile(): boolean {
-    const screenWidth = window.innerWidth;
-    return screenWidth < 768; // Cambia este valor según la definición de móvil en Bootstrap
-  }
+isMobil() {
+  return Capacitor.isNativePlatform();
+}
   selectficha(e:any){    
     this.opcionb=e;
     this.fichaTecnica();
@@ -581,27 +595,47 @@ export class MapComponent implements OnInit,AfterViewInit {
     this.buscarPolylayer=[];
     // Vaciar busquedaLayer
     this.busquedaLayer.clearLayers();
-    this.buscarPolylayer = L.geoJSON(opcion, { style: this.geojsonWFSstyle2,})
-    .bindPopup(`
-        <img src="${this.url}helper/obtener_portada_barrio/${opcion.id}" alt="Descripción de la imagen" class="imagen-popup" style="
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-      ">
-      <div class="leaflet-popup-content" style="width: 200px;">
-        <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
-          <b style="text-align: center;">${opcion.properties.nombre}</b>
-          <ul style="list-style-type: none; padding-left: 0;">
-            <li><strong>Parriquia:</strong> ${opcion.properties.parr}</li>
-            <li>
-              <button class="btn btn-secondary mt-3" id="fichaButton">
-                <strong><i class="bi bi-camera2"></i></strong>
-              </button>
-            </li>
-          </ul>
+    if(this.check.CreateDireccionGeoComponent){
+      this.buscarPolylayer = L.geoJSON(opcion, { style: this.geojsonWFSstyle2,})
+      .bindPopup(`
+          <img src="${this.url}helper/obtener_portada_barrio/${opcion.id}" alt="Descripción de la imagen" class="imagen-popup" style="
+          width: 100%;
+          height: 150px;
+          object-fit: cover;
+        ">
+        <div class="leaflet-popup-content" style="width: 200px;">
+          <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
+            <b style="text-align: center;">${opcion.properties.nombre}</b>
+            <ul style="list-style-type: none; padding-left: 0;">
+              <li><strong>Parriquia:</strong> ${opcion.properties.parr}</li>
+              <li>
+                <button class="btn btn-secondary mt-3" id="fichaButton">
+                  <strong><i class="bi bi-camera2"></i></strong>
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-        `).addTo(this.busquedaLayer);
+          `).addTo(this.busquedaLayer);
+    }else{
+      this.buscarPolylayer = L.geoJSON(opcion, { style: this.geojsonWFSstyle2,})
+      .bindPopup(`
+          <img src="${this.url}helper/obtener_portada_barrio/${opcion.id}" alt="Descripción de la imagen" class="imagen-popup" style="
+          width: 100%;
+          height: 150px;
+          object-fit: cover;
+        ">
+        <div class="leaflet-popup-content" style="width: 200px;">
+          <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
+            <b style="text-align: center;">${opcion.properties.nombre}</b>
+            <ul style="list-style-type: none; padding-left: 0;">
+              <li><strong>Parriquia:</strong> ${opcion.properties.parr}</li>
+            </ul>
+          </div>
+        </div>
+          `).addTo(this.busquedaLayer);
+    }
+  
 
      // Agrega un event listener al botón cuando se abra el popup
      this.buscarPolylayer.on('popupopen', (e:any) => {
@@ -673,10 +707,11 @@ export class MapComponent implements OnInit,AfterViewInit {
 
   //UBICACIÓN GPS
   async getLocation() {
-    if(this.isMobile()){
+    if(this.isMobil()){
       const permission = await Geolocation['requestPermissions']();
+      console.log(permission);
     }else{
-      iziToast.info({title:'Info',position:'topRight',message:'Tu ubicación puede ser no exacta'})
+      iziToast.info({title:'Info',position:'bottomRight',message:'Tu ubicación puede ser no exacta'})
     }
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(

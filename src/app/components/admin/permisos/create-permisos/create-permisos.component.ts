@@ -11,25 +11,44 @@ import { ListService } from 'src/app/services/list.service';
 export class CreatePermisosComponent implements OnInit{
   componente:any;
   componentes = [
-    'HomeComponent',
-    'CreateCategoriaComponent', 'IndexCategoriaComponent',
-    'CreateSubcategoriaComponent', 'IndexSubcategoriaComponent',
-
-    'IndexUsuarioComponent', 'CreateUsuarioComponent',
-    'CreateFichaSectorialComponent', 'IndexFichaSectorialComponent', 
-    'IndexIncidentesDenunciaComponent', 'CreateIncidentesDenunciaComponent',
-    'IndexEncargadoCategoriaComponent', 'CreateEncargadoCategoriaComponent',
-
-    'IndexRolUserComponent', 'EditRolUserComponent', 'CreateRolUserComponent',
-    'IndexEstadoIncidenteComponent','CreateEstadoIncidenteComponent',
-    'IndexEstadoActividadProyectoComponent', 'CreateEstadoActividadProyectoComponent',
-
-    'IndexActividadProyectoComponent', 'CreateActividadProyectoComponent',
-
-    'IndexDireccionGeoComponent', 'EditDireccionGeoComponent', 'CreateDireccionGeoComponent',
-    
-    'IndexPermisosComponent', 'EditPermisosComponent', 'CreatePermisosComponent',
-    'AdminComponent'
+'CreateCategoriaComponent',
+'IndexCategoriaComponent',
+'EditCategoriaComponent',
+'CreateSubcategoriaComponent',
+'IndexSubcategoriaComponent',
+'EditSubcategoriaComponent',
+'ErrorComponent',
+'IndexUsuarioComponent',
+'EditUsuarioComponent',
+'CreateUsuarioComponent',
+'CreateFichaSectorialComponent',
+'IndexFichaSectorialComponent',
+'EditFichaSectorialComponent',
+'IndexIncidentesDenunciaComponent',
+'CreateIncidentesDenunciaComponent',
+'EditIncidentesDenunciaComponent',
+'IndexEncargadoCategoriaComponent',
+'CreateEncargadoCategoriaComponent',
+'EditEncargadoCategoriaComponent',
+'IndexRolUserComponent',
+'EditRolUserComponent',
+'CreateRolUserComponent',
+'IndexEstadoIncidenteComponent',
+'EditEstadoIncidenteComponent',
+'CreateEstadoIncidenteComponent',
+'IndexEstadoActividadProyectoComponent',
+'EditEstadoActividadProyectoComponent',
+'CreateEstadoActividadProyectoComponent',
+'IndexActividadProyectoComponent',
+'EditActividadProyectoComponent',
+'CreateActividadProyectoComponent',
+'IndexDireccionGeoComponent',
+'EditDireccionGeoComponent',
+'CreateDireccionGeoComponent',
+'IndexPermisosComponent',
+'EditPermisosComponent',
+'CreatePermisosComponent',
+'AdminComponent',
   ];
   rol:any;
   roles:any;

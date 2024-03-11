@@ -47,8 +47,9 @@ export class IndexEstadoIncidenteComponent implements OnInit {
         this.router.navigate(["/inicio"]);
       }else{
         iziToast.error({
-          title:'Error',
-          message:'Sin Conexión a la Base de Datos'
+          title: ('('+error.status+')').toString(),
+          position: 'bottomRight',
+          message: error.error.message,
         });
       }      
     });

@@ -99,4 +99,13 @@ export class FilterService {
     });
     return this.http.get(this.url + 'obtener_direccion_geo/' + id, { headers: headers });
   }
+  tienePermiso(token: any, componente: string, rolUsuario: string): Observable<any> {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: token
+    });
+    const  data={ componente: componente, rol_usuario: rolUsuario } 
+    // Aquí puedes ajustar la URL según la estructura de tu API
+    return this.http.post<any>(this.url + 'verificar_permiso',data, { headers: headers});
+  }
 }

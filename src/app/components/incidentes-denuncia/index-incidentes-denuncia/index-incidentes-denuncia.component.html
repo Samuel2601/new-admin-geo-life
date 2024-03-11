@@ -6,11 +6,11 @@
         (touchmove)="onTouchMove($event)" 
         (touchend)="onTouchEnd()">      
         <div class="row">
-          <div class="col-lg-7">
+          <div class="col-md-7 col-lg-auto">
             <h2>Listado de Incidentes/Deuncias: {{valor}}</h2>          
           </div>
           <div class="col-sm-3">                 
-            <a class="btn btn-primary float-end" (click)="llamarmodal()"><i class="bi bi-substack"></i></a>  
+            <a class="btn btn-primary float-end" *ngIf="check.IndexEstadoIncidenteComponent" (click)="llamarmodal()"><i class="bi bi-substack"></i></a>  
           </div>
           <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close" (click)="deshabilitarMapaDesdeIndexFichaSectorial($event)"></button>
         </div>
@@ -18,7 +18,7 @@
   
       <div class="card-body">
         <p-toast></p-toast>
-        <div  *ngIf="incidentesDenuncias.length>0&&!load_lista" class="table-responsive-lg" >
+        <div [style.height.px]="height-135" *ngIf="incidentesDenuncias.length>0&&!load_lista" class="table-responsive-lg" style="min-height: fit-content; overflow-y: auto;">
           <table class="table table-lg align-middle table-striped table-hover table-fixed">
               <thead>
                   <tr>
@@ -114,7 +114,7 @@
                   <h2>Listado de incidente/Denuncia </h2>
                 </div>
                 <div class="col-sm-auto">
-                  <a class="btn btn-primary float-end" (click)="llamarmodal()"><i class="bi bi-substack"></i></a>
+                  <a class="btn btn-primary float-end" *ngIf="check.IndexEstadoIncidenteComponent" (click)="llamarmodal()"><i class="bi bi-substack"></i></a>
                 </div>
               </div>
             </div>

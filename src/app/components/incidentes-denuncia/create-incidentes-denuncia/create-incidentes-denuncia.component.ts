@@ -145,8 +145,9 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
             this.router.navigate(["/inicio"]);
           }else{
             iziToast.error({
-              title:'Error',
-              message:'Sin Conexión a la Base de Datos'
+              title: ('('+error.status+')').toString(),
+              position: 'bottomRight',
+              message: error.error.message,
             });
           }
         }
@@ -171,8 +172,9 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
           this.router.navigate(["/inicio"]);
         }else{
           iziToast.error({
-            title:'Error',
-            message:'Sin Conexión a la Base de Datos'
+            title: ('('+error.status+')').toString(),
+            position: 'bottomRight',
+            message: error.error.message,
           });
         }
       }
@@ -213,8 +215,10 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     this.load_carrusel = false;
     const files: FileList = event.target.files;
     console.log(files);
-    this.imagenesSeleccionadas=[];
-    this.selectedFiles=[];
+    if(!this.isMobil()){
+      this.imagenesSeleccionadas=[];
+      this.selectedFiles=[];
+    }
     if (files && files.length > 0) {
       for (let i = 0; i < Math.min(files.length, 3); i++) {
         const file = files[i];
@@ -325,8 +329,9 @@ selectedFiles: File[] = [];
         this.router.navigate(["/inicio"]);
       }else{
         iziToast.error({
-          title:'Error',
-          message: error
+          title: ('('+error.status+')').toString(),
+          position: 'bottomRight',
+          message: error.error.message,
         });
       }
     });

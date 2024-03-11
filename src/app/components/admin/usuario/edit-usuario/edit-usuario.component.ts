@@ -64,11 +64,10 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
       this.datauser.password='';
       console.log(this.datauser);
     },error=>{
-      console.log(error);
       iziToast.error({
-        title:'ERROR:',
-        position:'bottomRight',
-        message:error.error.message
+        title: ('('+error.status+')').toString(),
+        position: 'bottomRight',
+        message: error.error.message,
       });
     });
   }

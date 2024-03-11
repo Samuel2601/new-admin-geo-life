@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ListService } from 'src/app/services/list.service';
 import { CreatePermisosComponent } from '../create-permisos/create-permisos.component';
+import { UpdateService } from 'src/app/services/update.service';
+import iziToast from 'izitoast';
 
 @Component({
   selector: 'app-index-permisos',
@@ -9,19 +11,19 @@ import { CreatePermisosComponent } from '../create-permisos/create-permisos.comp
   styleUrl: './index-permisos.component.scss'
 })
 export class IndexPermisosComponent {
-  permisos=[];
+  permisos:any=[];
   clonedProducts: { [s: string]: any } = {};
   roles:any
   rolselect: string[] = [];
 
-  constructor(private listService: ListService,private modalService: NgbModal) { }
+  constructor(private listService: ListService,private modalService: NgbModal, private updateServices:UpdateService) { }
 
   ngOnInit(): void {
     this.listarCategorias();
+    this.listarrol();
   }
   token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
-  listarCategorias(): void {
-     
+  listarCategorias(): void {     
     this.listService.ListarPermisos(this.token).subscribe(
       response => {
         this.permisos = response.data;
@@ -31,6 +33,29 @@ export class IndexPermisosComponent {
         console.log(error);
       }
     );
+  }
+  toggleRol(permiso: any, rol: any) {
+    if (this.checklist(permiso, rol._id)) {
+      this.deleterol(permiso, rol._id);
+    } else {
+      this.addrol(permiso, rol);
+    }
+  }
+  checklist(permiso:any,id: any): boolean {
+    return permiso.rolesPermitidos.find((element: any) => element._id === id) !== undefined;
+  }
+  
+  addrol(permiso:any,rol: any){
+    permiso.rolesPermitidos.push(rol);
+    console.log(permiso);
+  }
+
+  deleterol(permiso: any, rolId: any) {
+    const index = permiso.rolesPermitidos.findIndex((rol: any) => rol._id === rolId);
+    if (index !== -1) {
+      permiso.rolesPermitidos.splice(index, 1);
+    }
+    console.log(permiso);
   }
   listarrol(){
     this.listService.listarRolesUsuarios(this.token).subscribe(response=>{
@@ -53,9 +78,7 @@ export class IndexPermisosComponent {
     // Guardar los cambios de la categoría
     console.log('Guardar cambios de la categoría:', categoria);
       // Agregar roles seleccionados al permiso
-  categoria.rolesPermitidos = this.roles.filter((rol:any) => this.rolselect.includes(rol._id));
-  
-  // Aquí debes guardar el permiso actualizado
+      this.updateServices.actualizarPermisos(this.token,categoria._id,categoria).subscribe(response=>{iziToast.success({title:'Ingresado',position:'bottomRight',message:response.message})});
 
   }
 

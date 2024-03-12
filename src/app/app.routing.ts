@@ -46,18 +46,19 @@ import { IndexPermisosComponent } from './components/admin/permisos/index-permis
 import { EditPermisosComponent } from './components/admin/permisos/edit-permisos/edit-permisos.component';
 import { CreatePermisosComponent } from './components/admin/permisos/create-permisos/create-permisos.component';
 import { AdminComponent } from './components/admin/admin.component';
-
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 const appRoute: Routes = [
 	{ path: '', redirectTo: 'home', pathMatch: 'full' },
-	{ path: 'error', component: ErrorComponent },
 	{ path: 'home', component: HomeComponent },//, canActivate: [AuthGuard]
 	{ path: 'inicio', component:LoginComponent },
-	{ path: 'registro', component:SignupComponent },
+	{ path: 'registro', component:SignupComponent },	
+	{ path: 'error', component: ErrorComponent },
 	
 	{ path: 'categorias', component: IndexCategoriaComponent, canActivate: [PermisoGuard], data: { componente: 'IndexCategoriaComponent' } },
 	{ path: 'subcategorias', component: IndexSubcategoriaComponent, canActivate: [PermisoGuard], data: { componente: 'IndexSubcategoriaComponent' } },
 	{ path: 'create-categoria', component:CreateCategoriaComponent, canActivate: [PermisoGuard], data: { componente: 'CreateCategoriaComponent' }  },
 	{ path: 'create-subcategoria', component:CreateSubcategoriaComponent, canActivate: [PermisoGuard], data: { componente: 'CreateSubcategoriaComponent' }  },
+	{ path: 'dashboard', component:DashboardComponent, canActivate: [PermisoGuard], data: { componente: 'DashboardComponent' }  },
 	
 	// Agregar las rutas para los otros componentes
 	{ path: 'administracion', component: AdminComponent, canActivate: [PermisoGuard], data: { componente: 'AdminComponent' }  },

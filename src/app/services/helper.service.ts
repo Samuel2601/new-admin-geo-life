@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { AdminService } from './admin.service';
 import { FilterService } from './filter.service';
-
+import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { SpinnerComponent } from '../spinner/spinner.component';
+import { MapComponent } from '../components/map/map.component';
 @Injectable({
   providedIn: 'root'
 })
@@ -23,7 +25,7 @@ export class HelperService {
   actualizarToken(token:any){
 
   }
-  constructor(private router: Router, private adminService: AdminService,private filterService:FilterService) { }
+  constructor(private modalService: NgbModal,private router: Router, private adminService: AdminService,private filterService:FilterService) { }
 
   async checkPermiso(componente: any): Promise<boolean> {
     const token = this.token();
@@ -36,8 +38,53 @@ export class HelperService {
       const response = await this.filterService.tienePermiso(token, componente, rolUsuario._id).toPromise();
       return response.data ? true : false;
     } catch (error) {
-      console.error('Error al verificar el permiso:', error);
+      //console.error('Error al verificar el permiso:', error);
       return false;
+    }
+  }
+  // Declara una variable para almacenar el estado del spinner
+  llamadasActivas = 0;
+  llamarspinner(mensaje?: string[], tiempo?: number) {
+    if(this.llamadasActivas==0){
+      const mensajesPredeterminados = ['Podrías ir por café mientras', 'Estamos cargando tu página', 'Esto puede tardar unos segundos'];
+      const modalRef = this.modalService.open(SpinnerComponent, { centered: true, backdrop: 'static' });
+      modalRef.componentInstance.show = true;
+      if (mensaje) {
+        mensaje.forEach((elemento, indice) => {
+          setTimeout(() => {
+            if (modalRef.componentInstance)modalRef.componentInstance.message = elemento;
+          }, tiempo || 5000 * (indice));
+        });
+      } else {
+        mensajesPredeterminados.forEach((elemento, indice) => {
+          setTimeout(() => {
+            if (modalRef.componentInstance)modalRef.componentInstance.message = elemento;
+          }, tiempo || 5000 * (indice));
+        });
+      }
+    }
+    this.llamadasActivas++;
+    
+    console.log(this.llamadasActivas);
+  }
+  cerrarspinner(){
+    this.llamadasActivas--;
+    console.log(this.llamadasActivas);
+    if(this.llamadasActivas==0){
+      setTimeout(() => {      
+        console.log('Cerrando');
+        this.modalService.dismissAll();
+        }, 1000);
+    }
+  }
+  private mapComponent: MapComponent | null = null;
+  setMapComponent(mapComponent: MapComponent) {
+    this.mapComponent = mapComponent;
+  }
+
+  marcarlugar(latitud: any, longitud: any, message: string) {
+    if (this.mapComponent) {
+      this.mapComponent.marcarlugar(latitud, longitud, message);
     }
   }
 }

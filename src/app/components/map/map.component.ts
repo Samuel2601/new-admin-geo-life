@@ -18,6 +18,7 @@ import { from } from 'rxjs';
 import { Capacitor, Plugins } from '@capacitor/core';
 const { Geolocation } = Plugins;
 import 'jquery.finger';
+import { SpinnerComponent } from 'src/app/spinner/spinner.component';
 declare global {
   interface JQueryStatic {
       Finger: any;
@@ -92,14 +93,17 @@ export class MapComponent implements OnInit,AfterViewInit {
 
   //IMPLEMENTOS
   check:any={};
+
   async ngOnInit(): Promise<void> {
+    this.helperService.setMapComponent(this);
+    this.helperService.llamarspinner();
     try {
       this.check.IndexFichaSectorialComponent = await this.helperService.checkPermiso('IndexFichaSectorialComponent') || false;
       this.check.IndexIncidentesDenunciaComponent = await this.helperService.checkPermiso('IndexIncidentesDenunciaComponent')|| false;
       this.check.CreateIncidentesDenunciaComponent = await this.helperService.checkPermiso('CreateIncidentesDenunciaComponent')|| false;
       this.check.CreateFichaSectorialComponent = await this.helperService.checkPermiso('CreateFichaSectorialComponent') || false;
       this.check.CreateDireccionGeoComponent = await this.helperService.checkPermiso('CreateDireccionGeoComponent') || false;
-      
+      this.helperService.cerrarspinner();
       console.log(this.check);
     } catch (error) {
       console.error('Error al verificar permisos:', error);
@@ -258,8 +262,8 @@ export class MapComponent implements OnInit,AfterViewInit {
       const mark = L.marker([latitud, longitud], { icon: this.redIcon }).addTo(this.map);
       mark.bindPopup(message).openPopup();
       this.map.flyTo([latitud, longitud]);//ZOOM 20
-    }
-}
+      }
+  }
 
   async buscarfeature(latitud:any, longitud:any){
     if(this.lista_feature.length==0){

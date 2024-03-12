@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ListService } from 'src/app/services/list.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UpdateService } from 'src/app/services/update.service';
+import { HelperService } from 'src/app/services/helper.service';
 @Component({
   selector: 'app-index-subcategoria',
   templateUrl: './index-subcategoria.component.html',
@@ -12,11 +13,12 @@ export class IndexSubcategoriaComponent {
   load_lista:boolean=true;
   id: any ='';
   clonedProducts: { [s: string]: any } = {};
-  constructor(private listService: ListService,private route: ActivatedRoute,private router: Router,private updateservice:UpdateService) {
+  constructor(private listService: ListService,private route: ActivatedRoute,private router: Router,private updateservice:UpdateService,private helperservice:HelperService) {
     this.id = this.route.snapshot.queryParamMap.get('id');
    }
 
   ngOnInit(): void {
+    this.helperservice.llamarspinner();
     this.listarSubcategorias();
   }
 
@@ -35,6 +37,7 @@ export class IndexSubcategoriaComponent {
         console.log(error);
       }
     );
+    this.helperservice.cerrarspinner();
   }
   onRowEditInit(subcategoria: any) {
     this.clonedProducts[subcategoria._id as string] = { ...subcategoria };

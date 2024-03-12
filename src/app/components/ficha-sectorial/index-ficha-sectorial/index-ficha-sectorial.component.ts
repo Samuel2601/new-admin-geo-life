@@ -37,6 +37,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   }
   check:any={};
   async ngOnInit(): Promise<void> {
+    this.heleperservice.llamarspinner();
     try {
       this.check.IndexEstadoActividadProyectoComponent = await this.heleperservice.checkPermiso('IndexEstadoActividadProyectoComponent') || false;
       this.check.IndexActividadProyectoComponent = await this.heleperservice.checkPermiso('IndexActividadProyectoComponent')|| false;
@@ -47,7 +48,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
     }
   
     this.listarficha();
-
+    this.heleperservice.cerrarspinner();
   }
 
   isMobil() {
@@ -58,6 +59,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   }
 
   listarficha(){
+    this.heleperservice.llamarspinner();
     this.load_lista=true;
     const token=sessionStorage.getItem('token');
     if(!token){
@@ -102,6 +104,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
           }
       });
     }
+    this.heleperservice.cerrarspinner();
   }
   llamarmodal2(){
     this.modalService.dismissAll();

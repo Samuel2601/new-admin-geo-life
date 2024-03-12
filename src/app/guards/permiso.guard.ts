@@ -14,10 +14,9 @@ export class PermisoGuard implements CanActivate {
   constructor(private adminService: AdminService , private router: Router,private helperService:HelperService,private filterService:FilterService) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
-    const token = this.helperService.token();
-    const componente = route.data['componente'];
-    const rolUsuario = this.adminService.roluser(token); // Método para obtener el rol del usuario desde AuthService
-  
+    const token = this.helperService.token() || this.router.navigate(['/home']);
+    const componente = route.data['componente'] || this.router.navigate(['/home']);
+    const rolUsuario = this.adminService.roluser(token);
     return new Observable<boolean>(observer => {
       this.filterService.tienePermiso(token, componente, rolUsuario._id).subscribe(
         response => {
@@ -25,19 +24,21 @@ export class PermisoGuard implements CanActivate {
             observer.next(true);
             observer.complete();
           } else {
-            this.router.navigate(['/error']); // Redirigir a /home si no tiene permiso
+            this.router.navigate(['/error']);
             observer.next(false);
             observer.complete();
           }
         },
         error => {
-          this.router.navigate(['/error']); // Redirigir a /home si hay un error
+          this.router.navigate(['/error']);
           observer.next(false);
           observer.complete();
         }
       );
+    
     });
   }
+  
   
   
 

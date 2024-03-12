@@ -12,14 +12,14 @@ declare interface RouteInfo {
     status?:boolean;
 }
 export let ROUTES: RouteInfo[] = [
-  { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '', component: 'HomeComponent',status:true },
-  { path: '/user-profile', title: 'Perfil',  icon:'person', class: '', component: 'EditUsuarioComponent',status:true },
-  { path: '/categorias', title: 'Categorias',  icon:'content_paste', class: '', component: 'IndexCategoriaComponent',status:true },
-  { path: '/incidentes-denuncia', title: 'Incidentes/Decuncias',  icon:'library_books', class: '', component: 'IndexIncidentesDenunciaComponent',status:true },
-  { path: '/fichas-sectoriales', title: 'Fichas Sectoriales',  icon:'bubble_chart', class: '', component: 'IndexFichaSectorialComponent',status:true },
+  { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '', component: 'DashboardComponent',status:false },
+  { path: '/user-profile', title: 'Perfil',  icon:'person', class: '', component: 'EditUsuarioComponent',status:false },
+  { path: '/categorias', title: 'Categorias',  icon:'content_paste', class: '', component: 'IndexCategoriaComponent',status:false },
+  { path: '/incidentes-denuncia', title: 'Incidentes/Decuncias',  icon:'library_books', class: '', component: 'IndexIncidentesDenunciaComponent',status:false },
+  { path: '/fichas-sectoriales', title: 'Fichas Sectoriales',  icon:'bubble_chart', class: '', component: 'IndexFichaSectorialComponent',status:false },
   { path: '/home', title: 'Maps',  icon:'location_on', class: ''},
-  { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '', component: 'HomeComponent' ,status:true},
-  { path: '/administracion', title: 'Administración',  icon:'unarchive', class: 'active-pro', component: 'AdminComponent',status:true },
+  { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '', component: 'HomeComponent' ,status:false},
+  { path: '/administracion', title: 'Administración',  icon:'unarchive', class: 'active-pro', component: 'AdminComponent',status:false },
 ];
 
 @Component({
@@ -35,13 +35,18 @@ export class SidebarComponent implements OnInit {
   constructor(private platform: Platform,private element: ElementRef,private heleperservice:HelperService) { }
 
   ngOnInit() {
-    ROUTES.forEach(async (element:any) => {
+    this.heleperservice.llamarspinner();
+    ROUTES.forEach(async (element:any,index:any) => {
       if(element.component){
         element.status=await this.heleperservice.checkPermiso(element.component) || false;
+      }
+      if(ROUTES.length-1==index){
+        this.heleperservice.cerrarspinner();
       }
     });
     this.menuItems = ROUTES.filter(menuItem => menuItem);
     this.dropdownButton = this.element.nativeElement.querySelector('.dropdown-toggle');
+    
   }
   
   toggleDropdown(): void {

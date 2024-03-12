@@ -43,7 +43,7 @@ export class AdminService {
 		});
 		return this._http.get(this.url + 'verificar_token', { headers: headers });
 	}
-	identity(token:any){
+	identity(token:string){
 		const helper = new JwtHelperService();
 		var decodedToken = helper.decodeToken(token);
 		return decodedToken.sub;

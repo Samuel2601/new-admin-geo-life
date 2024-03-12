@@ -45,7 +45,7 @@ export class CreateFichaSectorialComponent implements OnInit {
     } else {
       this.router.navigate(['/home']);
     }
-    const ident=this.adminservice.identity(sessionStorage.getItem('token'));
+    const ident=this.adminservice.identity(sessionStorage.getItem('token')||'');
     if (ident) {
       const indentr = this.fichaSectorialForm.get('encargado');
       if (indentr) {

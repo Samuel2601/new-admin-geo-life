@@ -67,8 +67,8 @@ export class CreateService {
     formData.append('subcategoria', data.subcategoria);
     formData.append('ciudadano', data.ciudadano);
     formData.append('descripcion', data.descripcion);
-    formData.append('direccion_geo', data.direccion_geo);
-  
+    formData.append('direccion_geo',JSON.stringify(data.direccion_geo));
+    
     // Llama a la función compressor para comprimir cada imagen
     return new Observable((observer) => {
       const compressedFilesPromises = fotos.map((foto) => this.compressor(foto));

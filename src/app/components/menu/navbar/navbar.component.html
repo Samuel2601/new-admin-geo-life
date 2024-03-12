@@ -21,7 +21,7 @@
             </form>
             <ul class="navbar-nav">
                 <li class="nav-item" *ngIf="dashboard">
-                    <a class="nav-link" href="javascript:void(0)">
+                    <a class="nav-link" href="/dashboard">
                         <i class="material-icons">dashboard</i>
                         <p>
                             <span class="d-lg-none d-md-block">Stats</span>
@@ -47,14 +47,20 @@
                 <li class="nav-item dropdown" *ngIf="token">
                     <div class="dropdown dropstart">
                         <a class="nav-link" style="cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="material-icons">person</i>
+                           
+                            <img [src]="url + 'helper/obtener_portada_avatar/' + foto"
+                            width="40"
+                            height="50"
+                            alt="Your profile picture"
+                            class="rounded-circle img-fluid"
+                            style="aspect-ratio: 48 / 48; object-fit: cover;">
                             <p>
                                 <span class="d-lg-none d-md-block">Account</span>
                             </p>
                         </a>
                         <ul class="dropdown-menu">
-                          <li><a class="dropdown-item " href="#">Perfil</a></li>
-                          <li><a class="dropdown-item" href="#">Incidentes</a></li>
+                          <li><a class="dropdown-item " href="/user-profile">Perfil</a></li>
+                          <li><a class="dropdown-item" href="/incidentes-denuncia">Incidentes</a></li>
                           <li><hr class="dropdown-divider"></li>
                           <li><a class="dropdown-item active" style="cursor: pointer;" (click)="logout()">Cerrar Sesión</a></li>
                         </ul>

@@ -61,6 +61,8 @@ import { EditPermisosComponent } from './components/admin/permisos/edit-permisos
 import { CreatePermisosComponent } from './components/admin/permisos/create-permisos/create-permisos.component';
 
 import { AdminComponent } from './components/admin/admin.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
@@ -158,6 +160,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RippleModule } from 'primeng/ripple';
 import { StyleClassModule } from 'primeng/styleclass';
 import { MessageService } from 'primeng/api';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 @NgModule({
   declarations: [
     ErrorComponent,
@@ -207,7 +211,9 @@ import { MessageService } from 'primeng/api';
     EditPermisosComponent,
     IndexPermisosComponent,
     CreatePermisosComponent,
-    AdminComponent
+    AdminComponent,
+    DashboardComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
@@ -309,7 +315,8 @@ import { MessageService } from 'primeng/api';
     CardModule,
     RippleModule,
     StyleClassModule,
-    NgbModule
+    NgbModule,
+    BrowserAnimationsModule
   ],
   providers: [ MessageService],
   bootstrap: [AppComponent]

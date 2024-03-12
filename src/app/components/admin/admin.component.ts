@@ -11,17 +11,19 @@ export class AdminComponent implements OnInit{
   check:any={};
   constructor(private helperService: HelperService, private router: Router) { }
   async ngOnInit(): Promise<void> {
+    this.helperService.llamarspinner();
     try {
       this.check.IndexUsuarioComponent = await this.helperService.checkPermiso('IndexUsuarioComponent') || false;
       this.check.IndexRolUserComponent = await this.helperService.checkPermiso('IndexRolUserComponent')|| false;
       this.check.IndexEncargadoCategoriaComponent = await this.helperService.checkPermiso('IndexEncargadoCategoriaComponent')|| false;
       this.check.IndexPermisosComponent = await this.helperService.checkPermiso('IndexPermisosComponent') || false;
       console.log(this.check);
+      this.helperService.cerrarspinner();
     } catch (error) {
       console.error('Error al verificar permisos:', error);
       this.router.navigate(['/error']);
     }
-  
+    
     let found = false;
     for (const key in this.check) {
       if (this.check[key] && !found) {

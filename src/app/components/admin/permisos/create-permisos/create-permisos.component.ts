@@ -11,6 +11,7 @@ import { ListService } from 'src/app/services/list.service';
 export class CreatePermisosComponent implements OnInit{
   componente:any;
   componentes = [
+    'DashboardComponent',
 'CreateCategoriaComponent',
 'IndexCategoriaComponent',
 'EditCategoriaComponent',

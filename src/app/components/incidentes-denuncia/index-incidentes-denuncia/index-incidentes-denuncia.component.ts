@@ -109,6 +109,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
 
   check:any={};
   async ngOnInit(): Promise<void> {
+    this.heleperservice.llamarspinner();
     try {
       this.check.IndexEstadoIncidenteComponent = await this.heleperservice.checkPermiso('IndexEstadoIncidenteComponent') || false;
       console.log(this.check);
@@ -118,7 +119,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
     }
   
     this.listarIncidentesDenuncias();
-
+    this.heleperservice.cerrarspinner();
   }
   llamarmodal(){
     this.modalService.dismissAll();
@@ -130,8 +131,13 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
       this.height = 300;
     }
   }
+  irMap(direccion:any){
+    console.log('Marcando');
+    this.heleperservice.marcarlugar(direccion.latitud,direccion.longitud,'Incidente del Ciudadano');
+  }
 
   listarIncidentesDenuncias(): void {
+    this.heleperservice.llamarspinner();
     this.load_lista=true;
     const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
     if(!token){
@@ -177,6 +183,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
           }
       });
     }
+    this.heleperservice.cerrarspinner();
   }
 
   imagenModal: string='';

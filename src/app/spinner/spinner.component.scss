@@ -1,0 +1,17 @@
+.modal {
+    display: none;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .modal.show {
+    display: block;
+  }
+  
+  .modal-dialog {
+    margin: auto;
+  }
+  
+  .spinner-border {
+    margin-top: 20px;
+  }
+  

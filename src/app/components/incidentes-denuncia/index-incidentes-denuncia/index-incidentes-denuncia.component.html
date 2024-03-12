@@ -45,7 +45,7 @@
                 </td>
 
                     <td *ngIf="!isMobil()">{{ ficha.descripcion }}</td>
-                    <td>{{ ficha.direccion_geo }}</td>
+                    <td (click)="irMap(ficha.direccion_geo)">{{ ficha.direccion_geo.nombre }}</td>
                     <td> {{ficha.ciudadano.nombres}}</td>
                     <td *ngIf="!isMobil()"> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span> </td>
 
@@ -65,7 +65,7 @@
                           <!-- Contenido del modal -->
                           <p><strong>Categoría:</strong> {{ ficha.categoria.nombre }}</p>
                           <p><strong>Subcategoría:</strong> {{ ficha.subcategoria.nombre }}</p>
-                          <p><strong>Dirección Geográfica:</strong> {{ ficha.direccion_geo }}</p>                                      
+                          <p (click)="irMap(ficha.direccion_geo)"><strong>Dirección Geográfica:</strong> {{ ficha.direccion_geo.nombre }}</p>                                      
                           <p><strong>Estado:</strong> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span></p>
                           <p><strong>Ciudadano:</strong> {{ ficha.ciudadano.nombres }}</p>
                           <p><strong>Descripción:</strong> {{ ficha.descripcion }}</p>
@@ -147,7 +147,7 @@
                         </td>
     
                             <td *ngIf="!isMobil()">{{ ficha.descripcion }}</td>
-                            <td>{{ ficha.direccion_geo }}</td>
+                            <td (click)="irMap(ficha.direccion_geo)">{{ ficha.direccion_geo.nombre }}</td>
                             <td> {{ficha.ciudadano.nombres}}</td>
                             <td *ngIf="!isMobil()"> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span> </td>
     
@@ -167,7 +167,7 @@
                                   <!-- Contenido del modal -->
                                   <p><strong>Categoría:</strong> {{ ficha.categoria.nombre }}</p>
                                   <p><strong>Subcategoría:</strong> {{ ficha.subcategoria.nombre }}</p>
-                                  <p><strong>Dirección Geográfica:</strong> {{ ficha.direccion_geo }}</p>                                      
+                                  <p (click)="irMap(ficha.direccion_geo)"><strong>Dirección Geográfica:</strong> {{ ficha.direccion_geo.nombre }}</p>                                      
                                   <p><strong>Estado:</strong> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span></p>
                                   <p><strong>Ciudadano:</strong> {{ ficha.ciudadano.nombres }}</p>
                                   <p><strong>Descripción:</strong> {{ ficha.descripcion }}</p>

@@ -2,7 +2,7 @@
 <ng-container *ngIf="model">
   <div class="modal-content" *ngIf="!mostrar">
     <div class="modal-header">
-      <h2 class="modal-title">Nuevo Incidente o Denuncia: <span>{{nuevoIncidenteDenuncia.direccion_geo}}</span>/<span *ngIf="geolocation">{{geolocation.address.road}}</span></h2>
+      <h2 class="modal-title">Nuevo Incidente o Denuncia: <span>{{nuevoIncidenteDenuncia.direccion_geo.nombre}}</span>/<span *ngIf="geolocation">{{geolocation.address.road}}</span></h2>
       <button type="button" class="btn-close" aria-label="Close" (click)="DimissModal()"></button>
     </div>
 

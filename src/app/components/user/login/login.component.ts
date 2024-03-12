@@ -62,6 +62,9 @@ export class LoginComponent implements OnInit{
      this._adminService.login_admin(user).subscribe((response:any)=>{
       if(response.token){
         sessionStorage.setItem('token',response.token);
+        if(response.data.foto){
+          sessionStorage.setItem('foto',response.data.foto);
+        }
         iziToast.success({
           title:'Ingreso',
           position:'bottomRight',

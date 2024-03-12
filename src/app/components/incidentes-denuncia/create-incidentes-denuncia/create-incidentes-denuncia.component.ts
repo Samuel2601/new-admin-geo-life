@@ -95,7 +95,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
   ngOnInit(): void {
    
     if (this.data) {
-      this.nuevoIncidenteDenuncia.direccion_geo = this.data.properties.nombre;
+      this.nuevoIncidenteDenuncia.direccion_geo = {nombre:this.data.properties.nombre,latitud:this.direccion.latitud ,longitud:this.direccion.longitud};
     } else {
       this.router.navigate(['/maps']); // Corregido: navigate espera un array como argumento
     }
@@ -308,7 +308,7 @@ selectedFiles: File[] = [];
   load_form=true;
   crearIncidenteDenuncia(): void {
     this.load_form=false;
-    const token = sessionStorage.getItem('token');
+    const token:string = sessionStorage.getItem('token')||'';
     
     this.nuevoIncidenteDenuncia.ciudadano=this.adminservice.identity(token);
     

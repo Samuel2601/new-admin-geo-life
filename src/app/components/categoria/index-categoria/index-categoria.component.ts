@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { HelperService } from 'src/app/services/helper.service';
 import { ListService } from 'src/app/services/list.service';
 import { UpdateService } from 'src/app/services/update.service';
 
@@ -13,9 +14,10 @@ export class IndexCategoriaComponent {
   constcategorias=[];
   clonedProducts: { [s: string]: any } = {};
 
-  constructor(private listService: ListService,private router: Router, private updateservice:UpdateService) { }
+  constructor(private listService: ListService,private router: Router, private updateservice:UpdateService, private helperservice:HelperService) { }
 
   ngOnInit(): void {
+    this.helperservice.llamarspinner();
     this.listarCategorias();
   }
 
@@ -34,6 +36,7 @@ export class IndexCategoriaComponent {
         console.log(error);
       }
     );
+    this.helperservice.cerrarspinner();
   }
   editCategoriaId: any | null = null;
   onRowEditInit(categoria: any) {

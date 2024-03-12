@@ -3,6 +3,7 @@ import { ROUTES } from '../sidebar/sidebar.component';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { HelperService } from 'src/app/services/helper.service';
+import { GLOBAL } from 'src/app/services/GLOBAL';
 
 declare var $: any;
 declare interface RouteInfo {
@@ -25,6 +26,8 @@ export const ROUTES2: RouteInfo[] = [
 })
 export class NavbarComponent implements OnInit {
   listTitles: any[] = [];
+  url=GLOBAL.url;
+  foto=sessionStorage.getItem('foto');
   public mobile_menu_visible = false;
   private toggleButton: HTMLElement | null = null;
   private sidebarVisible = false;
@@ -53,7 +56,7 @@ export class NavbarComponent implements OnInit {
   }
   
   async ngOnInit(): Promise<void> {    
-    this.dashboard=await this.helper.checkPermiso('DashBoardCompont');
+    this.dashboard=await this.helper.checkPermiso('DashboardComponent')||false;
     this.title=this.setTitle();
     this.listTitles = ROUTES2.filter((listTitle: any) => listTitle);
     this.toggleButton = this.element.nativeElement.querySelector('.navbar-toggler');

@@ -89,7 +89,7 @@
       <li *ngFor="let menuItem of listTitles" class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
           <a class="nav-link text-center" [routerLink]="[menuItem.path]" style="color: #4caf50;">
               <i class="material-icons">{{menuItem.icon}}</i>
-              <p *ngIf="isActive(menuItem)" class="mb-0">{{menuItem.title}}</p>
+              <p *ngIf="isActive(menuItem)" class="mb-0"></p>
           </a>
       </li>
     </ul>

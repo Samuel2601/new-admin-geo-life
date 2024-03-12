@@ -113,11 +113,11 @@ export class MapComponent implements OnInit,AfterViewInit {
     this.helperService.deshabilitarMapa$.subscribe(() => {
       this.handleClick();
     });
-
+    this.geoserve();
   }
 
   async ngAfterViewInit(): Promise<void> {
-    this.geoserve();
+    
     let containers = document.querySelectorAll('.leaflet-control-container');
     containers.forEach(container => {
       container.addEventListener('click', (event) => {

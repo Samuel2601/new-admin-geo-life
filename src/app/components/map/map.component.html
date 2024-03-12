@@ -35,7 +35,7 @@
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <a class="dropdown-item" href="javascript:void(0)" *ngIf="check.IndexIncidentesDenunciaComponent" (click)="incidente()">Incidentes</a>
-                <a class="dropdown-item" href="javascript:void(0)" (click)="nuevoIncidente()">Nuevo Incidente</a>
+                <a class="dropdown-item" href="javascript:void(0)" *ngIf="!token || check.CreateIncidentesDenunciaComponent" (click)="nuevoIncidente()">Nuevo Incidente</a>
             </div>
         </div>
         
@@ -48,7 +48,7 @@
         </app-index-ficha-sectorial>
     </div>
     <div #mapContainer2 class="container" id="listarficha" *ngIf="mostrarincidente" (click)="stopPropagation($event)" >
-        <app-index-incidentes-denuncia class="container" id="indexficha"  [filtro]="'direccion_geo'" [valor]="opcionb.properties.nombre" [modal]="true">
+        <app-index-incidentes-denuncia class="container" id="indexficha"  [filtro]="'direccion_geo.nombre'" [valor]="opcionb.properties.nombre" [modal]="true">
         </app-index-incidentes-denuncia>
     </div>
     <!-- Modal -->

@@ -26,6 +26,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   deshabilitarMapaDesdeIndexFichaSectorial(event: MouseEvent) {
     this.stopPropagation(event);
     this.heleperservice.deshabilitarMapa();
+    this.heleperservice.disablehandliClick();
   }
   stopPropagation(event: MouseEvent) {
     event.stopPropagation();

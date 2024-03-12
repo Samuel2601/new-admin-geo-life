@@ -23,6 +23,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   deshabilitarMapaDesdeIndexFichaSectorial(event: MouseEvent) {
     this.stopPropagation(event);
     this.heleperservice.deshabilitarMapa();
+    this.heleperservice.disablehandliClick();
   }
   load_lista=true;
   fichasectorial:any=[];

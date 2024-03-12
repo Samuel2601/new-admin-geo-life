@@ -83,7 +83,7 @@ export class MapComponent implements OnInit,AfterViewInit {
   urlgeoserwifi="https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Apuntos-wifi&outputFormat=application%2Fjson";
   urlgeoser="https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson";  
   urlgeolocal="http://192.168.120.35/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson";
-
+  token=this.helperService.token()||undefined;
   //CONSTRUCTOR
   constructor(private modalService: NgbModal,private helperService:HelperService,config: NgbPopoverConfig, private router: Router){
     // Configuración global de popovers
@@ -198,7 +198,6 @@ export class MapComponent implements OnInit,AfterViewInit {
         fillOpacity: 0.7
     });
   } 
-
   resetHighlight(e:any) {
     const layer = e.target;
     layer.setStyle({
@@ -210,7 +209,6 @@ export class MapComponent implements OnInit,AfterViewInit {
         fillOpacity: 0.5
     });
   }
-
   geojsonWFSstyle(feature:any) {
     return {
       fillColor: "#2986CC",
@@ -221,7 +219,6 @@ export class MapComponent implements OnInit,AfterViewInit {
         fillOpacity: 0.5
     };
   }
-
   geojsonWFSstyle2(feature:any) {
     return {
       weight: 4,
@@ -249,7 +246,7 @@ export class MapComponent implements OnInit,AfterViewInit {
     }, 200);
   }
 
-  marcarlugar(latitud:any, longitud:any,message:string){
+  marcarlugar(latitud:any, longitud:any,message:string,zoom?:number){
     if (this.map) {
       // Borra todas las marcas existentes en el mapa
       this.map.eachLayer((layer) => {
@@ -261,7 +258,7 @@ export class MapComponent implements OnInit,AfterViewInit {
       // Añade la nueva marca al mapa
       const mark = L.marker([latitud, longitud], { icon: this.redIcon }).addTo(this.map);
       mark.bindPopup(message).openPopup();
-      this.map.flyTo([latitud, longitud]);//ZOOM 20
+      this.map.flyTo([latitud, longitud],zoom);//ZOOM 20
       }
   }
 
@@ -350,6 +347,26 @@ isMobil() {
       
     }
   } 
+  enablehandleClick() {
+    if (this.map) {
+      console.log('habilitar');
+      this.map.dragging.enable();
+      this.map.scrollWheelZoom.enable();
+      this.map.off('click', this.onClickHandlerMap);
+      // Remover la capa de búsqueda del control de capas
+      this.map.removeLayer(this.busquedaLayer);
+    }
+  } 
+  disablehandliClick(){
+    if (this.map) {
+      console.log('habilitar');
+      this.map.dragging.enable();
+      this.map.scrollWheelZoom.enable();
+      this.map.on('click', this.onClickHandlerMap);
+      // Añadir la capa de búsqueda al control de capas
+      this.map.addLayer(this.busquedaLayer);
+    }
+  }
   guardarfeature(data:any){
     if(data.features){
       var aux=[];
@@ -375,7 +392,7 @@ isMobil() {
   }  
   
   stopPropagation(event: Event) {
-    event.stopPropagation();
+    event.stopPropagation();    
   }
   
   onClickHandler = async (e: any) => {
@@ -402,11 +419,14 @@ isMobil() {
               }
           });
 
-          // Crea un marcador en las coordenadas especificadas
-          const mark = L.marker([this.latitud, this.longitud], { icon: this.redIcon }).addTo(this.map);
-          // Si deseas añadir un popup al marcador
-          mark.bindPopup('Ubicación elegida').openPopup();
-          this.map.flyTo([this.latitud, this.longitud], 14);
+          if(this.check.CreateIncidentesDenunciaComponent||!this.token){
+            // Crea un marcador en las coordenadas especificadas
+            const mark = L.marker([this.latitud, this.longitud], { icon: this.redIcon }).addTo(this.map);
+            // Si deseas añadir un popup al marcador
+            mark.bindPopup('Ubicación elegida').openPopup();
+            this.map.flyTo([this.latitud, this.longitud], 14);
+          }
+         
           const puntoUsuario = turf.point([this.longitud,this.latitud]);
           for (const feature of this.lista_feature) {
             if(feature.geometry&&feature.geometry.coordinates&&feature.geometry.coordinates[0]&&feature.geometry.coordinates[0][0].length>4){
@@ -432,8 +452,9 @@ isMobil() {
 
     // Agregar evento de fin de dibujo al mapa
     this.map.on('dragend', this.onDragEnd);
-    // Agregar el evento de clic al mapa con el handler definido anteriormente
-    this.map.on('click', this.onClickHandlerMap);
+       // Agregar el evento de clic al mapa con el handler definido anteriormente
+       this.map.on('click', this.onClickHandlerMap);
+
 
     this.map.addLayer(this.wfsSelangor);
     this.map.addLayer(this.wfsSelangorWifi);
@@ -653,17 +674,19 @@ isMobil() {
 
     // Elimina el event listener cuando se cierre el popup
     this.buscarPolylayer.on('popupclose', (e:any) => {
-
-      this.buscarPolylayer.on('click', (e:any) => {
-          console.log('tap');
-          console.log('Latitud:', e.latlng.lat);
-          console.log('Longitud:', e.latlng.lng);
-          this.latitud = e.latlng.lat;
-          this.longitud = e.latlng.lng;
-          this.map?.closePopup();
-          
-          this.marcarlugar(this.latitud,this.longitud,'Ubicación Seleccionada');
-      });
+      if(this.check.CreateIncidentesDenunciaComponent){
+          this.buscarPolylayer.on('click', (e:any) => {
+              console.log('tap');
+              console.log('Latitud:', e.latlng.lat);
+              console.log('Longitud:', e.latlng.lng);
+              this.latitud = e.latlng.lat;
+              this.longitud = e.latlng.lng;
+              this.map?.closePopup();
+              
+              this.marcarlugar(this.latitud,this.longitud,'Ubicación Seleccionada');
+          });
+      }
+      
 
       let bton = document.getElementById('fichaButton');
       if (bton) {

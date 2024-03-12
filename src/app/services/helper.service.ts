@@ -53,13 +53,13 @@ export class HelperService {
         mensaje.forEach((elemento, indice) => {
           setTimeout(() => {
             if (modalRef.componentInstance)modalRef.componentInstance.message = elemento;
-          }, tiempo || 5000 * (indice));
+          }, tiempo || 8000 * (indice));
         });
       } else {
         mensajesPredeterminados.forEach((elemento, indice) => {
           setTimeout(() => {
             if (modalRef.componentInstance)modalRef.componentInstance.message = elemento;
-          }, tiempo || 5000 * (indice));
+          }, tiempo || 8000 * (indice));
         });
       }
     }
@@ -84,7 +84,13 @@ export class HelperService {
 
   marcarlugar(latitud: any, longitud: any, message: string) {
     if (this.mapComponent) {
-      this.mapComponent.marcarlugar(latitud, longitud, message);
+      this.mapComponent.marcarlugar(latitud, longitud, message,17);
+      this.mapComponent.enablehandleClick();
+    }
+  }
+  disablehandliClick(){
+    if (this.mapComponent) {
+      this.mapComponent.disablehandliClick();
     }
   }
 }

@@ -13,17 +13,18 @@ export class AdminComponent implements OnInit{
   async ngOnInit(): Promise<void> {
     this.helperService.llamarspinner();
     try {
-      this.check.IndexUsuarioComponent = await this.helperService.checkPermiso('IndexUsuarioComponent') || false;
-      this.check.IndexRolUserComponent = await this.helperService.checkPermiso('IndexRolUserComponent')|| false;
-      this.check.IndexEncargadoCategoriaComponent = await this.helperService.checkPermiso('IndexEncargadoCategoriaComponent')|| false;
-      this.check.IndexPermisosComponent = await this.helperService.checkPermiso('IndexPermisosComponent') || false;
+      this.check.IndexUsuarioComponent = sessionStorage.getItem('IndexUsuarioComponent') || false;
+      this.check.IndexRolUserComponent = sessionStorage.getItem('IndexRolUserComponent')|| false;
+      this.check.IndexEncargadoCategoriaComponent = sessionStorage.getItem('IndexEncargadoCategoriaComponent')|| false;
+      this.check.IndexPermisosComponent = sessionStorage.getItem('IndexPermisosComponent') || false;
       console.log(this.check);
-      this.helperService.cerrarspinner();
     } catch (error) {
+      
       console.error('Error al verificar permisos:', error);
       this.router.navigate(['/error']);
+      
     }
-    
+    this.helperService.cerrarspinner();
     let found = false;
     for (const key in this.check) {
       if (this.check[key] && !found) {

@@ -23,7 +23,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   deshabilitarMapaDesdeIndexFichaSectorial(event: MouseEvent) {
     this.stopPropagation(event);
     this.heleperservice.deshabilitarMapa();
-    this.heleperservice.disablehandliClick();
+    this.heleperservice.enablehandliClick();
   }
   load_lista=true;
   fichasectorial:any=[];
@@ -38,10 +38,10 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   }
   check:any={};
   async ngOnInit(): Promise<void> {
-    this.heleperservice.llamarspinner();
+    if(!this.modal)this.heleperservice.llamarspinner();
     try {
-      this.check.IndexEstadoActividadProyectoComponent = await this.heleperservice.checkPermiso('IndexEstadoActividadProyectoComponent') || false;
-      this.check.IndexActividadProyectoComponent = await this.heleperservice.checkPermiso('IndexActividadProyectoComponent')|| false;
+      this.check.IndexEstadoActividadProyectoComponent = sessionStorage.getItem('IndexEstadoActividadProyectoComponent') || false;
+      this.check.IndexActividadProyectoComponent = sessionStorage.getItem('IndexActividadProyectoComponent')|| false;
       console.log(this.check);
     } catch (error) {
       console.error('Error al verificar permisos:', error);
@@ -49,7 +49,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
     }
   
     this.listarficha();
-    this.heleperservice.cerrarspinner();
+    if(!this.modal)this.heleperservice.cerrarspinner();
   }
 
   isMobil() {
@@ -60,7 +60,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   }
 
   listarficha(){
-    this.heleperservice.llamarspinner();
+    if(!this.modal)this.heleperservice.llamarspinner();
     this.load_lista=true;
     const token=sessionStorage.getItem('token');
     if(!token){
@@ -105,7 +105,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
           }
       });
     }
-    this.heleperservice.cerrarspinner();
+    if(!this.modal)this.heleperservice.cerrarspinner();
   }
   llamarmodal2(){
     this.modalService.dismissAll();

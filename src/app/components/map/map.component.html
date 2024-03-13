@@ -43,11 +43,11 @@
             
     </div>
     
-    <div #mapContainer2 class="container" id="listarficha" *ngIf="mostrarficha" (click)="stopPropagation($event)" >
+    <div #mapContainer2 class="container" id="listarficha" *ngIf="mostrarficha" (click)="stopPropagation($event)" style="max-width: 100% !important;">
         <app-index-ficha-sectorial class="container" id="indexficha"  [filtro]="'direccion_geo'" [valor]="opcionb.properties.nombre" [modal]="true">
         </app-index-ficha-sectorial>
     </div>
-    <div #mapContainer2 class="container" id="listarficha" *ngIf="mostrarincidente" (click)="stopPropagation($event)" >
+    <div #mapContainer2 class="container" id="listarficha" *ngIf="mostrarincidente" (click)="stopPropagation($event)" style="max-width: 100% !important;">
         <app-index-incidentes-denuncia class="container" id="indexficha"  [filtro]="'direccion_geo.nombre'" [valor]="opcionb.properties.nombre" [modal]="true">
         </app-index-incidentes-denuncia>
     </div>

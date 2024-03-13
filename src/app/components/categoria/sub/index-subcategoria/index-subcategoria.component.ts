@@ -18,11 +18,12 @@ export class IndexSubcategoriaComponent {
    }
 
   ngOnInit(): void {
-    this.helperservice.llamarspinner();
+   
     this.listarSubcategorias();
   }
 
   listarSubcategorias(): void {
+    this.helperservice.llamarspinner();
     this.load_lista=true;
     const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
     if(!token){

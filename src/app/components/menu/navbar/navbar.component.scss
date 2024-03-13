@@ -10,5 +10,9 @@
   .modal-login-container form {
     max-width: 100%; /* Utilizar todo el ancho disponible */
   }
-
-  
+  .nav-pills {
+    --bs-nav-pills-link-active-bg: #4caf50;
+  }
+  .nav{
+    --bs-nav-link-color: #198754;
+  }

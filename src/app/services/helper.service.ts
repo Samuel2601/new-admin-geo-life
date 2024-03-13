@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, catchError, map, throwError } from 'rxjs';
 import { AdminService } from './admin.service';
 import { FilterService } from './filter.service';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { MapComponent } from '../components/map/map.component';
+import * as CryptoJS from 'crypto-js';
 @Injectable({
   providedIn: 'root'
 })
@@ -33,7 +34,9 @@ export class HelperService {
       return false
     }
     const rolUsuario = this.adminService.roluser(token);
-  
+    if(!rolUsuario){
+      return false;
+    }
     try {
       const response = await this.filterService.tienePermiso(token, componente, rolUsuario._id).toPromise();
       return response.data ? true : false;
@@ -42,6 +45,50 @@ export class HelperService {
       return false;
     }
   }
+
+  listpermisos() {
+    const token = this.token();
+    if (!token) {
+      console.error('Token no válido');
+      return;
+    }
+    const rolUsuario = this.adminService.roluser(token);
+    if (!rolUsuario) {
+      console.error('Rol de usuario no válido');
+      return;
+    }
+    this.filterService.listpermisos(token, rolUsuario._id)
+      .subscribe(
+        response => {
+          const data = response.data;
+          for (let clave in data) {
+            if (data.hasOwnProperty(clave)) {    
+              let val=this.encryptData(data[clave],this.key);
+              sessionStorage.setItem(clave,val);
+            }
+        }
+        },
+        error => {
+          console.error('Error al obtener permisos:', error);
+        }
+      );
+  }
+  public key = 'buzon'; 
+  // Función para cifrar la información
+  encryptData(data: string, key: string): string {
+    const dataString = data ? 'true' : 'false'; // Convertir booleano a cadena
+    const encryptedData = CryptoJS.AES.encrypt(dataString, key).toString();
+    return encryptedData;
+  }
+
+  // Función para descifrar la información
+  decryptData(encryptedData: string): string {
+    const decryptedData = CryptoJS.AES.decrypt(encryptedData, this.key).toString(CryptoJS.enc.Utf8);
+    return decryptedData;
+  }
+
+  
+
   // Declara una variable para almacenar el estado del spinner
   llamadasActivas = 0;
   llamarspinner(mensaje?: string[], tiempo?: number) {
@@ -64,8 +111,8 @@ export class HelperService {
       }
     }
     this.llamadasActivas++;
-    
-    console.log(this.llamadasActivas);
+      
+      console.log(this.llamadasActivas);
   }
   cerrarspinner(){
     this.llamadasActivas--;
@@ -74,7 +121,7 @@ export class HelperService {
       setTimeout(() => {      
         console.log('Cerrando');
         this.modalService.dismissAll();
-        }, 1000);
+        }, 500);
     }
   }
   private mapComponent: MapComponent | null = null;
@@ -91,6 +138,11 @@ export class HelperService {
   disablehandliClick(){
     if (this.mapComponent) {
       this.mapComponent.disablehandliClick();
+    }
+  }
+  enablehandliClick(){
+    if (this.mapComponent) {
+      this.mapComponent.enablehandleClick();
     }
   }
 }

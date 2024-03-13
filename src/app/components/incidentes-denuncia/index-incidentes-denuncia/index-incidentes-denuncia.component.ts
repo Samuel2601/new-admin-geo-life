@@ -26,7 +26,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   deshabilitarMapaDesdeIndexFichaSectorial(event: MouseEvent) {
     this.stopPropagation(event);
     this.heleperservice.deshabilitarMapa();
-    this.heleperservice.disablehandliClick();
+    this.heleperservice.enablehandliClick();
   }
   stopPropagation(event: MouseEvent) {
     event.stopPropagation();
@@ -37,6 +37,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   isResizing = false; // Indicador de si se está redimensionando
   
   startResize(event: MouseEvent | TouchEvent): void {
+    this.heleperservice.disablehandliClick();
     let initialY=0;
     if (event instanceof MouseEvent) {
       initialY = (event as MouseEvent).clientY;
@@ -92,6 +93,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
 
   onTouchEnd() {
     this.isDragging = false;
+    this.heleperservice.enablehandliClick();
   }
 
   isMobil() {
@@ -110,9 +112,9 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
 
   check:any={};
   async ngOnInit(): Promise<void> {
-    this.heleperservice.llamarspinner();
+    if(!this.modal)this.heleperservice.llamarspinner();
     try {
-      this.check.IndexEstadoIncidenteComponent = await this.heleperservice.checkPermiso('IndexEstadoIncidenteComponent') || false;
+      this.check.IndexEstadoIncidenteComponent = sessionStorage.getItem('IndexEstadoIncidenteComponent') || false;
       console.log(this.check);
     } catch (error) {
       console.error('Error al verificar permisos:', error);
@@ -120,7 +122,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
     }
   
     this.listarIncidentesDenuncias();
-    this.heleperservice.cerrarspinner();
+    if(!this.modal)this.heleperservice.cerrarspinner();
   }
   llamarmodal(){
     this.modalService.dismissAll();
@@ -132,13 +134,19 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
       this.height = 300;
     }
   }
-  irMap(direccion:any){
+  irMap(direccion:any,event:any){
+    event.stopPropagation();
     console.log('Marcando');
     this.heleperservice.marcarlugar(direccion.latitud,direccion.longitud,'Incidente del Ciudadano');
+    const carficha = document.getElementById("card-ficha");
+    if (carficha) {
+      carficha.addEventListener('touchend', this.onTouchEnd.bind(this));
+      carficha.addEventListener('mouseup', this.onTouchEnd.bind(this));
+    }    
   }
 
   listarIncidentesDenuncias(): void {
-    this.heleperservice.llamarspinner();
+    if(!this.modal)this.heleperservice.llamarspinner();
     this.load_lista=true;
     const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
     if(!token){
@@ -184,7 +192,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
           }
       });
     }
-    this.heleperservice.cerrarspinner();
+    if(!this.modal)this.heleperservice.cerrarspinner();
   }
 
   imagenModal: string='';

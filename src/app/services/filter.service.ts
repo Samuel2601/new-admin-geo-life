@@ -108,4 +108,12 @@ export class FilterService {
     // Aquí puedes ajustar la URL según la estructura de tu API
     return this.http.post<any>(this.url + 'verificar_permiso',data, { headers: headers});
   }
+  listpermisos(token: any, rolUsuario: string): Observable<any> {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: token
+    });
+    // Aquí puedes ajustar la URL según la estructura de tu API
+    return this.http.get<any>(this.url + 'obtener_permisosrol/'+rolUsuario, { headers: headers});
+  }
 }

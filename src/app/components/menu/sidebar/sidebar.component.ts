@@ -10,16 +10,17 @@ declare interface RouteInfo {
     class: string;
     component?:string;
     status?:boolean;
+    mobil:boolean;
 }
 export let ROUTES: RouteInfo[] = [
-  { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '', component: 'DashboardComponent',status:false },
-  { path: '/user-profile', title: 'Perfil',  icon:'person', class: '', component: 'EditUsuarioComponent',status:false },
-  { path: '/categorias', title: 'Categorias',  icon:'content_paste', class: '', component: 'IndexCategoriaComponent',status:false },
-  { path: '/incidentes-denuncia', title: 'Incidentes/Decuncias',  icon:'library_books', class: '', component: 'IndexIncidentesDenunciaComponent',status:false },
-  { path: '/fichas-sectoriales', title: 'Fichas Sectoriales',  icon:'bubble_chart', class: '', component: 'IndexFichaSectorialComponent',status:false },
-  { path: '/home', title: 'Maps',  icon:'location_on', class: ''},
-  { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '', component: 'HomeComponent' ,status:false},
-  { path: '/administracion', title: 'Administración',  icon:'unarchive', class: 'active-pro', component: 'AdminComponent',status:false },
+  { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '', component: 'DashboardComponent',status:false ,mobil:false},
+  { path: '/user-profile', title: 'Perfil',  icon:'person', class: '', component: 'EditUsuarioComponent',status:false,mobil:true },
+  { path: '/categorias', title: 'Categorias',  icon:'content_paste', class: '', component: 'IndexCategoriaComponent',status:false,mobil:true },
+  { path: '/incidentes-denuncia', title: 'Incidentes/Decuncias',  icon:'library_books', class: '', component: 'IndexIncidentesDenunciaComponent',status:false,mobil:true },
+  { path: '/fichas-sectoriales', title: 'Fichas Sectoriales',  icon:'bubble_chart', class: '', component: 'IndexFichaSectorialComponent',status:false,mobil:true },
+  { path: '/home', title: 'Maps',  icon:'location_on', class: '',mobil:true},
+  { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '', component: 'HomeComponent' ,status:false,mobil:true},
+  { path: '/administracion', title: 'Administración',  icon:'unarchive', class: 'active-pro', component: 'AdminComponent',status:false ,mobil:true},
 ];
 
 @Component({
@@ -38,12 +39,13 @@ export class SidebarComponent implements OnInit {
     this.heleperservice.llamarspinner();
     ROUTES.forEach(async (element:any,index:any) => {
       if(element.component){
-        element.status=await this.heleperservice.checkPermiso(element.component) || false;
+        element.status=sessionStorage.getItem(element.component) || false;
       }
-      if(ROUTES.length-1==index){
+      /*if(ROUTES.length-1==index){
         this.heleperservice.cerrarspinner();
-      }
+      }*/
     });
+    this.heleperservice.cerrarspinner();
     this.menuItems = ROUTES.filter(menuItem => menuItem);
     this.dropdownButton = this.element.nativeElement.querySelector('.dropdown-toggle');
     

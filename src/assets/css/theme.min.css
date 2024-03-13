@@ -1197,11 +1197,12 @@
     margin-right: auto;
     margin-left: auto;
   }
-  @media (min-width: 576px) {
-    .container-sm, .container {
-      max-width: 540px;
-    }
+  @media (min-width: 576px){
+    .container, .container-sm {
+      max-width: 100% !important;
   }
+  }
+  
   @media (min-width: 768px) {
     .container-md, .container-sm, .container {
       max-width: 720px;

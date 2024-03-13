@@ -17,11 +17,12 @@ export class IndexCategoriaComponent {
   constructor(private listService: ListService,private router: Router, private updateservice:UpdateService, private helperservice:HelperService) { }
 
   ngOnInit(): void {
-    this.helperservice.llamarspinner();
+    
     this.listarCategorias();
   }
 
   listarCategorias(): void {
+    this.helperservice.llamarspinner();
     const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
     if(!token){
       throw this.router.navigate(["/inicio"]);

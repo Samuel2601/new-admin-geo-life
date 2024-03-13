@@ -94,36 +94,37 @@ export class MapComponent implements OnInit,AfterViewInit {
   //IMPLEMENTOS
   check:any={};
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void{
     this.helperService.setMapComponent(this);
     this.helperService.llamarspinner();
-    try {
-      this.check.IndexFichaSectorialComponent = await this.helperService.checkPermiso('IndexFichaSectorialComponent') || false;
-      this.check.IndexIncidentesDenunciaComponent = await this.helperService.checkPermiso('IndexIncidentesDenunciaComponent')|| false;
-      this.check.CreateIncidentesDenunciaComponent = await this.helperService.checkPermiso('CreateIncidentesDenunciaComponent')|| false;
-      this.check.CreateFichaSectorialComponent = await this.helperService.checkPermiso('CreateFichaSectorialComponent') || false;
-      this.check.CreateDireccionGeoComponent = await this.helperService.checkPermiso('CreateDireccionGeoComponent') || false;
-      this.helperService.cerrarspinner();
-      console.log(this.check);
-    } catch (error) {
-      console.error('Error al verificar permisos:', error);
-      this.router.navigate(['/error']);
-    }
-  
-    this.helperService.deshabilitarMapa$.subscribe(() => {
-      this.handleClick();
-    });
     this.geoserve();
   }
 
   async ngAfterViewInit(): Promise<void> {
-    
+    try {
+      this.check.IndexFichaSectorialComponent = this.helperService.decryptData(sessionStorage.getItem('IndexFichaSectorialComponent')||'') ||false; //await this.helperService.checkPermiso('IndexFichaSectorialComponent') || false;
+      this.check.IndexIncidentesDenunciaComponent = this.helperService.decryptData(sessionStorage.getItem('IndexIncidentesDenunciaComponent')||'')|| false;
+      this.check.CreateIncidentesDenunciaComponent = this.helperService.decryptData(sessionStorage.getItem('CreateIncidentesDenunciaComponent')||'') || false;
+      this.check.CreateFichaSectorialComponent = this.helperService.decryptData(sessionStorage.getItem('CreateFichaSectorialComponent')||'') || false;
+      this.check.CreateDireccionGeoComponent = this.helperService.decryptData(sessionStorage.getItem('CreateDireccionGeoComponent')||'')|| false;
+     
+      console.log(this.check);
+    } catch (error) {
+      
+      //console.error('Error al verificar permisos:', error);
+      this.router.navigate(['/error']);
+    }
+    this.helperService.cerrarspinner();
+    this.helperService.deshabilitarMapa$.subscribe(() => {
+      this.handleClick();
+    });
+
     let containers = document.querySelectorAll('.leaflet-control-container');
     containers.forEach(container => {
       container.addEventListener('click', (event) => {
         event.stopPropagation();
         // Aquí va el código que quieres ejecutar al hacer clic en los elementos
-        console.log('Elemento clickeado:', container);
+        //console.log('Elemento clickeado:', container);
       });
     });
     
@@ -132,7 +133,7 @@ export class MapComponent implements OnInit,AfterViewInit {
       container.addEventListener('click', (event) => {
         event.stopPropagation();
         // Aquí va el código que quieres ejecutar al hacer clic en los elementos
-        console.log('Elemento clickeado:', container);
+        //console.log('Elemento clickeado:', container);
       });
     });
   }
@@ -271,7 +272,7 @@ export class MapComponent implements OnInit,AfterViewInit {
       if (feature.geometry && feature.geometry.coordinates && feature.geometry.coordinates[0] && feature.geometry.coordinates[0][0].length > 4) {
         const poligono = turf.polygon(feature.geometry.coordinates[0]);
         if (turf.booleanContains(poligono, puntoUsuario)) {
-          console.log('El usuario está dentro del polígono:', feature);
+          //console.log('El usuario está dentro del polígono:', feature);
           await this.buscar(feature);
           return feature;
         }
@@ -288,13 +289,13 @@ export class MapComponent implements OnInit,AfterViewInit {
         .then(response => response.json())
         .then(data => {
             const direccion = data.display_name;
-            console.log('Dirección:', data,data.display_name);
+            //console.log('Dirección:', data,data.display_name);
             //this.obtenerLatLong(data.addresss);
             return data.address;
             
         })
         .catch(error => {
-            console.error('Error al realizar la solicitud:', error);
+            //console.error('Error al realizar la solicitud:', error);
         });
   }
 
@@ -308,7 +309,7 @@ export class MapComponent implements OnInit,AfterViewInit {
             if (data.length > 0) {
                 const latitud = data[0].lat;
                 const longitud = data[0].lon;
-                console.log('Latitud:', latitud, 'Longitud:', longitud);
+                //console.log('Latitud:', latitud, 'Longitud:', longitud);
                 //this.marcarlugar(latitud,longitud);
                 return { latitud, longitud };
             } else {
@@ -316,7 +317,7 @@ export class MapComponent implements OnInit,AfterViewInit {
             }
         })
         .catch(error => {
-            console.error('Error al realizar la solicitud:', error);
+            //console.error('Error al realizar la solicitud:', error);
             throw error;
         });
 }
@@ -331,9 +332,16 @@ isMobil() {
 
   deshabilitarArrastreZoom() {
     if(this.map){
-      console.log('Deshabilitar');
+      //console.log('Deshabilitar');
       this.map.dragging.disable();
       this.map.scrollWheelZoom.disable();
+    }
+  } 
+  habilitarArrastreZoom() {
+    if(this.map){
+      //console.log('Deshabilitar');
+      this.map.dragging.enable();
+      this.map.scrollWheelZoom.enable();
     }
   } 
 
@@ -341,7 +349,7 @@ isMobil() {
     this.mostrarficha=false;
     this.mostrarincidente=false;
     if (this.map) {
-      console.log('habilitar');
+      //console.log('habilitar');
       this.map.dragging.enable();
       this.map.scrollWheelZoom.enable();
       
@@ -349,22 +357,22 @@ isMobil() {
   } 
   enablehandleClick() {
     if (this.map) {
-      console.log('habilitar');
+      //console.log('habilitar');
       this.map.dragging.enable();
       this.map.scrollWheelZoom.enable();
-      this.map.off('click', this.onClickHandlerMap);
+      this.map.on('click', this.onClickHandlerMap);
       // Remover la capa de búsqueda del control de capas
-      this.map.removeLayer(this.busquedaLayer);
+      this.map.addLayer(this.busquedaLayer);
     }
   } 
   disablehandliClick(){
     if (this.map) {
-      console.log('habilitar');
-      this.map.dragging.enable();
-      this.map.scrollWheelZoom.enable();
-      this.map.on('click', this.onClickHandlerMap);
+      //console.log('deshabilitar');
+      this.map.dragging.disable();
+      this.map.scrollWheelZoom.disable();
+      this.map.off('click', this.onClickHandlerMap);
       // Añadir la capa de búsqueda al control de capas
-      this.map.addLayer(this.busquedaLayer);
+      this.map.removeLayer(this.busquedaLayer);
     }
   }
   guardarfeature(data:any){
@@ -372,7 +380,7 @@ isMobil() {
       var aux=[];
       aux.push(data.features);
       this.lista_feature=aux[0];
-      console.log(this.lista_feature);
+      //console.log(this.lista_feature);
       this.filter = this.lista_feature;
     }
   }
@@ -383,12 +391,12 @@ isMobil() {
   //EVENTOS
   onDragStart() {
     this.editing=false;
-    console.log('Inicio de arrastre',this.editing);
+    //console.log('Inicio de arrastre',this.editing);
   }
   
   onDragEnd() {
     this.editing=true;
-    console.log('Fin de arrastre',this.editing);
+    //console.log('Fin de arrastre',this.editing);
   }  
   
   stopPropagation(event: Event) {
@@ -396,8 +404,8 @@ isMobil() {
   }
   
   onClickHandler = async (e: any) => {
-    console.log('Latitud:', e.latlng.lat);
-      console.log('Longitud:', e.latlng.lng);
+    //console.log('Latitud:', e.latlng.lat);
+      //console.log('Longitud:', e.latlng.lng);
       this.latitud = e.latlng.lat;
       this.longitud = e.latlng.lng;
       this.myControl.setValue((this.latitud+';'+this.longitud).toString());
@@ -407,8 +415,8 @@ isMobil() {
   onClickHandlerMap= async (e: any) =>{
     if (!this.editing){
       if(this.map){
-        console.log('Latitud:', e.latlng.lat);
-        console.log('Longitud:', e.latlng.lng);
+        //console.log('Latitud:', e.latlng.lat);
+        //console.log('Longitud:', e.latlng.lng);
         this.latitud = e.latlng.lat;
         this.longitud = e.latlng.lng;
         this.myControl.setValue((this.latitud+';'+this.longitud).toString());
@@ -418,7 +426,7 @@ isMobil() {
                   this.map.removeLayer(layer);
               }
           });
-
+    console.log(this.check.CreateIncidentesDenunciaComponent||!this.token);
           if(this.check.CreateIncidentesDenunciaComponent||!this.token){
             // Crea un marcador en las coordenadas especificadas
             const mark = L.marker([this.latitud, this.longitud], { icon: this.redIcon }).addTo(this.map);
@@ -433,7 +441,7 @@ isMobil() {
               const poligono = turf.polygon(feature.geometry.coordinates[0]);
               
               if (turf.booleanContains(poligono, puntoUsuario)) {
-                console.log('El usuario está dentro del polígono:', feature);
+                //console.log('El usuario está dentro del polígono:', feature);
                 await this.buscar(feature);
                 break; // Si solo quieres saber en qué polígono está, puedes detener el bucle aquí
               }
@@ -452,6 +460,7 @@ isMobil() {
 
     // Agregar evento de fin de dibujo al mapa
     this.map.on('dragend', this.onDragEnd);
+    
        // Agregar el evento de clic al mapa con el handler definido anteriormente
        this.map.on('click', this.onClickHandlerMap);
 
@@ -599,7 +608,7 @@ isMobil() {
       if(this.lista_feature.length==0){
         this.guardarfeature(data);
       }
-      console.log(data);
+      //console.log(data);
       return data;
     } catch (error) {
       iziToast.error({
@@ -607,7 +616,7 @@ isMobil() {
         position:'bottomRight',
         message:'Sin Conexión a Geoserver'
       });
-      console.log('Error fetching WFS geojson:', error);
+      //console.log('Error fetching WFS geojson:', error);
       return null;
     }
   }
@@ -676,9 +685,9 @@ isMobil() {
     this.buscarPolylayer.on('popupclose', (e:any) => {
       if(this.check.CreateIncidentesDenunciaComponent){
           this.buscarPolylayer.on('click', (e:any) => {
-              console.log('tap');
-              console.log('Latitud:', e.latlng.lat);
-              console.log('Longitud:', e.latlng.lng);
+              //console.log('tap');
+              //console.log('Latitud:', e.latlng.lat);
+              //console.log('Longitud:', e.latlng.lng);
               this.latitud = e.latlng.lat;
               this.longitud = e.latlng.lng;
               this.map?.closePopup();
@@ -699,12 +708,12 @@ isMobil() {
   /*
     if(this.isMobile()){
       this.buscarPolylayer.on('tap', (e:any) => {
-        console.log('tap');
+        //console.log('tap');
         this.onClickHandlerMap(e);
       });
     }else{
       this.buscarPolylayer.on('mousedown', (e:any) => {
-        console.log('mousedown');
+        //console.log('mousedown');
         this.longPressTimeout = setTimeout(() => {
           // Aquí puedes llamar a tu función para manejar el clic sostenido
           this.onClickHandlerMap(e);
@@ -712,12 +721,12 @@ isMobil() {
       });
   
       this.buscarPolylayer.on('mouseup', () => {
-        console.log('mouseup');
+        //console.log('mouseup');
         clearTimeout(this.longPressTimeout);
       });
   
       this.buscarPolylayer.on('dblclick', (e:any) => {
-        console.log('dblclick');
+        //console.log('dblclick');
         this.onClickHandlerMap(e)
       } );
   
@@ -736,14 +745,18 @@ isMobil() {
   async getLocation() {
     if(this.isMobil()){
       const permission = await Geolocation['requestPermissions']();
-      console.log(permission);
+      //console.log(permission);
+      if (permission !== 'granted') {
+        const coordinates = await Geolocation['getCurrentPosition']();
+        //console.log(coordinates);
+      }
     }else{
       iziToast.info({title:'Info',position:'bottomRight',message:'Tu ubicación puede ser no exacta'})
     }
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {          
-          console.log(position,position.coords.longitude, position.coords.latitude);
+          //console.log(position,position.coords.longitude, position.coords.latitude);
           this.latitud = position.coords.latitude;
           this.longitud = position.coords.longitude;
           await this.obtenerDireccion(this.latitud,this.longitud);   
@@ -751,11 +764,11 @@ isMobil() {
           await this.buscarfeature(this.latitud,this.longitud);
         },
         (error) => {
-          console.error('Error getting location: ' + error.message);
+          //console.error('Error getting location: ' + error.message);
         }
       );
     } else {
-      console.error('Geolocation is not supported by this browser.');
+      //console.error('Geolocation is not supported by this browser.');
     }
   }
 
@@ -785,7 +798,7 @@ isMobil() {
     } 
     if(this.map){
       if(this.mostrarficha){
-        console.log('Deshabilitar');
+        //console.log('Deshabilitar');
         // Deshabilitar interacción con el mapa
         this.map.dragging.disable();
         this.map.scrollWheelZoom.disable();
@@ -800,7 +813,7 @@ isMobil() {
     } 
     if(this.map){
       if(this.mostrarincidente){
-        console.log('Deshabilitar');
+        //console.log('Deshabilitar');
         // Deshabilitar interacción con el mapa
         this.map.dragging.disable();
         this.map.scrollWheelZoom.disable();
@@ -824,7 +837,7 @@ isMobil() {
  */
     // Agrega un event listener al botón cuando se abra el popup
     /*this.buscarPolylayer.on('popupopen', async (popupEvent:any) => {
-      // console.log(e);
+      // //console.log(e);
       if (!this.editing){
         if(this.map){
           let res=await this.abrirModalSeleccion();
@@ -920,7 +933,7 @@ isMobil() {
 
     
     /*this.buscarPolylayer.on('popupopen', async (popupEvent:any) => {
-      // console.log(e);
+      // //console.log(e);
       if (!this.editing){
         if(this.map){
           let res=await this.abrirModalSeleccion();

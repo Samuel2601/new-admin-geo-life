@@ -7,22 +7,6 @@ import { GLOBAL } from 'src/app/services/GLOBAL';
 import { Capacitor } from '@capacitor/core';
 
 declare var $: any;
-declare interface RouteInfo {
-  path: string;
-  title: string;
-  icon: string;
-  class: string;
-  component?:string;
-  status?:boolean;
-}
-export const ROUTES2: RouteInfo[] = [
-  { path: '/categorias', title: 'Categorias',  icon:'content_paste', class: '', component: 'IndexCategoriaComponent',status:false },
-  { path: '/incidentes-denuncia', title: 'Incidentes/Decuncias',  icon:'library_books', class: '', component: 'IndexIncidentesDenunciaComponent',status:false },
-  { path: '/home', title: 'Maps',  icon:'location_on', class: '' },
-  { path: '/fichas-sectoriales', title: 'Fichas Sectoriales',  icon:'bubble_chart', class: '', component: 'IndexFichaSectorialComponent',status:false },
-  { path: '/user-profile', title: 'Perfil',  icon:'person', class: '', component: 'EditUsuarioComponent',status:false },
-  { path: '/administracion', title: 'Administración',  icon:'unarchive', class: 'active-pro', component: 'AdminComponent',status:false },
-];
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -61,21 +45,9 @@ export class NavbarComponent implements OnInit {
   isMobil() {
     return Capacitor.isNativePlatform();
   }
-  async ngOnInit(): Promise<void> {
-    if(this.isMobil()){
-      this.helper.llamarspinner();
-      ROUTES2.forEach(async (element:any,index:any) => {
-        if(element.component){
-          element.status=await this.helper.checkPermiso(element.component) || false;
-        }
-        if(ROUTES.length-1==index){
-          this.helper.cerrarspinner();
-        }
-      });
-    }    
-    this.dashboard=await this.helper.checkPermiso('DashboardComponent')||false;
+  ngOnInit(): void{
     this.title=this.setTitle();
-    this.listTitles = ROUTES2.filter((listTitle: any) => listTitle);
+    this.listTitles = ROUTES.filter((listTitle: any) => listTitle);
     this.toggleButton = this.element.nativeElement.querySelector('.navbar-toggler');
     this.router.events.subscribe(() => {
       this.sidebarClose();

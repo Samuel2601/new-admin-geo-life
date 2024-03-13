@@ -82,13 +82,13 @@
   z-index: 1000;
   bottom: 0;
   height: 100px;
-  @media (max-width: 767px) { // Estilos para dispositivos móviles
+  @media (max-width: 990px) { // Estilos para dispositivos móviles
     //width: 100% !important;
     --bs-gutter-x: 0rem !important;
     margin-left: -16px !important;
   }
 
-  @media (min-width: 768px) { // Estilos para escritorio
+  @media (min-width: 990px) { // Estilos para escritorio
    // width: 90% !important;
     --bs-gutter-x: 0.5rem !important; // Establecer el espacio entre columnas de Bootstrap
   
@@ -113,11 +113,12 @@
   }
 }
 .container{
+  
+  
   @media (min-width:1400px) {
-      max-width: 1140px !important;
+      max-width: -webkit-fill-availabl !important;
   }
-    @media (min-width:1400px) {
-    
+  @media (min-width:1400px) {  
     max-width: -webkit-fill-available;
   }
 }

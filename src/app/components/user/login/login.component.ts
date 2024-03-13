@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import iziToast from 'izitoast';
 import { AdminService } from 'src/app/services/admin.service';
+import { HelperService } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +19,7 @@ export class LoginComponent implements OnInit{
   constructor(private router: Router,
     public formBuilder: FormBuilder,
     private _adminService:AdminService,
+    private helper:HelperService
     ) { }
 
   async ngOnInit() {
@@ -59,30 +61,40 @@ export class LoginComponent implements OnInit{
         correo: this.loginForm.get("correo")?.value,
         password: this.loginForm.get("pass")?.value,
       };
-     this._adminService.login_admin(user).subscribe((response:any)=>{
-      if(response.token){
-        sessionStorage.setItem('token',response.token);
-        if(response.data.foto){
-          sessionStorage.setItem('foto',response.data.foto);
-        }
-        iziToast.success({
-          title:'Ingreso',
-          position:'bottomRight',
-          message:'Bienvenido'
-        });
-        //this.navbarComponent.cerrarmodal();
-        //this.navbarComponent.asignarToken();
-        this.router.navigate(["/home"]);
-      }      
-     },
-     error => {
-       iziToast.error({
-         title: ('('+error.status+')').toString(),
-         position: 'bottomRight',
-         message: error.error.message,
+      this._adminService.login_admin(user).subscribe((response:any)=>{
+        if(response.token){
+          sessionStorage.setItem('token',response.token);
+          if(response.data.foto){
+            sessionStorage.setItem('foto',response.data.foto);
+          }
+          this.helper.listpermisos();
+          iziToast.success({
+            title:'Ingreso',
+            position:'bottomRight',
+            message:'Bienvenido'
+          });
+          //this.navbarComponent.cerrarmodal();
+          //this.navbarComponent.asignarToken();
+          setTimeout(() => {          
+          this.router.navigate(["/home"]);
+          }, 2000);
+        }   
+       },
+       error => {
+        console.error(error);
+         iziToast.error({
+           title: ('('+error.status+')').toString(),
+           position: 'bottomRight',
+           message: error.error.message||'Sin conexión',
+         });
        });
-     });
+     
     } else {
+      iziToast.warning({
+        title:'Aviso',
+        position:'bottomRight',
+        message:'Completa los datos'
+      });
     }
   }
 

@@ -192,6 +192,7 @@ export class MapComponent implements OnInit,AfterViewInit {
   highlightFeature(e:any) {
     const layer = e.target;
     layer.setStyle({
+      fillColor: "#1a5989",
         weight: 2,
         opacity: 1,
         color: '#0B5394',
@@ -202,7 +203,7 @@ export class MapComponent implements OnInit,AfterViewInit {
   resetHighlight(e:any) {
     const layer = e.target;
     layer.setStyle({
-      fillColor: "#2986CC",
+      fillColor: "#2986cc5e",
         weight: 2,
         opacity: 0.7,
         color: "#2986CC",
@@ -212,7 +213,7 @@ export class MapComponent implements OnInit,AfterViewInit {
   }
   geojsonWFSstyle(feature:any) {
     return {
-      fillColor: "#2986CC",
+      fillColor: "#2986cc5e",
         weight: 2,
         opacity: 0.7,
         color: "#2986CC",
@@ -426,7 +427,6 @@ isMobil() {
                   this.map.removeLayer(layer);
               }
           });
-    console.log(this.check.CreateIncidentesDenunciaComponent||!this.token);
           if(this.check.CreateIncidentesDenunciaComponent||!this.token){
             // Crea un marcador en las coordenadas especificadas
             const mark = L.marker([this.latitud, this.longitud], { icon: this.redIcon }).addTo(this.map);

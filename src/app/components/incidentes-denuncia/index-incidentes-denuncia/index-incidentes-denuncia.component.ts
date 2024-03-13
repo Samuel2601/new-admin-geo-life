@@ -114,7 +114,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   async ngOnInit(): Promise<void> {
     if(!this.modal)this.heleperservice.llamarspinner();
     try {
-      this.check.IndexEstadoIncidenteComponent = sessionStorage.getItem('IndexEstadoIncidenteComponent') || false;
+      this.check.IndexEstadoIncidenteComponent = this.heleperservice.decryptData(sessionStorage.getItem('IndexEstadoIncidenteComponent')||'')  || false;
       console.log(this.check);
     } catch (error) {
       console.error('Error al verificar permisos:', error);

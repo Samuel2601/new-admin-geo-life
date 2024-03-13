@@ -40,8 +40,8 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   async ngOnInit(): Promise<void> {
     if(!this.modal)this.heleperservice.llamarspinner();
     try {
-      this.check.IndexEstadoActividadProyectoComponent = sessionStorage.getItem('IndexEstadoActividadProyectoComponent') || false;
-      this.check.IndexActividadProyectoComponent = sessionStorage.getItem('IndexActividadProyectoComponent')|| false;
+      this.check.IndexEstadoActividadProyectoComponent = this.heleperservice.decryptData(sessionStorage.getItem('IndexEstadoActividadProyectoComponent')||'')  || false;
+      this.check.IndexActividadProyectoComponent = this.heleperservice.decryptData(sessionStorage.getItem('IndexActividadProyectoComponent')||'') || false;
       console.log(this.check);
     } catch (error) {
       console.error('Error al verificar permisos:', error);

@@ -39,7 +39,7 @@ export class SidebarComponent implements OnInit {
     this.heleperservice.llamarspinner();
     ROUTES.forEach(async (element:any,index:any) => {
       if(element.component){
-        element.status=sessionStorage.getItem(element.component) || false;
+        element.status=this.heleperservice.decryptData(sessionStorage.getItem(element.component)||'')  || false;
       }
       /*if(ROUTES.length-1==index){
         this.heleperservice.cerrarspinner();

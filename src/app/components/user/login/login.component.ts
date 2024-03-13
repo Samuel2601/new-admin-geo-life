@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit{
   public loginForm: FormGroup|any;
   showPassword = false;
   height: number=700;
-
+  save:boolean=false;
 
   constructor(private router: Router,
     public formBuilder: FormBuilder,
@@ -41,6 +41,7 @@ export class LoginComponent implements OnInit{
         Validators.minLength(8),
         Validators.maxLength(30)
       ]],
+      save:[false]
     });
   }
   setHeight(): void {
@@ -57,17 +58,31 @@ export class LoginComponent implements OnInit{
 
   async postLogin() {
     if (this.loginForm.valid) {
-      const user = {
+      let user = {
         correo: this.loginForm.get("correo")?.value,
-        password: this.loginForm.get("pass")?.value,
+        password: this.loginForm.get("pass")?.value,        
+        time:3,
+        tipo:'hours'
       };
+      if(this.loginForm.get("save")?.value){
+        user.time=7;
+        user.tipo='days';
+      }
       this._adminService.login_admin(user).subscribe((response:any)=>{
         if(response.token){
-          sessionStorage.setItem('token',response.token);
-          if(response.data.foto){
-            sessionStorage.setItem('foto',response.data.foto);
+          if(!this.loginForm.get("save")?.value){
+            sessionStorage.setItem('token',response.token);
+            if(response.data.foto){
+              sessionStorage.setItem('foto',response.data.foto);
+            }
+          }else{
+            localStorage.setItem('token',response.token);
+            if(response.data.foto){
+              localStorage.setItem('foto',response.data.foto);
+            }
           }
-          this.helper.listpermisos();
+         
+          this.helper.listpermisos(this.loginForm.get("save")?.value);
           iziToast.success({
             title:'Ingreso',
             position:'bottomRight',

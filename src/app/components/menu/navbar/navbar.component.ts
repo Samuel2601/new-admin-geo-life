@@ -43,7 +43,7 @@ export class NavbarComponent implements OnInit {
     return this.router.url === menuItem.path;
   }
   isMobil() {
-    return Capacitor.isNativePlatform();
+    return this.helper.isMobil();
   }
   ngOnInit(): void{
     this.title=this.setTitle();
@@ -69,6 +69,7 @@ export class NavbarComponent implements OnInit {
   
   logout():void{
     sessionStorage.clear();
+    localStorage.clear();
     location.reload();
   }
 

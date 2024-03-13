@@ -20,7 +20,7 @@ export class IndexUsuarioComponent implements OnInit{
   token=sessionStorage.getItem('token');
   categoria:any;
   valor:any;
-  constructor(private router: Router,private listService:ListService,private modalService: NgbModal,private heleperservice:HelperService){
+  constructor(private router: Router,private listService:ListService,private modalService: NgbModal,private helperservice:HelperService){
   
   }
   ngOnInit() {  
@@ -111,7 +111,7 @@ export class IndexUsuarioComponent implements OnInit{
 
   
   isMobil() {
-    return Capacitor.isNativePlatform();
+    return this.helperservice.isMobil();
   }
   editrow(id:any){
     this.modalService.dismissAll();

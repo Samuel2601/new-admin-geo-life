@@ -7,11 +7,15 @@ import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { MapComponent } from '../components/map/map.component';
 import * as CryptoJS from 'crypto-js';
+import { Capacitor } from '@capacitor/core';
 @Injectable({
   providedIn: 'root'
 })
 export class HelperService {
   private deshabilitarMapaSubject = new Subject<void>();
+  isMobil() {
+    return window.innerWidth <= 768;//Capacitor.isNativePlatform();
+  } 
 
   deshabilitarMapa$ = this.deshabilitarMapaSubject.asObservable();
 
@@ -19,7 +23,11 @@ export class HelperService {
     this.deshabilitarMapaSubject.next();
   }
   token(): string | null {
+    
     const token = sessionStorage.getItem('token') || localStorage.getItem('token');
+    if(token){
+      console.log(this.adminService.calcularTiempoRestante(token));
+    }
     return token ? token : null;
   }
   
@@ -35,6 +43,7 @@ export class HelperService {
       return false
     }
     const rolUsuario = this.adminService.roluser(token);
+    
     if(!rolUsuario){
       return false;
     }
@@ -47,7 +56,7 @@ export class HelperService {
     }
   }
 
-  listpermisos() {
+  listpermisos(save?:boolean) {
     const token = this.token();
     if (!token) {
       console.error('Token no válido');
@@ -65,7 +74,11 @@ export class HelperService {
           for (let clave in data) {
             if (data.hasOwnProperty(clave)) {    
               let val=this.encryptData(data[clave],this.key);
-              sessionStorage.setItem(clave,val);
+              if(!save){
+                sessionStorage.setItem(clave,val);
+              }else{
+                localStorage.setItem(clave,val);
+              }
             }
         }
         },
@@ -83,9 +96,14 @@ export class HelperService {
   }
 
   // Función para descifrar la información
-  decryptData(encryptedData: string): string {
-    const decryptedData = CryptoJS.AES.decrypt(encryptedData, this.key).toString(CryptoJS.enc.Utf8);
-    return decryptedData;
+  decryptData(encryptedData: string): boolean {
+    const encrypte=sessionStorage.getItem(encryptedData)||localStorage.getItem(encryptedData);
+    if(encrypte){
+      const decryptedData = CryptoJS.AES.decrypt(encrypte, this.key).toString(CryptoJS.enc.Utf8);      
+      return decryptedData?true:false;
+    }else{
+      return false;
+    }
   }
 
   
@@ -115,6 +133,7 @@ export class HelperService {
       
       console.log(this.llamadasActivas);
   }
+
   cerrarspinner(){
     this.llamadasActivas--;
     console.log(this.llamadasActivas);
@@ -126,6 +145,7 @@ export class HelperService {
     }
   }
   private mapComponent: MapComponent | null = null;
+
   setMapComponent(mapComponent: MapComponent) {
     this.mapComponent = mapComponent;
   }
@@ -136,11 +156,13 @@ export class HelperService {
       this.mapComponent.enablehandleClick();
     }
   }
+
   disablehandliClick(){
     if (this.mapComponent) {
       this.mapComponent.disablehandliClick();
     }
   }
+
   enablehandliClick(){
     if (this.mapComponent) {
       this.mapComponent.enablehandleClick();

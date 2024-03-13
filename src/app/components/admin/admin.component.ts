@@ -13,10 +13,10 @@ export class AdminComponent implements OnInit{
   async ngOnInit(): Promise<void> {
     this.helperService.llamarspinner();
     try {
-      this.check.IndexUsuarioComponent = this.helperService.decryptData(sessionStorage.getItem('IndexUsuarioComponent')||'')  || false;
-      this.check.IndexRolUserComponent = this.helperService.decryptData(sessionStorage.getItem('IndexRolUserComponent')||'') || false;
-      this.check.IndexEncargadoCategoriaComponent = this.helperService.decryptData(sessionStorage.getItem('IndexEncargadoCategoriaComponent')||'') || false;
-      this.check.IndexPermisosComponent = this.helperService.decryptData(sessionStorage.getItem('IndexPermisosComponent')||'')  || false;
+      this.check.IndexUsuarioComponent = this.helperService.decryptData('IndexUsuarioComponent')  || false;
+      this.check.IndexRolUserComponent = this.helperService.decryptData('IndexRolUserComponent') || false;
+      this.check.IndexEncargadoCategoriaComponent = this.helperService.decryptData('IndexEncargadoCategoriaComponent') || false;
+      this.check.IndexPermisosComponent = this.helperService.decryptData('IndexPermisosComponent')  || false;
       console.log(this.check);
     } catch (error) {
       

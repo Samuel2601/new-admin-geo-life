@@ -8,11 +8,13 @@
         text-align: center !important;
       }
 }
-
+.is-mobile {
+  padding-bottom: 60px; /* O el valor deseado */
+}
 @media (max-width: 767px) {
   .card .card-body {
       padding: 0rem 2px !important;
-      position: relative;
+      position: relative;     
   }
 }
 @media (max-width: 767.98px) { 

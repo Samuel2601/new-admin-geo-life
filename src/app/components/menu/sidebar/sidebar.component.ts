@@ -33,19 +33,19 @@ export class SidebarComponent implements OnInit {
   token=sessionStorage.getItem('token');
   private dropdownButton: HTMLElement | null = null;
   dropdownVisible: boolean=false;
-  constructor(private platform: Platform,private element: ElementRef,private heleperservice:HelperService) { }
+  constructor(private platform: Platform,private element: ElementRef,private helperservice:HelperService) { }
 
   ngOnInit() {
-    this.heleperservice.llamarspinner();
+    this.helperservice.llamarspinner();
     ROUTES.forEach(async (element:any,index:any) => {
       if(element.component){
-        element.status=this.heleperservice.decryptData(sessionStorage.getItem(element.component)||'')  || false;
+        element.status=this.helperservice.decryptData(element.component)  || false;
       }
       /*if(ROUTES.length-1==index){
-        this.heleperservice.cerrarspinner();
+        this.helperservice.cerrarspinner();
       }*/
     });
-    this.heleperservice.cerrarspinner();
+    this.helperservice.cerrarspinner();
     this.menuItems = ROUTES.filter(menuItem => menuItem);
     this.dropdownButton = this.element.nativeElement.querySelector('.dropdown-toggle');
     
@@ -55,7 +55,7 @@ export class SidebarComponent implements OnInit {
     this.dropdownVisible = !this.dropdownVisible;
   }
   isMobil() {
-    return Capacitor.isNativePlatform();
+    return this.helperservice.isMobil();
   }
   logout():void{
     sessionStorage.clear();

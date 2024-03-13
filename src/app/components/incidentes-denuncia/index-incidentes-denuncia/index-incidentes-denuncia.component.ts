@@ -15,7 +15,7 @@ import { Capacitor } from '@capacitor/core';
 })
 export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   public url = GLOBAL.url;
-  constructor(private router: Router,private listService: ListService,private modalService: NgbModal,private heleperservice:HelperService) { }
+  constructor(private router: Router,private listService: ListService,private modalService: NgbModal,private helperservice:HelperService) { }
   
   load_lista=true;
 
@@ -25,8 +25,8 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
 
   deshabilitarMapaDesdeIndexFichaSectorial(event: MouseEvent) {
     this.stopPropagation(event);
-    this.heleperservice.deshabilitarMapa();
-    this.heleperservice.enablehandliClick();
+    this.helperservice.deshabilitarMapa();
+    this.helperservice.enablehandliClick();
   }
   stopPropagation(event: MouseEvent) {
     event.stopPropagation();
@@ -37,7 +37,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   isResizing = false; // Indicador de si se está redimensionando
   
   startResize(event: MouseEvent | TouchEvent): void {
-    this.heleperservice.disablehandliClick();
+    this.helperservice.disablehandliClick();
     let initialY=0;
     if (event instanceof MouseEvent) {
       initialY = (event as MouseEvent).clientY;
@@ -93,11 +93,11 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
 
   onTouchEnd() {
     this.isDragging = false;
-    this.heleperservice.enablehandliClick();
+    this.helperservice.enablehandliClick();
   }
 
   isMobil() {
-    return Capacitor.isNativePlatform();
+    return this.helperservice.isMobil();
   }
 
   checkstatus=[
@@ -112,9 +112,9 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
 
   check:any={};
   async ngOnInit(): Promise<void> {
-    if(!this.modal)this.heleperservice.llamarspinner();
+    if(!this.modal)this.helperservice.llamarspinner();
     try {
-      this.check.IndexEstadoIncidenteComponent = this.heleperservice.decryptData(sessionStorage.getItem('IndexEstadoIncidenteComponent')||'')  || false;
+      this.check.IndexEstadoIncidenteComponent = this.helperservice.decryptData('IndexEstadoIncidenteComponent')  || false;
       console.log(this.check);
     } catch (error) {
       console.error('Error al verificar permisos:', error);
@@ -122,7 +122,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
     }
   
     this.listarIncidentesDenuncias();
-    if(!this.modal)this.heleperservice.cerrarspinner();
+    if(!this.modal)this.helperservice.cerrarspinner();
   }
   llamarmodal(){
     this.modalService.dismissAll();
@@ -137,7 +137,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   irMap(direccion:any,event:any){
     event.stopPropagation();
     console.log('Marcando');
-    this.heleperservice.marcarlugar(direccion.latitud,direccion.longitud,'Incidente del Ciudadano');
+    this.helperservice.marcarlugar(direccion.latitud,direccion.longitud,'Incidente del Ciudadano');
     const carficha = document.getElementById("card-ficha");
     if (carficha) {
       carficha.addEventListener('touchend', this.onTouchEnd.bind(this));
@@ -146,7 +146,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   }
 
   listarIncidentesDenuncias(): void {
-    if(!this.modal)this.heleperservice.llamarspinner();
+    if(!this.modal)this.helperservice.llamarspinner();
     this.load_lista=true;
     const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
     if(!token){
@@ -192,7 +192,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
           }
       });
     }
-    if(!this.modal)this.heleperservice.cerrarspinner();
+    if(!this.modal)this.helperservice.cerrarspinner();
   }
 
   imagenModal: string='';

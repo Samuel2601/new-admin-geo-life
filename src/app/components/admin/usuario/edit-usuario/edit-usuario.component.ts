@@ -6,6 +6,8 @@ import iziToast from 'izitoast';
 import { UpdateService } from 'src/app/services/update.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GLOBAL } from 'src/app/services/GLOBAL';
+import { Capacitor } from '@capacitor/core';
+import { HelperService } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-edit-usuario',
@@ -22,7 +24,7 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
     private router:Router,
     private _filterservice: FilterService,
     private adminservice:AdminService,
-    private updateservice:UpdateService,private modalService: NgbModal){ }
+    private updateservice:UpdateService,private modalService: NgbModal, private helper:HelperService){ }
 
   ngAfterViewInit(): void {
     this._route.params.subscribe((params) => {
@@ -57,7 +59,9 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
     }
 
   }
-  
+  isMobil() {
+   return this.helper.isMobil();
+  }  
   obteneruser(id:any){    
     this._filterservice.obtenerUsuario(this.token,id).subscribe(response=>{
       this.datauser=response.data;

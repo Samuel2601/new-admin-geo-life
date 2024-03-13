@@ -7,6 +7,7 @@ import { AdminService } from 'src/app/services/admin.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import iziToast from 'izitoast';
 import { Capacitor } from '@capacitor/core';
+import { HelperService } from 'src/app/services/helper.service';
 @Component({
   selector: 'app-create-ficha-sectorial',
   templateUrl: './create-ficha-sectorial.component.html',
@@ -18,7 +19,7 @@ export class CreateFichaSectorialComponent implements OnInit {
   actividadesProyecto:any=[];
   model: boolean=true;
   data:any
-  constructor(private modalService: NgbModal,private fb: FormBuilder,private createService:CreateService,private router: Router,private listarService:ListService,private adminservice:AdminService){
+  constructor(private modalService: NgbModal,private fb: FormBuilder,private createService:CreateService,private router: Router,private listarService:ListService,private adminservice:AdminService,private helper:HelperService){
     this.fichaSectorialForm = this.fb.group({
       descripcion: ['', Validators.required],
       encargado: ['', Validators.required],
@@ -138,7 +139,7 @@ export class CreateFichaSectorialComponent implements OnInit {
     this.hover = false;
   }
   isMobil() {
-    return Capacitor.isNativePlatform();
+    return this.helper.isMobil();
   }
   
   imagenesSeleccionadas:Array<any>=[];

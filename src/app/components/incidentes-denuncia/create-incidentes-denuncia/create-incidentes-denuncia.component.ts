@@ -9,6 +9,7 @@ import { Plugins, Capacitor } from '@capacitor/core';
 import iziToast from 'izitoast';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { HelperService } from 'src/app/services/helper.service';
 const { Geolocation } = Plugins;
 @Component({
   selector: 'app-create-incidentes-denuncia',
@@ -27,7 +28,8 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     private router: Router,
     private listService: ListService,
     private adminservice:AdminService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private helper:HelperService
     ){
     this.nuevoIncidenteDenuncia = this.fb.group({
       categoria: ['', Validators.required],
@@ -182,7 +184,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
   }
 
   isMobil() {
-    return Capacitor.isNativePlatform();
+    return this.helper.isMobil();
   }
 
   imagenesSeleccionadas:Array<any>=[];

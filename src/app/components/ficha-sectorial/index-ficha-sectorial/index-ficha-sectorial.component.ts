@@ -22,12 +22,12 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   
   deshabilitarMapaDesdeIndexFichaSectorial(event: MouseEvent) {
     this.stopPropagation(event);
-    this.heleperservice.deshabilitarMapa();
-    this.heleperservice.enablehandliClick();
+    this.helperservice.deshabilitarMapa();
+    this.helperservice.enablehandliClick();
   }
   load_lista=true;
   fichasectorial:any=[];
-  constructor(private router: Router,private listService:ListService,private modalService: NgbModal,private heleperservice:HelperService){
+  constructor(private router: Router,private listService:ListService,private modalService: NgbModal,private helperservice:HelperService){
   
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -38,10 +38,10 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   }
   check:any={};
   async ngOnInit(): Promise<void> {
-    if(!this.modal)this.heleperservice.llamarspinner();
+    if(!this.modal)this.helperservice.llamarspinner();
     try {
-      this.check.IndexEstadoActividadProyectoComponent = this.heleperservice.decryptData(sessionStorage.getItem('IndexEstadoActividadProyectoComponent')||'')  || false;
-      this.check.IndexActividadProyectoComponent = this.heleperservice.decryptData(sessionStorage.getItem('IndexActividadProyectoComponent')||'') || false;
+      this.check.IndexEstadoActividadProyectoComponent = this.helperservice.decryptData('IndexEstadoActividadProyectoComponent')  || false;
+      this.check.IndexActividadProyectoComponent = this.helperservice.decryptData('IndexActividadProyectoComponent') || false;
       console.log(this.check);
     } catch (error) {
       console.error('Error al verificar permisos:', error);
@@ -49,18 +49,18 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
     }
   
     this.listarficha();
-    if(!this.modal)this.heleperservice.cerrarspinner();
+    if(!this.modal)this.helperservice.cerrarspinner();
   }
 
   isMobil() {
-    return Capacitor.isNativePlatform();
+    return this.helperservice.isMobil();
   }
   openModal(content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
   listarficha(){
-    if(!this.modal)this.heleperservice.llamarspinner();
+    if(!this.modal)this.helperservice.llamarspinner();
     this.load_lista=true;
     const token=sessionStorage.getItem('token');
     if(!token){
@@ -105,7 +105,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
           }
       });
     }
-    if(!this.modal)this.heleperservice.cerrarspinner();
+    if(!this.modal)this.helperservice.cerrarspinner();
   }
   llamarmodal2(){
     this.modalService.dismissAll();

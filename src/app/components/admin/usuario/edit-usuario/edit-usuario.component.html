@@ -153,7 +153,7 @@
     <div class="main-panel">
       <app-navbar></app-navbar>   
       <div class="main-content">
-        <div class="card border  text-dark shadow-sm w-100 max-w-3xl" *ngIf="datauser">
+        <div class="card border  text-dark shadow-sm w-100 max-w-3xl" [ngClass]="{'is-mobile': isMobil()}" *ngIf="datauser">
           <div class="card-body">
             <div class="row g-0  text-sm-center-costum">
               <div class="col-sm-6 col-md-8">
@@ -292,7 +292,7 @@
         </div>
       </div> 
 
-      <div>
+      <div *ngIf="isMobil()">
         <app-footer></app-footer>
       </div>
     </div>

@@ -102,11 +102,11 @@ export class MapComponent implements OnInit,AfterViewInit {
 
   async ngAfterViewInit(): Promise<void> {
     try {
-      this.check.IndexFichaSectorialComponent = this.helperService.decryptData(sessionStorage.getItem('IndexFichaSectorialComponent')||'') ||false; //await this.helperService.checkPermiso('IndexFichaSectorialComponent') || false;
-      this.check.IndexIncidentesDenunciaComponent = this.helperService.decryptData(sessionStorage.getItem('IndexIncidentesDenunciaComponent')||'')|| false;
-      this.check.CreateIncidentesDenunciaComponent = this.helperService.decryptData(sessionStorage.getItem('CreateIncidentesDenunciaComponent')||'') || false;
-      this.check.CreateFichaSectorialComponent = this.helperService.decryptData(sessionStorage.getItem('CreateFichaSectorialComponent')||'') || false;
-      this.check.CreateDireccionGeoComponent = this.helperService.decryptData(sessionStorage.getItem('CreateDireccionGeoComponent')||'')|| false;
+      this.check.IndexFichaSectorialComponent = this.helperService.decryptData('IndexFichaSectorialComponent') ||false; //await this.helperService.checkPermiso('IndexFichaSectorialComponent') || false;
+      this.check.IndexIncidentesDenunciaComponent = this.helperService.decryptData('IndexIncidentesDenunciaComponent')|| false;
+      this.check.CreateIncidentesDenunciaComponent = this.helperService.decryptData('CreateIncidentesDenunciaComponent') || false;
+      this.check.CreateFichaSectorialComponent = this.helperService.decryptData('CreateFichaSectorialComponent') || false;
+      this.check.CreateDireccionGeoComponent = this.helperService.decryptData('CreateDireccionGeoComponent')|| false;
      
       console.log(this.check);
     } catch (error) {
@@ -324,7 +324,7 @@ export class MapComponent implements OnInit,AfterViewInit {
 }
 
 isMobil() {
-  return Capacitor.isNativePlatform();
+  return this.helperService.isMobil();
 }
   selectficha(e:any){    
     this.opcionb=e;

@@ -53,6 +53,31 @@ export class AdminService {
 		var decodedToken = helper.decodeToken(token);
 		return decodedToken.rol_user;
 	}
+	calcularTiempoRestante(token: string): { dias: number, horas: number, minutos: number, segundos: number } {
+		const helper = new JwtHelperService();
+		const decodedToken = helper.decodeToken(token);
+	
+		// Obtener la fecha de expiración del token en milisegundos
+		const expiracion = decodedToken.exp * 1000;
+	
+		// Obtener la fecha actual en milisegundos
+		const ahora = Date.now();
+	
+		// Calcular la diferencia de tiempo en milisegundos
+		let diferencia = expiracion - ahora;
+	
+		// Calcular días, horas, minutos y segundos
+		const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+		diferencia -= dias * (1000 * 60 * 60 * 24);
+		const horas = Math.floor(diferencia / (1000 * 60 * 60));
+		diferencia -= horas * (1000 * 60 * 60);
+		const minutos = Math.floor(diferencia / (1000 * 60));
+		diferencia -= minutos * (1000 * 60);
+		const segundos = Math.floor(diferencia / 1000);
+	
+		// Devolver el objeto con el tiempo restante formateado
+		return { dias, horas, minutos, segundos };
+	}
 	isAuthenticate() {
 		const token: any = sessionStorage.getItem('token');
 
@@ -61,22 +86,25 @@ export class AdminService {
 			var decodedToken = helper.decodeToken(token);
 			console.log(decodedToken);
 			if (!token) {
+				localStorage.clear();
 				sessionStorage.clear();
 				return false;
 			}
 
 			if (!decodedToken) {
+				localStorage.clear();
 				sessionStorage.clear();
 				return false;
 			}
 
 			if (helper.isTokenExpired(token)) {
+				localStorage.clear();
 				sessionStorage.clear();
 				return false;
 			}
 		} catch (error) {
 			//console.log(error);
-
+			localStorage.clear();
 			sessionStorage.clear();
 			return false;
 		}

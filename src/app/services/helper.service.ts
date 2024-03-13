@@ -26,6 +26,7 @@ export class HelperService {
   actualizarToken(token:any){
 
   }
+  
   constructor(private modalService: NgbModal,private router: Router, private adminService: AdminService,private filterService:FilterService) { }
 
   async checkPermiso(componente: any): Promise<boolean> {

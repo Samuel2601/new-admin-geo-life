@@ -22,6 +22,7 @@ export let ROUTES: RouteInfo[] = [
   { path: '/home', title: 'Maps',  icon:'location_on', class: '',mobil:true},
   { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '', component: 'HomeComponent' ,status:false,mobil:true},
   { path: '/administracion', title: 'Administración',  icon:'unarchive', class: 'active-pro', component: 'AdminComponent',status:false ,mobil:true},
+  { path: '/inicio', title: 'Logout',  icon:'person', class: '',status:true,mobil:true },
 ];
 
 @Component({

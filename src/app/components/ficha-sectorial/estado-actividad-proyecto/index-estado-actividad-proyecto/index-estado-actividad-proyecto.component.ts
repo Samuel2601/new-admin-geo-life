@@ -3,6 +3,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateEstadoActividadProyectoComponent } from '../create-estado-actividad-proyecto/create-estado-actividad-proyecto.component';
 import { Router } from '@angular/router';
 import { ListService } from 'src/app/services/list.service';
+import { HelperService } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-index-estado-actividad-proyecto',
@@ -12,7 +13,7 @@ import { ListService } from 'src/app/services/list.service';
 export class IndexEstadoActividadProyectoComponent implements OnInit{
   actividadEstado:any={};
   model:boolean=true;
-  constructor(private modalService: NgbModal,private router: Router,private listService:ListService){
+  constructor(private modalService: NgbModal,private router: Router,private listService:ListService,private helper:HelperService){
    
   }
   cerrarModal() {
@@ -29,12 +30,12 @@ export class IndexEstadoActividadProyectoComponent implements OnInit{
     });
     this.listarestadoser();
   }
+  token=this.helper.token();
   listarestadoser(){
-    const token = sessionStorage.getItem('token');
-    if(!token){
+    if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
-    this.listService.listarEstadosActividadesProyecto(token).subscribe(response=>{
+    this.listService.listarEstadosActividadesProyecto(this.token).subscribe(response=>{
       if(response.data){
         this.actividadEstado=response.data
       }

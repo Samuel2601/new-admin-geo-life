@@ -4,6 +4,7 @@ import { ListService } from 'src/app/services/list.service';
 import { CreatePermisosComponent } from '../create-permisos/create-permisos.component';
 import { UpdateService } from 'src/app/services/update.service';
 import iziToast from 'izitoast';
+import { HelperService } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-index-permisos',
@@ -16,13 +17,13 @@ export class IndexPermisosComponent {
   roles:any
   rolselect: string[] = [];
 
-  constructor(private listService: ListService,private modalService: NgbModal, private updateServices:UpdateService) { }
+  constructor(private listService: ListService,private modalService: NgbModal, private updateServices:UpdateService,private helper:HelperService) { }
 
   ngOnInit(): void {
     this.listarCategorias();
     this.listarrol();
   }
-  token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
+  token = this.helper.token();
   listarCategorias(): void {     
     this.listService.ListarPermisos(this.token).subscribe(
       response => {

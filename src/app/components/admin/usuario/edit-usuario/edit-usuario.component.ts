@@ -43,7 +43,7 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
     });
   }
 
-  token:string = sessionStorage.getItem('token')||'';
+  token:any = this.helper.token();
   id:any
   ngOnInit(): void {
     this.router.events.subscribe((val) => {

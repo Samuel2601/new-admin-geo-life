@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import iziToast from 'izitoast';
 import { CreateService } from 'src/app/services/create.service';
+import { HelperService } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-create-actividad-proyecto',
@@ -12,7 +13,7 @@ import { CreateService } from 'src/app/services/create.service';
 export class CreateActividadProyectoComponent {
   estadoIncidenteForm: FormGroup<any>;
   model: boolean=true;
-  constructor(private fb: FormBuilder,private createService:CreateService,private router: Router){
+  constructor(private fb: FormBuilder,private createService:CreateService,private router: Router,private helper:HelperService){
     this.estadoIncidenteForm = this.fb.group({
       nombre: ['', Validators.required]
     });
@@ -27,13 +28,13 @@ export class CreateActividadProyectoComponent {
       }
     });
   }
+  token=this.helper.token();
   registrarActividadP() {
     if (this.estadoIncidenteForm.valid) {
-        const token = sessionStorage.getItem('token');
-        if(!token){
+        if(!this.token){
           throw this.router.navigate(["/inicio"]);
         }
-        this.createService.registrarTipoActividadProyecto(token, this.estadoIncidenteForm.value).subscribe(response => {
+        this.createService.registrarTipoActividadProyecto(this.token, this.estadoIncidenteForm.value).subscribe(response => {
             console.log(response);
             if(response.data){
               iziToast.success({

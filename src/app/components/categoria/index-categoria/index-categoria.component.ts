@@ -13,7 +13,7 @@ export class IndexCategoriaComponent {
   categorias:any[]=[];
   constcategorias=[];
   clonedProducts: { [s: string]: any } = {};
-
+  token = this.helperservice.token();
   constructor(private listService: ListService,private router: Router, private updateservice:UpdateService, private helperservice:HelperService) { }
 
   ngOnInit(): void {
@@ -23,11 +23,11 @@ export class IndexCategoriaComponent {
 
   listarCategorias(): void {
     this.helperservice.llamarspinner();
-    const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
-    if(!token){
+    
+    if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
-    this.listService.listarCategorias(token).subscribe(
+    this.listService.listarCategorias(this.token).subscribe(
       response => {
         this.constcategorias=response.data;
         this.categorias = response.data;
@@ -49,8 +49,7 @@ export class IndexCategoriaComponent {
   onRowEditSave(categoria: any) {
     // Guardar los cambios de la categoría
     console.log('Guardar cambios de la categoría:', categoria);
-    const token = sessionStorage.getItem('token');
-    this.updateservice.actualizarCategoria(token,categoria._id,categoria).subscribe(response=>{console.log(response)},error=>{
+    this.updateservice.actualizarCategoria(this.token,categoria._id,categoria).subscribe(response=>{console.log(response)},error=>{
       console.log(error);
     });
 

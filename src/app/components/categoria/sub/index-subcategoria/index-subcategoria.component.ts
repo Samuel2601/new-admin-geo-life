@@ -21,15 +21,14 @@ export class IndexSubcategoriaComponent {
    
     this.listarSubcategorias();
   }
-
+  token=this.helperservice.token();
   listarSubcategorias(): void {
     this.helperservice.llamarspinner();
     this.load_lista=true;
-    const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
-    if(!token){
+    if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
-    this.listService.listarSubcategorias(token,'categoria',this.id).subscribe(
+    this.listService.listarSubcategorias(this.token,'categoria',this.id).subscribe(
       response => {
         this.subcategorias = response.data;
         this.load_lista=false;
@@ -49,8 +48,7 @@ export class IndexSubcategoriaComponent {
   onRowEditSave(subcategoria: any) {
     // Guardar los cambios de la categoría
     console.log('Guardar cambios de la categoría:', subcategoria);
-    const token = sessionStorage.getItem('token');
-    this.updateservice.actualizarSubcategoria(token,subcategoria._id,subcategoria).subscribe(response=>{console.log(response)},error=>{
+    this.updateservice.actualizarSubcategoria(this.token,subcategoria._id,subcategoria).subscribe(response=>{console.log(response)},error=>{
       console.log(error);
     });
 

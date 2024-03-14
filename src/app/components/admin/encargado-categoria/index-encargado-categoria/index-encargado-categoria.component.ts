@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { HelperService } from 'src/app/services/helper.service';
 import { ListService } from 'src/app/services/list.service';
 
 @Component({
@@ -11,14 +12,14 @@ export class IndexEncargadoCategoriaComponent {
   encargadosCategoria:any=[];
   clonedProducts: { [s: string]: any } = {};
 
-  constructor(private listService: ListService,private router: Router) { }
+  constructor(private listService: ListService,private router: Router,private helper:HelperService) { }
 
   ngOnInit(): void {
     this.listarCategorias();
   }
 
   listarCategorias(): void {
-    const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
+    const token = this.helper.token();
     if(!token){
       throw this.router.navigate(["/inicio"]);
     }

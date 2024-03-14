@@ -6,6 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateEstadoIncidenteComponent } from '../create-estado-incidente/create-estado-incidente.component';
 import iziToast from 'izitoast';
+import { HelperService } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-index-estado-incidente',
@@ -16,7 +17,7 @@ export class IndexEstadoIncidenteComponent implements OnInit {
   incidentesDenuncias: any[] = [];
   model: boolean=true;
   load_lista:boolean=true;
-  constructor(private fb: FormBuilder,private listarService:ListService,private router: Router,private modalService: NgbModal){
+  constructor(private fb: FormBuilder,private listarService:ListService,private router: Router,private modalService: NgbModal,private helper:HelperService){
 
   }
   ngOnInit(): void {
@@ -30,13 +31,13 @@ export class IndexEstadoIncidenteComponent implements OnInit {
     });
     this.listartEstados();
   }
+  token=this.helper.token();
   listartEstados(){
     this.load_lista=true;
-    const token = sessionStorage.getItem('token');
-    if(!token){
+    if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
-    this.listarService.listarEstadosIncidentes(token).subscribe(response=>{
+    this.listarService.listarEstadosIncidentes(this.token).subscribe(response=>{
       console.log(response);
       this.incidentesDenuncias=response.data;
       this.load_lista=false;

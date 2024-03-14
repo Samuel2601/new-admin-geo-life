@@ -129,14 +129,14 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
       console.error('Geolocation is not supported by this browser.');
     }
   }
+  token=this.helper.token();
   selectcategoria(target:any){
-    const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
-    if(!token){
+    if(!this.token){
       this.modalService.dismissAll();
       throw this.router.navigate(["/inicio"]);
     }
     if(target.value){
-      this.listService.listarSubcategorias(token,'categoria',target.value).subscribe(
+      this.listService.listarSubcategorias(this.token,'categoria',target.value).subscribe(
         response => {
           console.log(response)
           this.subcategorias = response.data;
@@ -157,12 +157,11 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     }    
   }
   listarCategorias(): void {
-    const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
-    if(!token){
+    if(!this.token){
       this.modalService.dismissAll();
       throw this.router.navigate(["/inicio"]);
     }
-    this.listService.listarCategorias(token).subscribe(
+    this.listService.listarCategorias(this.token).subscribe(
       response => {
         this.categorias = response.data;
         console.log(response.data);
@@ -310,11 +309,12 @@ selectedFiles: File[] = [];
   load_form=true;
   crearIncidenteDenuncia(): void {
     this.load_form=false;
-    const token:string = sessionStorage.getItem('token')||'';
+    if(!this.token){
+      throw this.router.navigate(["/inicio"]);
+    }
+    this.nuevoIncidenteDenuncia.ciudadano=this.adminservice.identity(this.token);
     
-    this.nuevoIncidenteDenuncia.ciudadano=this.adminservice.identity(token);
-    
-    this.createService.registrarIncidenteDenuncia(token, this.nuevoIncidenteDenuncia,this.selectedFiles).subscribe(response => {
+    this.createService.registrarIncidenteDenuncia(this.token, this.nuevoIncidenteDenuncia,this.selectedFiles).subscribe(response => {
       // Manejar la respuesta del servidor
       console.log(response);
       if(response.data){

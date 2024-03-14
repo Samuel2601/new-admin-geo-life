@@ -7,6 +7,7 @@ import { AdminService } from 'src/app/services/admin.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import iziToast from 'izitoast';
 import { GLOBAL } from 'src/app/services/GLOBAL';
+import { HelperService } from 'src/app/services/helper.service';
 @Component({
   selector: 'app-create-direccion-geo',
   templateUrl: './create-direccion-geo.component.html',
@@ -19,7 +20,7 @@ export class CreateDireccionGeoComponent implements OnInit, AfterViewInit {
   estadosActividadProyecto:any=[];
   actividadesProyecto:any=[];
   url=GLOBAL.url;
-  constructor(private modalService: NgbModal,private fb: FormBuilder,private createService:CreateService,private router: Router,private listarService:ListService,private adminservice:AdminService){
+  constructor(private modalService: NgbModal,private fb: FormBuilder,private createService:CreateService,private router: Router,private listarService:ListService,private adminservice:AdminService,private helper:HelperService){
     this.fichaSectorialForm = this.fb.group({
       direccion_geo: ['', Validators.required],
     });
@@ -34,9 +35,9 @@ export class CreateDireccionGeoComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  token=this.helper.token();
   ngOnInit(): void {
-    const token = sessionStorage.getItem('token');
-    if(!token){
+    if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
     
@@ -104,9 +105,8 @@ export class CreateDireccionGeoComponent implements OnInit, AfterViewInit {
 
   registrarFichaSectorial() {
     if (this.fichaSectorialForm?.valid) {
-      const token = sessionStorage.getItem('token');
-      if (token && this.fichaSectorialForm.value) {
-        this.createService.registrarDireccionGeo(token, this.valor.id,this.archivoSeleccionado).subscribe(response => {
+      if (this.token && this.fichaSectorialForm.value) {
+        this.createService.registrarDireccionGeo(this.token, this.valor.id,this.archivoSeleccionado).subscribe(response => {
           console.log(response);
           if(response.data){
             iziToast.success({
@@ -130,7 +130,7 @@ export class CreateDireccionGeoComponent implements OnInit, AfterViewInit {
           } 
         });
       }else{
-        if(!token){
+        if(!this.token){
           throw this.router.navigate(["/inicio"]);
         }
       }

@@ -3,7 +3,6 @@ import { Component, AfterViewInit, OnInit, HostListener, ViewChild, ElementRef, 
 import { Router } from '@angular/router';
 import * as L from 'leaflet';
 import { Location, LocationStrategy, PathLocationStrategy, PopStateEvent } from '@angular/common';
-import { FormControl } from '@angular/forms';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { CreateIncidentesDenunciaComponent } from '../incidentes-denuncia/create-incidentes-denuncia/create-incidentes-denuncia.component';
 import { CreateFichaSectorialComponent } from '../ficha-sectorial/create-ficha-sectorial/create-ficha-sectorial.component';
@@ -14,17 +13,21 @@ import * as turf from '@turf/turf';
 import { NgbPopoverConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CreateDireccionGeoComponent } from '../direccion-geo/create-direccion-geo/create-direccion-geo.component';
 import { GLOBAL } from 'src/app/services/GLOBAL';
-import { from } from 'rxjs';
+import { from, map } from 'rxjs';
 import { Capacitor, Plugins } from '@capacitor/core';
 const { Geolocation } = Plugins;
 import 'jquery.finger';
-import { SpinnerComponent } from 'src/app/spinner/spinner.component';
+import { MenuItem, MessageService } from 'primeng/api';
 declare global {
   interface JQueryStatic {
       Finger: any;
   }
 }
-
+import { FormControl, FormGroup } from '@angular/forms';
+interface AutoCompleteCompleteEvent {
+  originalEvent: Event;
+  query: string;
+}
 
 @Component({
   selector: 'app-map',
@@ -32,7 +35,12 @@ declare global {
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit,AfterViewInit {
+  items: MenuItem[]=[];
+  visible: boolean = false;
 
+  showDialog() {
+      this.visible = true;
+  }
   //ELEMENTREF
   @ViewChild('modalContent') modal: ElementRef |undefined;
   @ViewChild('modalContentUbicacion') modalubicacion: ElementRef |undefined;
@@ -85,7 +93,7 @@ export class MapComponent implements OnInit,AfterViewInit {
   urlgeolocal="http://192.168.120.35/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson";
   token=this.helperService.token()||undefined;
   //CONSTRUCTOR
-  constructor(private modalService: NgbModal,private helperService:HelperService,config: NgbPopoverConfig, private router: Router){
+  constructor(private modalService: NgbModal,private helperService:HelperService,config: NgbPopoverConfig, private router: Router,private messageService: MessageService){
     // Configuración global de popovers
     config.autoClose = 'outside';
     config.triggers = 'mouseenter';
@@ -95,10 +103,12 @@ export class MapComponent implements OnInit,AfterViewInit {
   check:any={};
 
   ngOnInit(): void{
+ 
+  
     this.helperService.setMapComponent(this);
     this.helperService.llamarspinner();
-    this.geoserve();
   }
+  
 
   async ngAfterViewInit(): Promise<void> {
     try {
@@ -107,7 +117,52 @@ export class MapComponent implements OnInit,AfterViewInit {
       this.check.CreateIncidentesDenunciaComponent = this.helperService.decryptData('CreateIncidentesDenunciaComponent') || false;
       this.check.CreateFichaSectorialComponent = this.helperService.decryptData('CreateFichaSectorialComponent') || false;
       this.check.CreateDireccionGeoComponent = this.helperService.decryptData('CreateDireccionGeoComponent')|| false;
-     
+      this.items = [
+        {
+            icon: 'pi pi-book',
+            tooltipOptions: {
+              tooltipLabel:'Fichas Técnicas',
+              tooltipPosition:'right'
+            },
+            disabled:!this.check.IndexFichaSectorialComponent,
+            command: () => {
+              this.fichaTecnica();            
+            }
+        },
+        {
+            icon: 'pi pi-pencil',
+            tooltipOptions: {
+              tooltipLabel:'Nuevas Ficha Técnica',
+              tooltipPosition:'right'
+            },
+            disabled:!this.check.CreateFichaSectorialComponent,
+            command: () => {
+              this.nuevoFicha();//  this.messageService.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' });
+            }
+        },
+        {
+            icon: 'pi pi-inbox',
+            tooltipOptions: {
+              tooltipLabel:'Incidentes',
+              tooltipPosition:'right'
+            },
+            disabled:!this.check.IndexIncidentesDenunciaComponent,
+            command: () => {
+              this.incidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
+            }
+        },
+        {
+          icon: 'pi pi-telegram',
+          tooltipOptions: {
+            tooltipLabel:'Nuevo Incidente',
+            tooltipPosition:'right'
+          },
+          disabled:!this.check.CreateIncidentesDenunciaComponent,
+          command: () => {
+            this.nuevoIncidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
+          }
+        }
+    ];
       console.log(this.check);
     } catch (error) {
       
@@ -136,6 +191,7 @@ export class MapComponent implements OnInit,AfterViewInit {
         //console.log('Elemento clickeado:', container);
       });
     });
+    this.geoserve();
   }
   ngOnDestroy() {
     this.map?.remove(); // Elimina el mapa al destruir el componente

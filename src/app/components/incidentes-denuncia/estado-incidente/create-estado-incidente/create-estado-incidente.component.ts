@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import iziToast from 'izitoast';
 import { CreateService } from 'src/app/services/create.service';
+import { HelperService } from 'src/app/services/helper.service';
 
 @Component({
   selector: 'app-create-estado-incidente',
@@ -12,7 +13,7 @@ import { CreateService } from 'src/app/services/create.service';
 export class CreateEstadoIncidenteComponent implements OnInit {
   estadoIncidenteForm: FormGroup<any>;
   model: boolean=true;
-  constructor(private fb: FormBuilder,private createService:CreateService,private router: Router){
+  constructor(private fb: FormBuilder,private createService:CreateService,private router: Router,private helper:HelperService){
     this.estadoIncidenteForm = this.fb.group({
       nombre: ['', Validators.required]
     });
@@ -34,15 +35,14 @@ export class CreateEstadoIncidenteComponent implements OnInit {
   cerrarModal() {
     this.model = false; // Cambia model a false cuando se cierra el modal
   }
-
+  token=this.helper.token();
   registrarEstadoIncidente() {
     if (this.estadoIncidenteForm?.valid) {
-      const token = sessionStorage.getItem('token');
-      if(!token){
+      if(!this.token){
         throw this.router.navigate(["/inicio"]);
       }
-      if (token && this.estadoIncidenteForm.value) {
-        this.createService.registrarEstadoIncidente(token, this.estadoIncidenteForm.value).subscribe(response => {
+      if (this.token && this.estadoIncidenteForm.value) {
+        this.createService.registrarEstadoIncidente(this.token, this.estadoIncidenteForm.value).subscribe(response => {
           console.log(response);
           if(response.data){
             iziToast.success({

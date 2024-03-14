@@ -30,9 +30,9 @@ export class CreateFichaSectorialComponent implements OnInit {
       observacion: ['']
     });
   }
+  token=this.helper.token();
   ngOnInit(): void {
-    const token = sessionStorage.getItem('token');
-    if(!token){
+    if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
     
@@ -46,7 +46,7 @@ export class CreateFichaSectorialComponent implements OnInit {
     } else {
       this.router.navigate(['/home']);
     }
-    const ident=this.adminservice.identity(sessionStorage.getItem('token')||'');
+    const ident=this.adminservice.identity(this.token);
     if (ident) {
       const indentr = this.fichaSectorialForm.get('encargado');
       if (indentr) {
@@ -70,11 +70,10 @@ export class CreateFichaSectorialComponent implements OnInit {
     this.listarActividadProyecto();
   }
   listartEstados(){
-    const token = sessionStorage.getItem('token');
-    if(!token){
+    if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
-    this.listarService.listarEstadosActividadesProyecto(token).subscribe(response=>{
+    this.listarService.listarEstadosActividadesProyecto(this.token).subscribe(response=>{
       console.log(response);
       if(response.data.length>0){
         this.estadosActividadProyecto=response.data;
@@ -94,11 +93,10 @@ export class CreateFichaSectorialComponent implements OnInit {
   }
 
   listarActividadProyecto(){
-    const token=sessionStorage.getItem('token');
-    if(!token){
+    if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
-    this.listarService.listarTiposActividadesProyecto(token).subscribe(response=>{
+    this.listarService.listarTiposActividadesProyecto(this.token).subscribe(response=>{
       console.log(response);
       if(response.data.length>0){
         this.actividadesProyecto=response.data;
@@ -194,9 +192,8 @@ export class CreateFichaSectorialComponent implements OnInit {
   registrarFichaSectorial() {
     this.load_form=false;
     if (this.fichaSectorialForm?.valid) {
-      const token = sessionStorage.getItem('token');
-      if (token && this.fichaSectorialForm.value) {
-        this.createService.registrarActividadProyecto(token, this.fichaSectorialForm.value,this.selectedFiles).subscribe(response => {
+      if (this.token && this.fichaSectorialForm.value) {
+        this.createService.registrarActividadProyecto(this.token, this.fichaSectorialForm.value,this.selectedFiles).subscribe(response => {
           console.log(response);
           if(response.data){
             iziToast.success({
@@ -220,7 +217,7 @@ export class CreateFichaSectorialComponent implements OnInit {
           } 
         });
       }else{
-        if(!token){
+        if(!this.token){
           throw this.router.navigate(["/inicio"]);
         }
       }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateService } from 'src/app/services/create.service';
+import { HelperService } from 'src/app/services/helper.service';
 import { ListService } from 'src/app/services/list.service';
 
 @Component({
@@ -57,13 +58,13 @@ export class CreatePermisosComponent implements OnInit{
     nombreComponente:'',
     rolesPermitidos:[]
   }
-  constructor(private modalService: NgbModal, private listService:ListService,private createService:CreateService){
+  constructor(private modalService: NgbModal, private listService:ListService,private createService:CreateService,private helper:HelperService){
 
   }
   ngOnInit(): void {
     this.listarrol();
   }
-  token = sessionStorage.getItem('token');
+  token = this.helper.token();
   listarrol(){
     this.listService.listarRolesUsuarios(this.token).subscribe(response=>{
       this.roles=response.data;

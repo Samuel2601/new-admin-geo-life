@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { HelperService } from 'src/app/services/helper.service';
 import { ListService } from 'src/app/services/list.service';
 
 @Component({
@@ -10,14 +11,14 @@ export class IndexRolUserComponent {
   roles=[];
   clonedProducts: { [s: string]: any } = {};
 
-  constructor(private listService: ListService) { }
+  constructor(private listService: ListService,private helper:HelperService) { }
 
   ngOnInit(): void {
     this.listarCategorias();
   }
 
   listarCategorias(): void {
-    const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
+    const token = this.helper.token();
     this.listService.listarRolesUsuarios(token).subscribe(
       response => {
         this.roles = response.data;

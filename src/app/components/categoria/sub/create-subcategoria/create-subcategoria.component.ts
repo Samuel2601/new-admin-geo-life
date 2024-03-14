@@ -4,6 +4,7 @@ import { ListService } from 'src/app/services/list.service';
 import { CreateService } from 'src/app/services/create.service';
 import iziToast from 'izitoast';
 import { Router } from '@angular/router';
+import { HelperService } from 'src/app/services/helper.service';
 @Component({
   selector: 'app-create-subcategoria',
   templateUrl: './create-subcategoria.component.html',
@@ -12,7 +13,7 @@ import { Router } from '@angular/router';
 export class CreateSubcategoriaComponent implements OnInit{
   categorias: any[] = [];
   subcategoriaForm:any={};
-  constructor(private fb: FormBuilder,private listService: ListService, private createService:CreateService,private router: Router){
+  constructor(private fb: FormBuilder,private listService: ListService, private createService:CreateService,private router: Router,private helper:HelperService){
     this.subcategoriaForm = this.fb.group({
       categoria: ['', Validators.required],
       nombre: ['', Validators.required],
@@ -22,25 +23,23 @@ export class CreateSubcategoriaComponent implements OnInit{
   ngOnInit() {
     this.listarCategorias();
   }
-  
+  token=this.helper.token();
   listarCategorias() {
-    const token = sessionStorage.getItem('token'); // Reemplaza 'tu_token' por el token real
-    if(!token){
+    if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
-    this.listService.listarCategorias(token).subscribe(response => {
+    this.listService.listarCategorias(this.token).subscribe(response => {
       this.categorias = response.data;
       console.log(response);
     });
   }
   registrarSubcategoria() {
     if (this.subcategoriaForm.valid) {
-      const token = sessionStorage.getItem('token'); // Reemplaza 'tu_token' por el token real
-      if(!token){
+      if(!this.token){
         throw this.router.navigate(["/inicio"]);
       }
       console.log(this.subcategoriaForm);
-    this.createService.registrarSubcategoria(token, this.subcategoriaForm.value).subscribe(response => {
+    this.createService.registrarSubcategoria(this.token, this.subcategoriaForm.value).subscribe(response => {
         console.log(response);
         if(response.data){
           iziToast.success({

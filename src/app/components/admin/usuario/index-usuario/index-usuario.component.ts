@@ -17,7 +17,7 @@ export class IndexUsuarioComponent implements OnInit{
   load_lista:boolean=true;
   usuarios:any[]=[];
   usuariosconst:any[]=[];
-  token=sessionStorage.getItem('token');
+  token=this.helperservice.token();
   categoria:any;
   valor:any;
   constructor(private router: Router,private listService:ListService,private modalService: NgbModal,private helperservice:HelperService){

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateActividadProyectoComponent } from '../create-actividad-proyecto/create-actividad-proyecto.component';
 import { ListService } from 'src/app/services/list.service';
+import { HelperService } from 'src/app/services/helper.service';
 @Component({
   selector: 'app-index-actividad-proyecto',
   templateUrl: './index-actividad-proyecto.component.html',
@@ -12,7 +13,7 @@ export class IndexActividadProyectoComponent implements OnInit {
   model:boolean=true;
   actividadPro:any={};
 
-  constructor(private modalService: NgbModal,private router: Router,private listService:ListService){
+  constructor(private modalService: NgbModal,private router: Router,private listService:ListService,private helper:HelperService){
 
   }
   cerrarModal() {
@@ -29,12 +30,12 @@ export class IndexActividadProyectoComponent implements OnInit {
     });
     this.listarActividadProyecto();
   }
+  token=this.helper.token();
   listarActividadProyecto(){
-    const token=sessionStorage.getItem('token');
-    if(!token){
+    if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
-    this.listService.listarTiposActividadesProyecto(token).subscribe(response=>{
+    this.listService.listarTiposActividadesProyecto(this.token).subscribe(response=>{
       console.log(response);
       if(response.data){
         this.actividadPro=response.data;

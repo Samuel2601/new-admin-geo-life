@@ -97,5 +97,13 @@ export class NavbarComponent implements OnInit {
     this.sidebarVisible = false;
   }
 
+  visible: boolean = false;
 
+  showDialog() {
+      this.visible = true;
+  }
+
+  closeDialog() {
+      this.visible = false;
+  }
 }

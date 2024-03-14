@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { HelperService } from 'src/app/services/helper.service';
 import { ListService } from 'src/app/services/list.service';
 
 @Component({
@@ -10,15 +11,14 @@ export class IndexDireccionGeoComponent {
   direccionesGeo=[];
   clonedProducts: { [s: string]: any } = {};
 
-  constructor(private listService: ListService) { }
+  constructor(private listService: ListService,private helper:HelperService) { }
 
   ngOnInit(): void {
     this.listarCategorias();
   }
-
+  token=this.helper.token();
   listarCategorias(): void {
-    const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
-    this.listService.listarDireccionesGeo(token).subscribe(
+    this.listService.listarDireccionesGeo(this.token).subscribe(
       response => {
         this.direccionesGeo = response.data;
         console.log(response.data);

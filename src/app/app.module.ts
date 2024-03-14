@@ -316,6 +316,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     RippleModule,
     StyleClassModule,
     NgbModule,
+    AvatarModule,
+    AvatarGroupModule,
     BrowserAnimationsModule
   ],
   providers: [ MessageService],

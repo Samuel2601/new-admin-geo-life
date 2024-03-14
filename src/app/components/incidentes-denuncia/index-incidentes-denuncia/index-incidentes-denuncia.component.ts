@@ -144,17 +144,16 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
       carficha.addEventListener('mouseup', this.onTouchEnd.bind(this));
     }    
   }
-
+  token=this.helperservice.token();
   listarIncidentesDenuncias(): void {
     if(!this.modal)this.helperservice.llamarspinner();
     this.load_lista=true;
-    const token = sessionStorage.getItem('token'); // Reemplaza 'your_token_here' con tu token de autenticación
-    if(!token){
+    if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
 
     if(this.filtro&&this.valor){
-      this.listService.listarIncidentesDenuncias(token,this.filtro,this.valor).subscribe(response=>{
+      this.listService.listarIncidentesDenuncias(this.token,this.filtro,this.valor).subscribe(response=>{
         console.log(response);
         if(response.data){
           this.incidentesDenuncias=response.data;
@@ -174,7 +173,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
         }  
       });
     }else{
-      this.listService.listarIncidentesDenuncias(token).subscribe(response=>{
+      this.listService.listarIncidentesDenuncias(this.token).subscribe(response=>{
         console.log(response);
         this.incidentesDenuncias=response.data;
         this.load_lista=false;

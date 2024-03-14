@@ -52,4 +52,39 @@
   .cambiarColor {
     fill: rgb(72, 197, 68); /* Cambia el color a rojo, puedes usar cualquier color válido aquí */
   }
-  
+ 
+  ::ng-deep .p-speed-dial {
+    border-radius: 50%;
+  }
+  .custom-menu-item {
+    border-radius: 50%;
+      background-color: #0000ff1f
+  }
+  .p-speeddial-list{
+    padding-left: 0rem !important
+  }
+  .p-element .p-speeddial-item .ng-star-inserted{
+    transition-delay: 0ms !important; 
+    border-radius: 50%;
+    background-color: #4b5563;
+    color: #fff;
+  }
+  .p-speeddial-action:hover {
+    background: #022354;
+    color: #fff;
+}
+  .p-speeddial-button.p-button.p-button-icon-only {
+    width: 3rem;
+    height: 3rem;
+}
+.p-speeddial-opened .p-speeddial-item {
+  transform: scale(1);
+  opacity: 1;
+}
+  //webpack:///node_modules/bootstrap/scss/_reboot.scss
+// Importa tu tema personalizado y otros estilos
+@import "/src/assets/css/theme.min";
+@import "primeflex/primeflex";
+@import "primeng/resources/themes/lara-light-teal/theme";
+@import "primeng/resources/primeng";
+@import "primeicons/primeicons";

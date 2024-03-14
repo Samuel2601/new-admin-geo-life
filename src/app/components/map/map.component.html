@@ -19,7 +19,9 @@
                 <li class="list-group-item" (click)="buscar(option);stopPropagation($event)" (touch)="stopPropagation($event)" (touchend)="buscar(option)"    *ngIf="option.properties.nombre">{{ option.properties.nombre }}</li>
             </ng-container>
         </ul>
-        <div class="dropdown" *ngIf="opcionb&&(check.IndexFichaSectorialComponent||check.CreateFichaSectorialComponent)" style="display: inline-block!important" >
+     
+    <!--
+         <div class="dropdown" *ngIf="opcionb&&(check.IndexFichaSectorialComponent||check.CreateFichaSectorialComponent)" style="display: inline-block!important" >
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="bi bi-journal-bookmark-fill"></i> Fichas
             </button>
@@ -28,8 +30,7 @@
                 <a class="dropdown-item" href="javascript:void(0)" *ngIf="check.CreateFichaSectorialComponent" (click)="nuevoFicha()">Nueva Ficha</a>
             </div>
         </div>
-    <!--d-md-inline-block-->
-        <div class="dropdown" *ngIf="opcionb" style="display: inline-block!important">
+<div class="dropdown" *ngIf="opcionb" style="display: inline-block!important">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="bi bi-journal-bookmark-fill"></i> Incidentes
             </button>
@@ -38,8 +39,10 @@
                 <a class="dropdown-item" href="javascript:void(0)" *ngIf="!token || check.CreateIncidentesDenunciaComponent" (click)="nuevoIncidente()">Nuevo Incidente</a>
             </div>
         </div>
+    -->
         
-          
+        <p-speedDial *ngIf="opcionb&&(check.IndexFichaSectorialComponent||check.CreateFichaSectorialComponent)" [model]="items" direction="down" className="speeddial-left" buttonClassName="p-speed-dial-button" [buttonStyle]="{ 'border-radius': '50%'}" >
+        </p-speedDial>
             
     </div>
     
@@ -102,6 +105,6 @@
           <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancelar</button>
         </div>
       </ng-template>
-    
+
 </div>
 

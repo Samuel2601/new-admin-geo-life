@@ -58,16 +58,15 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   openModal(content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
-
+  token = this.helperservice.token();
   listarficha(){
     if(!this.modal)this.helperservice.llamarspinner();
     this.load_lista=true;
-    const token=sessionStorage.getItem('token');
-    if(!token){
+    if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
     if(this.filtro&&this.valor){
-      this.listService.listarFichaSectorial(token,this.filtro,this.valor).subscribe(response=>{
+      this.listService.listarFichaSectorial(this.token,this.filtro,this.valor).subscribe(response=>{
         console.log(response);
         if(response.data){
           this.fichasectorial=response.data;
@@ -87,7 +86,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
         }  
       });
     }else{
-      this.listService.listarFichaSectorial(token).subscribe(response=>{
+      this.listService.listarFichaSectorial(this.token).subscribe(response=>{
         console.log(response);
         this.fichasectorial=response.data;
         this.load_lista=false;

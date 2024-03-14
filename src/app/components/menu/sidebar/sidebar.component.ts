@@ -1,7 +1,8 @@
-import { Component, ElementRef, OnInit} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
 import { HelperService } from 'src/app/services/helper.service';
 import { Capacitor } from '@capacitor/core';
+import { Sidebar } from 'primeng/sidebar';
 declare const $: any;
 declare interface RouteInfo {
     path: string;
@@ -29,8 +30,16 @@ export let ROUTES: RouteInfo[] = [
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
+  @ViewChild('sidebarRef') sidebarRef!: Sidebar;
+
+    closeCallback(e:any): void {
+        this.sidebarRef.close(e);
+    }
+
+    sidebarVisible: boolean = false;
+
   menuItems: any[]=[];
-  token=sessionStorage.getItem('token');
+  token=this.helperservice.token();
   private dropdownButton: HTMLElement | null = null;
   dropdownVisible: boolean=false;
   constructor(private platform: Platform,private element: ElementRef,private helperservice:HelperService) { }

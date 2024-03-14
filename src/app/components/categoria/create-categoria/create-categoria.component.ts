@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import iziToast from 'izitoast';
 import { CreateService } from 'src/app/services/create.service';
+import { HelperService } from 'src/app/services/helper.service';
 @Component({
   selector: 'app-create-categoria',
   templateUrl: './create-categoria.component.html',
@@ -10,7 +11,7 @@ import { CreateService } from 'src/app/services/create.service';
 })
 export class CreateCategoriaComponent implements OnInit{
   categoriaForm: FormGroup;
-  constructor(private fb: FormBuilder,private createService:CreateService,private router: Router){
+  constructor(private fb: FormBuilder,private createService:CreateService,private router: Router,private helper:HelperService){
     this.categoriaForm = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required]
@@ -21,7 +22,7 @@ export class CreateCategoriaComponent implements OnInit{
   }
   registrarCategoria(){
     if (this.categoriaForm.valid) {
-      const token = sessionStorage.getItem('token'); // Reemplaza 'tu_token' por el token real
+      const token = this.helper.token();
       if(!token){
         throw this.router.navigate(["/inicio"]);
       }

@@ -75,25 +75,7 @@
   z-index: 1000;
 }
 
-#indexficha{
-  position: absolute;
-  padding: 0px;
-  border: 0px solid black;
-  z-index: 1000;
-  bottom: 0;
-  height: 100px;
-  @media (max-width: 990px) { // Estilos para dispositivos móviles
-    //width: 100% !important;
-    --bs-gutter-x: 0rem !important;
-    margin-left: -16px !important;
-  }
 
-  @media (min-width: 990px) { // Estilos para escritorio
-   // width: 90% !important;
-    --bs-gutter-x: 0.5rem !important; // Establecer el espacio entre columnas de Bootstrap
-  
-  }
-}
 
 .container {
   height: -webkit-fill-available; /* Altura total de la ventana */

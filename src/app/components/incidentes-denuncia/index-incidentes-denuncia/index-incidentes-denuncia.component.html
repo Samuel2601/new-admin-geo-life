@@ -1,101 +1,90 @@
-  <ng-container *ngIf="modal">
-    <div class="card" [style.height.px]="height" style="min-height: auto; position: absolute; bottom: 0;">
-      
-      <div class="card-header position-relative" id="card-ficha" (mousedown)="startResize($event)" (touchstart)="startResize($event)"
-        (touchstart)="onTouchStart($event)" 
-        (touchmove)="onTouchMove($event)" 
-        (touchend)="onTouchEnd()" (mouseup)="onTouchEnd()">      
-        <div class="row">
-          <div class="col-md-7 col-lg-auto">
-            <h2>Listado de Incidentes/Deuncias: {{valor}}</h2>          
-          </div>
-          <div class="col-sm-3">                 
-            <a class="btn btn-primary float-end" *ngIf="check.IndexEstadoIncidenteComponent" (click)="llamarmodal()"><i class="bi bi-substack"></i></a>  
-          </div>
-          <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close" (click)="deshabilitarMapaDesdeIndexFichaSectorial($event)"></button>
-        </div>
+<p-dialog header="Header" [modal]="false" [(visible)]="vermodal" [position]="'bottom'"  [style]="{width: '50vw'}" [maximizable]="true" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+  <ng-template pTemplate="header">
+      <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2">
+          <span class="font-bold white-space-nowrap mb-2">Listado de Ficha Técnica:</span> <span class="font-bold white-space-nowrap mb-2">{{valor}}</span> 
+          <div class="d-flex flex-row align-items-center justify-content-center flex-wrap">
+              <a class="btn btn-primary me-2 mb-2" *ngIf="check.IndexEstadoIncidenteComponent"  (click)="llamarmodal()">
+                  <i class="bi bi-substack"></i>Actividades</a>                
+          </div>          
       </div>
-  
-      <div class="card-body">
-        <p-toast></p-toast>
-        <div [style.height.px]="height-135" *ngIf="incidentesDenuncias.length>0&&!load_lista" class="table-responsive-lg" style="min-height: fit-content; overflow-y: auto;">
-          <table class="table table-lg align-middle table-striped table-hover table-fixed">
-              <thead>
-                  <tr>
-                    <th scope="col" *ngIf="!isMobil()">Categoría</th>
-                    <th scope="col" *ngIf="!isMobil()">Subcategoría</th>
-                    <th scope="col" *ngIf="isMobil()">Categoria <br> subcategoría <br> Estado </th>
+  </ng-template>
+  <div *ngIf="incidentesDenuncias.length>0&&!load_lista" class="table-responsive-lg"  style="min-height: height; overflow-y: auto; overflow-x: auto;">
+    <table class="table table-lg align-middle table-striped table-hover table-fixed">
+        <thead>
+            <tr>
+              <th scope="col" *ngIf="!isMobil()">Categoría</th>
+              <th scope="col" *ngIf="!isMobil()">Subcategoría</th>
+              <th scope="col" *ngIf="isMobil()">Categoria <br> subcategoría <br> Estado </th>
 
-                    <th scope="col" *ngIf="!isMobil()">Descripción</th>
-                    <th scope="col">Dirección</th>
-                    <th scope="col">Ciudadano</th>
-                    <th scope="col" *ngIf="!isMobil()">Estado</th>
+              <th scope="col" *ngIf="!isMobil()">Descripción</th>
+              <th scope="col">Dirección</th>
+              <th scope="col">Ciudadano</th>
+              <th scope="col" *ngIf="!isMobil()">Estado</th>
 
-                    <th scope="col" *ngIf="!isMobil()">Respuesta</th>
-                    <th scope="col" *ngIf="!isMobil()">Encargado</th>
-                    <th scope="col">Foto</th>
-                  </tr>
-              </thead>
-              <tbody >
-                  <tr *ngFor="let ficha of incidentesDenuncias" (click)="isMobil()&&openModal(modalContent)">
-                    <td  *ngIf="!isMobil()">{{ ficha.categoria.nombre }}</td>
-                    <td *ngIf="!isMobil()">{{ ficha.subcategoria.nombre }}</td>
-                    <td *ngIf="isMobil()"> <tr>{{ ficha.categoria.nombre }}</tr> <tr>{{ ficha.subcategoria.nombre }}</tr> <br> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span></td>
+              <th scope="col" *ngIf="!isMobil()">Respuesta</th>
+              <th scope="col" *ngIf="!isMobil()">Encargado</th>
+              <th scope="col">Foto</th>
+            </tr>
+        </thead>
+        <tbody >
+            <tr *ngFor="let ficha of incidentesDenuncias" (click)="isMobil()&&openModal(modalContent)">
+              <td  *ngIf="!isMobil()">{{ ficha.categoria.nombre }}</td>
+              <td *ngIf="!isMobil()">{{ ficha.subcategoria.nombre }}</td>
+              <td *ngIf="isMobil()"> <tr>{{ ficha.categoria.nombre }}</tr> <tr>{{ ficha.subcategoria.nombre }}</tr> <br> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span></td>
 
-                    <td *ngIf="!isMobil()">{{ ficha.descripcion }}</td>
-                    <td (click)="irMap(ficha.direccion_geo,$event)">{{ ficha.direccion_geo.nombre }}</td>
+              <td *ngIf="!isMobil()">{{ ficha.descripcion }}</td>
+              <td (click)="irMap(ficha.direccion_geo,$event)">{{ ficha.direccion_geo.nombre }}</td>
 
-                    <td> {{ficha.ciudadano.nombres}}</td>
-                    <td *ngIf="!isMobil()"> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span> </td>
+              <td> {{ficha.ciudadano.nombres}}</td>
+              <td *ngIf="!isMobil()"> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span> </td>
 
-                    <td *ngIf="!isMobil()"> <ng-container *ngIf="ficha.respuesta">{{ ficha.respuesta }}</ng-container> <ng-container *ngIf="!ficha.respuesta">--</ng-container> </td>
-                    <td *ngIf="!isMobil()"><ng-container *ngIf="ficha.encargado">{{ ficha.encargado.nombres }}</ng-container> <ng-container *ngIf="!ficha.encargado">--</ng-container> </td>
-                    <td (click)="stopPropagation($event)" >
-                      <img [src]="url + 'helper/obtener_portada/' + ficha.foto[0]" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." (click)="openModalimagen(ficha.foto)" />
-                    </td>
-                    <!-- Agrega el modal al final del componente -->
-                    <ng-template #modalContent let-modal>
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h4 class="modal-title" id="modal-basic-title">Detalles de la Ficha Sectorial</h4>
-                          <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
-                        </div>
-                        <div class="modal-body">
-                          <!-- Contenido del modal -->
-                          <p><strong>Categoría:</strong> {{ ficha.categoria.nombre }}</p>
-                          <p><strong>Subcategoría:</strong> {{ ficha.subcategoria.nombre }}</p>
-                          <p (click)="irMap(ficha.direccion_geo,$event)"><strong>Dirección Geográfica:</strong> {{ ficha.direccion_geo.nombre }}</p>                                      
-                          <p><strong>Estado:</strong> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span></p>
-                          <p><strong>Ciudadano:</strong> {{ ficha.ciudadano.nombres }}</p>
-                          <p><strong>Descripción:</strong> {{ ficha.descripcion }}</p>
-                          <p><strong>Respuesta:</strong><ng-container *ngIf="ficha.respuesta">{{ ficha.respuesta }}</ng-container> <ng-container *ngIf="!ficha.respuesta">--</ng-container></p>                                     
-                          <p><strong>Encargado:</strong><ng-container *ngIf="ficha.encargado">{{ ficha.encargado.nombres }}</ng-container> <ng-container *ngIf="!ficha.encargado">--</ng-container></p>                             
-                      </div>                          
-                      </div>
-                    </ng-template>
-                    
-                </tr>
-              </tbody>
-          </table>
-      </div>
-        <div class="alert alert-info" role="alert" *ngIf="incidentesDenuncias.length==0&&!load_lista">
-          No se han realizado registros de esta ubicación
-        </div>
-        <div class="card-body" aria-hidden="true" *ngIf="load_lista">
-          <h5 class="card-title placeholder-glow">
-            <span class="placeholder col-6"></span>
-          </h5>
-          <p class="card-text placeholder-glow">
-            <span class="placeholder col-7"></span>
-            <span class="placeholder col-4"></span>
-            <span class="placeholder col-4"></span>
-            <span class="placeholder col-6"></span>
-            <span class="placeholder col-8"></span>
-          </p>
-        </div>
-    </div>  
-    </div>
-  </ng-container>
+              <td *ngIf="!isMobil()"> <ng-container *ngIf="ficha.respuesta">{{ ficha.respuesta }}</ng-container> <ng-container *ngIf="!ficha.respuesta">--</ng-container> </td>
+              <td *ngIf="!isMobil()"><ng-container *ngIf="ficha.encargado">{{ ficha.encargado.nombres }}</ng-container> <ng-container *ngIf="!ficha.encargado">--</ng-container> </td>
+              <td (click)="stopPropagation($event)" >
+                <img [src]="url + 'helper/obtener_portada/' + ficha.foto[0]" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." (click)="openModalimagen(ficha.foto); this.displayBasic=true;" />
+              </td>
+              <!-- Agrega el modal al final del componente -->
+              <ng-template #modalContent let-modal>
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">Detalles de la Ficha Sectorial</h4>
+                    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+                  </div>
+                  <div class="modal-body">
+                    <!-- Contenido del modal -->
+                    <p><strong>Categoría:</strong> {{ ficha.categoria.nombre }}</p>
+                    <p><strong>Subcategoría:</strong> {{ ficha.subcategoria.nombre }}</p>
+                    <p (click)="irMap(ficha.direccion_geo,$event)"><strong>Dirección Geográfica:</strong> {{ ficha.direccion_geo.nombre }}</p>                                      
+                    <p><strong>Estado:</strong> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span></p>
+                    <p><strong>Ciudadano:</strong> {{ ficha.ciudadano.nombres }}</p>
+                    <p><strong>Descripción:</strong> {{ ficha.descripcion }}</p>
+                    <p><strong>Respuesta:</strong><ng-container *ngIf="ficha.respuesta">{{ ficha.respuesta }}</ng-container> <ng-container *ngIf="!ficha.respuesta">--</ng-container></p>                                     
+                    <p><strong>Encargado:</strong><ng-container *ngIf="ficha.encargado">{{ ficha.encargado.nombres }}</ng-container> <ng-container *ngIf="!ficha.encargado">--</ng-container></p>                             
+                </div>                          
+                </div>
+              </ng-template>
+              
+          </tr>
+        </tbody>
+    </table>
+</div>
+  <div class="alert alert-info" role="alert" *ngIf="incidentesDenuncias.length==0&&!load_lista">
+    No se han realizado registros de esta ubicación
+  </div>
+  <div class="card-body" aria-hidden="true" *ngIf="load_lista">
+    <h5 class="card-title placeholder-glow">
+      <span class="placeholder col-6"></span>
+    </h5>
+    <p class="card-text placeholder-glow">
+      <span class="placeholder col-7"></span>
+      <span class="placeholder col-4"></span>
+      <span class="placeholder col-4"></span>
+      <span class="placeholder col-6"></span>
+      <span class="placeholder col-8"></span>
+    </p>
+  </div>
+
+</p-dialog>  
   
   <ng-container *ngIf="!modal">
     <div class="wrapper">
@@ -152,8 +141,8 @@
     
                             <td *ngIf="!isMobil()"> <ng-container *ngIf="ficha.respuesta">{{ ficha.respuesta }}</ng-container> <ng-container *ngIf="!ficha.respuesta">--</ng-container> </td>
                             <td *ngIf="!isMobil()"><ng-container *ngIf="ficha.encargado">{{ ficha.encargado.nombres }}</ng-container> <ng-container *ngIf="!ficha.encargado">--</ng-container> </td>
-                            <td (click)="stopPropagation($event)" >
-                              <img [src]="url + 'helper/obtener_portada/' + ficha.foto[0]" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." (click)="openModalimagen(ficha.foto)" />
+                            <td (click)="stopPropagation($event);displayBasic=true"  >
+                              <img [src]="url + 'helper/obtener_portada/' + ficha.foto[0]" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." (click)="openModalimagen(ficha.foto); this.displayBasic=true;" />
                             </td>
                             <!-- Agrega el modal al final del componente -->
                             <ng-template #modalContent let-modal>
@@ -206,42 +195,34 @@
     </div>
   </ng-container>
   
-  <ng-template #contentimage let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">Imagenes</h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
+ 
+    <p-galleria [value]="imagenModal" [(visible)]="displayBasic" [responsiveOptions]="responsiveOptions" [containerStyle]="{'max-width': '50%'}" [numVisible]="9"
+        [circular]="true" [fullScreen]="true" [showItemNavigators]="true">
+        <ng-template pTemplate="item" let-item>
+            <img [src]="url + 'helper/obtener_portada/' + item" style="width: 100%; display: block;"/>
+        </ng-template>
+        <ng-template pTemplate="thumbnail" let-item>
+            <div class="grid grid-nogutter justify-content-center">
+                <img [src]="url + 'helper/obtener_portada/' + item" style="display: block;"  style="width: 30%;"/>
+            </div>
+        </ng-template>
+    </p-galleria>
 
-      <div id="carouselExample" class="carousel slide carousel-fade" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-          <button *ngFor="let imagen of imagenModal; let i = index" type="button" data-bs-target="#carouselExample" [attr.data-bs-slide-to]="i" [class.active]="i === 0"></button>
+  
+  <!-- <div class="py-2">
+     <ng-template #contentimage let-modal>
+    <p-galleria [value]="imagenModal" [thumbnailsPosition]="'bottom'" [responsiveOptions]="responsiveOptions" [containerStyle]="{ 'max-width': '640px' }" [numVisible]="5">
+      <ng-template pTemplate="item" let-item>
+          <img  [src]="url + 'helper/obtener_portada/' + item" style="width: 100%; min-height: 420px; display: block;" />
+      </ng-template>
+      <ng-template pTemplate="thumbnail" let-item>
+        <div class="grid grid-nogutter justify-content-center">
+            <img [src]="url + 'helper/obtener_portada/' + item" style="width: 30%;"/>
         </div>
-        <div class="carousel-inner" style="height: 70vh;">
-          <div *ngFor="let imagen of imagenModal; let i = index" class="carousel-item" [class.active]="i === 0">
-            <img [src]="url + 'helper/obtener_portada/' + imagen" class="d-block w-100" alt="Imagen" />
-          </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      </div>
-      
-      <!-- Galería de imágenes con miniaturas -->
-      <div class="d-flex justify-content-center mt-3">
-        <div *ngFor="let imagen of imagenModal.slice(0, 3); let i = index" class="m-1">
-          <img [src]="url + 'helper/obtener_portada/' + imagen" class="img-thumbnail" style="cursor: pointer; max-width: 100px; max-height: 100px;" (click)="mostrarImagen(i)" />
-        </div>
-      </div>
-           
-    </div>
-    
-    
+    </ng-template>
+  </p-galleria> 
+        <p-button type="button" icon="pi pi-minus" (click)="prev()" styleClass="p-button-secondary mr-2"></p-button>
+        <p-button type="button" icon="pi pi-plus" (click)="next()" styleClass="p-button-primary"></p-button>
+            
   </ng-template>
+    </div>-->

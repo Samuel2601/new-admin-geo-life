@@ -443,6 +443,7 @@ isMobil() {
   }
   selectmap(e:any){
     this.opcionb=e;
+  
    // this.nuevoIncidente();
   }
   //EVENTOS
@@ -483,7 +484,7 @@ isMobil() {
                   this.map.removeLayer(layer);
               }
           });
-          if(this.check.CreateIncidentesDenunciaComponent||!this.token){
+          if(!this.mostrarficha&&this.check.CreateIncidentesDenunciaComponent||!this.token){
             // Crea un marcador en las coordenadas especificadas
             const mark = L.marker([this.latitud, this.longitud], { icon: this.redIcon }).addTo(this.map);
             // Si deseas añadir un popup al marcador
@@ -844,15 +845,16 @@ isMobil() {
     modalRef.componentInstance.direccion={latitud:this.latitud,longitud:this.longitud}
     
   }
-
   //LISTAR FICHA E INCIDENTE
   fichaTecnica(){
+    
     this.mostrarficha=false;
     this.mostrarincidente=false;
     if(this.opcionb){
       this.mostrarficha=true;
     } 
-    if(this.map){
+    if(this.map){      
+      //this.map.off('click', this.onClickHandlerMap);
       if(this.mostrarficha){
         //console.log('Deshabilitar');
         // Deshabilitar interacción con el mapa

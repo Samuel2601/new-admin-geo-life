@@ -10,7 +10,9 @@ import iziToast from 'izitoast';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { HelperService } from 'src/app/services/helper.service';
+import { MessageService } from 'primeng/api';
 const { Geolocation } = Plugins;
+import { GalleriaModule } from 'primeng/galleria';
 @Component({
   selector: 'app-create-incidentes-denuncia',
   templateUrl: './create-incidentes-denuncia.component.html',
@@ -29,7 +31,8 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     private listService: ListService,
     private adminservice:AdminService,
     private modalService: NgbModal,
-    private helper:HelperService
+    private helper:HelperService,
+    private messageService: MessageService
     ){
     this.nuevoIncidenteDenuncia = this.fb.group({
       categoria: ['', Validators.required],
@@ -186,7 +189,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     return this.helper.isMobil();
   }
 
-  imagenesSeleccionadas:Array<any>=[];
+  imagenesSeleccionadas: any[] =[];
   load_carrusel=false;
   public file:Array<any> = [];
 
@@ -211,11 +214,41 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
       this.file.push(file);
     }
   }
-
+  responsiveOptions = [
+    {
+        breakpoint: '1024px',
+        numVisible: 5
+    },
+    {
+        breakpoint: '768px',
+        numVisible: 3
+    },
+    {
+        breakpoint: '560px',
+        numVisible: 1
+    }
+];
+mostrargale=false;
   onFilesSelected(event: any): void {
+    this.mostrargale=false;
+    console.log(event);
     this.load_carrusel = false;
-    const files: FileList = event.target.files;
-    console.log(files);
+    const files: FileList = event.files;
+
+    for(let file of event.files) {
+      this.selectedFiles.push(file);
+      const objectURL = URL.createObjectURL(file);
+      this.imagenesSeleccionadas.push({ itemImageSrc: objectURL });
+    }
+
+    this.messageService.add({severity: 'info', summary: 'File Uploaded', detail: this.selectedFiles.length+'Imagenes subidas'});
+
+    console.log(this.selectedFiles,this.imagenesSeleccionadas );
+    setTimeout(() => {
+      
+    this.mostrargale=true;
+    }, 1000);
+    /*
     if(!this.isMobil()){
       this.imagenesSeleccionadas=[];
       this.selectedFiles=[];
@@ -243,6 +276,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
         this.load_carrusel = true;
       }, 500);
     }
+    */
   }
   
 

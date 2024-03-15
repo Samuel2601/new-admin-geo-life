@@ -1,89 +1,89 @@
-<ng-container *ngIf="modal">
-  <div class="card" [style.height.px]="height" style="min-height: auto; position: absolute; bottom: 0;">
-    
-    <div class="card-header position-relative" (mousedown)="startResize($event)" (touchstart)="startResize($event)"
-    (touchstart)="onTouchStart($event)" 
-    (touchmove)="onTouchMove($event)" 
-    (touchend)="onTouchEnd()">      
-    <div class="row">
-      <div class="col-md-7 col-lg-auto">
-        <h2>Listado de Ficha Técnica: {{valor}}</h2>          
+<!--
+  [style.height.px]="height"
+  [baseZIndex]="1500" (mousedown)="startResize($event)" (touchstart)="startResize($event)"
+(touchstart)="onTouchStart($event)" 
+(touchmove)="onTouchMove($event)" 
+(touchend)="onTouchEnd()"
+-->
+<p-dialog header="Header" [modal]="false" [(visible)]="vermodal" [position]="'bottom'"  [style]="{width: '50vw'}" [maximizable]="true" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+  <ng-template pTemplate="header">
+      <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2">
+          <span class="font-bold white-space-nowrap mb-2">Listado de Ficha Técnica:</span> <span class="font-bold white-space-nowrap mb-2">{{valor}}</span> 
+          <div class="d-flex flex-row align-items-center justify-content-center flex-wrap"
+              *ngIf="check.IndexActividadProyectoComponent || check.IndexEstadoActividadProyectoComponent">
+              <a class="btn btn-primary me-2 mb-2" *ngIf="check.IndexActividadProyectoComponent" (click)="llamarmodal2()">
+                  <i class="bi bi-substack"></i>Actividades</a>
+              <a class="btn btn-primary me-2 mb-2" *ngIf="check.IndexEstadoActividadProyectoComponent" (click)="llamarmodal()">
+                  <i class="bi bi-stack"></i>Estados</a>                    
+          </div>          
       </div>
-      <div class="col-sm-3" *ngIf="check.IndexActividadProyectoComponent||check.IndexEstadoActividadProyectoComponent">                 
-        <a class="btn btn-primary float-end"  *ngIf="check.IndexActividadProyectoComponent" (click)="llamarmodal2()"><i class="bi bi-substack"></i></a>          
-        <a class="btn btn-primary float-end" *ngIf="check.IndexEstadoActividadProyectoComponent"  (click)="llamarmodal()"><i class="bi bi-stack"></i></a>
-      </div>
-      <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close" (click)="deshabilitarMapaDesdeIndexFichaSectorial($event)"></button>
-    </div>
-  </div>
+  </ng-template>
 
-    <div class="card-body">
-      <p-toast></p-toast>
-      <div  *ngIf="fichasectorial.length>0&&!load_lista" class="table-responsive-lg" [style.height.px]="height-135" style="min-height: fit-content; overflow-y: auto;">
-        <table class="table table-lg align-middle table-striped table-hover table-fixed">
-          <thead>
-              <tr>
-                  <th scope="col">Actividad</th>
-                  <th scope="col" *ngIf="!isMobil()">Descripción</th>
-                  <th scope="col">Encargado</th>
-                  <th scope="col">Estado</th>
-                  <th scope="col" *ngIf="!isMobil()">Fecha Evento</th>
-                  <th scope="col" *ngIf="!isMobil()">Observación</th>
-                  <th scope="col" >Fotos</th>
-              </tr>
-          </thead>
-          <tbody >
-              <tr *ngFor="let ficha of fichasectorial" (click)="openModal(modalContent)">
-                  <td *ngFor="let item of ficha.actividad">{{ item.nombre }}</td>
-                  <td *ngIf="!isMobil()">{{ ficha.descripcion }}</td>
-                  <td>{{ ficha.encargado.nombres }}</td>
-                  <td>{{ ficha.estado.nombre }}</td>
-                  <td *ngIf="!isMobil()">{{ ficha.fecha_evento | date }}</td>
-                  <td *ngIf="!isMobil()">{{ ficha.observacion }}</td>
-                  <td  (click)="stopPropagation($event)" >
-                    <img *ngIf="ficha.foto" [src]="url + 'helper/obtener_portada_ficha/' + ficha.foto[0]" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." (click)="openModalimagen(ficha.foto)" />
-                  </td>
-                  <!-- Agrega el modal al final del componente -->
-                  <ng-template #modalContent let-modal>
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h4 class="modal-title" id="modal-basic-title">Detalles de la Ficha Sectorial</h4>
-                        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
-                      </div>
-                      <div class="modal-body">
-                        <!-- Contenido del modal -->
-                        <p><strong>Actividad:</strong> {{ ficha.actividad[0].nombre }}</p>
-                        <p><strong>Descripción:</strong> {{ ficha.descripcion }}</p>
-                        <p><strong>Encargado:</strong> {{ ficha.encargado.nombres }}</p>
-                        <p><strong>Estado:</strong> {{ ficha.estado.nombre }}</p>
-                        <p><strong>Fecha Evento:</strong> {{ ficha.fecha_evento | date:'dd/MM/yyyy' }}</p>
-                        <p><strong>Observación:</strong> {{ ficha.observacion }}</p>
-                      </div>
-                    </div>
-                  </ng-template>
-                  
-              </tr>
-          </tbody>
-      </table> 
-      </div>
-      <div class="alert alert-info" role="alert" *ngIf="fichasectorial.length==0&&!load_lista">
-        No se han realizado registros de esta ubicación
-      </div>
-      <div class="card-body" aria-hidden="true" *ngIf="load_lista">
-        <h5 class="card-title placeholder-glow">
-          <span class="placeholder col-6"></span>
-        </h5>
-        <p class="card-text placeholder-glow">
-          <span class="placeholder col-7"></span>
-          <span class="placeholder col-4"></span>
-          <span class="placeholder col-4"></span>
-          <span class="placeholder col-6"></span>
-          <span class="placeholder col-8"></span>
-        </p>
-      </div>
-  </div>  
+  <div  *ngIf="fichasectorial.length>0&&!load_lista" class="table-responsive-lg"  style="min-height: height; overflow-y: auto; overflow-x: auto;">
+    <table class="table table-lg align-middle table-striped table-hover table-fixed">
+      <thead>
+          <tr>
+              <th scope="col">Actividad</th>
+              <th scope="col" *ngIf="!isMobil()">Descripción</th>
+              <th scope="col">Encargado</th>
+              <th scope="col">Estado</th>
+              <th scope="col" *ngIf="!isMobil()">Fecha Evento</th>
+              <th scope="col" *ngIf="!isMobil()">Observación</th>
+              <th scope="col" >Fotos</th>
+          </tr>
+      </thead>
+      <tbody >
+          <tr *ngFor="let ficha of fichasectorial" (click)="openModal(modalContent)">
+              <td *ngFor="let item of ficha.actividad">{{ item.nombre }}</td>
+              <td *ngIf="!isMobil()">{{ ficha.descripcion }}</td>
+              <td>{{ ficha.encargado.nombres }}</td>
+              <td>{{ ficha.estado.nombre }}</td>
+              <td *ngIf="!isMobil()">{{ ficha.fecha_evento | date }}</td>
+              <td *ngIf="!isMobil()">{{ ficha.observacion }}</td>
+              <td  (click)="stopPropagation($event)" >
+                <img *ngIf="ficha.foto" [src]="url + 'helper/obtener_portada_ficha/' + ficha.foto[0]" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." (click)="openModalimagen(ficha.foto); this.displayBasic=true;" />
+              </td>
+              <!-- Agrega el modal al final del componente -->
+              <ng-template #modalContent let-modal>
+                <div class="modal-content" >
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">Detalles de la Ficha Sectorial</h4>
+                    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+                  </div>
+                  <div class="modal-body">
+                    <!-- Contenido del modal -->
+                    <p><strong>Actividad:</strong> {{ ficha.actividad[0].nombre }}</p>
+                    <p><strong>Descripción:</strong> {{ ficha.descripcion }}</p>
+                    <p><strong>Encargado:</strong> {{ ficha.encargado.nombres }}</p>
+                    <p><strong>Estado:</strong> {{ ficha.estado.nombre }}</p>
+                    <p><strong>Fecha Evento:</strong> {{ ficha.fecha_evento | date:'dd/MM/yyyy' }}</p>
+                    <p><strong>Observación:</strong> {{ ficha.observacion }}</p>
+                  </div>
+                </div>
+              </ng-template>
+              
+          </tr>
+      </tbody>
+  </table> 
   </div>
-</ng-container>
+  <div class="alert alert-info" role="alert" *ngIf="fichasectorial.length==0&&!load_lista">
+    No se han realizado registros de esta ubicación
+  </div>
+  <div class="card-body" aria-hidden="true" *ngIf="load_lista">
+    <h5 class="card-title placeholder-glow">
+      <span class="placeholder col-6"></span>
+    </h5>
+    <p class="card-text placeholder-glow">
+      <span class="placeholder col-7"></span>
+      <span class="placeholder col-4"></span>
+      <span class="placeholder col-4"></span>
+      <span class="placeholder col-6"></span>
+      <span class="placeholder col-8"></span>
+    </p>
+  </div>
+</p-dialog>
+
+
 
 <ng-container *ngIf="!modal">
   <div class="wrapper">
@@ -130,7 +130,7 @@
                         <td *ngIf="!isMobil()">{{ ficha.fecha_evento | date }}</td>
                         <td *ngIf="!isMobil()">{{ ficha.observacion }}</td>
                         <td  (click)="stopPropagation($event)" >
-                          <img *ngIf="ficha.foto" [src]="url + 'helper/obtener_portada_ficha/' + ficha.foto[0]" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." (click)="openModalimagen(ficha.foto)" />
+                          <img *ngIf="ficha.foto" [src]="url + 'helper/obtener_portada_ficha/' + ficha.foto[0]" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." (click)="openModalimagen(ficha.foto); this.displayBasic=true;" />
                         </td>
                         <!-- Agrega el modal al final del componente -->
                         <ng-template #modalContent let-modal>
@@ -221,3 +221,15 @@
   
   
 </ng-template>
+
+<p-galleria [value]="imagenModal" [(visible)]="displayBasic" [responsiveOptions]="responsiveOptions" [containerStyle]="{'max-width': '50%'}" [numVisible]="9"
+[circular]="true" [fullScreen]="true" [showItemNavigators]="true">
+<ng-template pTemplate="item" let-item>
+    <img [src]="url + 'helper/obtener_portada_ficha/' + item" style="width: 100%; display: block;"/>
+</ng-template>
+<ng-template pTemplate="thumbnail" let-item>
+    <div class="grid grid-nogutter justify-content-center">
+        <img [src]="url + 'helper/obtener_portada_ficha/' + item" style="display: block;"  style="width: 30%;"/>
+    </div>
+</ng-template>
+</p-galleria>

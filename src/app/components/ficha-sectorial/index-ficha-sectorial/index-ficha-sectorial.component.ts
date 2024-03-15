@@ -36,8 +36,23 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
       this.height = 300;
     }
   }
+  get vermodal():boolean{
+    if(this.modal){
+      return this.modal
+    }else{
+      return false;
+    }
+  }
+  set vermodal(val: boolean){  
+    this.helperservice.disablehandliClick();    
+    this.helperservice.deshabilitarMapa();
+    setTimeout(() => {      
+    this.helperservice.enablehandliClick();
+    }, 500);
+  }
   check:any={};
   async ngOnInit(): Promise<void> {
+    console.log(this.modal);
     if(!this.modal)this.helperservice.llamarspinner();
     try {
       this.check.IndexEstadoActividadProyectoComponent = this.helperservice.decryptData('IndexEstadoActividadProyectoComponent')  || false;
@@ -56,8 +71,9 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
     return this.helperservice.isMobil();
   }
   openModal(content: any) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', windowClass: 'custom-modal' });
   }
+  
   token = this.helperservice.token();
   listarficha(){
     if(!this.modal)this.helperservice.llamarspinner();
@@ -183,12 +199,12 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
     this.isDragging = false;
   }
   
-  imagenModal: string='';
+  imagenModal: any[] = [];
 
   openModalimagen(url: any) {
     this.imagenModal = url;
     this.imagenAMostrar = this.imagenModal[0];
-    const modalRef = this.modalService.open(this.modalContent, { size: 'lg' });
+    //const modalRef = this.modalService.open(this.modalContent, { size: 'lg' });
   }
   imagenAMostrar:any;
   mostrarImagen(index: number) {
@@ -202,5 +218,26 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
       }
     });
   }
+  displayBasic: boolean = false;
+
+ 
+    responsiveOptions: any[] = [
+      {
+          breakpoint: '1500px',
+          numVisible: 5
+      },
+      {
+          breakpoint: '1024px',
+          numVisible: 3
+      },
+      {
+          breakpoint: '768px',
+          numVisible: 2
+      },
+      {
+          breakpoint: '560px',
+          numVisible: 1
+      }
+  ];
 
 }

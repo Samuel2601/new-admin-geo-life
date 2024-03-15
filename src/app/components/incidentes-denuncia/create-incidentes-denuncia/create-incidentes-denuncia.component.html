@@ -27,6 +27,23 @@
             <textarea id="descripcion" name="descripcion" class="form-control" [(ngModel)]="nuevoIncidenteDenuncia.descripcion" formControlName="descripcion" required></textarea>
           </div>
 
+          <p-toast></p-toast>
+    <p-fileUpload name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" (onUpload)="onFilesSelected($event)" [multiple]="true" accept="image/*" [maxFileSize]="1000000">
+        <ng-template pTemplate="content">
+            <ul *ngIf="selectedFiles.length">
+                <li *ngFor="let itemfile of selectedFiles;let i = index"><img [src]="" width="150" class="ng-star-inserted"> {{ itemfile.name }} - {{ itemfile.size }} bytes</li>
+            </ul>
+           
+        </ng-template>
+    </p-fileUpload>
+ 
+    <p-galleria  [value]="imagenesSeleccionadas" *ngIf="mostrargale">
+      <ng-template pTemplate="item" let-item>
+          <img [src]="item.itemImageSrc" width="150" class="ng-star-inserted" />
+      </ng-template>
+  </p-galleria>
+
+
           <div class="ms-3" *ngIf="!isMobil()">
             <label class="form-label" for="profile-picture">
               Puedes añadir hasta 3 fotos.

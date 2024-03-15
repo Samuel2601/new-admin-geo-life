@@ -3,6 +3,7 @@ import { Platform } from '@angular/cdk/platform';
 import { HelperService } from 'src/app/services/helper.service';
 import { Capacitor } from '@capacitor/core';
 import { Sidebar } from 'primeng/sidebar';
+import { state } from '@angular/animations';
 declare const $: any;
 declare interface RouteInfo {
     path: string;
@@ -22,7 +23,7 @@ export let ROUTES: RouteInfo[] = [
   { path: '/home', title: 'Maps',  icon:'location_on', class: '',mobil:true},
   { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '', component: 'HomeComponent' ,status:false,mobil:true},
   { path: '/administracion', title: 'Administración',  icon:'unarchive', class: 'active-pro', component: 'AdminComponent',status:false ,mobil:true},
-  { path: '/inicio', title: 'Logout',  icon:'person', class: '',status:true,mobil:true },
+  { path: '/inicio', title: 'Inicio', component: 'Inicio', icon:'person', class: '',status:false,mobil:true },
 ];
 
 @Component({
@@ -51,10 +52,14 @@ export class SidebarComponent implements OnInit {
       if(element.component){
         element.status=this.helperservice.decryptData(element.component)  || false;
       }
+      if(element.path=='/inicio'&&!this.token){
+        element.status=true;
+      }
       /*if(ROUTES.length-1==index){
         this.helperservice.cerrarspinner();
       }*/
     });
+    console.log(ROUTES);
     this.helperservice.cerrarspinner();
     this.menuItems = ROUTES.filter(menuItem => menuItem);
     this.dropdownButton = this.element.nativeElement.querySelector('.dropdown-toggle');

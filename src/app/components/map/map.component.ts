@@ -1,9 +1,9 @@
-import { Component, AfterViewInit, OnInit, HostListener, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, AfterViewInit, OnInit, HostListener, ViewChild, ElementRef, Output, EventEmitter, QueryList, ViewChildren } from '@angular/core';
 //import { LatLng, geoJSON, Map, tileLayer, control, layerGroup, featureGroup, LeafletMouseEvent, LeafletEventHandlerFn, marker, Marker, icon} from 'leaflet';
 import { Router } from '@angular/router';
 import * as L from 'leaflet';
 import { Location, LocationStrategy, PathLocationStrategy, PopStateEvent } from '@angular/common';
-import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalOptions, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { CreateIncidentesDenunciaComponent } from '../incidentes-denuncia/create-incidentes-denuncia/create-incidentes-denuncia.component';
 import { CreateFichaSectorialComponent } from '../ficha-sectorial/create-ficha-sectorial/create-ficha-sectorial.component';
 import { HelperService } from 'src/app/services/helper.service';
@@ -24,6 +24,8 @@ declare global {
   }
 }
 import { FormControl, FormGroup } from '@angular/forms';
+import { Tooltip } from 'primeng/tooltip';
+import { SpeedDial } from 'primeng/speeddial';
 interface AutoCompleteCompleteEvent {
   originalEvent: Event;
   query: string;
@@ -108,7 +110,102 @@ export class MapComponent implements OnInit,AfterViewInit {
     this.helperService.setMapComponent(this);
     this.helperService.llamarspinner();
   }
+  @ViewChildren(SpeedDial) speedDials: QueryList<SpeedDial> | undefined;
+  activarTooltips() {
+    setTimeout(() => {
+      if (this.speedDials) {
+        this.speedDials.forEach((speedDial,index) => {
+          speedDial.show();
+        });
+      }
+    }, 0);
+  }
+  responsiveimage():string{
+    let aux=window.innerWidth-30;
+    return (aux+'px').toString();
+  }
+  updateItem(){
+    this.items = [
+      {
+        icon: !this.capaActiva? 'pi pi-eye':'bi bi-eye-slash-fill',
+        tooltipPosition:'right',
+        tooltipOptions: {
+          tooltipLabel:'Barrios',
+          tooltipPosition:'right',
+          hideDelay:1000,
+        },
+        command: () => {
+          this.reloadmap();     //this.messageService.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' });   
+        },
+      },
+      {
+        icon: !this.capaActivaWIFI? 'bi bi-wifi':'bi bi-wifi-off',
+        tooltip:'Puntos Wifi',
+        tooltipOptions: {
+          tooltipLabel:'Puntos Wifi',
+          tooltipPosition:'right',
+          hideDelay:1000,
+        },
+        command: () => {
+          this.reloadWifi();            
+        }
+      },
+      {
+          icon: 'pi pi-book',
+          tooltip:'Fichas Técnicas',
+          tooltipOptions: {
+            tooltipLabel:'Fichas Técnicas',
+            tooltipPosition:'right',
+            hideDelay:1000,
+          },
+          visible: (this.opcionb||false)  && this.check.IndexFichaSectorialComponent,
+          command: () => {
+            this.fichaTecnica();            
+          }
+      },
+      {
+          icon: 'pi pi-pencil',
+          tooltip:'Nuevas Ficha Técnica',
+          tooltipOptions: {
+            tooltipLabel:'Nuevas Ficha Técnica',
+            tooltipPosition:'right',
+            hideDelay:1000,
+          },
+          visible:(this.opcionb||false) &&this.check.CreateFichaSectorialComponent,
+          command: () => {
+            this.nuevoFicha(); 
+          }
+      },
+      {
+          icon: 'pi pi-inbox',
+          tooltip:'Incidentes',
+          tooltipOptions: {
+            tooltipLabel:'Incidentes',
+            tooltipPosition:'right',
+            hideDelay:1000,
+          },
+          visible:(this.opcionb||false) &&this.check.IndexIncidentesDenunciaComponent,
+          command: () => {
+            this.incidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
+          }
+      },
+      {
+        icon: 'pi pi-telegram',
+        tooltip:'Nuevo Incidente',
+        tooltipOptions: {
+          tooltipLabel:'Nuevo Incidente',
+          tooltipPosition:'right',
+          hideDelay:1000,
+        },
+        visible:(this.opcionb||false)&&this.check.CreateIncidentesDenunciaComponent && !(!this.latitud && !this.longitud),
+        command: () => {
+          this.nuevoIncidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
+        }
+      }
+    ];
+    this.activarTooltips();
   
+  }
 
   async ngAfterViewInit(): Promise<void> {
     try {
@@ -117,53 +214,7 @@ export class MapComponent implements OnInit,AfterViewInit {
       this.check.CreateIncidentesDenunciaComponent = this.helperService.decryptData('CreateIncidentesDenunciaComponent') || false;
       this.check.CreateFichaSectorialComponent = this.helperService.decryptData('CreateFichaSectorialComponent') || false;
       this.check.CreateDireccionGeoComponent = this.helperService.decryptData('CreateDireccionGeoComponent')|| false;
-      this.items = [
-        {
-            icon: 'pi pi-book',
-            tooltipOptions: {
-              tooltipLabel:'Fichas Técnicas',
-              tooltipPosition:'right'
-            },
-            disabled:!this.check.IndexFichaSectorialComponent,
-            command: () => {
-              this.fichaTecnica();            
-            }
-        },
-        {
-            icon: 'pi pi-pencil',
-            tooltipOptions: {
-              tooltipLabel:'Nuevas Ficha Técnica',
-              tooltipPosition:'right'
-            },
-            disabled:!this.check.CreateFichaSectorialComponent,
-            command: () => {
-              this.nuevoFicha();//  this.messageService.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' });
-            }
-        },
-        {
-            icon: 'pi pi-inbox',
-            tooltipOptions: {
-              tooltipLabel:'Incidentes',
-              tooltipPosition:'right'
-            },
-            disabled:!this.check.IndexIncidentesDenunciaComponent,
-            command: () => {
-              this.incidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
-            }
-        },
-        {
-          icon: 'pi pi-telegram',
-          tooltipOptions: {
-            tooltipLabel:'Nuevo Incidente',
-            tooltipPosition:'right'
-          },
-          disabled:!this.check.CreateIncidentesDenunciaComponent,
-          command: () => {
-            this.nuevoIncidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
-          }
-        }
-    ];
-      console.log(this.check);
+      this.updateItem();
     } catch (error) {
       
       //console.error('Error al verificar permisos:', error);
@@ -289,6 +340,7 @@ export class MapComponent implements OnInit,AfterViewInit {
   
   //HELPERS
   filterOptions(target?: any) {
+    this.disablehandliClick();
     this.filter = this.lista_feature.filter((option:any) =>{
         if(option.properties.nombre&&option.properties.nombre.toLowerCase().includes(target.value.toLowerCase())){
           return option
@@ -296,6 +348,9 @@ export class MapComponent implements OnInit,AfterViewInit {
       }   
     ); 
     this.showOptions = true;
+    setTimeout(() => {
+      this.enablehandleClick();
+    }, 1000);
   }
   
   hideOptions() {
@@ -458,7 +513,11 @@ isMobil() {
   }  
   
   stopPropagation(event: Event) {
+    this.disablehandliClick();
     event.stopPropagation();    
+    setTimeout(() => {
+      this.enablehandleClick();
+    }, 500);
   }
   
   onClickHandler = async (e: any) => {
@@ -467,7 +526,7 @@ isMobil() {
       this.latitud = e.latlng.lat;
       this.longitud = e.latlng.lng;
       this.myControl.setValue((this.latitud+';'+this.longitud).toString());
-
+      this.updateItem();
   };
 
   onClickHandlerMap= async (e: any) =>{
@@ -475,9 +534,11 @@ isMobil() {
       if(this.map){
         //console.log('Latitud:', e.latlng.lat);
         //console.log('Longitud:', e.latlng.lng);
+        this.opcionb=false;
         this.latitud = e.latlng.lat;
         this.longitud = e.latlng.lng;
         this.myControl.setValue((this.latitud+';'+this.longitud).toString());
+        this.updateItem();
         // Eliminar todas las marcas existentes en el mapa
           this.map.eachLayer((layer) => {
             if (layer instanceof L.Marker && this.map) {
@@ -584,7 +645,7 @@ isMobil() {
       this.capaActivaWIFI=true;
     }
 
-   
+   this.updateItem();
 
   }
   capaActivaWIFIpop:boolean=true;
@@ -655,6 +716,7 @@ isMobil() {
       this.wfsSelangor.clearLayers();
       this.capaActiva=true;
     }
+    this.updateItem();
   }
 
   //CONEXION DE FEATURE
@@ -682,6 +744,7 @@ isMobil() {
   //BUSQUEDAS
   async buscar(opcion:any){      
     this.opcionb=opcion; 
+    this.updateItem();
     this.myControl.setValue(this.opcionb.properties.nombre);
     this.buscarPolylayer=[];
     // Vaciar busquedaLayer
@@ -750,6 +813,7 @@ isMobil() {
               this.map?.closePopup();
               
               this.marcarlugar(this.latitud,this.longitud,'Ubicación Seleccionada');
+              this.updateItem();
           });
       }
       
@@ -816,6 +880,7 @@ isMobil() {
           //console.log(position,position.coords.longitude, position.coords.latitude);
           this.latitud = position.coords.latitude;
           this.longitud = position.coords.longitude;
+          this.updateItem();
           await this.obtenerDireccion(this.latitud,this.longitud);   
           this.marcarlugar(this.latitud,this.longitud,'Ubicación actual');      
           await this.buscarfeature(this.latitud,this.longitud);

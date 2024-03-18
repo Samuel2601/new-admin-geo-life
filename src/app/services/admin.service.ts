@@ -53,7 +53,7 @@ export class AdminService {
 		var decodedToken = helper.decodeToken(token);
 		return decodedToken.rol_user;
 	}
-	calcularTiempoRestante(token: string): { dias: number, horas: number, minutos: number, segundos: number } {
+	calcularTiempoRestante(token: string): number {
 		const helper = new JwtHelperService();
 		const decodedToken = helper.decodeToken(token);
 	
@@ -76,7 +76,8 @@ export class AdminService {
 		const segundos = Math.floor(diferencia / 1000);
 	
 		// Devolver el objeto con el tiempo restante formateado
-		return { dias, horas, minutos, segundos };
+		console.log({ dias, horas, minutos, segundos });
+		return diferencia ;
 	}
 	isAuthenticate() {
 		const token: any = sessionStorage.getItem('token');

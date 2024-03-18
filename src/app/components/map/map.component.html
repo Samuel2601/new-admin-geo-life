@@ -1,22 +1,25 @@
 <div class="main-content "id="mapid" style="min-height: -webkit-fill-available;" >
-    <div #mapContainer id="formulario" class="formulario-flotante" style="margin-left: 0%" (click)="stopPropagation($event)">
-        <div class="input-group mb-3">
-            <span class="input-group-text" style="background-color: white;" (mouseenter)="showCrosshair = true" (mouseleave)="showCrosshair = false" (click)="getLocation()">
-                <i *ngIf="!showCrosshair" class="bi bi-search"></i>
-                <i *ngIf="showCrosshair" class="bi bi-crosshair"></i>
-              </span>
-              
-            <input class="form-control" type="text" placeholder="Buscar un barrio" aria-label="Number" [formControl]="myControl" (input)="filterOptions($event.target)" (blur)="hideOptions()" (mousedown)="stopPropagation($event)" (mouseup)="stopPropagation($event)" (touchmove)="stopPropagation($event)">        
-            
-            <button class="btn btn-primary" type="button" id="button-addon1" (click)="reloadmap()"  ngbPopover="Barrios" ngbPopoverTrigger="mouseenter"><i class="bi bi-eye-fill" *ngIf="!capaActiva"></i> <i class="bi bi-eye-slash-fill" *ngIf="capaActiva"></i></button>
-            <button type="button" class="btn btn-primary" ngbPopover="Puntos Wifi" (click)="reloadWifi()" ngbPopoverTrigger="mouseenter" ><i class="bi bi-wifi" *ngIf="!capaActivaWIFI"></i> <i class="bi bi-wifi-off" *ngIf="capaActivaWIFI"></i></button>
-            <button class="btn btn-primary" (click)="activarPopups()" *ngIf="!capaActivaWIFI && !isMobil()"><i class="bi bi-caret-right"></i></button>
+    <div #mapContainer id="formulario" class="formulario-flotante" style="margin-left: 0%"  (click)="stopPropagation($event)">
 
+      <p-inputGroup [style]="{'height': '50px'}">
+        <p-iconField iconPosition="left" >
+          <p-inputIcon *ngIf="!isMobil()&&!showCrosshair" (mouseenter)="showCrosshair = true" (mouseleave)="showCrosshair = false" (click)="getLocation()" styleClass="pi pi-search" />
+          <p-inputIcon  *ngIf="!isMobil()&&showCrosshair"(mouseenter)="showCrosshair = true" (mouseleave)="showCrosshair = false" (click)="getLocation()" styleClass="pi pi-map-marker" />
+          <p-inputIcon *ngIf="isMobil()" (click)="getLocation()">
+            <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-crosshair2" viewBox="0 0 16 16">
+              <path d="M8 0a.5.5 0 0 1 .5.5v.518A7 7 0 0 1 14.982 7.5h.518a.5.5 0 0 1 0 1h-.518A7 7 0 0 1 8.5 14.982v.518a.5.5 0 0 1-1 0v-.518A7 7 0 0 1 1.018 8.5H.5a.5.5 0 0 1 0-1h.518A7 7 0 0 1 7.5 1.018V.5A.5.5 0 0 1 8 0m-.5 2.02A6 6 0 0 0 2.02 7.5h1.005A5 5 0 0 1 7.5 3.025zm1 1.005A5 5 0 0 1 12.975 7.5h1.005A6 6 0 0 0 8.5 2.02zM12.975 8.5A5 5 0 0 1 8.5 12.975v1.005a6 6 0 0 0 5.48-5.48zM7.5 12.975A5 5 0 0 1 3.025 8.5H2.02a6 6 0 0 0 5.48 5.48zM10 8a2 2 0 1 0-4 0 2 2 0 0 0 4 0"/>
+            </svg>
+          </p-inputIcon>
+          
+          <input pInputText placeholder="Username" [style.width]="!isMobil() ? '430px' : responsiveimage()" style="height: 50px;"  type="text" placeholder="Buscar un barrio" aria-label="Number" [formControl]="myControl" (input)="filterOptions($event.target)" (blur)="hideOptions()" (mousedown)="stopPropagation($event)" (mouseup)="stopPropagation($event)" (touchmove)="stopPropagation($event)" />
+        
+        </p-iconField>
+        <p-inputIcon  *ngIf="!capaActivaWIFI && !isMobil()" (click)="activarPopups()" styleClass="pi pi-question" />
+      </p-inputGroup>
 
-        </div>
-        <ul *ngIf="lista_feature.length > 0 && showOptions" class="options-list list-group" (touch)="stopPropagation($event)" (click)="stopPropagation($event)"  (touchmove)="stopPropagation($event)"  >
+        <ul *ngIf="lista_feature.length > 0 && showOptions" class="options-list list-group" (touch)="stopPropagation($event)" (click)="stopPropagation($event)"  (touchmove)="stopPropagation($event)" style="z-index: 3000;" >
             <ng-container *ngFor="let option of filter">
-                <li class="list-group-item" (click)="buscar(option);stopPropagation($event)" (touch)="stopPropagation($event)" (touchend)="buscar(option)"    *ngIf="option.properties.nombre">{{ option.properties.nombre }}</li>
+                <li class="list-group-item" (click)="stopPropagation($event);buscar(option);" (touch)="stopPropagation($event);buscar(option);" (touchend)="stopPropagation($event);buscar(option);"  (touchstart)="stopPropagation($event);buscar(option);"  *ngIf="option.properties.nombre">{{ option.properties.nombre }}</li>
             </ng-container>
         </ul>
     <!--
@@ -38,11 +41,13 @@
                 <a class="dropdown-item" href="javascript:void(0)" *ngIf="!token || check.CreateIncidentesDenunciaComponent" (click)="nuevoIncidente()">Nuevo Incidente</a>
             </div>
         </div>
+        *ngIf="opcionb&&(check.IndexFichaSectorialComponent||check.CreateFichaSectorialComponent)"
     -->
-        
-        <p-speedDial *ngIf="opcionb&&(check.IndexFichaSectorialComponent||check.CreateFichaSectorialComponent)" [model]="items" direction="down" className="speeddial-left" buttonClassName="p-speed-dial-button" [buttonStyle]="{ 'border-radius': '50%'}" >
-        </p-speedDial>
-            
+    </div>
+    <div #mapContainer id="formulario" class="formulario-flotante" style="margin-left: 0%; margin-top: 70px;" (click)="stopPropagation($event)" *ngIf="!showOptions">  
+
+    <p-speedDial  [model]="items" direction="down" className="speeddial-left" buttonClassName="p-speed-dial-button" [buttonStyle]="{ 'border-radius': '50%'}">
+    </p-speedDial>
     </div>
 
     <app-index-ficha-sectorial class="container" *ngIf="mostrarficha" id="indexficha"  [filtro]="'direccion_geo'" [valor]="opcionb.properties.nombre" [modal]="true" (click)="stopPropagation($event)" style="z-index: inherit;">

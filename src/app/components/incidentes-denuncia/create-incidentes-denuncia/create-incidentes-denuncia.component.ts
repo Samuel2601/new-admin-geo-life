@@ -191,6 +191,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
 
   imagenesSeleccionadas: any[] =[];
   load_carrusel=false;
+  upload=true;
   public file:Array<any> = [];
 
 
@@ -228,6 +229,10 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
         numVisible: 1
     }
 ];
+ responsiveimage():string{
+  return (window.innerWidth-50).toString();
+ }
+
 mostrargale=false;
   onFilesSelected(event: any): void {
     this.mostrargale=false;
@@ -245,7 +250,7 @@ mostrargale=false;
 
     console.log(this.selectedFiles,this.imagenesSeleccionadas );
     setTimeout(() => {
-      
+      this.upload=false;
     this.mostrargale=true;
     }, 1000);
     /*

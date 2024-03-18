@@ -161,7 +161,8 @@ import { RippleModule } from 'primeng/ripple';
 import { StyleClassModule } from 'primeng/styleclass';
 import { MessageService } from 'primeng/api';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 @NgModule({
   declarations: [
     ErrorComponent,
@@ -318,7 +319,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NgbModule,
     AvatarModule,
     AvatarGroupModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    IconFieldModule,
+    InputIconModule
   ],
   providers: [ MessageService],
   bootstrap: [AppComponent]

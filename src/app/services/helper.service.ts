@@ -14,7 +14,7 @@ import { Capacitor } from '@capacitor/core';
 export class HelperService {
   private deshabilitarMapaSubject = new Subject<void>();
   isMobil() {
-    return window.innerWidth <= 768;//Capacitor.isNativePlatform();
+    return window.innerWidth <= 575;//Capacitor.isNativePlatform();
   } 
 
   deshabilitarMapa$ = this.deshabilitarMapaSubject.asObservable();
@@ -26,7 +26,12 @@ export class HelperService {
     
     const token = sessionStorage.getItem('token') || localStorage.getItem('token');
     if(token){
-      console.log(this.adminService.calcularTiempoRestante(token));
+      let aux = this.adminService.calcularTiempoRestante(token);
+      if(aux<=0){
+        localStorage.clear();
+        sessionStorage.clear();
+        return null;
+      }
     }
     return token ? token : null;
   }

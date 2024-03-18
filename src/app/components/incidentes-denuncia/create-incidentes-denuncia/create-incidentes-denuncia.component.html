@@ -28,22 +28,32 @@
           </div>
 
           <p-toast></p-toast>
-    <p-fileUpload name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" (onUpload)="onFilesSelected($event)" [multiple]="true" accept="image/*" [maxFileSize]="1000000">
-        <ng-template pTemplate="content">
-            <ul *ngIf="selectedFiles.length">
-                <li *ngFor="let itemfile of selectedFiles;let i = index"><img [src]="" width="150" class="ng-star-inserted"> {{ itemfile.name }} - {{ itemfile.size }} bytes</li>
-            </ul>
-           
-        </ng-template>
-    </p-fileUpload>
- 
-    <p-galleria  [value]="imagenesSeleccionadas" *ngIf="mostrargale">
-      <ng-template pTemplate="item" let-item>
-          <img [src]="item.itemImageSrc" width="150" class="ng-star-inserted" />
-      </ng-template>
-  </p-galleria>
+          <p-button label="Subir de Nuevo" severity="warning" *ngIf="!upload" (onClick)="upload=true;imagenesSeleccionadas=[];selectedFiles=[]"></p-button>
+          <p-fileUpload *ngIf="imagenesSeleccionadas.length==0||upload" name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" (onUpload)="onFilesSelected($event)" [multiple]="true" accept="image/*" [fileLimit]="3" [maxFileSize]="5000000">
+              <ng-template pTemplate="content">
+                  <ul *ngIf="selectedFiles.length">
+                      <li *ngFor="let itemfile of selectedFiles;let i = index"> {{ itemfile.name }} - {{ itemfile.size }} bytes</li>
+                  </ul>
+                
+              </ng-template>
+          </p-fileUpload>
+ <!--
+  <img [src]="imagenesSeleccionadas[i].itemImageSrc" width="150" class="ng-star-inserted">
+ -->
+        <p-galleria [value]="imagenesSeleccionadas" *ngIf="mostrargale" [showIndicators]="true" [showThumbnails]="false" [showIndicatorsOnItem]="true" indicatorsPosition="left" [responsiveOptions]="responsiveOptions" [containerStyle]="{ 'max-width': '100%', 'margin-top': '2em' }">
+          <ng-template pTemplate="item" let-item>
+            <p-image [src]="item.itemImageSrc" alt="Image" [width]="!isMobil() ? '470' : responsiveimage()" height="320"></p-image>
+          </ng-template>
+          <ng-template pTemplate="indicator" let-index>
+              <span style="color: #e9ecef; cursor: pointer">
+                  {{ index + 1 }}
+              </span>
+          </ng-template>
+      </p-galleria>
 
 
+          <!--
+            
           <div class="ms-3" *ngIf="!isMobil()">
             <label class="form-label" for="profile-picture">
               Puedes añadir hasta 3 fotos.
@@ -84,7 +94,6 @@
             </button>
           </div>
           
-          <!--
             <button class="btn btn-primary" type="button" *ngIf="isMobil()" (change)="onFileSelected($event)"> Subir</button>
             -->              
           <button type="submit" class="btn btn-primary">Crear Incidente o Denuncia</button>

@@ -49,7 +49,29 @@
         }
     }
 }
+$input-width: 430px; // Ancho para escritorio
 
+.inputmap {
+  @media (max-width: 700px) { // Estilos para dispositivos móviles
+    width: calc(100vw - 30px); // Restar 30px al ancho total de la ventana
+  }
+
+  @media (min-width: 700px) { // Estilos para escritorio
+    width: $input-width;
+  }
+  height: 50px;
+}
+
+#lista {
+  @media (max-width: 700px) { // Estilos para dispositivos móviles
+    width: calc(100vw - 50px); // Restar 30px al ancho total de la ventana
+  }
+
+  @media (min-width: 700px) { // Estilos para escritorio
+    width: $input-width;
+  }
+  height: 50px;
+}
 
 .formulario-flotante {
   position: absolute;

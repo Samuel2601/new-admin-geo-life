@@ -11,15 +11,19 @@
             </svg>
           </p-inputIcon>
           
-          <input pInputText placeholder="Username" [style.width]="!isMobil() ? '430px' : responsiveimage()" style="height: 50px;"  type="text" placeholder="Buscar un barrio" aria-label="Number" [formControl]="myControl" (input)="filterOptions($event.target)" (blur)="hideOptions()" (mousedown)="stopPropagation($event)" (mouseup)="stopPropagation($event)" (touchmove)="stopPropagation($event)" />
-        
+          <input pInputText placeholder="Username" class="inputmap"   type="text" 
+          placeholder="Buscar un barrio" aria-label="Number" [formControl]="myControl" 
+          (input)="filterOptions($event.target)" (blur)="hideOptions()" (mousedown)="stopPropagation($event)" (mouseup)="stopPropagation($event)" (touchmove)="stopPropagation($event)" />
+         
+      
         </p-iconField>
         <p-inputIcon  *ngIf="!capaActivaWIFI && !isMobil()" (click)="activarPopups()" styleClass="pi pi-question" />
       </p-inputGroup>
 
-        <ul *ngIf="lista_feature.length > 0 && showOptions" class="options-list list-group" (touch)="stopPropagation($event)" (click)="stopPropagation($event)"  (touchmove)="stopPropagation($event)" style="z-index: 3000;" >
+        <ul *ngIf="lista_feature.length > 0 && showOptions" class="options-list list-group" style="overflow-y: auto;" (touch)="stopPropagation($event)" (click)="stopPropagation($event)"  (touchmove)="stopPropagation($event)" >
             <ng-container *ngFor="let option of filter">
-                <li class="list-group-item" (click)="stopPropagation($event);buscar(option);" (touch)="stopPropagation($event);buscar(option);" (touchend)="stopPropagation($event);buscar(option);"  (touchstart)="stopPropagation($event);buscar(option);"  *ngIf="option.properties.nombre">{{ option.properties.nombre }}</li>
+                <li class="list-group-item" (click)="buscar(option);
+                this.borrarmarkas();stopPropagation($event)" (touch)="buscar(option);this.borrarmarkas();stopPropagation($event);" (touchend)="stopPropagation($event);"  (touchstart)="stopPropagation($event);"   *ngIf="option.properties.nombre">{{ option.properties.nombre }}</li>
             </ng-container>
         </ul>
     <!--
@@ -43,10 +47,11 @@
         </div>
         *ngIf="opcionb&&(check.IndexFichaSectorialComponent||check.CreateFichaSectorialComponent)"
     -->
+    {{showOptions}}
     </div>
-    <div #mapContainer id="formulario" class="formulario-flotante" style="margin-left: 0%; margin-top: 70px;" (click)="stopPropagation($event)" *ngIf="!showOptions">  
-
-    <p-speedDial  [model]="items" direction="down" className="speeddial-left" buttonClassName="p-speed-dial-button" [buttonStyle]="{ 'border-radius': '50%'}">
+    <div #mapContainer id="formulario" class="formulario-flotante" style="margin-left: 0%; margin-top: 70px;" (click)="stopPropagation($event)" *ngIf="!showOptions&&loadspeed">  
+    <p-speedDial *ngIf="!showOptions&&loadspeed" [model]="items" direction="down" className="speeddial-left" buttonClassName="p-speed-dial-button" [buttonStyle]="{ 'border-radius': '50%'}">
+      <input type="text" pInputText pTooltip="tooltipText"  tooltipPosition="position" placeholder="placeholder">
     </p-speedDial>
     </div>
 

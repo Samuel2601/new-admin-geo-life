@@ -18,6 +18,7 @@ import { Capacitor, Plugins } from '@capacitor/core';
 const { Geolocation } = Plugins;
 import 'jquery.finger';
 import { MenuItem, MessageService } from 'primeng/api';
+
 declare global {
   interface JQueryStatic {
       Finger: any;
@@ -119,16 +120,20 @@ export class MapComponent implements OnInit,AfterViewInit {
         });
       }
     }, 0);
+    setTimeout(() => {
+      this.loadspeed=true;
+    }, 200);
   }
   responsiveimage():string{
     let aux=window.innerWidth-30;
     return (aux+'px').toString();
   }
+  loadspeed=false;
   updateItem(){
+    this.loadspeed=false;
     this.items = [
       {
         icon: !this.capaActiva? 'pi pi-eye':'bi bi-eye-slash-fill',
-        tooltipPosition:'right',
         tooltipOptions: {
           tooltipLabel:'Barrios',
           tooltipPosition:'right',
@@ -140,7 +145,6 @@ export class MapComponent implements OnInit,AfterViewInit {
       },
       {
         icon: !this.capaActivaWIFI? 'bi bi-wifi':'bi bi-wifi-off',
-        tooltip:'Puntos Wifi',
         tooltipOptions: {
           tooltipLabel:'Puntos Wifi',
           tooltipPosition:'right',
@@ -152,7 +156,6 @@ export class MapComponent implements OnInit,AfterViewInit {
       },
       {
           icon: 'pi pi-book',
-          tooltip:'Fichas Técnicas',
           tooltipOptions: {
             tooltipLabel:'Fichas Técnicas',
             tooltipPosition:'right',
@@ -165,7 +168,6 @@ export class MapComponent implements OnInit,AfterViewInit {
       },
       {
           icon: 'pi pi-pencil',
-          tooltip:'Nuevas Ficha Técnica',
           tooltipOptions: {
             tooltipLabel:'Nuevas Ficha Técnica',
             tooltipPosition:'right',
@@ -178,7 +180,6 @@ export class MapComponent implements OnInit,AfterViewInit {
       },
       {
           icon: 'pi pi-inbox',
-          tooltip:'Incidentes',
           tooltipOptions: {
             tooltipLabel:'Incidentes',
             tooltipPosition:'right',
@@ -191,7 +192,6 @@ export class MapComponent implements OnInit,AfterViewInit {
       },
       {
         icon: 'pi pi-telegram',
-        tooltip:'Nuevo Incidente',
         tooltipOptions: {
           tooltipLabel:'Nuevo Incidente',
           tooltipPosition:'right',
@@ -513,11 +513,17 @@ isMobil() {
   }  
   
   stopPropagation(event: Event) {
-    this.disablehandliClick();
-    event.stopPropagation();    
-    setTimeout(() => {
-      this.enablehandleClick();
-    }, 500);
+    event.stopPropagation();  
+    if(!this.isMobil()){
+      this.disablehandliClick();
+
+      setTimeout(() => {
+        this.enablehandleClick();
+      }, 500);
+    }
+   
+     
+   
   }
   
   onClickHandler = async (e: any) => {
@@ -739,7 +745,15 @@ isMobil() {
       return null;
     }
   }
-  
+borrarmarkas(){
+  if(this.map){
+    this.map.eachLayer((layer) => {
+      if (layer instanceof L.Marker) {
+          this.map?.removeLayer(layer);
+      }
+  });
+  }
+}  
 
   //BUSQUEDAS
   async buscar(opcion:any){      

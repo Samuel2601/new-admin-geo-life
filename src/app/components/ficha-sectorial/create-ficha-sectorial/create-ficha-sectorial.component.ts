@@ -8,6 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import iziToast from 'izitoast';
 import { Capacitor } from '@capacitor/core';
 import { HelperService } from 'src/app/services/helper.service';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-create-ficha-sectorial',
   templateUrl: './create-ficha-sectorial.component.html',
@@ -19,7 +20,7 @@ export class CreateFichaSectorialComponent implements OnInit {
   actividadesProyecto:any=[];
   model: boolean=true;
   data:any
-  constructor(private modalService: NgbModal,private fb: FormBuilder,private createService:CreateService,private router: Router,private listarService:ListService,private adminservice:AdminService,private helper:HelperService){
+  constructor(private modalService: NgbModal,private fb: FormBuilder,private createService:CreateService,private router: Router,private listarService:ListService,private adminservice:AdminService,private helper:HelperService,private messageService: MessageService){
     this.fichaSectorialForm = this.fb.group({
       descripcion: ['', Validators.required],
       encargado: ['', Validators.required],
@@ -144,8 +145,41 @@ export class CreateFichaSectorialComponent implements OnInit {
   load_carrusel=false;
   public file:Array<any> = [];
   selectedFiles: File[] = [];
+  upload=true;
+  responsiveOptions = [
+    {
+        breakpoint: '1024px',
+        numVisible: 5
+    },
+    {
+        breakpoint: '768px',
+        numVisible: 3
+    },
+    {
+        breakpoint: '560px',
+        numVisible: 1
+    }
+  ];
   onFilesSelected(event: any): void {
+    this.load_carrusel=false;
+    console.log(event);
     this.load_carrusel = false;
+    const files: FileList = event.files;
+
+    for(let file of event.files) {
+      this.selectedFiles.push(file);
+      const objectURL = URL.createObjectURL(file);
+      this.imagenesSeleccionadas.push({ itemImageSrc: objectURL });
+    }
+
+    this.messageService.add({severity: 'info', summary: 'File Uploaded', detail: this.selectedFiles.length+'Imagenes subidas'});
+
+    console.log(this.selectedFiles,this.imagenesSeleccionadas );
+    setTimeout(() => {
+      this.upload=false;
+    this.load_carrusel=true;
+    }, 1000);
+    /*
     const files: FileList = event.target.files;
     console.log(files);
     if(!this.isMobil()){
@@ -174,7 +208,7 @@ export class CreateFichaSectorialComponent implements OnInit {
       setTimeout(() => {        
         this.load_carrusel = true;
       }, 500);
-    }
+    }*/
   }
   
   eliminarImagen(index: number) {
@@ -200,9 +234,7 @@ export class CreateFichaSectorialComponent implements OnInit {
               title:'Listo',
               message:'Ingresado correctamente'
             });
-            setTimeout(() => {
-              this.router.navigate(["/home"]);
-            }, 2000);
+            this.modalService.dismissAll();
           }
         }, error => {
           console.error(error);
@@ -225,4 +257,7 @@ export class CreateFichaSectorialComponent implements OnInit {
       console.log(this.fichaSectorialForm.valid);
     }
   }
+  responsiveimage():string{
+    return (window.innerWidth-50).toString();
+   }
 }

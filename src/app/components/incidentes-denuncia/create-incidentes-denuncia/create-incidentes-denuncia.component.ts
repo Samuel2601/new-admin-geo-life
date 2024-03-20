@@ -228,7 +228,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
         breakpoint: '560px',
         numVisible: 1
     }
-];
+  ];
  responsiveimage():string{
   return (window.innerWidth-50).toString();
  }

@@ -28,8 +28,11 @@
           </div>
 
           <p-toast></p-toast>
-          <p-button label="Subir de Nuevo" severity="warning" *ngIf="!upload" (onClick)="upload=true;imagenesSeleccionadas=[];selectedFiles=[]"></p-button>
-          <p-fileUpload *ngIf="imagenesSeleccionadas.length==0||upload" name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" (onUpload)="onFilesSelected($event)" [multiple]="true" accept="image/*" [fileLimit]="3" [maxFileSize]="5000000">
+          <p-button label="Subir de Nuevo" severity="warning" *ngIf="!upload" (onClick)="upload=true;imagenesSeleccionadas=[];selectedFiles=[]" icon="pi pi-trash"></p-button>
+          <p-fileUpload *ngIf="(imagenesSeleccionadas.length==0||upload )&& !isMobil()" 
+          chooseLabel="Seleccionar" uploadLabel="Cargar" cancelLabel="Cancelar" 
+          name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" (onUpload)="onFilesSelected($event)" [multiple]="true" accept="image/*"  [maxFileSize]="5000000" [fileLimit]="3"
+          invalidFileLimitMessageSummary="Se superó el número máximo de archivos">
               <ng-template pTemplate="content">
                   <ul *ngIf="selectedFiles.length">
                       <li *ngFor="let itemfile of selectedFiles;let i = index"> {{ itemfile.name }} - {{ itemfile.size }} bytes</li>
@@ -37,6 +40,10 @@
                 
               </ng-template>
           </p-fileUpload>
+          <div class="mb-3" *ngIf="(imagenesSeleccionadas.length<=3||upload )&&isMobil()">
+            <label for="formFileMultiple" class="form-label">Añade fotos</label>
+            <button class="btn btn-primary" type="button" *ngIf="imagenesSeleccionadas.length <= 3" (click)="tomarFotoYEnviar($event)"><i class="bi bi-camera-fill"></i></button>
+          </div>
  <!--
   <img [src]="imagenesSeleccionadas[i].itemImageSrc" width="150" class="ng-star-inserted">
  -->

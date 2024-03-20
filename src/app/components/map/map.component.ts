@@ -113,15 +113,16 @@ export class MapComponent implements OnInit,AfterViewInit {
   }
   @ViewChildren(SpeedDial) speedDials: QueryList<SpeedDial> | undefined;
   activarTooltips() {
-    setTimeout(() => {
-      if (this.speedDials) {
-        this.speedDials.forEach((speedDial,index) => {
-          speedDial.show();
-        });
-      }
-    }, 0);
+   
     setTimeout(() => {
       this.loadspeed=true;
+      setTimeout(() => {
+        if (this.speedDials) {
+          this.speedDials.forEach((speedDial,index) => {
+            speedDial.show();
+          });
+        }
+      }, 0);
     }, 200);
   }
   responsiveimage():string{

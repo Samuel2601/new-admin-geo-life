@@ -35,14 +35,21 @@ export class ListService {
     return this.http.get(this.url + 'listar_ficha_sectorial',  { headers: headers, params: params });
   }
 
-  listarIncidentesDenuncias(token: any, campo?: string, valor?: any): Observable<any> {
+  listarIncidentesDenuncias(token: any, campo?: string, valor?: any,all?:boolean): Observable<any> {
+    console.log(all);
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: token,
     });
     let params = new HttpParams()
         .set('campo', campo||'')
-        .set('valor', valor||'');
+        .set('valor', valor||'')
+    // Solo agregar el parámetro 'all' si es verdadero
+    if (all) {
+      params = params.set('all', all);
+    }else{
+      params = params.set('all', true);
+    }
     return this.http.get(this.url + 'listar_incidentes_denuncias',  { headers: headers, params: params });
   }
   listarCategorias(token: any, campo?: string, valor?: any): Observable<any> {

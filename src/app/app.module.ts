@@ -61,10 +61,18 @@ import { EditPermisosComponent } from './components/admin/permisos/edit-permisos
 import { CreatePermisosComponent } from './components/admin/permisos/create-permisos/create-permisos.component';
 
 import { AdminComponent } from './components/admin/admin.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SpinnerComponent } from './spinner/spinner.component';
 
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+
+
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { StackBarriosComponent } from './components/dashboard/stack-barrios/stack-barrios.component';
+import { StackFichasComponent } from './components/dashboard/stack-fichas/stack-fichas.component';
+import { StackIncidentesComponent } from './components/dashboard/stack-incidentes/stack-incidentes.component';
+import { StackWIFIComponent } from './components/dashboard/stack-wifi/stack-wifi.component';
+
+
 
 // Import PrimeNG modules
 import { AccordionModule } from 'primeng/accordion';
@@ -214,7 +222,11 @@ import { InputIconModule } from 'primeng/inputicon';
     CreatePermisosComponent,
     AdminComponent,
     DashboardComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    StackBarriosComponent,
+    StackFichasComponent,
+    StackIncidentesComponent,
+    StackWIFIComponent
   ],
   imports: [
     BrowserModule,

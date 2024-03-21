@@ -1,15 +1,18 @@
 <p-splitter  [style]="{ height: '100px' }" styleClass="mb-5">
     <ng-template pTemplate>
-        <div class="col flex align-items-center justify-content-center"><button (click)="previoDataFeature()">Anterior</button></div>
-    </ng-template>
-    <ng-template pTemplate>
         <div class="col flex align-items-center justify-content-center">
-            <button (click)="dataFeature()">Actual</button>
-            <button (click)="rankin()">Ranking</button>
+            <p-button label="Anterior" [text]="true" (click)="previoDataFeature()"></p-button>
         </div>
     </ng-template>
     <ng-template pTemplate>
-        <div class="col flex align-items-center justify-content-center"><button (click)="postDataFeature()">Siguiente</button></div>
+        <div class="col flex align-items-center justify-content-center">
+            <p-button label="Todos" [text]="true" (click)="rankin()"></p-button>
+        </div>
+    </ng-template>
+    <ng-template pTemplate>
+        <div class="col flex align-items-center justify-content-center">
+            <p-button label="Siguiente" [text]="true" (click)="postDataFeature()"></p-button>
+        </div>
     </ng-template>
 </p-splitter>
 <p-scrollPanel  styleClass="custombar1">

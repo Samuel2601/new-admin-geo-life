@@ -24,45 +24,56 @@ export class StackBarriosComponent implements OnInit {
 
 
     await this.getWFSgeojson(this.urlgeoser);
-    this.updateCurrentData();
+    this.rankin();
   }
   token=this.helper.token();
   constIncidente:any=[];
   loading=true;
   async rankin() {
-    this.loading=true;
-    // Obtener todos los incidentes
-    const response: any = await this.listar.listarIncidentesDenuncias(this.token, '', '', false).toPromise();
-    if(response.data){
-      this.constIncidente =response.data;
-        // Agrupar y contar los incidentes por nombre de dirección
-      const incidentesPorDireccion = this.constIncidente.reduce((acc: any, incidente: any) => {
-        const nombreDireccion = incidente.direccion_geo.nombre;
-        acc[nombreDireccion] = acc[nombreDireccion] ? acc[nombreDireccion] + 1 : 1;
-        return acc;
-      }, {});
-    
-      // Ordenar las direcciones por cantidad de incidentes (de mayor a menor)
-      const direccionesOrdenadas = Object.entries(incidentesPorDireccion)
-        .sort((a:any, b:any) => b[1] - a[1])
-        .map(([nombre]) => nombre);
-    
-      // Crear el dataset para basicData
-      const dataset = {
-        data: Object.values(incidentesPorDireccion),
-        label: 'Incidentes o Denuncias',
-        borderWidth: 1
-      };
-    
-      // Actualizar basicData con los datos ordenados
-      this.basicData.datasets = [dataset];
-      this.basicData.labels = direccionesOrdenadas;
-      console.log(this.constIncidente);
-      this.canvas();
-      this.loading=false;
+    this.loading = true;
+    // Obtener todos los incidentes si aún no se han cargado
+    if (this.constIncidente.length === 0) {
+      try {
+        const response: any = await this.listar.listarIncidentesDenuncias(this.token, '', '', false).toPromise();
+        if (response.data) {
+          this.constIncidente = response.data;
+        }
+      } catch (error) {
+        console.error('Error al obtener incidentes:', error);
+        this.loading = false;
+        return;
+      }
     }
   
+    // Agrupar y contar los incidentes por nombre de dirección
+    const incidentesPorDireccion = this.constIncidente.reduce((acc: any, incidente: any) => {
+      const nombreDireccion = incidente.direccion_geo.nombre;
+      acc[nombreDireccion] = acc[nombreDireccion] ? acc[nombreDireccion] + 1 : 1;
+      return acc;
+    }, {});
+  
+    // Ordenar las direcciones por cantidad de incidentes (de mayor a menor)
+    const direccionesOrdenadas = Object.entries(incidentesPorDireccion)
+      .sort((a: any, b: any) => b[1] - a[1])
+      .map(([nombre]) => nombre);
+  
+    // Crear el dataset para basicData
+    const dataset = {
+      data: Object.values(incidentesPorDireccion),
+      label: 'Incidentes o Denuncias',
+      borderWidth: 1
+    };
+  
+    // Actualizar basicData con los datos ordenados
+    this.basicData.datasets = [dataset];
+    this.basicData.labels = direccionesOrdenadas;
+    
+    // Actualizar la vista
+    this.canvas();
+  
+    this.loading = false;
   }
+  
   
 
   async cargar(){
@@ -79,7 +90,6 @@ export class StackBarriosComponent implements OnInit {
           return false;
         }
       });
-      console.log(ci);
         if(ci.length!=0){
           aux.push(ci.length);         
         }else{

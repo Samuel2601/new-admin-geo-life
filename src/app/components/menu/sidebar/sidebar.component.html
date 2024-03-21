@@ -71,7 +71,7 @@
         </li>
     </ul>
   </div>
-  <p-button (click)="sidebarVisible = true" icon="pi pi-arrow-right"></p-button>
+
     <ul class="nav">
         <ng-container *ngFor="let menuItem of menuItems" >
             <li  *ngIf="!menuItem.component||menuItem.status" routerLinkActive="active"  class="{{menuItem.class}} nav-item">
@@ -281,3 +281,7 @@
         </div>
     </ng-template>
 </p-sidebar>
+
+ <!--
+      <p-button (click)="sidebarVisible = true" icon="pi pi-arrow-right"></p-button>
+ -->

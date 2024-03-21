@@ -66,7 +66,9 @@
                         </ul>
                       </div>                    
                 </li>
-                <p-button (click)="showDialog()" icon="pi pi-user" label="Login"></p-button>
+                <!--
+<p-button (click)="showDialog()" icon="pi pi-user" label="Login"></p-button>
+                --> 
                 <!-- Si no hay un token en el localStorage, mostrar el enlace de navegación al modal -->
                 <li class="nav-item" *ngIf="!token">
                     <a class="nav-link" [routerLink]="['/inicio']">

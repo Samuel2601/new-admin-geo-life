@@ -1,17 +1,109 @@
-<div class="card">
-    <p-splitter  [style]="{ height: '100px' }" styleClass="mb-5">
-        <ng-template pTemplate>
-            <div class="col flex align-items-center justify-content-center"><button (click)="previoDataFeature()">Anterior</button></div>
-        </ng-template>
-        <ng-template pTemplate>
-            <div class="col flex align-items-center justify-content-center">
-                <button (click)="dataFeature()">Actual</button>
-                <button (click)="filtrar()">Ranking</button>
-            </div>
-        </ng-template>
-        <ng-template pTemplate>
-            <div class="col flex align-items-center justify-content-center"><button (click)="postDataFeature()">Siguiente</button></div>
-        </ng-template>
-    </p-splitter>
-    <p-chart type="bar" [data]="basicData" [options]="basicOptions" ></p-chart>
-</div>
+<p-splitter  [style]="{ height: '100px' }" styleClass="mb-5">
+    <ng-template pTemplate>
+        <div class="col flex align-items-center justify-content-center"><button (click)="previoDataFeature()">Anterior</button></div>
+    </ng-template>
+    <ng-template pTemplate>
+        <div class="col flex align-items-center justify-content-center">
+            <button (click)="dataFeature()">Actual</button>
+            <button (click)="rankin()">Ranking</button>
+        </div>
+    </ng-template>
+    <ng-template pTemplate>
+        <div class="col flex align-items-center justify-content-center"><button (click)="postDataFeature()">Siguiente</button></div>
+    </ng-template>
+</p-splitter>
+<p-scrollPanel  styleClass="custombar1">
+    <div class="card">
+        <p-chart type="bar" [data]="basicData" [options]="basicOptions" ></p-chart>
+    </div>
+</p-scrollPanel>
+
+<p-scrollPanel  styleClass="custombar2">
+    <div class="card">
+        <p-table
+            #dt1
+            [value]="constIncidente"
+            dataKey="_id"
+            [rows]="10"
+            [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            [loading]="loading"
+            [paginator]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [globalFilterFields]="['direccion_geo.nombre', 'categoria.nombre', 'subcategoria.nombre', 'ciudadano.nombres', 'estado.nombre']"
+            >
+            <ng-template pTemplate="caption">
+                <div class="flex">
+                    <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+                    <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt1.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
+                    </span>
+                    
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="min-width:15rem">
+                        <div class="flex align-items-center">
+                            Dirección
+                            <p-columnFilter type="text" field="direccion_geo.nombre" display="menu"></p-columnFilter>
+                        </div>
+                    </th>
+                    <th style="min-width:15rem">
+                        <div class="flex align-items-center">
+                            Categoría
+                            <p-columnFilter type="text" field="categoria.nombre" display="menu"></p-columnFilter>
+                        </div>
+                    </th>
+                    <th style="min-width:15rem">
+                        <div class="flex align-items-center">
+                            Subcategoría
+                            <p-columnFilter type="text" field="subcategoria.nombre" display="menu"></p-columnFilter>
+                        </div>
+                    </th>
+                    <th style="min-width:15rem">
+                        <div class="flex align-items-center">
+                            Ciudadano
+                            <p-columnFilter type="text" field="ciudadano.nombres" display="menu"></p-columnFilter>
+                        </div>
+                    </th>
+                    <th style="min-width:10rem">
+                        <div class="flex align-items-center">
+                            Estado
+                            <p-columnFilter type="text" field="estado.nombre" display="menu"></p-columnFilter>
+                        </div>
+                    </th>
+                    <!-- Agrega las columnas restantes según tu necesidad -->
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-incidente>
+                <tr>
+                    <td>
+                        {{ incidente.direccion_geo.nombre }}
+                    </td>
+                    <td>
+                        {{ incidente.categoria.nombre }}
+                    </td>
+                    <td>
+                        {{ incidente.subcategoria.nombre }}
+                    </td>
+                    <td>
+                        {{ incidente.ciudadano.nombres }}
+                    </td>
+                    <td>
+                        <p-tag [value]="incidente.estado.nombre" [severity]="getSeverity(incidente.estado.nombre)"></p-tag>
+                    </td>
+                    <!-- Agrega las columnas restantes según tu necesidad -->
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5">No se encontraron incidentes.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    
+</p-scrollPanel>

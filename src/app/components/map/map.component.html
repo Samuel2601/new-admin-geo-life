@@ -48,13 +48,11 @@
         *ngIf="opcionb&&(check.IndexFichaSectorialComponent||check.CreateFichaSectorialComponent)"
     -->
     </div>
-    >
-    <div #mapContainer id="formulario" class="formulario-flotante" style="margin-left: 0%; margin-top: 70px; width: 60px; height: 60px;" (click)="stopPropagation($event)" *ngIf="!showOptions && loadspeed">  
-      <p-speedDial *ngIf="!showOptions && loadspeed" [model]="items" direction="down" className="speeddial-left" buttonClassName="p-speed-dial-button" [buttonStyle]="{ 'border-radius': '50%'}">
-        <input type="text" pInputText pTooltip="tooltipText"  tooltipPosition="position" placeholder="placeholder">
-      </p-speedDial>
+  <div #mapContainer id="formulario" class="formulario-flotante" style="margin-left: 0%; margin-top: 70px;" (click)="stopPropagation($event)" *ngIf="!showOptions && loadspeed">  
+      <p-speedDial *ngIf="!showOptions && loadspeed" [model]="items" direction="down" [buttonStyle]="{ 'border-radius': '50%'}">  
+      </p-speedDial>     
   </div>
-  
+ 
   
 
     <app-index-ficha-sectorial class="container" *ngIf="mostrarficha" id="indexficha"  [filtro]="'direccion_geo'" [valor]="opcionb.properties.nombre" [modal]="true" (click)="stopPropagation($event)" style="z-index: inherit;">

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { Table } from 'primeng/table';
 import { HelperService } from 'src/app/services/helper.service';
 import { ListService } from 'src/app/services/list.service';
 
@@ -27,43 +28,81 @@ export class StackBarriosComponent implements OnInit {
   }
   token=this.helper.token();
   constIncidente:any=[];
-  async filtrar(){
-    this.constIncidente= await this.listar.listarIncidentesDenuncias(this.token,'','',false).toPromise();
-    console.log(this.constIncidente);
-  }
-  async cargar(){
+  loading=true;
+  async rankin() {
+    this.loading=true;
+    // Obtener todos los incidentes
+    const response: any = await this.listar.listarIncidentesDenuncias(this.token, '', '', false).toPromise();
+    if(response.data){
+      this.constIncidente =response.data;
+        // Agrupar y contar los incidentes por nombre de dirección
+      const incidentesPorDireccion = this.constIncidente.reduce((acc: any, incidente: any) => {
+        const nombreDireccion = incidente.direccion_geo.nombre;
+        acc[nombreDireccion] = acc[nombreDireccion] ? acc[nombreDireccion] + 1 : 1;
+        return acc;
+      }, {});
     
-    let aux:any={};
-    aux.data=[];
-    aux.label='Sales';
-    aux.borderWidth= 1;
+      // Ordenar las direcciones por cantidad de incidentes (de mayor a menor)
+      const direccionesOrdenadas = Object.entries(incidentesPorDireccion)
+        .sort((a:any, b:any) => b[1] - a[1])
+        .map(([nombre]) => nombre);
+    
+      // Crear el dataset para basicData
+      const dataset = {
+        data: Object.values(incidentesPorDireccion),
+        label: 'Incidentes o Denuncias',
+        borderWidth: 1
+      };
+    
+      // Actualizar basicData con los datos ordenados
+      this.basicData.datasets = [dataset];
+      this.basicData.labels = direccionesOrdenadas;
+      console.log(this.constIncidente);
+      this.canvas();
+      this.loading=false;
+    }
+  
+  }
+  
+
+  async cargar(){
+    this.loading=true;
+    let aux=[];
     let axu2: any[]=[];
     for (const element of this.currentData) {
       if(element.properties.nombre){
         axu2.push(element.properties.nombre);
-        let ci=this.constIncidente?.find((element2:any)=> {
+        let ci=this.constIncidente?.filter((element2:any)=> {
           if (element2.direccion_geo && element.properties && element.properties.nombre) {
           return element2.direccion_geo.nombre == element.properties.nombre;
         } else {
           return false;
         }
       });
-        if(ci){
-          aux.data.push(ci.length);         
+      console.log(ci);
+        if(ci.length!=0){
+          aux.push(ci.length);         
         }else{
           const response: any  = await this.listar.listarIncidentesDenuncias(this.token,'direccion_geo.nombre',element.properties.nombre,false).toPromise();
           if(response.data){
-            aux.data.push(response.data.length);
-            this.constIncidente.push(response.data);
+            aux.push(response.data.length);
+            this.constIncidente.push(...response.data);
           }
         }
         
       }
     }
-
-    this.basicData.datasets=[aux];
+    const dataset = {
+      data: Object.values(aux),
+      label: 'Incidentes o Denuncias',
+      borderWidth: 1
+    };
+    this.basicData.datasets=[dataset];
     this.basicData.labels=axu2;
-    console.log(this.basicData,aux);
+    this.canvas();
+    this.loading=false;
+}
+canvas(){
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
@@ -101,58 +140,7 @@ export class StackBarriosComponent implements OnInit {
 }
 
 
-  async listarbarrio(){
-    await this.getWFSgeojson(this.urlgeoser);
-    console.log(this.lista_feature);
-    let aux:any={};
-    aux.data=[];
-    aux.label='Sales';
-    aux.borderWidth= 1;
-    let axu2: any[]=[];
-    this.lista_feature.forEach((element:any) => {
-      if(element.properties.nombre){
-        axu2.push(element.properties.nombre);
-        aux.data.push(10);
-      }
-    });
-    this.basicData.datasets=[aux];
-    this.basicData.labels=axu2;
-    console.log(this.basicData,aux);
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-    this.basicOptions = {
-      plugins: {
-          legend: {
-              labels: {
-                  color: textColor
-              }
-          }
-      },
-      scales: {
-          y: {
-              beginAtZero: true,
-              ticks: {
-                  color: textColorSecondary
-              },
-              grid: {
-                  color: surfaceBorder,
-                  drawBorder: false
-              }
-          },
-          x: {
-              ticks: {
-                  color: textColorSecondary
-              },
-              grid: {
-                  color: surfaceBorder,
-                  drawBorder: false
-              }
-          }
-      }
-  };
-  }
+
   lista_feature=[];
   async getWFSgeojson(url:any) {
     try {
@@ -164,7 +152,6 @@ export class StackBarriosComponent implements OnInit {
       this.lista_feature = this.lista_feature.filter((element: any) => {
         return element.properties.nombre;
     });
-      console.log(this.lista_feature);
       return data;
     } catch (error) {
       this.messageService.add({severity: 'error', summary: 'File Uploaded', detail: 'Sin Conexión a Geoserver'});
@@ -204,5 +191,31 @@ async postDataFeature() {
 updateCurrentData() {
     this.currentData = this.lista_feature.slice(this.currentIndex, this.currentIndex + 5);
     this.cargar();
+}
+
+clear(table: Table) {
+  table.clear();
+}
+
+getSeverity(status: string) {
+  switch (status.toLowerCase()) {
+      case 'pendiente':
+          return 'danger';
+
+      case 'qualified':
+          return 'success';
+
+      case 'new':
+          return 'info';
+
+      case 'negotiation':
+          return 'warning';
+
+          case 'renewal':
+            return 'info'; // Otra opción aquí, dependiendo de lo que desees
+  
+        default:
+          return 'info'; // Otra opción aquí, dependiendo de lo que desees
+  }
 }
 }

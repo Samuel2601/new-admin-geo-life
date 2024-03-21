@@ -136,15 +136,15 @@ export class HelperService {
     }
     this.llamadasActivas++;
       
-      console.log(this.llamadasActivas);
+      //console.log(this.llamadasActivas);
   }
 
   cerrarspinner(){
     this.llamadasActivas--;
-    console.log(this.llamadasActivas);
+   // console.log(this.llamadasActivas);
     if(this.llamadasActivas==0){
       setTimeout(() => {      
-        console.log('Cerrando');
+        //console.log('Cerrando');
         this.modalService.dismissAll();
         }, 500);
     }

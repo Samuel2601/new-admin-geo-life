@@ -2,29 +2,28 @@
 <ng-container *ngIf="model">
   <div class="modal-content" *ngIf="!mostrar">
     <div class="modal-header">
-      <h2 class="modal-title">Nuevo Incidente o Denuncia: <span>{{nuevoIncidenteDenuncia.direccion_geo.nombre}}</span>/<span *ngIf="geolocation">{{geolocation.address.road}}</span></h2>
+      <h2 class="modal-title">Nuevo Incidente o Denuncia : <span>{{nuevoIncidenteDenuncia.direccion_geo.nombre}}</span>/<span *ngIf="geolocation">{{geolocation.address.road}}</span></h2>
       <button type="button" class="btn-close" aria-label="Close" (click)="DimissModal()"></button>
     </div>
 
 
     <div class="modal-body">
       <ng-container *ngIf="load_form">
-        <form [formGroup]="nuevoIncidenteDenuncia" (ngSubmit)="crearIncidenteDenuncia()">
           <div class="mb-3">
             <label for="categoria" class="form-label">Categoría</label>
-            <select id="categoria" class="form-select" [(ngModel)]="nuevoIncidenteDenuncia.categoria" formControlName="categoria" required (change)="selectcategoria($event.target)">
+            <select id="categoria" class="form-select" [(ngModel)]="nuevoIncidenteDenuncia.categoria"  required (change)="selectcategoria($event.target)">
               <option *ngFor="let categoria of categorias" [value]="categoria._id">{{ categoria.nombre }}</option>
             </select>                      
           </div>
           <div class="mb-3" *ngIf="subcategorias.length>0">
             <label for="subcategoria" class="form-label">Subcategoría</label>
-            <select id="subcategoria" name="subcategoria" class="form-select" [(ngModel)]="nuevoIncidenteDenuncia.subcategoria" formControlName="subcategoria" required>
+            <select id="subcategoria" name="subcategoria" class="form-select" [(ngModel)]="nuevoIncidenteDenuncia.subcategoria" required>
               <option *ngFor="let subcategoria of subcategorias" [value]="subcategoria._id" >{{ subcategoria.nombre }}</option>
             </select>
           </div>
           <div class="mb-3">
             <label for="descripcion" class="form-label">Descripción</label>
-            <textarea id="descripcion" name="descripcion" class="form-control" [(ngModel)]="nuevoIncidenteDenuncia.descripcion" formControlName="descripcion" required></textarea>
+            <textarea id="descripcion" name="descripcion" class="form-control" [(ngModel)]="nuevoIncidenteDenuncia.descripcion"  required></textarea>
           </div>
 
           <p-toast></p-toast>
@@ -103,8 +102,8 @@
           
             <button class="btn btn-primary" type="button" *ngIf="isMobil()" (change)="onFileSelected($event)"> Subir</button>
             -->              
-          <button type="submit" class="btn btn-primary">Crear Incidente o Denuncia</button>
-        </form>  
+          <button type="submit" class="btn btn-primary" (click)="crearIncidenteDenuncia()">Crear Incidente o Denuncia</button>
+
       </ng-container>
       <ng-container  *ngIf="!load_form" >
         <div class="text-center">
@@ -117,58 +116,3 @@
     </div>
   </div> 
 </ng-container>
-
-<ng-container *ngIf="!model"><div class="wrapper">
-  <div class="sidebar" data-color="danger" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
-    <app-sidebar></app-sidebar>
-    <div class="sidebar-background" style="background-image: url(./assets/img/sidebar-4.jpg)"></div>
-  </div>
-  <div class="main-panel">
-    <app-navbar></app-navbar>
-    <div class="main-content">
-      <div class="container-fluid">
-        <div class="card">
-          <div class="card-header">
-            <h2>Nuevo Incidente o Denuncia</h2>
-          </div>
-          <div class="card-body">
-              <form [formGroup]="nuevoIncidenteDenuncia" (ngSubmit)="crearIncidenteDenuncia()">
-                  <div class="mb-3">
-                    <label for="categoria" class="form-label">Categoría</label>
-                    <select id="categoria" class="form-select" [(ngModel)]="nuevoIncidenteDenuncia.categoria" formControlName="categoria" required (change)="selectcategoria($event.target)">
-                      <option *ngFor="let categoria of categorias" [value]="categoria._id">{{ categoria.nombre }}</option>
-                    </select>                      
-                  </div>
-                  <div class="mb-3" *ngIf="subcategorias.length>0">
-                    <label for="subcategoria" class="form-label">Subcategoría</label>
-                    <select id="subcategoria" name="subcategoria" class="form-select" [(ngModel)]="nuevoIncidenteDenuncia.subcategoria" formControlName="subcategoria" required>
-                      <option *ngFor="let subcategoria of subcategorias" [value]="subcategoria._id" >{{ subcategoria.nombre }}</option>
-                    </select>
-                  </div>
-                  <div class="mb-3">
-                    <label for="descripcion" class="form-label">Descripción</label>
-                    <textarea id="descripcion" name="descripcion" class="form-control" [(ngModel)]="nuevoIncidenteDenuncia.descripcion" formControlName="descripcion" required></textarea>
-                  </div>
-                  <div class="mb-3">
-                    <label for="foto" class="form-label">Foto</label>
-                    <input type="file" id="foto" name="foto"  class="form-control-file" (change)="onFileSelected($event)" multiple>            
-                  </div>
-                  <div *ngFor="let imagen of imagenesSeleccionadas">
-                    <img [src]="imagen" alt="Imagen seleccionada" class="img-fluid">
-                  </div>
-                
-                  <button type="submit" class="btn btn-primary">Crear Incidente o Denuncia</button>
-                </form>
-                
-          </div>
-        </div>
-      </div>
-    </div>     
-    <div>
-      <app-footer></app-footer>
-    </div>
-  </div>
-</div></ng-container>
-
-
-  

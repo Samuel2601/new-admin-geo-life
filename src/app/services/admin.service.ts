@@ -76,7 +76,7 @@ export class AdminService {
 		const segundos = Math.floor(diferencia / 1000);
 	
 		// Devolver el objeto con el tiempo restante formateado
-		console.log({ dias, horas, minutos, segundos });
+		//console.log({ dias, horas, minutos, segundos });
 		return diferencia ;
 	}
 	isAuthenticate() {

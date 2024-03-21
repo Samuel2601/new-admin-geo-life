@@ -82,7 +82,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
     return new File([blob], fileName, { type: 'image/jpeg' });
   }
-  obtenerDireccion(latitud:any, longitud:any) {
+  async obtenerDireccion(latitud:any, longitud:any) {
     const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitud}&lon=${longitud}&format=json`;
 
     fetch(url)
@@ -97,10 +97,10 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
         });
   }
   
-  ngOnInit(): void {
-   
+  async ngOnInit() {
+    this.load_form = false;
     if (this.data) {
-      this.nuevoIncidenteDenuncia.direccion_geo = {nombre:this.data.properties.nombre,latitud:this.direccion.latitud ,longitud:this.direccion.longitud};
+      this.nuevoIncidenteDenuncia.direccion_geo = { nombre: this.data.properties.nombre, latitud: this.direccion.latitud, longitud: this.direccion.longitud };
     } else {
       this.router.navigate(['/maps']); // Corregido: navigate espera un array como argumento
     }
@@ -112,12 +112,21 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
         this.model = true; // En cualquier otra ruta, model es true
       }
     });
-    //this.getLocation();
-    console.log(this.data);
-    console.log(this.direccion);
-    this.obtenerDireccion(this.direccion.latitud,this.direccion.longitud);
-    this.listarCategorias();
+    try {
+      //this.getLocation();
+      console.log(this.data);
+      console.log(this.direccion);
+      await Promise.all([
+        this.obtenerDireccion(this.direccion.latitud, this.direccion.longitud),
+        this.listarCategorias()
+      ]);
+    } finally {
+      setTimeout(() => {        
+        this.load_form = true;
+      }, 1500);
+    }
   }
+  
   getLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -159,7 +168,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
       );
     }    
   }
-  listarCategorias(): void {
+  async listarCategorias() {
     if(!this.token){
       this.modalService.dismissAll();
       throw this.router.navigate(["/inicio"]);
@@ -345,7 +354,7 @@ selectedFiles: File[] = [];
       this.load_carrusel = true;
     }, 500);
   }
-  load_form=true;
+  load_form:boolean=false;
   crearIncidenteDenuncia(): void {
     this.load_form=false;
     if(!this.token){

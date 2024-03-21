@@ -36,7 +36,6 @@ export class ListService {
   }
 
   listarIncidentesDenuncias(token: any, campo?: string, valor?: any,all?:boolean): Observable<any> {
-    console.log(all);
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: token,

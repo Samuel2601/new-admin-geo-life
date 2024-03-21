@@ -17,7 +17,7 @@ import { from, map } from 'rxjs';
 import { Capacitor, Plugins } from '@capacitor/core';
 const { Geolocation } = Plugins;
 import 'jquery.finger';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem, MenuItemCommandEvent, MessageService } from 'primeng/api';
 
 declare global {
   interface JQueryStatic {
@@ -25,7 +25,7 @@ declare global {
   }
 }
 import { FormControl, FormGroup } from '@angular/forms';
-import { Tooltip } from 'primeng/tooltip';
+import { Tooltip, TooltipModule } from 'primeng/tooltip';
 import { SpeedDial } from 'primeng/speeddial';
 interface AutoCompleteCompleteEvent {
   originalEvent: Event;
@@ -113,7 +113,7 @@ export class MapComponent implements OnInit,AfterViewInit {
   }
   @ViewChildren(SpeedDial) speedDials: QueryList<SpeedDial> | undefined;
   activarTooltips() {
-   
+  
     setTimeout(() => {
       this.loadspeed=true;
       setTimeout(() => {
@@ -140,8 +140,11 @@ export class MapComponent implements OnInit,AfterViewInit {
           tooltipPosition:'right',
           hideDelay:1000,
         },
-        command: () => {
-          this.reloadmap();     //this.messageService.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' });   
+        command: (event) => {
+          console.log(event, event.index,event.item,event.originalEvent);
+          this.stopPropagation(event.originalEvent);
+          this.reloadmap();     //this.messageService.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' }); 
+      
         },
       },
       {
@@ -151,8 +154,9 @@ export class MapComponent implements OnInit,AfterViewInit {
           tooltipPosition:'right',
           hideDelay:1000,
         },
-        command: () => {
-          this.reloadWifi();            
+        command: (event) => {
+          this.stopPropagation(event.originalEvent);
+          this.reloadWifi();             
         }
       },
       {
@@ -163,8 +167,9 @@ export class MapComponent implements OnInit,AfterViewInit {
             hideDelay:1000,
           },
           visible: (this.opcionb||false)  && this.check.IndexFichaSectorialComponent,
-          command: () => {
-            this.fichaTecnica();            
+          command: (event) => {
+            this.stopPropagation(event.originalEvent);
+            this.fichaTecnica();             
           }
       },
       {
@@ -175,7 +180,8 @@ export class MapComponent implements OnInit,AfterViewInit {
             hideDelay:1000,
           },
           visible:(this.opcionb||false) &&this.check.CreateFichaSectorialComponent,
-          command: () => {
+          command: (event) => {
+            this.stopPropagation(event.originalEvent);
             this.nuevoFicha(); 
           }
       },
@@ -187,8 +193,10 @@ export class MapComponent implements OnInit,AfterViewInit {
             hideDelay:1000,
           },
           visible:(this.opcionb||false) &&this.check.IndexIncidentesDenunciaComponent,
-          command: () => {
+          command: (event) => {
+            this.stopPropagation(event.originalEvent);
             this.incidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
+        
           }
       },
       {
@@ -199,8 +207,10 @@ export class MapComponent implements OnInit,AfterViewInit {
           hideDelay:1000,
         },
         visible:(this.opcionb||false)&&this.check.CreateIncidentesDenunciaComponent && !(!this.latitud && !this.longitud),
-        command: () => {
+        command: (event) => {
+          this.stopPropagation(event.originalEvent);
           this.nuevoIncidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
+  
         }
       }
     ];
@@ -218,9 +228,10 @@ export class MapComponent implements OnInit,AfterViewInit {
       this.updateItem();
     } catch (error) {
       
-      //console.error('Error al verificar permisos:', error);
+      console.error('Error al verificar permisos:', error);
       this.router.navigate(['/error']);
     }
+    
     this.helperService.cerrarspinner();
     this.helperService.deshabilitarMapa$.subscribe(() => {
       this.handleClick();
@@ -513,7 +524,7 @@ isMobil() {
     //console.log('Fin de arrastre',this.editing);
   }  
   
-  stopPropagation(event: Event) {
+  stopPropagation(event: any) {
     event.stopPropagation();  
     if(!this.isMobil()){
       this.disablehandliClick();

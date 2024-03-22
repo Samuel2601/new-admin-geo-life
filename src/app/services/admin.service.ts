@@ -74,9 +74,14 @@ export class AdminService {
 		const minutos = Math.floor(diferencia / (1000 * 60));
 		diferencia -= minutos * (1000 * 60);
 		const segundos = Math.floor(diferencia / 1000);
-	
+		if(expiracion<=ahora){
+			localStorage.clear();
+			sessionStorage.clear();
+			return 0;
+		}
+		console.log(diferencia,expiracion,ahora,expiracion>ahora);
 		// Devolver el objeto con el tiempo restante formateado
-		//console.log({ dias, horas, minutos, segundos });
+		console.log({ dias, horas, minutos, segundos });
 		return diferencia ;
 	}
 	isAuthenticate() {

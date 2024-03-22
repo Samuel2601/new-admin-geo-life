@@ -171,6 +171,8 @@ import { MessageService } from 'primeng/api';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { StepperModule } from 'primeng/stepper';
+import { FloatLabelModule } from 'primeng/floatlabel';
 @NgModule({
   declarations: [
     ErrorComponent,
@@ -333,7 +335,9 @@ import { InputIconModule } from 'primeng/inputicon';
     AvatarGroupModule,
     BrowserAnimationsModule,
     IconFieldModule,
-    InputIconModule
+    InputIconModule,
+    StepperModule,
+    FloatLabelModule
   ],
   providers: [ MessageService],
   bootstrap: [AppComponent]

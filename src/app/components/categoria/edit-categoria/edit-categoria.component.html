@@ -1,1 +1,32 @@
-<p>edit-categoria works!</p>
+<div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Editar Categoría: <span *ngIf="loadcategoria">  {{categoria.nombre}} </span> </h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cerrar()"></button>
+    </div>
+    <div class="modal-body" >
+        <ng-container *ngIf="!loadcategoria">
+            <p-skeleton styleClass="mb-2" borderRadius="16px"></p-skeleton>
+            <p-skeleton width="10rem" styleClass="mb-2" borderRadius="16px"></p-skeleton>
+            <p-skeleton width="5rem" styleClass="mb-2" borderRadius="16px"></p-skeleton>
+            <p-skeleton height="2rem" styleClass="mb-2" borderRadius="16px"></p-skeleton>
+            <p-skeleton width="10rem" height="4rem" borderRadius="16px"></p-skeleton>
+        </ng-container>
+        <ng-container *ngIf="loadcategoria">
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Nombre de Categoria</label>
+                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Nombre de Categoria" pInputText [(ngModel)]="categoria.nombre">
+              </div>
+              <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Descripción</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="5" cols="30" pInputTextarea [(ngModel)]="categoria.descripcion"></textarea>
+              </div>
+    
+        </ng-container>
+       
+     
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cerrar()">Concelar</button>
+      <button type="button" class="btn btn-primary" (click)="updateCate()">Guardar</button>
+    </div>
+  </div>

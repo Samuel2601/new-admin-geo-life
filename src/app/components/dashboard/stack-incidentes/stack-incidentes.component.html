@@ -1,20 +1,3 @@
-<p-splitter  [style]="{ height: '100px' }" styleClass="mb-5">
-    <ng-template pTemplate>
-        <div class="col flex align-items-center justify-content-center">
-            <p-button label="Anterior" [text]="true" (click)="previoDataFeature()"></p-button>
-        </div>
-    </ng-template>
-    <ng-template pTemplate>
-        <div class="col flex align-items-center justify-content-center">
-            <p-button label="Todos" [text]="true" (click)="rankin()"></p-button>
-        </div>
-    </ng-template>
-    <ng-template pTemplate>
-        <div class="col flex align-items-center justify-content-center">
-            <p-button label="Siguiente" [text]="true" (click)="postDataFeature()"></p-button>
-        </div>
-    </ng-template>
-</p-splitter>
 <p-scrollPanel  styleClass="custombar1">
     <div class="card">
         <p-chart type="bar" [data]="basicData" [options]="options" ></p-chart>
@@ -41,6 +24,7 @@
                     <span class="p-input-icon-left ml-auto">
                         <i class="pi pi-search"></i>
                         <input pInputText type="text" (input)="dt1.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
+                        
                     </span>
                     
                 </div>
@@ -51,30 +35,35 @@
                         <div class="flex align-items-center">
                             Dirección
                             <p-columnFilter type="text" field="direccion_geo.nombre" display="menu"></p-columnFilter>
+                            <th pSortableColumn="direccion_geo.nombre" style="width:20%"><p-sortIcon field="direccion_geo.nombre"></p-sortIcon></th>
                         </div>
                     </th>
                     <th style="min-width:15rem">
                         <div class="flex align-items-center">
                             Categoría
                             <p-columnFilter type="text" field="categoria.nombre" display="menu"></p-columnFilter>
+                            <th pSortableColumn="categoria.nombre" style="width:20%"><p-sortIcon field="categoria.nombre"></p-sortIcon></th>
                         </div>
                     </th>
                     <th style="min-width:15rem">
                         <div class="flex align-items-center">
                             Subcategoría
                             <p-columnFilter type="text" field="subcategoria.nombre" display="menu"></p-columnFilter>
+                            <th pSortableColumn="subcategoria.nombre" style="width:20%"><p-sortIcon field="subcategoria.nombre"></p-sortIcon></th>
                         </div>
                     </th>
                     <th style="min-width:15rem">
                         <div class="flex align-items-center">
                             Ciudadano
                             <p-columnFilter type="text" field="ciudadano.nombres" display="menu"></p-columnFilter>
+                            <th pSortableColumn="ciudadano.nombre" style="width:20%"><p-sortIcon field="ciudadano.nombre"></p-sortIcon></th>
                         </div>
                     </th>
                     <th style="min-width:10rem">
                         <div class="flex align-items-center">
                             Estado
                             <p-columnFilter type="text" field="estado.nombre" display="menu"></p-columnFilter>
+                            <th pSortableColumn="estado.nombre" style="width:20%"><p-sortIcon field="estado.nombre"></p-sortIcon></th>
                         </div>
                     </th>
                     <!-- Agrega las columnas restantes según tu necesidad -->

@@ -36,22 +36,6 @@ export class DeleteService {
     return this.http.delete(this.url + 'eliminar_incidente_denuncia/' + id, { headers: headers });
   }
 
-  eliminarCategoria(token: any, id: string): Observable<any> {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: token,
-    });
-    return this.http.delete(this.url + 'eliminar_categoria/' + id, { headers: headers });
-  }
-
-  eliminarSubcategoria(token: any, id: string): Observable<any> {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: token,
-    });
-    return this.http.delete(this.url + 'eliminar_subcategoria/' + id, { headers: headers });
-  }
-
   eliminarEncargadoCategoria(token: any, id: string): Observable<any> {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -99,4 +83,40 @@ export class DeleteService {
     });
     return this.http.delete(this.url + 'eliminar_direccion_geo/' + id, { headers: headers });
   }
+
+  verificarCategoria(token: any, id: string): Observable<any> {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: token,
+    });
+    return this.http.get(this.url + 'verificar_categoria/' + id, { headers: headers });
+  }
+
+  eliminarCategoria(token: any, id: string,data: any): Observable<any> {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: token,
+    });
+    return this.http.put(this.url + 'eliminar_categoria/' + id, data, { headers: headers });
+  }
+
+  verificarSubCategoria(token: any, id: string): Observable<any> {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: token,
+    });
+    return this.http.get(this.url + 'verificar_subcategoria/' + id, { headers: headers });
+  }
+
+  eliminarSubcategoria(token: any, id: string,data: any): Observable<any> {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: token,
+    });
+    return this.http.put(this.url + 'eliminar_subcategoria/' + id, data , { headers: headers });
+  }
+
+  
+
+
 }

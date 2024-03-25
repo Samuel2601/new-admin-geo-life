@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import iziToast from 'izitoast';
 import { HelperService } from 'src/app/services/helper.service';
 import { Capacitor } from '@capacitor/core';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-index-incidentes-denuncia',
@@ -252,5 +253,29 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
           numVisible: 1
       }
   ];
+  clear(table: Table) {
+    table.clear();
+  }
 
+  getSeverity(status: string) {
+    switch (status.toLowerCase()) {
+        case 'suspendido':
+            return 'danger';
+  
+        case 'finalizado':
+            return 'success';
+  
+        case 'en proceso':
+            return 'primary';
+  
+        case 'pendiente':
+            return 'warning';
+  
+            case 'planificada':
+              return 'info'; // Otra opción aquí, dependiendo de lo que desees
+    
+          default:
+            return ''; // Otra opción aquí, dependiendo de lo que desees
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { HelperService } from 'src/app/services/helper.service';
@@ -14,20 +14,24 @@ export class StackIncidentesComponent implements OnInit {
   constructor(private messageService: MessageService,private helper:HelperService ,private listar:ListService){
 
   }
- 
-  
-  basicData:any={};
-  basicOptions: any;
-  async ngOnInit() {
-  
-
-
-    await this.getWFSgeojson(this.urlgeoser);
-    this.rankin();
-  }
   token=this.helper.token();
   constIncidente:any=[];
   loading=true;
+  
+  basicData:any={};
+  basicOptions: any;
+
+  async ngOnInit() {
+    await this.getWFSgeojson(this.urlgeoser);
+    if(this.valor&&this.filtro){
+      this.cargar();
+    }else{
+      this.rankin();
+    }
+  }
+
+ 
+
   async rankin() {
     this.loading = true;
     // Obtener todos los incidentes si aún no se han cargado
@@ -48,76 +52,92 @@ export class StackIncidentesComponent implements OnInit {
     const categoriasUnicas = [...new Set(this.constIncidente.map((incidente: any) => incidente.categoria.nombre))];
     const barriosUnicos = [...new Set(this.constIncidente.map((incidente: any) => incidente.direccion_geo.nombre))];
 
-    const datasets = barriosUnicos.map((elementbarr: any) => {
-      const incidentesPorDireccion = this.constIncidente.filter((incidente: any) => incidente.direccion_geo.nombre === elementbarr);
-      const data = categoriasUnicas.map((elementcat: any) => {
-          return incidentesPorDireccion.reduce((acc: any, incidente: any) => {
-              const nombreCategoria = elementcat;
-              if (incidente.categoria.nombre === nombreCategoria) {
-                  acc++;
-              }
-              return acc;
-          }, 0);
-      });
-      return {
-          data,
-          label: elementbarr,
-          borderWidth: 1,
-          type: 'bar',
-      };
-  });
-    console.log("datasets",datasets);
+      const datasets = barriosUnicos.map((elementbarr: any) => {
+        const incidentesPorDireccion = this.constIncidente.filter((incidente: any) => incidente.direccion_geo.nombre === elementbarr);
+        const data = categoriasUnicas.map((elementcat: any) => {
+            return incidentesPorDireccion.reduce((acc: any, incidente: any) => {
+                const nombreCategoria = elementcat;
+                if (incidente.categoria.nombre === nombreCategoria) {
+                    acc++;
+                }
+                return acc;
+            }, 0);
+        });
+        return {
+            data,
+            label: elementbarr,
+            borderWidth: 1,
+            type: 'bar',
+        };
+    });
+      console.log("datasets",datasets);
 
-    this.basicData.datasets = datasets.flat(); // Utiliza flat para aplanar el arreglo de arreglos
+      this.basicData.datasets = datasets.flat(); // Utiliza flat para aplanar el arreglo de arreglos
 
-    this.basicData.labels = categoriasUnicas;
-  console.log(this.basicData);
-    // Actualizar la vista
-    this.canvas();
+      this.basicData.labels = categoriasUnicas;
+    console.log(this.basicData);
+      // Actualizar la vista
+      this.canvas();
 
-    this.loading = false;
-}
+      this.loading = false;
+  }
 
   
-  
-
+  @Input() filtro: string | undefined;
+  @Input() valor: number | undefined;
+  @Input() modal: any = false;
   async cargar(){
-    this.loading=true;
-    let aux=[];
-    let axu2: any[]=[];
-    for (const element of this.currentData) {
-      if(element.properties.nombre){
-        axu2.push(element.properties.nombre);
-        let ci=this.constIncidente?.filter((element2:any)=> {
-          if (element2.direccion_geo && element.properties && element.properties.nombre) {
-          return element2.direccion_geo.nombre == element.properties.nombre;
-        } else {
-          return false;
+    this.loading = true;
+    // Obtener todos los incidentes si aún no se han cargado
+    if (this.constIncidente.length === 0) {
+        try {
+            const response: any = await this.listar.listarIncidentesDenuncias(this.token,this.filtro,this.valor, false).toPromise();
+            if (response.data) {
+                this.constIncidente = response.data;
+            }
+        } catch (error) {
+            console.error('Error al obtener incidentes:', error);
+            this.loading = false;
+            return;
         }
-      });
-        if(ci.length!=0){
-          aux.push(ci.length);         
-        }else{
-          const response: any  = await this.listar.listarIncidentesDenuncias(this.token,'direccion_geo.nombre',element.properties.nombre,false).toPromise();
-          if(response.data){
-            aux.push(response.data.length);
-            this.constIncidente.push(...response.data);
-          }
-        }
-        
-      }
     }
-    const dataset = {
-      data: Object.values(aux),
-      label: 'Incidentes o Denuncias',
-      borderWidth: 1
-    };
-    this.basicData.datasets=[dataset];
-    this.basicData.labels=axu2;
-    this.canvas();
-    this.loading=false;
+    console.log(this.constIncidente);
+    // Obtener valores únicos de categoria.nombre
+    const categoriasUnicas = [...new Set(this.constIncidente.map((incidente: any) => incidente.categoria.nombre))];
+    const barriosUnicos = [...new Set(this.constIncidente.map((incidente: any) => incidente.direccion_geo.nombre))];
+
+      const datasets = barriosUnicos.map((elementbarr: any) => {
+        const incidentesPorDireccion = this.constIncidente.filter((incidente: any) => incidente.direccion_geo.nombre === elementbarr);
+        const data = categoriasUnicas.map((elementcat: any) => {
+            return incidentesPorDireccion.reduce((acc: any, incidente: any) => {
+                const nombreCategoria = elementcat;
+                if (incidente.categoria.nombre === nombreCategoria) {
+                    acc++;
+                }
+                return acc;
+            }, 0);
+        });
+        return {
+            data,
+            label: elementbarr,
+            borderWidth: 1,
+            type: 'bar',
+        };
+    });
+      console.log("datasets",datasets);
+
+      this.basicData.datasets = datasets.flat(); // Utiliza flat para aplanar el arreglo de arreglos
+
+      this.basicData.labels = categoriasUnicas;
+    console.log(this.basicData);
+      // Actualizar la vista
+      this.canvas();
+
+      this.loading = false;
 }
+
 options: any;
+
 canvas(){
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');

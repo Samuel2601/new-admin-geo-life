@@ -11,7 +11,7 @@
         </div>
         <div class="card-body">
 
-          <p-table class="table table-sm align-middle table-striped table-hover" [value]="subcategorias" dataKey="_id" editMode="row" [tableStyle]="{'min-width': '10rem'}" *ngIf="subcategorias.length>0&&!load_lista">
+          <p-table styleClass="p-datatable-striped" class="table table-sm align-middle table-striped table-hover" [value]="subcategorias" dataKey="_id" editMode="row" [tableStyle]="{'min-width': '10rem'}" *ngIf="subcategorias.length>0&&!load_lista">
             <ng-template pTemplate="header">
                 <tr>
                     <th scope="col">Nombre</th>

@@ -71,7 +71,7 @@ import { StackBarriosComponent } from './components/dashboard/stack-barrios/stac
 import { StackFichasComponent } from './components/dashboard/stack-fichas/stack-fichas.component';
 import { StackIncidentesComponent } from './components/dashboard/stack-incidentes/stack-incidentes.component';
 import { StackWIFIComponent } from './components/dashboard/stack-wifi/stack-wifi.component';
-
+import { StackbarriofichaComponent } from './components/dashboard/stackbarrioficha/stackbarrioficha.component';
 
 
 // Import PrimeNG modules
@@ -228,7 +228,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
     StackBarriosComponent,
     StackFichasComponent,
     StackIncidentesComponent,
-    StackWIFIComponent
+    StackWIFIComponent,
+    StackbarriofichaComponent
   ],
   imports: [
     BrowserModule,

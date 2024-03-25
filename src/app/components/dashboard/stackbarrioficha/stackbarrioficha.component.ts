@@ -5,12 +5,12 @@ import { HelperService } from 'src/app/services/helper.service';
 import { ListService } from 'src/app/services/list.service';
 
 @Component({
-  selector: 'app-stack-barrios',
-  templateUrl: './stack-barrios.component.html',
-  styleUrl: './stack-barrios.component.scss'
+  selector: 'app-stackbarrioficha',
+  templateUrl: './stackbarrioficha.component.html',
+  styleUrl: './stackbarrioficha.component.scss'
 })
-export class StackBarriosComponent implements OnInit {
-  
+export class StackbarriofichaComponent {
+
   urlgeoser="https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson"; 
   constructor(private messageService: MessageService,private helper:HelperService ,private listar:ListService){
 
@@ -27,16 +27,16 @@ export class StackBarriosComponent implements OnInit {
     this.rankin();
   }
   token=this.helper.token();
-  constIncidente:any=[];
+  constFicha:any=[];
   loading=true;
   async rankin() {
     this.loading = true;
     // Obtener todos los incidentes si aún no se han cargado
-    if (this.constIncidente.length === 0) {
+    if (this.constFicha.length === 0) {
       try {
-        const response: any = await this.listar.listarIncidentesDenuncias(this.token, '', '', false).toPromise();
+        const response: any = await this.listar.listarFichaSectorial(this.token, '', '').toPromise();
         if (response.data) {
-          this.constIncidente = response.data;
+          this.constFicha = response.data;
         }
       } catch (error) {
         console.error('Error al obtener incidentes:', error);
@@ -46,8 +46,8 @@ export class StackBarriosComponent implements OnInit {
     }
   
     // Agrupar y contar los incidentes por nombre de dirección
-    const incidentesPorDireccion = this.constIncidente.reduce((acc: any, incidente: any) => {
-      const nombreDireccion = incidente.direccion_geo.nombre;
+    const incidentesPorDireccion = this.constFicha.reduce((acc: any, incidente: any) => {
+      const nombreDireccion = incidente.direccion_geo;
       acc[nombreDireccion] = acc[nombreDireccion] ? acc[nombreDireccion] + 1 : 1;
       return acc;
     }, {});
@@ -60,7 +60,7 @@ export class StackBarriosComponent implements OnInit {
     // Crear el dataset para basicData
     const dataset = {
       data: Object.values(incidentesPorDireccion),
-      label: 'Incidentes o Denuncias',
+      label: 'Ficha Sectorial',
       borderWidth: 1
     };
   
@@ -83,9 +83,9 @@ export class StackBarriosComponent implements OnInit {
     for (const element of this.currentData) {
       if(element.properties.nombre){
         axu2.push(element.properties.nombre);
-        let ci=this.constIncidente?.filter((element2:any)=> {
+        let ci=this.constFicha?.filter((element2:any)=> {
           if (element2.direccion_geo && element.properties && element.properties.nombre) {
-          return element2.direccion_geo.nombre == element.properties.nombre;
+          return element2.direccion_geo == element.properties.nombre;
         } else {
           return false;
         }
@@ -93,15 +93,16 @@ export class StackBarriosComponent implements OnInit {
         if(ci.length!=0){
           aux.push(ci.length);         
         }else{
-          const response: any  = await this.listar.listarIncidentesDenuncias(this.token,'direccion_geo.nombre',element.properties.nombre,false).toPromise();
+          const response: any  = await this.listar.listarFichaSectorial(this.token,'direccion_geo',element.properties.nombre).toPromise();
           if(response.data){
             aux.push(response.data.length);
-            this.constIncidente.push(...response.data);
+            this.constFicha.push(...response.data);
           }
         }
         
       }
     }
+   
     const dataset = {
       data: Object.values(aux),
       label: 'Incidentes o Denuncias',
@@ -114,6 +115,7 @@ export class StackBarriosComponent implements OnInit {
 }
 options:any
 canvas(){
+  console.log(this.constFicha);
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
@@ -247,24 +249,23 @@ clear(table: Table) {
 
 getSeverity(status: string) {
   switch (status.toLowerCase()) {
-      case 'pendiente':
+      case 'suspendido':
           return 'danger';
 
-      case 'qualified':
+      case 'finalizado':
           return 'success';
 
-      case 'new':
-          return 'info';
+      case 'en proceso':
+          return 'primary';
 
-      case 'negotiation':
+      case 'pendiente':
           return 'warning';
 
-          case 'renewal':
+          case 'planificada':
             return 'info'; // Otra opción aquí, dependiendo de lo que desees
   
         default:
-          return 'info'; // Otra opción aquí, dependiendo de lo que desees
+          return ''; // Otra opción aquí, dependiendo de lo que desees
   }
 }
-
 }

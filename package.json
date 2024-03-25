@@ -30,6 +30,8 @@
     "@capacitor/geolocation": "^5.0.7",
     "@capacitor/ios": "^5.7.1",
     "@ng-bootstrap/ng-bootstrap": "^16.0.0",
+    "@ngx-translate/core": "^15.0.0",
+    "@ngx-translate/http-loader": "^8.0.0",
     "@popperjs/core": "^2.11.8",
     "@turf/turf": "^6.5.0",
     "bootstrap": "^5.3.3",

@@ -104,7 +104,7 @@ export class MapComponent implements OnInit,AfterViewInit {
 
   //IMPLEMENTOS
   check:any={};
-
+  sidebarVisible: boolean = false;
   ngOnInit(): void{
  
   
@@ -225,6 +225,7 @@ export class MapComponent implements OnInit,AfterViewInit {
       this.check.CreateIncidentesDenunciaComponent = this.helperService.decryptData('CreateIncidentesDenunciaComponent') || false;
       this.check.CreateFichaSectorialComponent = this.helperService.decryptData('CreateFichaSectorialComponent') || false;
       this.check.CreateDireccionGeoComponent = this.helperService.decryptData('CreateDireccionGeoComponent')|| false;
+      this.check.DashboardComponent = this.helperService.decryptData('DashboardComponent')|| false;
       this.updateItem();
     } catch (error) {
       

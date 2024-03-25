@@ -25,7 +25,7 @@
     <div class="card">
         <p-table styleClass="p-datatable-striped"
             #dt1
-            [value]="constIncidente"
+            [value]="constFicha"
             dataKey="_id"
             [rows]="10"
             [showCurrentPageReport]="true"
@@ -33,7 +33,7 @@
             [loading]="loading"
             [paginator]="true"
             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
-            [globalFilterFields]="['direccion_geo.nombre', 'categoria.nombre', 'subcategoria.nombre', 'ciudadano.nombres', 'estado.nombre']"
+            [globalFilterFields]="['direccion_geo', 'actividad.nombre', 'encargado.nombres', 'estado.nombre']"
             [sortMode]="'multiple'"
             >
             <ng-template pTemplate="caption">
@@ -52,29 +52,29 @@
                     <th style="min-width:15rem">
                         <div class="flex align-items-center">
                             Dirección
-                            <p-columnFilter type="text" field="direccion_geo.nombre" display="menu"></p-columnFilter>
-                            <th pSortableColumn="direccion_geo.nombre" style="width:20%"><p-sortIcon field="direccion_geo.nombre"></p-sortIcon></th>
+                            <p-columnFilter type="text" field="direccion_geo" display="menu"></p-columnFilter>
+                            <th pSortableColumn="direccion_geo" style="width:20%"><p-sortIcon field="direccion_geo"></p-sortIcon></th>
                         </div>
                     </th>
                     <th style="min-width:15rem">
                         <div class="flex align-items-center">
-                            Categoría
-                            <p-columnFilter type="text" field="categoria.nombre" display="menu"></p-columnFilter>
-                            <th pSortableColumn="categoria.nombre" style="width:20%"><p-sortIcon field="categoria.nombre"></p-sortIcon></th>
+                            Actividad
+                            <p-columnFilter type="text" field="actividad.nombre" display="menu"></p-columnFilter>
+                            <th pSortableColumn="actividad.nombre" style="width:20%"><p-sortIcon field="actividad.nombre"></p-sortIcon></th>
                         </div>
                     </th>
                     <th style="min-width:15rem">
                         <div class="flex align-items-center">
-                            Subcategoría
-                            <p-columnFilter type="text" field="subcategoria.nombre" display="menu"></p-columnFilter>
-                            <th pSortableColumn="subcategoria.nombre" style="width:20%"><p-sortIcon field="subcategoria.nombre"></p-sortIcon></th>
+                            Fecha del evento
+                            <p-columnFilter type="text" field="fecha_evento" display="menu"></p-columnFilter>
+                            <th pSortableColumn="fecha_evento" style="width:20%"><p-sortIcon field="fecha_evento"></p-sortIcon></th>
                         </div>
                     </th>
                     <th style="min-width:15rem">
                         <div class="flex align-items-center">
-                            Ciudadano
-                            <p-columnFilter type="text" field="ciudadano.nombres" display="menu"></p-columnFilter>
-                            <th pSortableColumn="ciudadano.nombre" style="width:20%"><p-sortIcon field="ciudadano.nombre"></p-sortIcon></th>
+                            Encargado
+                            <p-columnFilter type="text" field="encargado.nombres" display="menu"></p-columnFilter>
+                            <th pSortableColumn="encargado.nombre" style="width:20%"><p-sortIcon field="encargado.nombre"></p-sortIcon></th>
                         </div>
                     </th>
                     <th style="min-width:10rem">
@@ -87,20 +87,20 @@
                     <!-- Agrega las columnas restantes según tu necesidad -->
                 </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-incidente let-rowIndex="rowIndex">
+            <ng-template pTemplate="body" let-incidente  let-rowIndex="rowIndex">
                 <tr>
-                    <td>{{rowIndex+1}}</td>  
+                    <td>{{rowIndex+1}}</td>   
                     <td>
-                        {{ incidente.direccion_geo.nombre }}
+                        {{ incidente.direccion_geo }}
                     </td>
                     <td>
-                        {{ incidente.categoria.nombre }}
+                        {{ incidente.actividad.nombre }}
                     </td>
                     <td>
-                        {{ incidente.subcategoria.nombre }}
+                        {{ incidente.fecha_evento | date:'medium':'es' }}
                     </td>
                     <td>
-                        {{ incidente.ciudadano.nombres }}
+                        {{ incidente.encargado.nombres }}
                     </td>
                     <td>
                         <p-tag [value]="incidente.estado.nombre" [severity]="getSeverity(incidente.estado.nombre)"></p-tag>

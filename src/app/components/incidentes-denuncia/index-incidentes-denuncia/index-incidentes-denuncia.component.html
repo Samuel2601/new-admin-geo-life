@@ -8,81 +8,116 @@
           </div>          
       </div>
   </ng-template>
-  <div *ngIf="incidentesDenuncias.length>0&&!load_lista" class="table-responsive-lg"  style="min-height: height; overflow-y: auto; overflow-x: auto;">
-    <table class="table table-lg align-middle table-striped table-hover table-fixed">
-        <thead>
-            <tr>
-              <th scope="col" *ngIf="!isMobil()">Categoría</th>
-              <th scope="col" *ngIf="!isMobil()">Subcategoría</th>
-              <th scope="col" *ngIf="isMobil()">Categoria <br> subcategoría <br> Estado </th>
-
-              <th scope="col" *ngIf="!isMobil()">Descripción</th>
-              <th scope="col">Dirección</th>
-              <th scope="col">Ciudadano</th>
-              <th scope="col" *ngIf="!isMobil()">Estado</th>
-
-              <th scope="col" *ngIf="!isMobil()">Respuesta</th>
-              <th scope="col" *ngIf="!isMobil()">Encargado</th>
-              <th scope="col">Foto</th>
-            </tr>
-        </thead>
-        <tbody >
-            <tr *ngFor="let ficha of incidentesDenuncias" (click)="isMobil()&&openModal(modalContent)">
-              <td  *ngIf="!isMobil()">{{ ficha.categoria.nombre }}</td>
-              <td *ngIf="!isMobil()">{{ ficha.subcategoria.nombre }}</td>
-              <td *ngIf="isMobil()"> <tr>{{ ficha.categoria.nombre }}</tr> <tr>{{ ficha.subcategoria.nombre }}</tr> <br> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span></td>
-
-              <td *ngIf="!isMobil()">{{ ficha.descripcion }}</td>
-              <td (click)="irMap(ficha.direccion_geo,$event)">{{ ficha.direccion_geo.nombre }}</td>
-
-              <td> {{ficha.ciudadano.nombres}}</td>
-              <td *ngIf="!isMobil()"> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span> </td>
-
-              <td *ngIf="!isMobil()"> <ng-container *ngIf="ficha.respuesta">{{ ficha.respuesta }}</ng-container> <ng-container *ngIf="!ficha.respuesta">--</ng-container> </td>
-              <td *ngIf="!isMobil()"><ng-container *ngIf="ficha.encargado">{{ ficha.encargado.nombres }}</ng-container> <ng-container *ngIf="!ficha.encargado">--</ng-container> </td>
-              <td (click)="stopPropagation($event)" >
-                <img [src]="url + 'helper/obtener_portada/' + ficha.foto[0]" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." (click)="openModalimagen(ficha.foto); this.displayBasic=true;" />
-              </td>
-              <!-- Agrega el modal al final del componente -->
-              <ng-template #modalContent let-modal>
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title" id="modal-basic-title">Detalles de la Ficha Sectorial</h4>
-                    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
-                  </div>
-                  <div class="modal-body">
-                    <!-- Contenido del modal -->
-                    <p><strong>Categoría:</strong> {{ ficha.categoria.nombre }}</p>
-                    <p><strong>Subcategoría:</strong> {{ ficha.subcategoria.nombre }}</p>
-                    <p (click)="irMap(ficha.direccion_geo,$event)"><strong>Dirección Geográfica:</strong> {{ ficha.direccion_geo.nombre }}</p>                                      
-                    <p><strong>Estado:</strong> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span></p>
-                    <p><strong>Ciudadano:</strong> {{ ficha.ciudadano.nombres }}</p>
-                    <p><strong>Descripción:</strong> {{ ficha.descripcion }}</p>
-                    <p><strong>Respuesta:</strong><ng-container *ngIf="ficha.respuesta">{{ ficha.respuesta }}</ng-container> <ng-container *ngIf="!ficha.respuesta">--</ng-container></p>                                     
-                    <p><strong>Encargado:</strong><ng-container *ngIf="ficha.encargado">{{ ficha.encargado.nombres }}</ng-container> <ng-container *ngIf="!ficha.encargado">--</ng-container></p>                             
-                </div>                          
+    <p-table styleClass="p-datatable-striped"
+    #dt1
+    [value]="incidentesDenuncias"
+    dataKey="_id"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="load_lista"
+    [paginator]="true"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    [globalFilterFields]="['direccion_geo.nombre', 'categoria.nombre', 'subcategoria.nombre', 'ciudadano.nombres', 'estado.nombre']"
+    [sortMode]="'multiple'"
+    >
+    <ng-template pTemplate="caption">
+        <div class="flex">
+            <button pButton label="" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+            <span class="p-input-icon-left ml-auto">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="dt1.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
+            </span>
+            
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width:3rem">#</th>
+            <th style="min-width:10rem">
+                <div class="flex align-items-center">
+                    Categoría
+                    <p-columnFilter type="text" field="categoria.nombre" display="menu"></p-columnFilter>
+                    <th pSortableColumn="categoria.nombre" style="width:20%"><p-sortIcon field="categoria.nombre"></p-sortIcon></th>
                 </div>
-              </ng-template>
-              
-          </tr>
-        </tbody>
-    </table>
-</div>
-  <div class="alert alert-info" role="alert" *ngIf="incidentesDenuncias.length==0&&!load_lista">
-    No se han realizado registros de esta ubicación
-  </div>
-  <div class="card-body" aria-hidden="true" *ngIf="load_lista">
-    <h5 class="card-title placeholder-glow">
-      <span class="placeholder col-6"></span>
-    </h5>
-    <p class="card-text placeholder-glow">
-      <span class="placeholder col-7"></span>
-      <span class="placeholder col-4"></span>
-      <span class="placeholder col-4"></span>
-      <span class="placeholder col-6"></span>
-      <span class="placeholder col-8"></span>
-    </p>
-  </div>
+            </th>
+            <th style="min-width:10rem">
+                <div class="flex align-items-center">
+                    Subcategoría
+                    <p-columnFilter type="text" field="subcategoria.nombre" display="menu"></p-columnFilter>
+                    <th pSortableColumn="subcategoria.nombre" style="width:20%"><p-sortIcon field="subcategoria.nombre"></p-sortIcon></th>
+                </div>
+            </th>
+            <th style="min-width:15rem">
+                <div class="flex align-items-center">
+                    Ciudadano
+                    <p-columnFilter type="text" field="ciudadano.nombres" display="menu"></p-columnFilter>
+                    <th pSortableColumn="ciudadano.nombre" style="width:20%"><p-sortIcon field="ciudadano.nombre"></p-sortIcon></th>
+                </div>
+            </th>
+            <th style="min-width:7rem">
+                <div class="flex align-items-center">
+                    Estado
+                    <p-columnFilter type="text" field="estado.nombre" display="menu"></p-columnFilter>
+                    <th pSortableColumn="estado.nombre" style="width:20%"><p-sortIcon field="estado.nombre"></p-sortIcon></th>
+                </div>
+            </th>
+            <th style="min-width:10rem">
+              <div class="flex align-items-center">
+                  Foto
+              </div>
+            </th>
+            <!-- Agrega las columnas restantes según tu necesidad -->
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-incidente let-rowIndex="rowIndex">
+        <tr>
+            <td  (click)="isMobil()&&openModal(modalContent)">{{rowIndex+1}}</td>  
+            <td>
+                {{ incidente.categoria.nombre }}
+            </td>
+            <td>
+                {{ incidente.subcategoria.nombre }}
+            </td>
+            <td>
+                {{ incidente.ciudadano.nombres }}
+            </td>
+            <td>
+                <p-tag [value]="incidente.estado.nombre" [severity]="getSeverity(incidente.estado.nombre)"></p-tag>
+            </td>
+            <td (click)="stopPropagation($event);displayBasic=true"  >
+              <img [src]="url + 'helper/obtener_portada/' + incidente.foto[0]" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." 
+              (click)="openModalimagen(incidente.foto); this.displayBasic=true;" />
+            </td>
+            <!-- Agrega las columnas restantes según tu necesidad -->
+            <!-- Agrega el modal al final del componente -->
+          <ng-template #modalContent let-modal>
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">Detalles de la Ficha Sectorial</h4>
+                <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+              </div>
+              <div class="modal-body">
+                <!-- Contenido del modal -->
+                <p><strong>Categoría:</strong> {{ incidente.categoria.nombre }}</p>
+                <p><strong>Subcategoría:</strong> {{ incidente.subcategoria.nombre }}</p>
+                <p (click)="irMap(incidente.direccion_geo,$event)"><strong>Dirección Geográfica:</strong> {{ incidente.direccion_geo.nombre }}</p>                                      
+                <p><strong>Estado:</strong> <span [ngClass]="'badge text-bg-' + checkstatus[incidente.estado.orden]">{{ incidente.estado.nombre }}</span></p>
+                <p><strong>Ciudadano:</strong> {{ incidente.ciudadano.nombres }}</p>
+                <p><strong>Descripción:</strong> {{ incidente.descripcion }}</p>
+                <p><strong>Respuesta:</strong><ng-container *ngIf="incidente.respuesta">{{ incidente.respuesta }}</ng-container> <ng-container *ngIf="!incidente.respuesta">--</ng-container></p>                                     
+                <p><strong>Encargado:</strong><ng-container *ngIf="incidente.encargado">{{ incidente.encargado.nombres }}</ng-container> <ng-container *ngIf="!incidente.encargado">--</ng-container></p>                             
+            </div>                          
+            </div>
+          </ng-template>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="5">No se encontraron incidentes.</td>
+        </tr>
+    </ng-template>
+    </p-table>
 
 </p-dialog>  
   
@@ -107,85 +142,152 @@
               </div>
             </div>
             <div class="card-body">
-              <p-toast></p-toast>
-              <div  *ngIf="incidentesDenuncias.length>0&&!load_lista" class="table-responsive-lg" >
-                  <table class="table table-lg align-middle table-striped table-hover table-fixed">
-                      <thead>
-                          <tr>
-                            <th scope="col" *ngIf="!isMobil()">Categoría</th>
-                            <th scope="col" *ngIf="!isMobil()">Subcategoría</th>
-                            <th scope="col" *ngIf="isMobil()">Categoria <br> subcategoría <br> Estado </th>
-    
-                            <th scope="col" *ngIf="!isMobil()">Descripción</th>
-                            <th scope="col">Dirección</th>
-                            <th scope="col">Ciudadano</th>
-                            <th scope="col" *ngIf="!isMobil()">Estado</th>
-    
-                            <th scope="col" *ngIf="!isMobil()">Respuesta</th>
-                            <th scope="col" *ngIf="!isMobil()">Encargado</th>
-                            <th scope="col">Foto</th>
-                          </tr>
-                      </thead>
-                      <tbody >
-                          <tr *ngFor="let ficha of incidentesDenuncias" (click)="isMobil()&&openModal(modalContent)">
-                            <td  *ngIf="!isMobil()">{{ ficha.categoria.nombre }}</td>
-                            <td *ngIf="!isMobil()">{{ ficha.subcategoria.nombre }}</td>
-                            <td *ngIf="isMobil()"> <tr>{{ ficha.categoria.nombre }}</tr> <tr>{{ ficha.subcategoria.nombre }}</tr> <br> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span>
-                           
-                        </td>
-    
-                            <td *ngIf="!isMobil()">{{ ficha.descripcion }}</td>
-                            <td (click)="irMap(ficha.direccion_geo,$event)">{{ ficha.direccion_geo.nombre }}</td>
-                            <td> {{ficha.ciudadano.nombres}}</td>
-                            <td *ngIf="!isMobil()"> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span> </td>
-    
-                            <td *ngIf="!isMobil()"> <ng-container *ngIf="ficha.respuesta">{{ ficha.respuesta }}</ng-container> <ng-container *ngIf="!ficha.respuesta">--</ng-container> </td>
-                            <td *ngIf="!isMobil()"><ng-container *ngIf="ficha.encargado">{{ ficha.encargado.nombres }}</ng-container> <ng-container *ngIf="!ficha.encargado">--</ng-container> </td>
-                            <td (click)="stopPropagation($event);displayBasic=true"  >
-                              <img [src]="url + 'helper/obtener_portada/' + ficha.foto[0]" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." (click)="openModalimagen(ficha.foto); this.displayBasic=true;" />
-                            </td>
-                            <!-- Agrega el modal al final del componente -->
-                            <ng-template #modalContent let-modal>
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h4 class="modal-title" id="modal-basic-title">Detalles de la Ficha Sectorial</h4>
-                                  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
-                                </div>
-                                <div class="modal-body">
-                                  <!-- Contenido del modal -->
-                                  <p><strong>Categoría:</strong> {{ ficha.categoria.nombre }}</p>
-                                  <p><strong>Subcategoría:</strong> {{ ficha.subcategoria.nombre }}</p>
-                                  <p (click)="irMap(ficha.direccion_geo,$event)"><strong>Dirección Geográfica:</strong> {{ ficha.direccion_geo.nombre }}</p>                                      
-                                  <p><strong>Estado:</strong> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span></p>
-                                  <p><strong>Ciudadano:</strong> {{ ficha.ciudadano.nombres }}</p>
-                                  <p><strong>Descripción:</strong> {{ ficha.descripcion }}</p>
-                                  <p><strong>Respuesta:</strong><ng-container *ngIf="ficha.respuesta">{{ ficha.respuesta }}</ng-container> <ng-container *ngIf="!ficha.respuesta">--</ng-container></p>                                     
-                                  <p><strong>Encargado:</strong><ng-container *ngIf="ficha.encargado">{{ ficha.encargado.nombres }}</ng-container> <ng-container *ngIf="!ficha.encargado">--</ng-container></p>                             
-                              </div>                          
-                              </div>
-                            </ng-template>
+              <p-table styleClass="p-datatable-striped"
+                    #dt1
+                    [value]="incidentesDenuncias"
+                    dataKey="_id"
+                    [rows]="10"
+                    [showCurrentPageReport]="true"
+                    [rowsPerPageOptions]="[10, 25, 50]"
+                    [loading]="load_lista"
+                    [paginator]="true"
+                    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                    [globalFilterFields]="['direccion_geo.nombre', 'categoria.nombre', 'subcategoria.nombre', 'ciudadano.nombres', 'estado.nombre']"
+                    [sortMode]="'multiple'"
+                    >
+                    <ng-template pTemplate="caption">
+                        <div class="flex">
+                            <button pButton label="" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+                            <span class="p-input-icon-left ml-auto">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="dt1.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
+                            </span>
                             
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width:3rem">#</th>
+                            <th style="min-width:10rem">
+                                <div class="flex align-items-center">
+                                    Dirección
+                                    <p-columnFilter type="text" field="direccion_geo.nombre" display="menu"></p-columnFilter>
+                                    <th pSortableColumn="direccion_geo.nombre" style="width:20%"><p-sortIcon field="direccion_geo.nombre"></p-sortIcon></th>
+                                </div>
+                            </th>
+                            <th style="min-width:10rem">
+                                <div class="flex align-items-center">
+                                    Categoría
+                                    <p-columnFilter type="text" field="categoria.nombre" display="menu"></p-columnFilter>
+                                    <th pSortableColumn="categoria.nombre" style="width:20%"><p-sortIcon field="categoria.nombre"></p-sortIcon></th>
+                                </div>
+                            </th>
+                            <th style="min-width:10rem">
+                                <div class="flex align-items-center">
+                                    Subcategoría
+                                    <p-columnFilter type="text" field="subcategoria.nombre" display="menu"></p-columnFilter>
+                                    <th pSortableColumn="subcategoria.nombre" style="width:20%"><p-sortIcon field="subcategoria.nombre"></p-sortIcon></th>
+                                </div>
+                            </th>
+                            <th style="min-width:15rem">
+                                <div class="flex align-items-center">
+                                    Ciudadano
+                                    <p-columnFilter type="text" field="ciudadano.nombres" display="menu"></p-columnFilter>
+                                    <th pSortableColumn="ciudadano.nombre" style="width:20%"><p-sortIcon field="ciudadano.nombre"></p-sortIcon></th>
+                                </div>
+                            </th>
+                            <th style="min-width:7rem">
+                                <div class="flex align-items-center">
+                                    Estado
+                                    <p-columnFilter type="text" field="estado.nombre" display="menu"></p-columnFilter>
+                                    <th pSortableColumn="estado.nombre" style="width:20%"><p-sortIcon field="estado.nombre"></p-sortIcon></th>
+                                </div>
+                            </th>
+                            <th style="min-width:10rem" *ngIf="!isMobil()">
+                              <div class="flex align-items-center">
+                                  Descripción
+                                  <p-columnFilter type="text" field="descripcion" display="menu"></p-columnFilter>
+                                  <th pSortableColumn="descripcion" style="width:20%"><p-sortIcon field="descripcion"></p-sortIcon></th>
+                              </div>
+                            </th>
+                            <th style="min-width:10rem" *ngIf="!isMobil()">
+                              <div class="flex align-items-center">
+                                  Encargado
+                                  <p-columnFilter type="text" field="encargado.nombre" display="menu"></p-columnFilter>
+                                  <th pSortableColumn="encargado.nombre" style="width:20%"><p-sortIcon field="encargado.nombre"></p-sortIcon></th>
+                              </div>
+                            </th>
+                            <th style="min-width:10rem" *ngIf="!isMobil()">
+                              <div class="flex align-items-center">
+                                  Respuesta
+                                  <p-columnFilter type="text" field="respuesta" display="menu"></p-columnFilter>
+                                  <th pSortableColumn="respuesta" style="width:20%"><p-sortIcon field="respuesta"></p-sortIcon></th>
+                              </div>
+                            </th>
+                            <th style="min-width:10rem">
+                              <div class="flex align-items-center">
+                                  Foto
+                              </div>
+                            </th>
+                            <!-- Agrega las columnas restantes según tu necesidad -->
                         </tr>
-                      </tbody>
-                  </table>
-              </div>
-              <div class="alert alert-info" role="alert" *ngIf="incidentesDenuncias.length==0&&!load_lista">
-                No se han realizado registros de esta ubicación
-              </div>
-              <div class="card-body" aria-hidden="true" *ngIf="load_lista">
-                <h5 class="card-title placeholder-glow">
-                  <span class="placeholder col-6"></span>
-                </h5>
-                <p class="card-text placeholder-glow">
-                  <span class="placeholder col-7"></span>
-                  <span class="placeholder col-4"></span>
-                  <span class="placeholder col-4"></span>
-                  <span class="placeholder col-6"></span>
-                  <span class="placeholder col-8"></span>
-                </p>
-              </div>
-          </div>
-          </div>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-incidente let-rowIndex="rowIndex">
+                        <tr>
+                            <td  (click)="isMobil()&&openModal(modalContent)">{{rowIndex+1}}</td>  
+                            <td>
+                                {{ incidente.direccion_geo.nombre }}
+                            </td>
+                            <td>
+                                {{ incidente.categoria.nombre }}
+                            </td>
+                            <td>
+                                {{ incidente.subcategoria.nombre }}
+                            </td>
+                            <td>
+                                {{ incidente.ciudadano.nombres }}
+                            </td>
+                            <td>
+                                <p-tag [value]="incidente.estado.nombre" [severity]="getSeverity(incidente.estado.nombre)"></p-tag>
+                            </td>
+                            <td *ngIf="!isMobil()">{{ incidente.descripcion }}</td>
+                            <td *ngIf="!isMobil()"><ng-container *ngIf="incidente.encargado">{{ incidente.encargado.nombres }}</ng-container> <ng-container *ngIf="!incidente.encargado">--</ng-container> </td>
+                            <td *ngIf="!isMobil()"> <ng-container *ngIf="incidente.respuesta">{{ incidente.respuesta }}</ng-container> <ng-container *ngIf="!incidente.respuesta">--</ng-container> </td>
+                            <td (click)="stopPropagation($event);displayBasic=true"  >
+                              <img [src]="url + 'helper/obtener_portada/' + incidente.foto[0]" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." 
+                              (click)="openModalimagen(incidente.foto); this.displayBasic=true;" />
+                            </td>
+                            <!-- Agrega las columnas restantes según tu necesidad -->
+                             <!-- Agrega el modal al final del componente -->
+                          <ng-template #modalContent let-modal>
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title" id="modal-basic-title">Detalles de la Ficha Sectorial</h4>
+                                <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+                              </div>
+                              <div class="modal-body">
+                                <!-- Contenido del modal -->
+                                <p><strong>Categoría:</strong> {{ incidente.categoria.nombre }}</p>
+                                <p><strong>Subcategoría:</strong> {{ incidente.subcategoria.nombre }}</p>
+                                <p (click)="irMap(incidente.direccion_geo,$event)"><strong>Dirección Geográfica:</strong> {{ incidente.direccion_geo.nombre }}</p>                                      
+                                <p><strong>Estado:</strong> <span [ngClass]="'badge text-bg-' + checkstatus[incidente.estado.orden]">{{ incidente.estado.nombre }}</span></p>
+                                <p><strong>Ciudadano:</strong> {{ incidente.ciudadano.nombres }}</p>
+                                <p><strong>Descripción:</strong> {{ incidente.descripcion }}</p>
+                                <p><strong>Respuesta:</strong><ng-container *ngIf="incidente.respuesta">{{ incidente.respuesta }}</ng-container> <ng-container *ngIf="!incidente.respuesta">--</ng-container></p>                                     
+                                <p><strong>Encargado:</strong><ng-container *ngIf="incidente.encargado">{{ incidente.encargado.nombres }}</ng-container> <ng-container *ngIf="!incidente.encargado">--</ng-container></p>                             
+                            </div>                          
+                            </div>
+                          </ng-template>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="5">No se encontraron incidentes.</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>     
         </div> 
   
         <div>
@@ -194,84 +296,8 @@
       </div>
     </div>
   </ng-container>
-  <ng-container *ngIf="modal==null">
-    <div  *ngIf="incidentesDenuncias.length>0&&!load_lista" class="table-responsive-lg" >
-      <table class="table table-lg align-middle table-striped table-hover table-fixed">
-          <thead>
-              <tr>
-                <th scope="col" *ngIf="!isMobil()">Categoría</th>
-                <th scope="col" *ngIf="!isMobil()">Subcategoría</th>
-                <th scope="col" *ngIf="isMobil()">Categoria <br> subcategoría <br> Estado </th>
+  
 
-                <th scope="col" *ngIf="!isMobil()">Descripción</th>
-                <th scope="col">Dirección</th>
-                <th scope="col">Ciudadano</th>
-                <th scope="col" *ngIf="!isMobil()">Estado</th>
-
-                <th scope="col" *ngIf="!isMobil()">Respuesta</th>
-                <th scope="col" *ngIf="!isMobil()">Encargado</th>
-                <th scope="col">Foto</th>
-              </tr>
-          </thead>
-          <tbody >
-              <tr *ngFor="let ficha of incidentesDenuncias" (click)="isMobil()&&openModal(modalContent)">
-                <td  *ngIf="!isMobil()">{{ ficha.categoria.nombre }}</td>
-                <td *ngIf="!isMobil()">{{ ficha.subcategoria.nombre }}</td>
-                <td *ngIf="isMobil()"> <tr>{{ ficha.categoria.nombre }}</tr> <tr>{{ ficha.subcategoria.nombre }}</tr> <br> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span>
-               
-            </td>
-
-                <td *ngIf="!isMobil()">{{ ficha.descripcion }}</td>
-                <td (click)="irMap(ficha.direccion_geo,$event)">{{ ficha.direccion_geo.nombre }}</td>
-                <td> {{ficha.ciudadano.nombres}}</td>
-                <td *ngIf="!isMobil()"> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span> </td>
-
-                <td *ngIf="!isMobil()"> <ng-container *ngIf="ficha.respuesta">{{ ficha.respuesta }}</ng-container> <ng-container *ngIf="!ficha.respuesta">--</ng-container> </td>
-                <td *ngIf="!isMobil()"><ng-container *ngIf="ficha.encargado">{{ ficha.encargado.nombres }}</ng-container> <ng-container *ngIf="!ficha.encargado">--</ng-container> </td>
-                <td (click)="stopPropagation($event);displayBasic=true"  >
-                  <img [src]="url + 'helper/obtener_portada/' + ficha.foto[0]" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." (click)="openModalimagen(ficha.foto); this.displayBasic=true;" />
-                </td>
-                <!-- Agrega el modal al final del componente -->
-                <ng-template #modalContent let-modal>
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h4 class="modal-title" id="modal-basic-title">Detalles de la Ficha Sectorial</h4>
-                      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
-                    </div>
-                    <div class="modal-body">
-                      <!-- Contenido del modal -->
-                      <p><strong>Categoría:</strong> {{ ficha.categoria.nombre }}</p>
-                      <p><strong>Subcategoría:</strong> {{ ficha.subcategoria.nombre }}</p>
-                      <p (click)="irMap(ficha.direccion_geo,$event)"><strong>Dirección Geográfica:</strong> {{ ficha.direccion_geo.nombre }}</p>                                      
-                      <p><strong>Estado:</strong> <span [ngClass]="'badge text-bg-' + checkstatus[ficha.estado.orden]">{{ ficha.estado.nombre }}</span></p>
-                      <p><strong>Ciudadano:</strong> {{ ficha.ciudadano.nombres }}</p>
-                      <p><strong>Descripción:</strong> {{ ficha.descripcion }}</p>
-                      <p><strong>Respuesta:</strong><ng-container *ngIf="ficha.respuesta">{{ ficha.respuesta }}</ng-container> <ng-container *ngIf="!ficha.respuesta">--</ng-container></p>                                     
-                      <p><strong>Encargado:</strong><ng-container *ngIf="ficha.encargado">{{ ficha.encargado.nombres }}</ng-container> <ng-container *ngIf="!ficha.encargado">--</ng-container></p>                             
-                  </div>                          
-                  </div>
-                </ng-template>
-                
-            </tr>
-          </tbody>
-      </table>
-  </div>
-  <div class="alert alert-info" role="alert" *ngIf="incidentesDenuncias.length==0&&!load_lista">
-    No se han realizado registros de esta ubicación
-  </div>
-  <div class="card-body" aria-hidden="true" *ngIf="load_lista">
-    <h5 class="card-title placeholder-glow">
-      <span class="placeholder col-6"></span>
-    </h5>
-    <p class="card-text placeholder-glow">
-      <span class="placeholder col-7"></span>
-      <span class="placeholder col-4"></span>
-      <span class="placeholder col-4"></span>
-      <span class="placeholder col-6"></span>
-      <span class="placeholder col-8"></span>
-    </p>
-  </div>
-  </ng-container>
   
  
     <p-galleria [value]="imagenModal" [(visible)]="displayBasic" [responsiveOptions]="responsiveOptions" [containerStyle]="{'max-width': '50%'}" [numVisible]="9"

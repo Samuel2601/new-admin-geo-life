@@ -8,6 +8,7 @@ import iziToast from 'izitoast';
 import { Router } from '@angular/router';
 import { GLOBAL } from 'src/app/services/GLOBAL';
 import { Capacitor } from '@capacitor/core';
+import { Table } from 'primeng/table';
 @Component({
   selector: 'app-index-ficha-sectorial',
   templateUrl: './index-ficha-sectorial.component.html',
@@ -19,7 +20,30 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   @Input() valor: number | undefined;
   @Input() modal: boolean = false;
   @ViewChild('contentimage') modalContent: TemplateRef<any> | undefined;
+  clear(table: Table) {
+    table.clear();
+  }
+  getSeverity(status: string) {
+    switch (status.toLowerCase()) {
+        case 'pendiente':
+            return 'danger';
   
+        case 'qualified':
+            return 'success';
+  
+        case 'new':
+            return 'info';
+  
+        case 'negotiation':
+            return 'warning';
+  
+            case 'renewal':
+              return 'info'; // Otra opción aquí, dependiendo de lo que desees
+    
+          default:
+            return 'info'; // Otra opción aquí, dependiendo de lo que desees
+    }
+  }
   deshabilitarMapaDesdeIndexFichaSectorial(event: MouseEvent) {
     this.stopPropagation(event);
     this.helperservice.deshabilitarMapa();
@@ -202,6 +226,12 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   imagenModal: any[] = [];
 
   openModalimagen(url: any) {
+    this.imagenModal = url;
+    this.imagenAMostrar = this.imagenModal[0];
+    const modalRef = this.modalService.open(this.modalContent, { size: 'lg' });
+  }
+  
+  openimagen(url: any) {
     this.imagenModal = url;
     this.imagenAMostrar = this.imagenModal[0];
     //const modalRef = this.modalService.open(this.modalContent, { size: 'lg' });

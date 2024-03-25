@@ -20,8 +20,8 @@
             </select>
           </div> 
           <div class="mb-3">
-            <label for="fecha_evento" class="form-label">Fecha del Evento</label>
-            <input type="date" class="form-control" id="fecha_evento" name="fecha_evento" formControlName="fecha_evento">
+            <label for="fecha_evento" class="form-label">Fecha del Evento: </label>
+            <p-calendar  id="fecha_evento" name="fecha_evento" formControlName="fecha_evento" [showTime]="true" [showSeconds]="true" [showIcon]="true" inputId="buttondisplay"></p-calendar>
           </div>
   
           <div class="mb-3">

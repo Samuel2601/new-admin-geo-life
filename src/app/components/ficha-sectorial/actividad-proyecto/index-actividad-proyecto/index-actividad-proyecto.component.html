@@ -49,7 +49,7 @@
                 <div class="card-body">
                   <p-toast></p-toast>
                   <div class="table-responsive-sm" *ngIf="actividadPro">
-                    <p-table class="table table-sm align-middle table-striped table-hover" [value]="actividadPro" dataKey="_id" editMode="row" [tableStyle]="{'min-width': '50rem'}">
+                    <p-table styleClass="p-datatable-striped" class="table table-sm align-middle table-striped table-hover" [value]="actividadPro" dataKey="_id" editMode="row" [tableStyle]="{'min-width': '50rem'}">
                       <ng-template pTemplate="header">
                         <tr>
                           <th scope="col">Nombre</th>

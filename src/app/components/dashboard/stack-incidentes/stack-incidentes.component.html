@@ -4,9 +4,9 @@
     </div>
 </p-scrollPanel>
 
-<p-scrollPanel  styleClass="custombar2">
+<p-scrollPanel  styleClass="custombar2" *ngIf="!modal">
     <div class="card">
-        <p-table
+        <p-table styleClass="p-datatable-striped"
             #dt1
             [value]="constIncidente"
             dataKey="_id"
@@ -15,12 +15,13 @@
             [rowsPerPageOptions]="[10, 25, 50]"
             [loading]="loading"
             [paginator]="true"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
             [globalFilterFields]="['direccion_geo.nombre', 'categoria.nombre', 'subcategoria.nombre', 'ciudadano.nombres', 'estado.nombre']"
+            [sortMode]="'multiple'"
             >
             <ng-template pTemplate="caption">
                 <div class="flex">
-                    <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+                    <button pButton label="" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
                     <span class="p-input-icon-left ml-auto">
                         <i class="pi pi-search"></i>
                         <input pInputText type="text" (input)="dt1.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
@@ -31,6 +32,7 @@
             </ng-template>
             <ng-template pTemplate="header">
                 <tr>
+                    <th style="width:3rem">#</th>
                     <th style="min-width:15rem">
                         <div class="flex align-items-center">
                             Dirección
@@ -69,8 +71,9 @@
                     <!-- Agrega las columnas restantes según tu necesidad -->
                 </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-incidente>
+            <ng-template pTemplate="body" let-incidente  let-rowIndex="rowIndex">
                 <tr>
+                    <td>{{rowIndex+1}}</td>  
                     <td>
                         {{ incidente.direccion_geo.nombre }}
                     </td>

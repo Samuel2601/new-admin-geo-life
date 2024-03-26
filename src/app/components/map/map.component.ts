@@ -138,11 +138,11 @@ export class MapComponent implements OnInit,AfterViewInit {
         tooltipOptions: {
           tooltipLabel:'Barrios',
           tooltipPosition:'right',
-          hideDelay:1000,
+         //hideDelay:1000,
         },
         command: (event) => {
           console.log(event, event.index,event.item,event.originalEvent);
-          this.stopPropagation(event.originalEvent);
+          //this.stopPropagation(event.originalEvent);
           this.reloadmap();     //this.messageService.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' }); 
       
         },
@@ -152,10 +152,10 @@ export class MapComponent implements OnInit,AfterViewInit {
         tooltipOptions: {
           tooltipLabel:'Puntos Wifi',
           tooltipPosition:'right',
-          hideDelay:1000,
+          //hideDelay:1000,
         },
         command: (event) => {
-          this.stopPropagation(event.originalEvent);
+          //this.stopPropagation(event.originalEvent);
           this.reloadWifi();             
         }
       },
@@ -164,11 +164,11 @@ export class MapComponent implements OnInit,AfterViewInit {
           tooltipOptions: {
             tooltipLabel:'Fichas Técnicas',
             tooltipPosition:'right',
-            hideDelay:1000,
+           // hideDelay:1000,
           },
           visible: (this.opcionb||false)  && this.check.IndexFichaSectorialComponent,
           command: (event) => {
-            this.stopPropagation(event.originalEvent);
+            //this.stopPropagation(event.originalEvent);
             this.fichaTecnica();             
           }
       },
@@ -177,11 +177,11 @@ export class MapComponent implements OnInit,AfterViewInit {
           tooltipOptions: {
             tooltipLabel:'Nuevas Ficha Técnica',
             tooltipPosition:'right',
-            hideDelay:1000,
+           // hideDelay:1000,
           },
           visible:(this.opcionb||false) &&this.check.CreateFichaSectorialComponent,
           command: (event) => {
-            this.stopPropagation(event.originalEvent);
+            //this.stopPropagation(event.originalEvent);
             this.nuevoFicha(); 
           }
       },
@@ -190,11 +190,11 @@ export class MapComponent implements OnInit,AfterViewInit {
           tooltipOptions: {
             tooltipLabel:'Incidentes',
             tooltipPosition:'right',
-            hideDelay:1000,
+            //hideDelay:1000,
           },
           visible:(this.opcionb||false) &&this.check.IndexIncidentesDenunciaComponent,
           command: (event) => {
-            this.stopPropagation(event.originalEvent);
+            //this.stopPropagation(event.originalEvent);
             this.incidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
         
           }
@@ -204,11 +204,11 @@ export class MapComponent implements OnInit,AfterViewInit {
         tooltipOptions: {
           tooltipLabel:'Nuevo Incidente',
           tooltipPosition:'right',
-          hideDelay:1000,
+          //hideDelay:1000,
         },
         visible:(this.opcionb||false)&&this.check.CreateIncidentesDenunciaComponent && !(!this.latitud && !this.longitud),
         command: (event) => {
-          this.stopPropagation(event.originalEvent);
+          //this.stopPropagation(event.originalEvent);
           this.nuevoIncidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
   
         }

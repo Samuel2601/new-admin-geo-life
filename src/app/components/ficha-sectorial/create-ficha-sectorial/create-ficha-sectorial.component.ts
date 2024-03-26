@@ -9,6 +9,9 @@ import iziToast from 'izitoast';
 import { Capacitor } from '@capacitor/core';
 import { HelperService } from 'src/app/services/helper.service';
 import { MessageService } from 'primeng/api';
+import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { GalleriaModule } from 'primeng/galleria';
 @Component({
   selector: 'app-create-ficha-sectorial',
   templateUrl: './create-ficha-sectorial.component.html',
@@ -260,4 +263,52 @@ export class CreateFichaSectorialComponent implements OnInit {
   responsiveimage():string{
     return (window.innerWidth-50).toString();
    }
+
+   async tomarFotoYEnviar(event: any) {
+    this.load_carrusel=false;
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Base64,
+      source: CameraSource.Prompt,
+      promptLabelPhoto:  'Seleccionar de la galería',
+      promptLabelPicture:'Tomar foto',
+    });
+    if (image && image.base64String && this.selectedFiles.length<3) {
+      
+        const byteCharacters = atob(image.base64String);
+        const byteNumbers = new Array(byteCharacters.length);
+    
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+    
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Puedes ajustar el tipo según el formato de tu imagen
+        let im =new File([blob], "prueba", { type: 'image/jpeg' });
+        this.selectedFiles.push(im); 
+
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.imagenesSeleccionadas.push(e.target.result);
+        };
+        reader.readAsDataURL(im);
+        this.load_carrusel=true;
+      if(this.selectedFiles.length==2){
+        iziToast.info({
+          title:'INFO:',
+          position:'bottomRight',
+          message:'Solo puede enviar 1 imangenes más'
+        });
+      }
+    } else {
+      iziToast.warning({
+        title:'Error:',
+        position:'bottomRight',
+        message:'Solo puede enviar 3 imangenes'
+      });
+      this.load_carrusel=true;
+      console.error('Error al obtener la cadena base64 de la imagen.');
+    }
+  }
 }

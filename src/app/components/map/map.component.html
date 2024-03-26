@@ -13,6 +13,7 @@
 <app-stack-incidentes *ngIf="sidebarVisible&&opcionb" [filtro]="'direccion_geo.nombre'" [valor]="opcionb.properties.nombre" [modal]="true"></app-stack-incidentes>
 <app-stack-fichas *ngIf="sidebarVisible&&opcionb" [filtro]="'direccion_geo'" [valor]="opcionb.properties.nombre" [modal]="true"></app-stack-fichas>
 </p-sidebar>
+
 <div class="main-content "id="mapid" style="min-height: -webkit-fill-available;" >
     <div #mapContainer id="formulario" class="formulario-flotante" style="margin-left: 0%"  (click)="stopPropagation($event)">
 
@@ -70,10 +71,7 @@
         *ngIf="opcionb&&(check.IndexFichaSectorialComponent||check.CreateFichaSectorialComponent)"
     -->
     </div>
-  <div #mapContainer id="formulario" class="formulario-flotante" style="margin-left: 0%; margin-top: 70px;" (click)="stopPropagation($event)" *ngIf="!showOptions && loadspeed">  
-      <p-speedDial *ngIf="!showOptions && loadspeed" [model]="items" direction="down" [buttonStyle]="{ 'border-radius': '50%'}">  
-      </p-speedDial>      
-  </div>
+ 
  
   
 
@@ -144,7 +142,10 @@
       </ng-template>
 
 </div>
-
+<div #mapContainer id="formulario" class="formulario-flotante" style="margin-left: 0%; margin-top: 140px;" (click)="stopPropagation($event)" *ngIf="!showOptions && loadspeed">  
+  <p-speedDial *ngIf="!showOptions && loadspeed" [model]="items" direction="down" [buttonStyle]="{ 'border-radius': '50%'}">  
+  </p-speedDial>      
+</div>
 <app-index-ficha-sectorial class="container" *ngIf="mostrarficha" id="indexficha"  [filtro]="'direccion_geo'" [valor]="opcionb.properties.nombre" [modal]="true" (click)="stopPropagation($event)" style="z-index: inherit;">
 </app-index-ficha-sectorial>
 <app-index-incidentes-denuncia class="container" *ngIf="mostrarincidente" id="indexficha"  [filtro]="'direccion_geo.nombre'" [valor]="opcionb.properties.nombre" [modal]="true" (click)="stopPropagation($event)" style="z-index: inherit;">

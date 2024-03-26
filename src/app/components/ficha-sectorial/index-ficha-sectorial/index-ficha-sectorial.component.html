@@ -262,8 +262,8 @@
                     <td>
                       {{ incidente.observacion }}
                     </td>
-                    <td *ngIf="incidente.foto &&incidente.foto .length>0" >
-                      <img [src]="url + 'helper/obtener_portada_ficha/' + incidente.foto[0]" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." (click)="openimagen(incidente.foto); this.displayBasic=true;" />
+                    <td>
+                      <img  *ngIf="incidente.foto &&incidente.foto .length>0"  [src]="url + 'helper/obtener_portada_ficha/' + incidente.foto[0]" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." (click)="openimagen(incidente.foto); this.displayBasic=true;" />
                     </td>                    
                 </tr>
             </ng-template>

@@ -40,7 +40,14 @@
             <label for="observacion" class="form-label">Observación</label>
             <textarea class="form-control" id="observacion" name="observacion" formControlName="observacion"></textarea>
           </div>
-  
+          
+          <div class="mb-3" >
+            <label for="formFileMultiple" *ngIf="(imagenesSeleccionadas.length<=3||upload )&&isMobil()"class="form-label">Añade fotos</label>
+            <button class="btn btn-primary" *ngIf="(imagenesSeleccionadas.length<=3||upload )&&isMobil()" type="button" (click)="tomarFotoYEnviar($event)"><i class="bi bi-camera-fill"></i></button>
+
+            <p-button label="Subir de Nuevo" severity="warning" *ngIf="!upload" (onClick)="upload=true;imagenesSeleccionadas=[];selectedFiles=[]" icon="pi pi-trash"></p-button>
+          </div>
+
           <div class="mb-3">
   
             <p-toast></p-toast>

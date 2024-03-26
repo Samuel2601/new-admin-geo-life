@@ -1,3 +1,15 @@
+<table *ngIf="labelsmobil.length>0">
+    <thead>
+        <th>N°</th>
+        <th>Categoria</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of labelsmobil,let i = index">
+            <td>{{i+1}}:</td>
+            <td> {{item}} ({{basicData.datasets[0].data[i]}})</td>
+        </tr>
+    </tbody>
+</table>
 <p-scrollPanel  styleClass="custombar1">
     <div class="card">
         <p-chart type="bar" [data]="basicData" [options]="options" ></p-chart>

@@ -25,23 +25,23 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   }
   getSeverity(status: string) {
     switch (status.toLowerCase()) {
-        case 'pendiente':
+        case 'suspendido':
             return 'danger';
   
-        case 'qualified':
+        case 'finalizado':
             return 'success';
   
-        case 'new':
-            return 'info';
+        case 'en proceso':
+            return 'primary';
   
-        case 'negotiation':
+        case 'pendiente':
             return 'warning';
   
-            case 'renewal':
+            case 'planificada':
               return 'info'; // Otra opción aquí, dependiendo de lo que desees
     
           default:
-            return 'info'; // Otra opción aquí, dependiendo de lo que desees
+            return ''; // Otra opción aquí, dependiendo de lo que desees
     }
   }
   deshabilitarMapaDesdeIndexFichaSectorial(event: MouseEvent) {

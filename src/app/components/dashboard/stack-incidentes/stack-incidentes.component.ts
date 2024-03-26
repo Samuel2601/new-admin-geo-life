@@ -31,7 +31,7 @@ export class StackIncidentesComponent implements OnInit {
   }
 
  
-
+  labelsmobil:any=[]
   async rankin() {
     this.loading = true;
     // Obtener todos los incidentes si aún no se han cargado
@@ -73,8 +73,17 @@ export class StackIncidentesComponent implements OnInit {
       console.log("datasets",datasets);
 
       this.basicData.datasets = datasets.flat(); // Utiliza flat para aplanar el arreglo de arreglos
-
-      this.basicData.labels = categoriasUnicas;
+    if(this.modal){
+        this.labelsmobil=categoriasUnicas;
+        let auxlabel:any=[];
+        this.labelsmobil.forEach((element:any,index:any) => {
+            auxlabel.push((index+1).toString())
+        });
+        this.basicData.labels = auxlabel;
+    }else{
+        this.basicData.labels = categoriasUnicas;
+    }
+      
     console.log(this.basicData);
       // Actualizar la vista
       this.canvas();
@@ -128,7 +137,16 @@ export class StackIncidentesComponent implements OnInit {
 
       this.basicData.datasets = datasets.flat(); // Utiliza flat para aplanar el arreglo de arreglos
 
-      this.basicData.labels = categoriasUnicas;
+    if(this.modal){
+        this.labelsmobil=categoriasUnicas;
+        let auxlabel:any=[];
+        this.labelsmobil.forEach((element:any,index:any) => {
+            auxlabel.push((index+1).toString())
+        });
+        this.basicData.labels = auxlabel;
+    }else{
+        this.basicData.labels = categoriasUnicas;
+    }
     console.log(this.basicData);
       // Actualizar la vista
       this.canvas();

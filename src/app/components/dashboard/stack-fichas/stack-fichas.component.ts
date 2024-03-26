@@ -75,8 +75,17 @@ export class StackFichasComponent implements OnInit{
 
       this.basicData.datasets = datasets.flat(); // Utiliza flat para aplanar el arreglo de arreglos
 
-      this.basicData.labels = actividadsUnicas;
-    console.log(this.basicData);
+    if(this.modal){
+        this.labelsmobil=actividadsUnicas;
+        let auxlabel:any=[];
+        this.labelsmobil.forEach((element:any,index:any) => {
+            auxlabel.push((index+1).toString())
+        });
+        this.basicData.labels = auxlabel;
+    }else{
+        this.basicData.labels = actividadsUnicas;
+    }
+        console.log(this.basicData);
       // Actualizar la vista
       this.canvas();
 
@@ -88,7 +97,7 @@ export class StackFichasComponent implements OnInit{
   @Input() filtro: string | undefined;
   @Input() valor: string | undefined;
   @Input() modal: any = false;
-  
+  labelsmobil:any=[]
   async cargar(){
     this.loading = true;
     // Obtener todos los incidentes si aún no se han cargado
@@ -132,8 +141,16 @@ export class StackFichasComponent implements OnInit{
       console.log("datasets",datasets);
 
       this.basicData.datasets = datasets.flat(); // Utiliza flat para aplanar el arreglo de arreglos
-
-      this.basicData.labels = actividadsUnicas;
+    if(this.modal){
+        this.labelsmobil=actividadsUnicas;
+        let auxlabel:any=[];
+        this.labelsmobil.forEach((element:any,index:any) => {
+            auxlabel.push((index+1).toString())
+        });
+        this.basicData.labels = auxlabel;
+    }else{
+        this.basicData.labels = actividadsUnicas;
+    }
     console.log(this.basicData);
       // Actualizar la vista
       this.canvas();

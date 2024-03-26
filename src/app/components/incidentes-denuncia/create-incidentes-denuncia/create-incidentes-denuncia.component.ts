@@ -66,7 +66,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
       promptLabelPicture: 'Seleccionar de la galería',
     });
   
-    this.imagenesSeleccionadas.push( `data:image/jpeg;base64,${image.base64String}`);
+    this.imagenesSeleccionadas.push({itemImageSrc: `data:image/jpeg;base64,${image.base64String}`});
     this.file.push(this.base64ToFile(image.base64String, 'imagen.jpg'));
   }
   
@@ -205,6 +205,8 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
 
 
   onFileSelected(event: any): void {
+    this.upload=true;
+    this.mostrargale=false;
     const file: File = event.target.files[0];
     if (file) {
       if (!file.type.startsWith('image/')) {
@@ -220,6 +222,10 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
       reader.onload = () => {
         this.imagenesSeleccionadas.push(reader.result);
       };
+      setTimeout(() => {
+        this.upload=false;
+      this.mostrargale=true;
+      }, 1000);
       reader.readAsDataURL(file);
       this.file.push(file);
     }
@@ -298,6 +304,8 @@ selectedFiles: File[] = [];
 
   async tomarFotoYEnviar(event: any) {
     this.load_carrusel=false;
+    this.upload=true;
+    this.mostrargale=false;
     const image = await Camera.getPhoto({
       quality: 90,
       allowEditing: false,
@@ -322,10 +330,15 @@ selectedFiles: File[] = [];
 
         const reader = new FileReader();
         reader.onload = (e: any) => {
-          this.imagenesSeleccionadas.push(e.target.result);
+          this.imagenesSeleccionadas.push({ itemImageSrc: e.target.result });
         };
+        setTimeout(() => {
+          this.mostrargale=true;
+        }, 1000);
         reader.readAsDataURL(im);
         this.load_carrusel=true;
+        
+      this.upload=false;
       if(this.selectedFiles.length==2){
         iziToast.info({
           title:'INFO:',

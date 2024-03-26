@@ -20,7 +20,9 @@ export class StackIncidentesComponent implements OnInit {
   
   basicData:any={};
   basicOptions: any;
-
+  isMobil() {
+    return this.helper.isMobil();
+  }
   async ngOnInit() {
     await this.getWFSgeojson(this.urlgeoser);
     if(this.valor&&this.filtro){
@@ -129,9 +131,22 @@ export class StackIncidentesComponent implements OnInit {
         return {
             data,
             label: elementbarr,
+            backgroundColor: this.modal ? [
+                getComputedStyle(document.documentElement).getPropertyValue('--bs-blue'),
+                getComputedStyle(document.documentElement).getPropertyValue('--bs-indigo'),
+                getComputedStyle(document.documentElement).getPropertyValue('--bs-purple'),
+                getComputedStyle(document.documentElement).getPropertyValue('--bs-pink'),
+                getComputedStyle(document.documentElement).getPropertyValue('--bs-red'),
+                getComputedStyle(document.documentElement).getPropertyValue('--bs-orange'),
+                getComputedStyle(document.documentElement).getPropertyValue('--bs-yellow'),
+                getComputedStyle(document.documentElement).getPropertyValue('--bs-teal'),
+                getComputedStyle(document.documentElement).getPropertyValue('--bs-cyan'),
+                getComputedStyle(document.documentElement).getPropertyValue('--bs-info'),
+                getComputedStyle(document.documentElement).getPropertyValue('--bs-green'),
+            ] : undefined,
             borderWidth: 1,
             type: 'bar',
-        };
+        };        
     });
       console.log("datasets",datasets);
 

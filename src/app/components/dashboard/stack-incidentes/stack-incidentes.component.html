@@ -11,7 +11,7 @@
     </tbody>
 </table>
 <p-scrollPanel  styleClass="custombar1">
-    <div class="card">
+    <div class="card" [style.width]="isMobil() ? '80%' : ''">
         <p-chart type="bar" [data]="basicData" [options]="options" ></p-chart>
     </div>
 </p-scrollPanel>

@@ -165,10 +165,8 @@ export class CreateFichaSectorialComponent implements OnInit {
   ];
   onFilesSelected(event: any): void {
     this.load_carrusel=false;
-    console.log(event);
-    this.load_carrusel = false;
     const files: FileList = event.files;
-
+    this.upload=true;
     for(let file of event.files) {
       this.selectedFiles.push(file);
       const objectURL = URL.createObjectURL(file);
@@ -179,9 +177,10 @@ export class CreateFichaSectorialComponent implements OnInit {
 
     console.log(this.selectedFiles,this.imagenesSeleccionadas );
     setTimeout(() => {
-      this.upload=false;
     this.load_carrusel=true;
     }, 1000);
+    
+    this.upload=false;
     /*
     const files: FileList = event.target.files;
     console.log(files);
@@ -215,7 +214,8 @@ export class CreateFichaSectorialComponent implements OnInit {
   }
   
   eliminarImagen(index: number) {
-    this.load_carrusel = false;
+    this.load_carrusel=false;
+    this.upload=true;
     this.imagenesSeleccionadas.splice(index, 1);
      // Eliminar la imagen del arreglo selectedFiles
     this.selectedFiles.splice(index, 1);
@@ -266,6 +266,7 @@ export class CreateFichaSectorialComponent implements OnInit {
 
    async tomarFotoYEnviar(event: any) {
     this.load_carrusel=false;
+    this.upload=true;
     const image = await Camera.getPhoto({
       quality: 90,
       allowEditing: false,
@@ -290,10 +291,13 @@ export class CreateFichaSectorialComponent implements OnInit {
 
         const reader = new FileReader();
         reader.onload = (e: any) => {
-          this.imagenesSeleccionadas.push(e.target.result);
+          this.imagenesSeleccionadas.push({ itemImageSrc: e.target.result });
         };
         reader.readAsDataURL(im);
-        this.load_carrusel=true;
+        setTimeout(() => {          
+          this.load_carrusel=true;
+        }, 1000);
+        this.upload=false;
       if(this.selectedFiles.length==2){
         iziToast.info({
           title:'INFO:',
@@ -307,7 +311,6 @@ export class CreateFichaSectorialComponent implements OnInit {
         position:'bottomRight',
         message:'Solo puede enviar 3 imangenes'
       });
-      this.load_carrusel=true;
       console.error('Error al obtener la cadena base64 de la imagen.');
     }
   }

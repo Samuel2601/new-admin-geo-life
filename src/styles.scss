@@ -63,12 +63,6 @@
   .p-speeddial-list{
     padding-left: 0rem !important
   }
-  .p-element .p-speeddial-item .ng-star-inserted{
-    transition-delay: 0ms !important; 
-    border-radius: 50%;
-    background-color: #4b5563;
-    color: #fff;
-  }
   .p-speeddial-action:hover {
     background: #022354;
     color: #fff;
@@ -84,6 +78,21 @@
 ngb-modal-window {
   z-index: 2300 !important;
 }
+
+.p-element .p-speeddial-item .ng-star-inserted {
+  transition-delay: 2ms !important;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: #1d4ed8;
+  
+}
+.p-speeddial-action{
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.p-speeddial-action-icon {
+  font-size: 24px; /* Ajusta el tamaño del icono según tus necesidades */
+}
+
   //webpack:///node_modules/bootstrap/scss/_reboot.scss
 // Importa tu tema personalizado y otros estilos
 @import "/src/assets/css/theme.min";

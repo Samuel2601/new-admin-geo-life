@@ -1,7 +1,7 @@
 <table *ngIf="labelsmobil.length>0">
     <thead>
         <th>N°</th>
-        <th>Categoria</th>
+        <th>Actividades</th>
     </thead>
     <tbody>
         <tr *ngFor="let item of labelsmobil,let i = index">
@@ -11,7 +11,7 @@
     </tbody>
 </table>
 <p-scrollPanel  styleClass="custombar1">
-    <div class="card">
+    <div class="card" [style.width]="isMobil() ? '80%' : ''">
         <p-chart type="bar" [data]="basicData" [options]="options" ></p-chart>
     </div>
 </p-scrollPanel>

@@ -134,14 +134,26 @@ export class MapComponent implements OnInit,AfterViewInit {
     this.loadspeed=false;
     this.items = [
       {
+        icon: 'bi bi-crosshair',
+        tooltipOptions: {
+          tooltipLabel:'Ubicación',
+          tooltipPosition:'right',
+         //hideDelay:1000,
+        },
+        visible:this.isMobil(),
+        command: () => {          
+          this.getLocation();
+      
+        },
+      },
+      {
         icon: !this.capaActiva? 'pi pi-eye':'bi bi-eye-slash-fill',
         tooltipOptions: {
           tooltipLabel:'Barrios',
           tooltipPosition:'right',
          //hideDelay:1000,
         },
-        command: (event) => {
-          console.log(event, event.index,event.item,event.originalEvent);
+        command: () => {
           //this.stopPropagation(event.originalEvent);
           this.reloadmap();     //this.messageService.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' }); 
       
@@ -154,7 +166,7 @@ export class MapComponent implements OnInit,AfterViewInit {
           tooltipPosition:'right',
           //hideDelay:1000,
         },
-        command: (event) => {
+        command: () => {
           //this.stopPropagation(event.originalEvent);
           this.reloadWifi();             
         }
@@ -167,7 +179,7 @@ export class MapComponent implements OnInit,AfterViewInit {
            // hideDelay:1000,
           },
           visible: (this.opcionb||false)  && this.check.IndexFichaSectorialComponent,
-          command: (event) => {
+          command: () => {
             //this.stopPropagation(event.originalEvent);
             this.fichaTecnica();             
           }
@@ -180,7 +192,7 @@ export class MapComponent implements OnInit,AfterViewInit {
            // hideDelay:1000,
           },
           visible:(this.opcionb||false) &&this.check.CreateFichaSectorialComponent,
-          command: (event) => {
+          command: () => {
             //this.stopPropagation(event.originalEvent);
             this.nuevoFicha(); 
           }
@@ -193,7 +205,7 @@ export class MapComponent implements OnInit,AfterViewInit {
             //hideDelay:1000,
           },
           visible:(this.opcionb||false) &&this.check.IndexIncidentesDenunciaComponent,
-          command: (event) => {
+          command: () => {
             //this.stopPropagation(event.originalEvent);
             this.incidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
         
@@ -207,7 +219,7 @@ export class MapComponent implements OnInit,AfterViewInit {
           //hideDelay:1000,
         },
         visible:(this.opcionb||false)&&this.check.CreateIncidentesDenunciaComponent && !(!this.latitud && !this.longitud),
-        command: (event) => {
+        command: () => {
           //this.stopPropagation(event.originalEvent);
           this.nuevoIncidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
   

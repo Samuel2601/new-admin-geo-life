@@ -65,6 +65,7 @@ export class LayersComponent implements OnInit,AfterViewInit{
     this.mapCustom.addListener('dragend', this.onDragEnd);
     // Adds a marker at the center of the map.
     this.addMarker(haightAshbury);
+    
     this.reloadmap();
   }
 
@@ -634,7 +635,7 @@ isMobil() {
        this.map.on('click', this.onClickHandlerMap);
 
 
-    this.map.addLayer(this.wfsSelangor);
+    this.mapCustom.(this.wfsSelangor);
     this.map.addLayer(this.wfsSelangorWifi);
 
     this.googleStreets = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{

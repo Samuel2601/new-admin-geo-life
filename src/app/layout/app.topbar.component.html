@@ -1,7 +1,10 @@
 <div class="layout-topbar">
     <a class="layout-topbar-logo" routerLink="">
+        <img src="/assets/layout/images/favicon.png" class="png-image" alt="logo"/>
+        <!--
         <img src="assets/layout/images/{{layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="logo">
-        <span>SAKAI</span>
+        -->
+        <span>Esmeraldas</span>
     </a>
 
     <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
@@ -14,16 +17,16 @@
 
     <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
         <button class="p-link layout-topbar-button">
-            <i class="pi pi-calendar"></i>
-            <span>Calendar</span>
+            <i class="pi pi-bell"></i>
+            <span>Notificaciones</span>
         </button>
         <button class="p-link layout-topbar-button">
             <i class="pi pi-user"></i>
-            <span>Profile</span>
+            <span>Perfil</span>
         </button>
         <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
-            <i class="pi pi-cog"></i>
-            <span>Settings</span>
+            <i class="pi pi-sign-out"></i>
+            <span>Cerrar Sesión</span>
         </button>
     </div>
 </div>

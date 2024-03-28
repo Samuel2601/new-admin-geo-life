@@ -1,4 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
+.gm-style .gm-style-iw-c {
+    background-color:var(--surface-0);
+
+}
+/* Para WebKit (Chrome, Safari) */
+.gm-style .gm-style-iw-d::-webkit-scrollbar {
+    width: 10px; /* Ancho del scrollbar */
+}
+
+.gm-style .gm-style-iw-d::-webkit-scrollbar-thumb {
+    background-color:var(--surface-0); /* Color de la barra de desplazamiento */
+    border-radius: 5px; /* Radio de borde para redondear la barra */
+}
+
+.gm-style .gm-style-iw-d::-webkit-scrollbar-track {
+    background-color: var(--surface-0); /* Color de fondo del scrollbar */
+    border-radius: 5px; /* Radio de borde para redondear el fondo */
+}
+
+/* Para Firefox */
+.gm-style .gm-style-iw-d {
+    scrollbar-color: var(--surface-0) var(--surface-0); /* Color de la barra y fondo del scrollbar */
+}
 
 $gutter: 1rem; //for primeflex grid system
 @import "assets/layout/styles/layout/layout.scss";

@@ -1,8 +1,10 @@
-<div id="floating-panel">
-    <button (click)="hideMarkers()">Hide Markers</button>
-    <button (click)="showMarkers()">Show Markers</button>
-    <button (click)="deleteMarkers()">Delete Markers</button>
-  </div>
+<p-toast></p-toast>
 <div class="card" id="map" style="min-height: 50rem;">
 
+</div>
+
+
+<div style="height: 500px" class="flex justify-content-center" #speedDial>
+  <p-speedDial   [model]="items" direction="up" [buttonStyle]="{ 'border-radius': '50%'}" >  
+  </p-speedDial>  
 </div>

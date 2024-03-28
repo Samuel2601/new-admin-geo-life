@@ -10,6 +10,8 @@ import { InputIconModule } from 'primeng/inputicon';
 import { SpeedDialModule } from 'primeng/speeddial';
 
 import { LayersComponent } from './layers/layers.component';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { ToastModule } from 'primeng/toast';
 @NgModule({  
   imports: [
     CommonModule,
@@ -19,7 +21,9 @@ import { LayersComponent } from './layers/layers.component';
     InputGroupAddonModule,
     IconFieldModule,
     InputIconModule,
-    SpeedDialModule
+    SpeedDialModule,
+    GoogleMapsModule,
+    ToastModule
   ],
   declarations: [LayersComponent],
 })

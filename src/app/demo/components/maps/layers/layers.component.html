@@ -1,10 +1,11 @@
-<p-toast></p-toast>
-<div class="card" id="map" style="min-height: 50rem;">
-
-</div>
-
-
-<div style="height: 500px" class="flex justify-content-center" #speedDial>
-  <p-speedDial   [model]="items" direction="up" [buttonStyle]="{ 'border-radius': '50%'}" >  
-  </p-speedDial>  
+<div style="overflow-y: auto;">
+  <p-toast></p-toast>
+  <div class="card" id="map" style="min-height: 50rem;">
+  
+  </div>
+  <div [style.display]="'none'">
+    <p-speedDial  #speedDial [model]="items" direction="down" className="speeddial-left" [buttonStyle]="{ 'border-radius': '50%'}">  
+    </p-speedDial> 
+  </div>
+   
 </div>

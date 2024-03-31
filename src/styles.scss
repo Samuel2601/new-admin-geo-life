@@ -22,6 +22,12 @@
 .gm-style .gm-style-iw-d {
     scrollbar-color: var(--surface-0) var(--surface-0); /* Color de la barra y fondo del scrollbar */
 }
+.p-speeddial-action {
+    background: var(--surface-0);
+}
+.p-speeddial-action-icon {
+    font-size: 24px; /* Ajusta el tamaño del icono según tus necesidades */
+}
 
 $gutter: 1rem; //for primeflex grid system
 @import "assets/layout/styles/layout/layout.scss";

@@ -54,7 +54,18 @@ export class LayersComponent implements OnInit{
       position,
       map,
     });
+    // Cerrar el popup actualmente abierto
+    if (this.openInfoWindow) {
+      this.openInfoWindow.close();
+    }
 
+    // Abrir un nuevo popup con el nombre del barrio
+    const infoWindow = new google.maps.InfoWindow({
+      content: 'Tu Ubicación Elegida'
+    });
+    infoWindow.setPosition(position);
+    infoWindow.open(this.mapCustom);
+    this.openInfoWindow = infoWindow;
     this.markers.push(marker);
   }
 
@@ -138,37 +149,53 @@ export class LayersComponent implements OnInit{
 
   constructor(private modalService: NgbModal,private elementRef: ElementRef,private helperService:HelperService,private router: Router,private layoutService: LayoutService,private messageService: MessageService){
     this.polygonColorsSubscription = this.layoutService.configUpdate$.subscribe(colors => {
-      console.log(colors);
       const documentStyle = getComputedStyle(document.documentElement);
       this.fillColor =  documentStyle.getPropertyValue('--primary-color');
       this.strokeColor = documentStyle.getPropertyValue('--gray-900');
       this.backgroundColor=documentStyle.getPropertyValue('--surface-0');
-      this.recargarPoligonosEnMapa();
+      this.actualizarpoligono();
     });
   }
   actualizarpoligono() {
+    console.log(this.arr_polygon);
     this.arr_polygon.forEach((polygon: google.maps.Polygon) => {
         polygon.setOptions({
             fillColor: this.fillColor,
             strokeColor: this.strokeColor
         });
-    });
-    //this.recargarPoligonosEnMapa();
-  }
-  recargarPoligonosEnMapa() {
-    // Primero, limpiamos los polígonos del mapa
-    this.arr_polygon.forEach((polygon: google.maps.Polygon) => {
         polygon.setMap(null);
-    });
-
-    // Luego, actualizamos los colores de los polígonos
-    this.actualizarpoligono();
-
-    // Finalmente, agregamos los polígonos actualizados al mapa
-    this.arr_polygon.forEach((polygon: google.maps.Polygon) => {
         polygon.setMap(this.mapCustom);
+        /*polygon.addListener('click', (event:any) => {
+          this.onClickHandlerMap(event);
+        });*/
     });
-}
+    this.activarTooltips();
+  }
+
+  recargarPoligonosEnMapa() {
+    if(this.capaActiva){
+      // Primero, limpiamos los polígonos del mapa
+      this.arr_polygon.forEach((polygon: google.maps.Polygon) => {
+        polygon.setMap(null);
+      });
+      this.capaActiva=false;
+    }else{
+      // Finalmente, agregamos los polígonos actualizados al mapa
+      this.arr_polygon.forEach((polygon: google.maps.Polygon) => {
+        polygon.setMap(this.mapCustom);
+      });
+      this.capaActiva=true;
+    }
+    this.activarTooltips();
+  }
+
+  borrarpoligonos(){
+    console.log(this.mapCustom.data.get);
+    this.mapCustom.data.forEach((feature) => {
+      console.log(feature);
+      this.mapCustom.data.remove(feature);
+    });
+  }
 
   //IMPLEMENTOS
   check:any={};
@@ -180,7 +207,7 @@ export class LayersComponent implements OnInit{
       .then(async ({ Map }) => {
         const haightAshbury = { lat: 0.977035, lng: -79.655415 };
         this.mapCustom = new google.maps.Map(document.getElementById("map") as HTMLElement, {
-          zoom: 12,
+          zoom: 15,
           center: haightAshbury,
           mapTypeId: "terrain",
         });
@@ -200,71 +227,47 @@ export class LayersComponent implements OnInit{
   }
   private openInfoWindow: google.maps.InfoWindow | null = null;
   arr_polygon:any[]=[];
-  reloadmap(data:any): void {
-  
-    if (data.features) {
-      data.features.forEach((feature: any) => {
-        const geometry = feature.geometry;
-        const properties = feature.properties;
-        const id= feature.id
-
-        if (geometry && properties) {
-          const coordinates = geometry.coordinates;
-          if (coordinates) {
-            let paths: google.maps.LatLng[][] = [];
-
-            coordinates.forEach((polygon: any) => {
-              let path: google.maps.LatLng[] = [];
-              polygon.forEach((ring: any) => {
-                ring.forEach((coord: number[]) => {
-                  path.push(new google.maps.LatLng(coord[1], coord[0]));
-                });
-              });
-              paths.push(path);
-            });
-
-            const polygon = new google.maps.Polygon({
-              paths: paths,
-              strokeColor: this.strokeColor,// "#FF0000",
-              strokeOpacity: 0.8,
-              strokeWeight: 2,
-              fillColor: this.fillColor,//"#FF0000",
-              fillOpacity: 0.35,
-              map: this.mapCustom
-            });
-            
-            // Agregar evento de clic al polígono para mostrar el popup
-            polygon.addListener('click', (event) => {
-              // Cerrar el popup actualmente abierto
-              if (this.openInfoWindow) {
-                this.openInfoWindow.close();
-              }
-
-              // Abrir un nuevo popup con el nombre del barrio
-              const infoWindow = new google.maps.InfoWindow({
-                content: `<img src="${this.url}helper/obtener_portada_barrio/${id}" alt="Descripción de la imagen" class="imagen-popup" style="
-                width: 100%;
-                height: 150px;
-                object-fit: cover;
-              ">
-              <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
-                <b style="text-align: center;">${feature.properties.nombre}</b>
-                <ul style="list-style-type: none; padding-left: 0;">
-                  <li><strong>Parroquia:</strong> ${feature.properties.parr}</li>                          
-                </ul>
-              </div>
-              `
-              });
-              infoWindow.setPosition(event.latLng);
-              infoWindow.open(this.mapCustom);
-              this.openInfoWindow = infoWindow;
-            });
-            this.arr_polygon.push(polygon);
-          }
-          
-        }
-      });
+  canpopup:boolean=false;
+  async reloadmap() {  
+    if(this.lista_feature.length==0){
+      await this.getWFSgeojson(this.urlgeoser);
+      console.log(this.lista_feature);
     }
+    this.lista_feature.forEach((feature: any) => {
+      const geometry = feature.geometry;
+      const properties = feature.properties;
+
+      if (geometry && properties) {
+        const coordinates = geometry.coordinates;
+        if (coordinates) {
+          let paths: google.maps.LatLng[][] = [];
+
+          coordinates.forEach((polygon: any) => {
+            let path: google.maps.LatLng[] = [];
+            polygon.forEach((ring: any) => {
+              ring.forEach((coord: number[]) => {
+                path.push(new google.maps.LatLng(coord[1], coord[0]));
+              });
+            });
+            paths.push(path);
+          });
+
+          const polygon = new google.maps.Polygon({
+            paths: paths,
+            strokeColor: this.strokeColor,// "#FF0000",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: this.fillColor,//"#FF0000",
+            fillOpacity: 0.35,
+            map: this.mapCustom
+          });
+          this.arr_polygon.push(polygon);
+          // Agregar evento de clic al polígono para mostrar el popup
+          this.levantarpopup(polygon,feature);          
+        }        
+      }
+    });
+
   }
   guardarfeature(data:any){
     if(data.features){
@@ -283,7 +286,7 @@ export class LayersComponent implements OnInit{
       const data = await response.json();     
       if(this.lista_feature.length==0){
         this.guardarfeature(data);
-        this.reloadmap(data);
+        //this.reloadmap(data);
       }
       return data;
     } catch (error) {
@@ -301,12 +304,15 @@ export class LayersComponent implements OnInit{
         //console.log('Latitud:', e.latlng.lat);
         //console.log('Longitud:', e.latlng.lng);
         this.opcionb=false;
-        this.latitud = e.latlng.lat;
-        this.longitud = e.latlng.lng;
+        this.latitud = e.latLng.lat();
+        this.longitud = e.latLng.lng();
         this.myControl.setValue((this.latitud+';'+this.longitud).toString());
+       
         this.updateItem();
+        
         this.deleteMarkers();
           if(!this.mostrarficha&&this.check.CreateIncidentesDenunciaComponent||!this.token){
+            this.addMarker({lat: this.latitud, lng: this.longitud});
             // Crea un marcador en las coordenadas especificadas
            // const mark = L.marker([this.latitud, this.longitud], { icon: this.redIcon }).addTo(this.map);
             // Si deseas añadir un popup al marcador
@@ -320,8 +326,31 @@ export class LayersComponent implements OnInit{
               const poligono = turf.polygon(feature.geometry.coordinates[0]);
               
               if (turf.booleanContains(poligono, puntoUsuario)) {
-                //console.log('El usuario está dentro del polígono:', feature);
+                this.borrarpoligonos();
+                console.log('El usuario está dentro del polígono:', feature);
                 //await this.buscar(feature);
+                let paths: google.maps.LatLng[][] = [];
+
+                feature.geometry.coordinates.forEach((polygon: any) => {
+                  let path: google.maps.LatLng[] = [];
+                  polygon.forEach((ring: any) => {
+                    ring.forEach((coord: number[]) => {
+                      path.push(new google.maps.LatLng(coord[1], coord[0]));
+                    });
+                  });
+                  paths.push(path);
+                });
+                const polygon = new google.maps.Polygon({
+                  paths: paths,
+                  strokeColor: this.strokeColor,// "#FF0000",
+                  strokeOpacity: 0.8,
+                  strokeWeight: 2,
+                  fillColor: this.fillColor,//"#FF0000",
+                  fillOpacity: 0.35,
+                  map: this.mapCustom
+                });
+                this.canpopup=true;
+                this.levantarpopup(polygon,feature);
                 break; // Si solo quieres saber en qué polígono está, puedes detener el bucle aquí
               }
             }           
@@ -330,50 +359,68 @@ export class LayersComponent implements OnInit{
 
     }
   }
-  @ViewChildren(SpeedDial) speedDials: QueryList<SpeedDial> | undefined;
- 
-  createCustomControl(template: TemplateRef<any>) {
-    const element = document.createElement('div');
-    const viewRef = template.createEmbeddedView(null);
-    element.appendChild(viewRef.rootNodes[0]);
-    return element;
+  levantarpopup(polygon:any,feature:any){
+    polygon.addListener('click', (event:any) => {
+      if(this.canpopup){
+          // Cerrar el popup actualmente abierto
+          if (this.openInfoWindow) {
+            this.openInfoWindow.close();
+          }
+
+          // Abrir un nuevo popup con el nombre del barrio
+          const infoWindow = new google.maps.InfoWindow({
+            content: `<img src="${this.url}helper/obtener_portada_barrio/${feature.id}" alt="Descripción de la imagen" class="imagen-popup" style="
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+          ">
+          <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
+            <b style="text-align: center;">${feature.properties.nombre}</b>
+            <ul style="list-style-type: none; padding-left: 0;">
+              <li><strong>Parroquia:</strong> ${feature.properties.parr}</li>                          
+            </ul>
+          </div>
+          `
+          });
+          infoWindow.setPosition(event.latLng);
+          infoWindow.open(this.mapCustom);
+          this.openInfoWindow = infoWindow;
+          this.canpopup=false;
+      }else{
+        this.onClickHandlerMap(event);
+      }
+      
+    });
+    polygon.setMap(this.mapCustom);
   }
-  @ViewChild('customControl') customControlTemplate!: TemplateRef<any>;
+  @ViewChildren(SpeedDial) speedDials: QueryList<SpeedDial> | undefined;
   activarTooltips() {
-  /*
     setTimeout(() => {
+      this.loadspeed = true;
+      const speedDial = document.getElementsByTagName('p-speedDial')[0];
+  
+      // Verificar si el speedDial ya está en el mapa antes de agregarlo
+      if (!this.isSpeedDialAdded()) {
+        const customControlDiv = document.createElement('div');
+        customControlDiv.appendChild(speedDial);
+  
+        // Añadir el speedDial al control solo si no está agregado
+        this.mapCustom.controls[google.maps.ControlPosition.LEFT_TOP].push(customControlDiv);
+      }
+  
       if (this.speedDials) {
-        this.speedDials.forEach((speedDial,index) => {
+        this.speedDials.forEach((speedDial, index) => {
           speedDial.show();
         });
       }
-    }, 220);*/
-    setTimeout(() => {
-      this.loadspeed=true;
-      console.log(this.speedDials, this.speedDials);
-      const customControlDiv = document.createElement('div');
-      const speedDial = document.getElementsByTagName('p-speedDial')[0];
-      customControlDiv.appendChild(speedDial);
-     
-
-      //this.mapCustom.controls[google.maps.ControlPosition.TOP_CENTER].push(customControlDiv);  
-      this.mapCustom.controls[google.maps.ControlPosition.LEFT_TOP].push(customControlDiv);  
-      console.log(this.mapCustom.controls[google.maps.ControlPosition.BOTTOM_LEFT],
-        this.mapCustom.controls[google.maps.ControlPosition.BOTTOM_CENTER],
-        this.mapCustom.controls[google.maps.ControlPosition.BOTTOM_RIGHT],
-        this.mapCustom.controls[google.maps.ControlPosition.TOP_CENTER],
-        this.mapCustom.controls[google.maps.ControlPosition.TOP_LEFT],
-        this.mapCustom.controls[google.maps.ControlPosition.TOP_RIGHT],
-        );
-      setTimeout(() => {
-        if (this.speedDials) {
-          this.speedDials.forEach((speedDial,index) => {
-            speedDial.show();
-          });
-        }
-      }, 220); 
-    }, 2000);
-   
+    }, 200);
+  }
+  
+  // Función para verificar si el speedDial ya está agregado al mapa
+  isSpeedDialAdded(): boolean {
+    const speedDial = document.getElementsByTagName('p-speedDial')[0];
+    const speedDialParent = speedDial.parentElement;
+    return speedDialParent && speedDialParent.tagName === 'DIV' && speedDialParent.parentNode === this.mapCustom.getDiv();
   }
   responsiveimage():string{
     let aux=window.innerWidth-30;
@@ -408,6 +455,10 @@ export class LayersComponent implements OnInit{
          //hideDelay:1000,
         },
         command: () => {
+          this.canpopup=true;
+          if(this.arr_polygon.length==0){
+            this.reloadmap();
+          }
           //this.stopPropagation(event.originalEvent);
           this.recargarPoligonosEnMapa();     //this.messageService.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' }); 
       

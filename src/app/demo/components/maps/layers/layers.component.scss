@@ -137,3 +137,35 @@ height: 100px;
 
 object-fit: cover; /* Para ajustar la imagen dentro del contenedor sin distorsionarla */
 }
+.fullscreen-button{
+  background: none rgb(255, 255, 255);
+    border: 0px;
+    margin: 10px;
+    padding: 0px;
+    text-transform: none;
+    appearance: none;
+    position: absolute;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 2px;
+    height: 40px;
+    width: 40px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+    overflow: hidden;
+    top: 0px;
+    right: 0px;
+}
+.fullscreen-button .hover-image {
+  display: none;
+}
+
+.fullscreen-button:hover .normal-image {
+  display: none;
+}
+
+.fullscreen-button:hover .hover-image {
+  display: inline-block;
+}
+.p-inputtext{
+    width: 400px;
+}

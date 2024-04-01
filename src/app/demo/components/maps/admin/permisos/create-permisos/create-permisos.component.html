@@ -1,0 +1,30 @@
+
+<div class="modal-content">
+  <div class="modal-header">
+    <h2 class="modal-title">Nueva Permiso</h2>
+    <button type="button" class="btn-close" aria-label="Close" (click)="DimissModal()"></button>
+  </div>
+  
+  <div class="modal-body">
+    <form>
+      <div class="mb-3">
+          <label for="componenteSelect" class="form-label">Seleccionar componente</label>
+          <select class="form-select" id="componenteSelect" name="componente" [(ngModel)]="newpermiso.nombreComponente" required>
+            <option value="" disabled selected>Seleccionar...</option>
+            <option *ngFor="let componente of componentes" [value]="componente"> {{ componente }}</option>
+          </select>
+        </div>
+        
+        <div class="mb-3">
+          <label for="rol" class="form-label">Rol</label>
+          <select class="form-select" id="rol" name="rol" [(ngModel)]="rol" (change)="addrol($event.target)" required>
+            <option *ngFor="let rol of roles" [value]="rol._id">{{ rol.nombre }}</option>
+          </select>
+        </div>
+        
+      <button type="submit" class="btn btn-primary" (click)="enviar()">Guardar</button>
+    </form>
+    
+  </div>
+</div>
+

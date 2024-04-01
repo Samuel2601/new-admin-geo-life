@@ -1,0 +1,80 @@
+<div class="card" style="margin-top: 10px;">
+    <div class="card-header">
+        <h2>Listado de Usuarios</h2>
+    </div>
+    <div class="card-body">
+        <p-toast></p-toast>
+        <form>
+            <div class="input-group mb-3">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> {{categoria||'Categoria'}} </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="javascript:void(0)" (click)="categoria='nombres'">Nombre</a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0)"  (click)="categoria='correo'">Correo</a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0)"  (click)="categoria='telefono'">Teléfono</a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0)"  (click)="categoria='cedula'">Cédula</a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0)"  (click)="categoria='rol_user'">Rol</a></li>
+                </ul>
+                <button class="btn btn-outline-secondary " type="button" (click)="orden = (orden === 'asc' ? 'desc' : 'asc')">
+                    <i class="bi bi-arrow-up" *ngIf="orden === 'asc'"></i>
+                    <i class="bi bi-arrow-down" *ngIf="orden === 'desc'"></i>
+                </button>
+                <input type="text" class="form-control" aria-label="Text a filtrar"  name="valor" [(ngModel)]="valor">                    
+                <button type="button" class="btn btn-primary" (click)="ordenaryfiltrar(categoria, valor, orden)">Buscar</button>
+            </div>               
+        </form>
+        
+        <div  *ngIf="usuarios.length>0&&!load_lista" class="table-responsive-lg" style="min-height: fit-content; overflow-y: auto;">
+            <table class="table table-lg align-middle table-striped table-hover table-fixed">
+                <thead>
+                    <tr>
+                        <th  colspan="2">Nombre</th>
+                        <th scope="col">Cargo</th>
+                        <th scope="col">Correo</th>
+                        <th scope="col">Teléfono</th>
+                        <th scope="col">Cédula</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of usuarios" (click)="editrow(user._id)">
+                        <td  (click)="stopPropagation($event)" style="width: 10%;">
+                            <div class="h-50 rounded-circle overflow-hidden">
+                                <img [src]="url + 'helper/obtener_portada_avatar/' + user.foto"
+                                     width="150"
+                                     height="150"
+                                     alt="Your profile picture"
+                                     class="rounded-circle img-fluid"
+                                     style="aspect-ratio: 48 / 48; object-fit: cover;">
+                              </div>
+                           
+                            </td>
+                        <td>{{ user.nombres }}</td>
+                        <td>{{ user.rol_user.nombre }}</td>
+                        <td>{{ user.correo }}</td>
+                        <td>{{ user.telefono }}</td>
+                        <td>{{ user.cedula }}</td>
+
+                    </tr>
+                    
+                </tbody>
+            </table>
+            
+
+        
+        </div>
+        <div class="alert alert-info" role="alert" *ngIf="usuarios.length==0&&!load_lista">
+        No se han realizado registros de esta ubicación
+        </div>
+        <div class="card-body" aria-hidden="true" *ngIf="load_lista">
+        <h5 class="card-title placeholder-glow">
+            <span class="placeholder col-6"></span>
+        </h5>
+        <p class="card-text placeholder-glow">
+            <span class="placeholder col-7"></span>
+            <span class="placeholder col-4"></span>
+            <span class="placeholder col-4"></span>
+            <span class="placeholder col-6"></span>
+            <span class="placeholder col-8"></span>
+        </p>
+        </div>
+    </div>
+    </div>

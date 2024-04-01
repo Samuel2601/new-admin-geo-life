@@ -1,0 +1,41 @@
+<ng-container *ngIf="model">
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-auto">
+                            <h2>Nuevo Estado de Incidente</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p-toast></p-toast>
+                    <div class="table-responsive-sm">
+                        <form
+                            [formGroup]="estadoIncidenteForm"
+                            (ngSubmit)="registrarEstadoIncidente()"
+                        >
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label"
+                                    >Nombre</label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="nombre"
+                                    name="nombre"
+                                    formControlName="nombre"
+                                    required
+                                />
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Guardar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

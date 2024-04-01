@@ -1,0 +1,34 @@
+<div class="wrapper">
+    <div class="sidebar" data-color="danger" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
+    <app-sidebar></app-sidebar>
+    <div class="sidebar-background" style="background-image: url(./assets/img/sidebar-4.jpg)"></div>
+    </div>
+    <div class="main-panel">
+    <app-navbar></app-navbar>
+    <div class="main-content">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link" *ngIf="check.IndexUsuarioComponent" [class.active]="selected === 'IndexUsuarioComponent'" aria-current="page" href="javascript:void(0)" (click)="selected='IndexUsuarioComponent'">Usuarios</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" *ngIf="check.IndexRolUserComponent" [class.active]="selected === 'IndexRolUserComponent' " href="javascript:void(0)" (click)="selected='IndexRolUserComponent'">Roles</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" *ngIf="check.IndexEncargadoCategoriaComponent" [class.active]="selected === 'IndexEncargadoCategoriaComponent' " href="javascript:void(0)" (click)="selected='IndexEncargadoCategoriaComponent'">Encargos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" *ngIf="check.IndexPermisosComponent" [class.active]="selected === 'IndexPermisosComponent' " href="javascript:void(0)" (click)="selected='IndexPermisosComponent'">Permisos</a>
+              </li>
+          </ul>
+        <app-index-usuario *ngIf="selected== 'IndexUsuarioComponent' &&check.IndexUsuarioComponent"></app-index-usuario>
+        <app-index-rol-user *ngIf="selected== 'IndexRolUserComponent' &&check.IndexRolUserComponent"></app-index-rol-user>
+        <app-index-encargado-categoria *ngIf="selected== 'IndexEncargadoCategoriaComponent' &&check.IndexEncargadoCategoriaComponent"></app-index-encargado-categoria>
+        <app-index-permisos  *ngIf="selected== 'IndexPermisosComponent' &&check.IndexPermisosComponent"></app-index-permisos>
+
+    </div> 
+
+    <div>
+        <app-footer></app-footer>
+    </div>
+    </div>
+</div>

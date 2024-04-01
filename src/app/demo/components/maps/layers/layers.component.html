@@ -1,38 +1,84 @@
-<div style="overflow-y: auto">
-    <p-toast></p-toast>
-    <div #formulariomap class="card flex justify-content-center">
-        <span class="p-float-label">
-            <p-autoComplete
-                [(ngModel)]="opcionb"
-                [suggestions]="filter"
-                (completeMethod)="filterOptions($event)"
-                field="properties.nombre"
-                inputId="float-label"
+<div class="grid p-fluid">
+    <div class="col-12">
+        <p-toast></p-toast>
+        <div [style.display]="'none'">
+            <div
+                #formulariomap
+                class="card flex justify-content-center"
+                style="background: #ffffffc2"
             >
-                <ng-template let-option pTemplate="item">
-                    <div
-                        class="flex align-items-center gap-2"
-                        (click)="poligonoview(true, option)"
+                <span class="p-float-label">
+                    <p-autoComplete
+                        [suggestions]="filter"
+                        (completeMethod)="filterOptions($event)"
+                        field="properties.nombre"
+                        inputId="float-label"
+                        [(ngModel)]="opcionb"
+                        (ngModelChange)="poligonoview(true, opcionb)"
                     >
-                        <div>
-                            {{ option.properties.nombre }}
-                        </div>
-                    </div>
-                </ng-template>
-            </p-autoComplete>
-            <label for="float-label">Buscar Barrio</label>
-        </span>
-    </div>
-    <div class="card" id="map" style="min-height: 50rem"></div>
+                        <ng-template let-option pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>
+                                    {{ option.properties.nombre }}
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                    <label for="float-label">Buscar Barrio</label>
+                </span>
+            </div>
+        </div>
 
-    <div [style.display]="'none'">
-        <p-speedDial
-            #speedDial
-            [model]="items"
-            direction="down"
-            className="speeddial-left"
-            [buttonStyle]="{ 'border-radius': '50%' }"
-        >
-        </p-speedDial>
+        <div *ngIf="!load_fullscreen" class="card flex">
+            <span class="p-float-label">
+                <p-autoComplete
+                    [suggestions]="filter"
+                    (completeMethod)="filterOptions($event)"
+                    field="properties.nombre"
+                    inputId="float-label"
+                    [(ngModel)]="opcionb"
+                    (ngModelChange)="poligonoview(true, opcionb)"
+                >
+                    <ng-template let-option pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>
+                                {{ option.properties.nombre }}
+                            </div>
+                        </div>
+                    </ng-template>
+                </p-autoComplete>
+                <label for="float-label">Buscar Barrio</label>
+            </span>
+        </div>
+        <div class="card" id="map" style="min-height: 50rem"></div>
+        <div [style.display]="'none'">
+            <div class="controls fullscreen-control">
+                <button title="Toggle Fullscreen" class="fullscreen-button">
+                    <img
+                        src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2018%2018%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M0%200v6h2V2h4V0H0zm16%200h-4v2h4v4h2V0h-2zm0%2016h-4v2h6v-6h-2v4zM2%2012H0v6h6v-2H2v-4z%22/%3E%3C/svg%3E"
+                        alt=""
+                        style="height: 18px; width: 18px"
+                        class="normal-image"
+                    />
+                    <img
+                        src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2018%2018%22%3E%3Cpath%20fill%3D%22%23111%22%20d%3D%22M0%200v6h2V2h4V0H0zm16%200h-4v2h4v4h2V0h-2zm0%2016h-4v2h6v-6h-2v4zM2%2012H0v6h6v-2H2v-4z%22/%3E%3C/svg%3E"
+                        alt=""
+                        style="height: 18px; width: 18px"
+                        class="hover-image"
+                    />
+                </button>
+            </div>
+        </div>
+
+        <div [style.display]="'none'">
+            <p-speedDial
+                #speedDial
+                [model]="items"
+                direction="down"
+                className="fullscreen-button"
+                [buttonStyle]="{ 'border-radius': '50%' }"
+            >
+            </p-speedDial>
+        </div>
     </div>
 </div>

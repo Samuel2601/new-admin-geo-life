@@ -29,7 +29,7 @@ import { LayoutService } from 'src/app/layout/service/app.layout.service';
   providers: [MessageService]
 })
 
-export class LayersComponent implements OnInit{
+export class LayersComponent implements OnInit, AfterViewInit{
 
   loader = new Loader({
     apiKey: "AIzaSyAnO4FEgIlMcRRB0NY5bn_h_EQzdyNUoPo",
@@ -132,7 +132,7 @@ export class LayersComponent implements OnInit{
   mostrarCreateDireccion=false;
   mostrarficha=false;
   mostrarincidente=false;
-  capaActiva: boolean = true;
+  capaActiva: boolean = false;
   capaActivaWIFI: boolean = true;
   urlgeoserwifi="https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Apuntos-wifi&outputFormat=application%2Fjson";
   urlgeoser="https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson";  
@@ -189,12 +189,11 @@ export class LayersComponent implements OnInit{
     this.activarTooltips();
   }
 
-  borrarpoligonos(){
-    console.log(this.mapCustom.data.get);
-    this.mapCustom.data.forEach((feature) => {
-      console.log(feature);
-      this.mapCustom.data.remove(feature);
-    });
+  borrarpoligonos() {
+    console.log(this.arr_polygon);
+    this.arr_polygon.forEach((polygon: google.maps.Polygon) => {
+        polygon.setMap(null);
+      });
   }
 
   //IMPLEMENTOS
@@ -233,7 +232,24 @@ export class LayersComponent implements OnInit{
       await this.getWFSgeojson(this.urlgeoser);
       console.log(this.lista_feature);
     }
-    this.lista_feature.forEach((feature: any) => {
+    console.log(this.capaActiva);
+    if (this.capaActiva) {
+      this.recargarPoligonosEnMapa();
+    } else {
+      this.arr_polygon = [];
+      this.lista_feature.forEach((feature: any) => {
+        this.poligonoview(false,feature);
+      });
+      this.capaActiva = true;
+     
+    }
+    
+    this.updateItem();
+  }
+  poligonoview(ver:boolean,feature?: any) {
+    if (!feature&&this.opcionb) {
+      feature = this.opcionb;
+    }
       const geometry = feature.geometry;
       const properties = feature.properties;
 
@@ -263,11 +279,19 @@ export class LayersComponent implements OnInit{
           });
           this.arr_polygon.push(polygon);
           // Agregar evento de clic al polígono para mostrar el popup
-          this.levantarpopup(polygon,feature);          
+          this.levantarpopup(polygon, feature);  
+           // Trasladar el mapa a la posición del polígono si ver es true
+          if (ver) {
+            const bounds = new google.maps.LatLngBounds();
+            paths.forEach(path => {
+              path.forEach(latlng => {
+                bounds.extend(latlng);
+              });
+            });
+            this.mapCustom.fitBounds(bounds);
+          }
         }        
       }
-    });
-
   }
   guardarfeature(data:any){
     if(data.features){
@@ -319,44 +343,54 @@ export class LayersComponent implements OnInit{
             //mark.bindPopup('Ubicación elegida').openPopup();
            // this.map.flyTo([this.latitud, this.longitud], 14);
           }
-         
-          const puntoUsuario = turf.point([this.longitud,this.latitud]);
-          for (const feature of this.lista_feature) {
-            if(feature.geometry&&feature.geometry.coordinates&&feature.geometry.coordinates[0]&&feature.geometry.coordinates[0][0].length>4){
-              const poligono = turf.polygon(feature.geometry.coordinates[0]);
-              
-              if (turf.booleanContains(poligono, puntoUsuario)) {
-                this.borrarpoligonos();
-                console.log('El usuario está dentro del polígono:', feature);
-                //await this.buscar(feature);
-                let paths: google.maps.LatLng[][] = [];
-
-                feature.geometry.coordinates.forEach((polygon: any) => {
-                  let path: google.maps.LatLng[] = [];
-                  polygon.forEach((ring: any) => {
-                    ring.forEach((coord: number[]) => {
-                      path.push(new google.maps.LatLng(coord[1], coord[0]));
-                    });
-                  });
-                  paths.push(path);
-                });
-                const polygon = new google.maps.Polygon({
-                  paths: paths,
-                  strokeColor: this.strokeColor,// "#FF0000",
-                  strokeOpacity: 0.8,
-                  strokeWeight: 2,
-                  fillColor: this.fillColor,//"#FF0000",
-                  fillOpacity: 0.35,
-                  map: this.mapCustom
-                });
-                this.canpopup=true;
-                this.levantarpopup(polygon,feature);
-                break; // Si solo quieres saber en qué polígono está, puedes detener el bucle aquí
-              }
-            }           
-          }
+          this.borrarpoligonos();
+          this.poligonoposition();
         }
 
+    }
+  }
+  poligonoposition() {
+    let buscarbol = false;
+    const puntoUsuario = turf.point([this.longitud,this.latitud]);
+      for (const feature of this.lista_feature) {
+        if(feature.geometry&&feature.geometry.coordinates&&feature.geometry.coordinates[0]&&feature.geometry.coordinates[0][0].length>4){
+          const poligono = turf.polygon(feature.geometry.coordinates[0]);
+          
+          if (turf.booleanContains(poligono, puntoUsuario)) {
+            
+            console.log('El usuario está dentro del polígono:', feature);
+            //await this.buscar(feature);
+            let paths: google.maps.LatLng[][] = [];
+
+            feature.geometry.coordinates.forEach((polygon: any) => {
+              let path: google.maps.LatLng[] = [];
+              polygon.forEach((ring: any) => {
+                ring.forEach((coord: number[]) => {
+                  path.push(new google.maps.LatLng(coord[1], coord[0]));
+                });
+              });
+              paths.push(path);
+            });
+            const polygon = new google.maps.Polygon({
+              paths: paths,
+              strokeColor: this.strokeColor,
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: this.fillColor,
+              fillOpacity: 0.35,
+              map: this.mapCustom
+            });
+            this.arr_polygon.push(polygon);
+            this.canpopup=true;
+            this.levantarpopup(polygon, feature);
+            buscarbol = true;
+            break;
+            
+          }
+      }           
+    }
+    if (!buscarbol) {
+      this.messageService.add({ severity: 'info', summary: 'Info', detail: 'Tu ubicación no se encuentra dentro de uno de los barrios' });
     }
   }
   levantarpopup(polygon:any,feature:any){
@@ -366,7 +400,6 @@ export class LayersComponent implements OnInit{
           if (this.openInfoWindow) {
             this.openInfoWindow.close();
           }
-
           // Abrir un nuevo popup con el nombre del barrio
           const infoWindow = new google.maps.InfoWindow({
             content: `<img src="${this.url}helper/obtener_portada_barrio/${feature.id}" alt="Descripción de la imagen" class="imagen-popup" style="
@@ -394,9 +427,19 @@ export class LayersComponent implements OnInit{
     polygon.setMap(this.mapCustom);
   }
   @ViewChildren(SpeedDial) speedDials: QueryList<SpeedDial> | undefined;
+  @ViewChild('formulariomap', { static: true }) formularioMapRef!: ElementRef;
   activarTooltips() {
     setTimeout(() => {
-      this.loadspeed = true;
+      this.loadspeed = true; 
+      const formularioMap = this.formularioMapRef.nativeElement;
+      if (!this.isFormularioMapAdded()) {
+            const customControlDiv = document.createElement('div');
+            customControlDiv.appendChild(formularioMap);
+
+            // Añadir el formulario al control solo si no está agregado
+        this.mapCustom.controls[google.maps.ControlPosition.TOP_CENTER].push(customControlDiv);
+        console.log(this.mapCustom.controls[google.maps.ControlPosition.TOP_CENTER]);
+        }
       const speedDial = document.getElementsByTagName('p-speedDial')[0];
   
       // Verificar si el speedDial ya está en el mapa antes de agregarlo
@@ -415,6 +458,17 @@ export class LayersComponent implements OnInit{
       }
     }, 200);
   }
+  isFormularioMapAdded(): boolean {
+  // Verificar si el formulario ya está en el mapa
+  const mapControls = this.mapCustom.controls[google.maps.ControlPosition.TOP_CENTER].getArray();
+  for (let i = 0; i < mapControls.length; i++) {
+    const control = mapControls[i] as HTMLElement;
+    if (control.contains(this.formularioMapRef.nativeElement)) {
+      return true; // El formulario ya está agregado al mapa
+    }
+  }
+  return false; // El formulario no está agregado al mapa
+}
   
   // Función para verificar si el speedDial ya está agregado al mapa
   isSpeedDialAdded(): boolean {
@@ -448,7 +502,7 @@ export class LayersComponent implements OnInit{
         },
       },
       {
-        icon: !this.capaActiva? 'pi pi-eye':'bi bi-eye-slash-fill',
+        icon: this.capaActiva? 'pi pi-eye':'bi bi-eye-slash-fill',
         tooltipOptions: {
           tooltipLabel:'Barrios',
           tooltipPosition:'right',
@@ -456,11 +510,8 @@ export class LayersComponent implements OnInit{
         },
         command: () => {
           this.canpopup=true;
-          if(this.arr_polygon.length==0){
-            this.reloadmap();
-          }
           //this.stopPropagation(event.originalEvent);
-          this.recargarPoligonosEnMapa();     //this.messageService.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' }); 
+          this.reloadmap();     //this.messageService.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' }); 
       
         },
       },
@@ -552,6 +603,7 @@ export class LayersComponent implements OnInit{
           this.latitud = position.coords.latitude;
           this.longitud = position.coords.longitude;
           this.updateItem();
+          this.poligonoposition();
           //await this.obtenerDireccion(this.latitud,this.longitud);   
           this.addMarker({lat: this.latitud, lng: this.longitud});
           //this.marcarlugar(this.latitud,this.longitud,'Ubicación actual');      
@@ -564,5 +616,38 @@ export class LayersComponent implements OnInit{
     } else {
       //console.error('Geolocation is not supported by this browser.');
     }
+  }
+  filterOptions(event?: any) {
+    console.log(event);
+    this.filter = this.lista_feature.filter((option:any) =>{
+        if(option.properties.nombre&&option.properties.nombre.toLowerCase().includes(event.query.toLowerCase())){
+          return option
+        }
+      }   
+    ); 
+    this.showOptions = true;
+  }
+  hideOptions() {
+    setTimeout(() => {
+      this.showOptions = false;
+    }, 200);
+  }
+  ngAfterViewInit() {
+    setTimeout(() => {
+         google.maps.event.addListenerOnce(this.mapCustom, 'idle', () => {
+           // Obtener el control de expansión del mapa
+           console.log(this.mapCustom.controls[google.maps.ControlPosition.TOP_RIGHT],
+             this.mapCustom.controls[google.maps.ControlPosition.RIGHT_TOP]);
+      const mapExpandControl = this.mapCustom.controls[google.maps.ControlPosition.TOP_RIGHT].getAt(0);
+           console.log(mapExpandControl);
+      // Agregar un evento de clic al control de expansión
+      mapExpandControl.addEventListener('click', () => {
+        // Manejar el clic en el control de expansión aquí
+        console.log('Se hizo clic en el botón de expandir del mapa');
+      });
+    });
+    }, 2000);
+  // Esperar a que el mapa se cargue completamente
+ 
   }
 }

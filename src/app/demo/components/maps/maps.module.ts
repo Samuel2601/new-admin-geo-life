@@ -12,6 +12,8 @@ import { SpeedDialModule } from 'primeng/speeddial';
 import { LayersComponent } from './layers/layers.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { ToastModule } from 'primeng/toast';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 @NgModule({  
   imports: [
     CommonModule,
@@ -23,7 +25,10 @@ import { ToastModule } from 'primeng/toast';
     InputIconModule,
     SpeedDialModule,
     GoogleMapsModule,
-    ToastModule
+    ToastModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AutoCompleteModule
   ],
   declarations: [LayersComponent],
 })

@@ -1,11 +1,38 @@
-<div style="overflow-y: auto;">
-  <p-toast></p-toast>
-  <div class="card" id="map" style="min-height: 50rem;">
-  
-  </div>
-  <div [style.display]="'none'">
-    <p-speedDial  #speedDial [model]="items" direction="down" className="speeddial-left" [buttonStyle]="{ 'border-radius': '50%'}">  
-    </p-speedDial> 
-  </div>
-   
+<div style="overflow-y: auto">
+    <p-toast></p-toast>
+    <div #formulariomap class="card flex justify-content-center">
+        <span class="p-float-label">
+            <p-autoComplete
+                [(ngModel)]="opcionb"
+                [suggestions]="filter"
+                (completeMethod)="filterOptions($event)"
+                field="properties.nombre"
+                inputId="float-label"
+            >
+                <ng-template let-option pTemplate="item">
+                    <div
+                        class="flex align-items-center gap-2"
+                        (click)="poligonoview(true, option)"
+                    >
+                        <div>
+                            {{ option.properties.nombre }}
+                        </div>
+                    </div>
+                </ng-template>
+            </p-autoComplete>
+            <label for="float-label">Buscar Barrio</label>
+        </span>
+    </div>
+    <div class="card" id="map" style="min-height: 50rem"></div>
+
+    <div [style.display]="'none'">
+        <p-speedDial
+            #speedDial
+            [model]="items"
+            direction="down"
+            className="speeddial-left"
+            [buttonStyle]="{ 'border-radius': '50%' }"
+        >
+        </p-speedDial>
+    </div>
 </div>

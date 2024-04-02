@@ -5,7 +5,6 @@
             <div
                 #formulariomap
                 class="card flex justify-content-center"
-                style="background: #ffffffc2"
             >
                 <span class="p-float-label">
                     <p-autoComplete
@@ -38,6 +37,7 @@
                     inputId="float-label"
                     [(ngModel)]="opcionb"
                     (ngModelChange)="poligonoview(true, opcionb)"
+                    [inputStyle]="{'width':isMobil()? responsiveimage():'400px'}"
                 >
                     <ng-template let-option pTemplate="item">
                         <div class="flex align-items-center gap-2">

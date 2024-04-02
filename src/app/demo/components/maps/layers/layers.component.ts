@@ -161,7 +161,7 @@ export class LayersComponent implements OnInit{
         },
         command: () => {
           //this.stopPropagation(event.originalEvent);
-         // this.reloadWifi();             
+          this.reloadWifi();             
         }
       },
       {
@@ -241,7 +241,7 @@ export class LayersComponent implements OnInit{
             speedDial.show();
           });
         }
-      }, 200);
+      }, 1000);
     }
     addtemplateFR() {
       setTimeout(() => { 
@@ -259,7 +259,7 @@ export class LayersComponent implements OnInit{
                 formularioMapDiv.removeChild(formularioMap);
             }
           }
-      }, 200);
+      }, 1000);
     }
     isFormularioMapAdded(): boolean {
     // Verificar si el formulario ya está en el mapa
@@ -325,7 +325,6 @@ export class LayersComponent implements OnInit{
     initFullscreenControl(): void {
       const elementToSendFullscreen = this.mapCustom.getDiv().firstChild as HTMLElement;
       const fullscreenControl = document.querySelector(".fullscreen-control") as HTMLElement;
-      console.log(fullscreenControl);
       this.mapCustom.controls[google.maps.ControlPosition.RIGHT_TOP].push(fullscreenControl);
       fullscreenControl.onclick = () => {
         if (this.isFullscreen(elementToSendFullscreen)) {
@@ -391,26 +390,22 @@ export class LayersComponent implements OnInit{
       
         this.updateItem();
         
-        this.addMarker({lat: this.latitud, lng: this.longitud});
+        
           if(!this.mostrarficha&&this.check.CreateIncidentesDenunciaComponent||!this.token){
-            
-            // Crea un marcador en las coordenadas especificadas
-          // const mark = L.marker([this.latitud, this.longitud], { icon: this.redIcon }).addTo(this.map);
-            // Si deseas añadir un popup al marcador
-            //mark.bindPopup('Ubicación elegida').openPopup();
-          // this.map.flyTo([this.latitud, this.longitud], 14);
+            this.addMarker({lat: this.latitud, lng: this.longitud},'Ubicación');
           }
           this.poligonoposition();
       }
     }
-
+  popupStates: boolean[] = [];
   // Adds a marker to the map and push to the array.
-  addMarker(position: google.maps.LatLng | google.maps.LatLngLiteral, message?: string) {
-    this.deleteMarkers();
+  addMarker(position: google.maps.LatLng | google.maps.LatLngLiteral, tipo: 'Wifi' | 'Poligono' | 'Ubicación',message?: string,){
+    this.deleteMarkers('Ubicación');
     const map = this.mapCustom
     const marker = new google.maps.Marker({
       position,
       map,
+      label:tipo
     });
     // Cerrar el popup actualmente abierto
     if (this.openInfoWindow) {
@@ -419,12 +414,35 @@ export class LayersComponent implements OnInit{
 
     // Abrir un nuevo popup con el nombre del barrio
     const infoWindow = new google.maps.InfoWindow({
+      ariaLabel:tipo,
       content: message?message:'Marcador'
     });
     infoWindow.setPosition(position);
     infoWindow.open(this.mapCustom);
+
     this.openInfoWindow = infoWindow;
     this.markers.push(marker);
+    this.popupStates.push(false);
+    // Añade un listener para el evento 'click' en el marcador
+    marker.addListener('click', () => {
+      //this.mapCustom.setZoom(18);
+      infoWindow.open(this.mapCustom, marker);
+    });
+
+    /*marker.addListener('click', () => {
+      const index = this.markers.indexOf(marker);
+      if (this.popupStates[index]) {
+          this.openInfoWindow.close();
+          this.popupStates[index] = false;
+      } else {
+          const infoWindow = new google.maps.InfoWindow({
+              content: 'Contenido del popup'
+          });
+          infoWindow.open(this.mapCustom, marker);
+          this.openInfoWindow = infoWindow;
+          this.popupStates[index] = true;
+      }
+    });*/
   }
 
   // Sets the map on all markers in the array.
@@ -445,9 +463,9 @@ export class LayersComponent implements OnInit{
   }
 
 // Deletes all markers in the array by removing references to them.
-  deleteMarkers(): void {
+  deleteMarkers(tipo:any): void {
     this.hideMarkers();
-    this.markers = [];
+    this.markers = this.markers.filter(marker => marker.getLabel() !== tipo);
   }
 
   
@@ -546,7 +564,7 @@ export class LayersComponent implements OnInit{
             }
           }
           // Agregar evento de clic al polígono para mostrar el popup
-          this.levantarpopup(polygon, feature,ver);  
+          this.levantarpopup(polygon, feature);  
            // Trasladar el mapa a la posición del polígono si ver es true
           if (ver) {
             const bounds = new google.maps.LatLngBounds();
@@ -562,12 +580,6 @@ export class LayersComponent implements OnInit{
     }
     
   }
-
-
-
-
-
-  
   poligonoposition() {
     let buscarbol = false;
     const puntoUsuario = turf.point([this.longitud,this.latitud]);
@@ -589,10 +601,13 @@ export class LayersComponent implements OnInit{
       this.messageService.add({ severity: 'info', summary: 'Info', detail: 'Tu ubicación no se encuentra dentro de uno de los barrios' });
     }
   }
-  levantarpopup(polygon: any, feature: any, ver?: boolean) {
-    this.canpopup = true;
+  popupsMostrados: { [key: string]: boolean } = {};
+
+  levantarpopup(polygon: any, feature: any) {
+    //this.canpopup = true;
+    const featureId = feature.id;
     polygon.addListener('click', (event:any) => {
-      if(this.canpopup){
+      if(!this.popupsMostrados[featureId]){
           // Cerrar el popup actualmente abierto
           if (this.openInfoWindow) {
             this.openInfoWindow.close();
@@ -615,19 +630,20 @@ export class LayersComponent implements OnInit{
           infoWindow.setPosition(event.latLng);
           infoWindow.open(this.mapCustom);
           this.openInfoWindow = infoWindow;
-          this.canpopup=false;
+          this.popupsMostrados[featureId] = true;
+          //this.canpopup=false;
       } else {
+        this.popupsMostrados={}
         this.latitud = event.latLng.lat();
         this.longitud = event.latLng.lng();
-        this.addMarker({lat: this.latitud, lng: this.longitud});
+        this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono');
       }
       
     });
   }
 
-
   responsiveimage():string{
-    let aux=window.innerWidth-30;
+    let aux=window.innerWidth-120;
     return (aux+'px').toString();
   }
   loadspeed=false;
@@ -655,7 +671,7 @@ export class LayersComponent implements OnInit{
           this.updateItem();
           this.poligonoposition();
           //await this.obtenerDireccion(this.latitud,this.longitud);   
-          this.addMarker({lat: this.latitud, lng: this.longitud},'Tu ubicación Actual');
+          this.addMarker({lat: this.latitud, lng: this.longitud},'Ubicación','Tu ubicación Actual');
           //this.marcarlugar(this.latitud,this.longitud,'Ubicación actual');      
           //await this.buscarfeature(this.latitud,this.longitud);
         },
@@ -681,6 +697,53 @@ export class LayersComponent implements OnInit{
       this.showOptions = false;
     }, 200);
   }
- 
+  arr_wifi:any[]=[];
+ async reloadWifi() {
+    if (this.capaActivaWIFI) {
+        if (this.arr_wifi.length!=0) {
+            this.arr_wifi.forEach(marker => marker.setMap(this.mapCustom));
+        } else {
+            this.arr_wifi = [];
+            await this.getWFSgeojson(this.urlgeoserwifi).then((e) => {
+                const geoJson = e;
+                geoJson.features.forEach((feature: any) => {
+                    const latlng = new google.maps.LatLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
+                    const marker = new google.maps.Marker({
+                        position: latlng,
+                        map: this.mapCustom,
+                        icon: {
+                            url: "./assets/icon/router-fill.svg",
+                            scaledSize: new google.maps.Size(25, 41),
+                            anchor: new google.maps.Point(13, 41),
+                        }
+                    });
+                    const infoWindow = new google.maps.InfoWindow({
+                      content: `
+                      <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px">
+                          <b style="text-align: center">${feature.properties.punto}</b>
+                      </div>`
+                    });
+                    marker.addListener('click', () => {
+                        this.mapCustom.setCenter(latlng);
+                        //this.mapCustom.setZoom(18);
+                        infoWindow.open(this.mapCustom, marker);
+                    });
+
+                    this.arr_wifi.push(marker);
+                });
+            });
+            this.arr_wifi.forEach(marker => marker.setMap(this.mapCustom));
+        }        
+        this.capaActivaWIFI = false;
+        console.log(this.arr_wifi);
+        //this.capaActivaWIFIpop = true;
+    } else {
+        this.arr_wifi.forEach(marker => marker.setMap(null));
+        this.capaActivaWIFI = true;
+    }
+
+    this.updateItem();
+}
+
   
 }

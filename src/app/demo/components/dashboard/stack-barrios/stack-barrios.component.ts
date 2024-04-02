@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { HelperService } from 'src/app/demo/services/helper.service';
@@ -17,11 +17,11 @@ export class StackBarriosComponent implements OnInit {
 
   }
  
-  
+    @Input() modal: any = false;
   basicData:any={};
   basicOptions: any;
   async ngOnInit() {
-  
+    
 
 
     await this.getWFSgeojson(this.urlgeoser);
@@ -68,13 +68,32 @@ export class StackBarriosComponent implements OnInit {
     // Actualizar basicData con los datos ordenados
     this.basicData.datasets = [dataset];
     this.basicData.labels = direccionesOrdenadas;
-    
     // Actualizar la vista
     this.canvas();
   
     this.loading = false;
+    this.helper.setStbarrioComponent(this);
+    
   }
-  
+  encontrarMaximo(): { label: string; valor: number; } {
+
+      let maximoValor = 0;
+      let maximoLabel = '';
+      // Obtener todos los valores de los datasets combinados en un solo array
+    // Obtener la suma de los valores de los datasets
+    console.log("DAtaset",this.basicData.datasets,this.basicData);
+      const sumaValores = this.basicData.datasets[0].data;
+    
+      // Encontrar el valor máximo y su correspondiente label
+      sumaValores.forEach((valor: number, index: number) => {
+          if (valor > maximoValor) {
+              maximoValor = valor;
+              maximoLabel = this.basicData.labels[index];
+          }
+      });
+      
+      return { label: maximoLabel, valor: maximoValor };
+  }
   
 
   async cargar(){
@@ -111,8 +130,10 @@ export class StackBarriosComponent implements OnInit {
     this.basicData.datasets=[dataset];
     this.basicData.labels=axu2;
     this.canvas();
-    this.loading=false;
-}
+    this.loading = false;
+    
+  }
+
 options:any
 canvas(){
     const documentStyle = getComputedStyle(document.documentElement);

@@ -30,8 +30,8 @@ export class CreateService {
     formData.append('descripcion', data.descripcion);
     formData.append('encargado', data.encargado);
     formData.append('direccion_geo', data.direccion_geo);
-    formData.append('estado', data.estado);
-    formData.append('actividad', data.actividad);
+    formData.append('estado', data.estado._id);
+    formData.append('actividad', data.actividad._id);
     formData.append('fecha_evento', data.fecha_evento);
     formData.append('observacion', data.observacion);
 
@@ -63,8 +63,8 @@ export class CreateService {
       Authorization: token,
     });    
     const formData = new FormData();
-    formData.append('categoria', data.categoria);
-    formData.append('subcategoria', data.subcategoria);
+    formData.append('categoria', data.categoria._id);
+    formData.append('subcategoria', data.subcategoria._id);
     formData.append('ciudadano', data.ciudadano);
     formData.append('descripcion', data.descripcion);
     formData.append('direccion_geo',JSON.stringify(data.direccion_geo));

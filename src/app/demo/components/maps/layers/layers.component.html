@@ -1,11 +1,32 @@
+<p-sidebar
+    [(visible)]="sidebarVisible"
+    id="sidebar"
+    (onHide)="sidebarVisible = false"
+    [fullScreen]="isMobil() ? true : false"
+    [position]="!isMobil() ? 'right' : 'null'"
+    styleClass="w-30rem"
+    role="region"
+>
+    <h3 *ngIf="sidebarVisible && opcionb">{{ opcionb.properties.nombre }}</h3>
+    <app-stack-fichas
+        *ngIf="sidebarVisible && opcionb"
+        [filtro]="'direccion_geo'"
+        [valor]="opcionb.properties.nombre"
+        [modal]="true"
+    ></app-stack-fichas>
+    <app-stack-incidentes
+        *ngIf="sidebarVisible && opcionb"
+        [filtro]="'direccion_geo.nombre'"
+        [valor]="opcionb.properties.nombre"
+        [modal]="true"
+    ></app-stack-incidentes>
+</p-sidebar>
+
 <div class="grid p-fluid">
     <div class="col-12">
         <p-toast></p-toast>
         <div [style.display]="'none'">
-            <div
-                #formulariomap
-                class="card flex justify-content-center"
-            >
+            <div #formulariomap class="card flex justify-content-center">
                 <span class="p-float-label">
                     <p-autoComplete
                         [suggestions]="filter"
@@ -37,7 +58,9 @@
                     inputId="float-label"
                     [(ngModel)]="opcionb"
                     (ngModelChange)="poligonoview(true, opcionb)"
-                    [inputStyle]="{'width':isMobil()? responsiveimage():'400px'}"
+                    [inputStyle]="{
+                        width: isMobil() ? responsiveimage() : '400px'
+                    }"
                 >
                     <ng-template let-option pTemplate="item">
                         <div class="flex align-items-center gap-2">
@@ -49,8 +72,18 @@
                 </p-autoComplete>
                 <label for="float-label">Buscar Barrio</label>
             </span>
+            <p-button
+                *ngIf="!this.isMobil() && opcionb"
+                icon="pi pi-chart-bar"
+                (click)="sidebarVisible = true"
+                [attr.aria-controls]="sidebarVisible ? 'sidebar' : null"
+                [attr.aria-expanded]="sidebarVisible ? true : false"
+            >
+            </p-button>
         </div>
+
         <div class="card" id="map" style="min-height: 50rem"></div>
+
         <div [style.display]="'none'">
             <div class="controls fullscreen-control">
                 <button title="Toggle Fullscreen" class="fullscreen-button">
@@ -82,3 +115,23 @@
         </div>
     </div>
 </div>
+<app-index-ficha-sectorial
+    class="container"
+    *ngIf="mostrarficha"
+    id="indexficha"
+    [filtro]="'direccion_geo'"
+    [valor]="opcionb.properties.nombre"
+    [modal]="true"
+    style="z-index: inherit"
+>
+</app-index-ficha-sectorial>
+<app-index-incidentes-denuncia
+    class="container"
+    *ngIf="mostrarincidente"
+    id="indexficha"
+    [filtro]="'direccion_geo.nombre'"
+    [valor]="opcionb.properties.nombre"
+    [modal]="true"
+    style="z-index: inherit"
+>
+</app-index-incidentes-denuncia>

@@ -1,17 +1,16 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { TreeNode } from 'primeng/api';
+import { MessageService, TreeNode } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { HelperService } from 'src/app/services/helper.service';
-import { ListService } from 'src/app/services/list.service';
-import { UpdateService } from 'src/app/services/update.service';
+import { HelperService } from 'src/app/demo/services/helper.service';
+import { ListService } from 'src/app/demo/services/list.service';
+import { UpdateService } from 'src/app/demo/services/update.service';
 import { CreateCategoriaComponent } from '../create-categoria/create-categoria.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateSubcategoriaComponent } from '../sub/create-subcategoria/create-subcategoria.component';
 import { EditCategoriaComponent } from '../edit-categoria/edit-categoria.component';
 import { EditSubcategoriaComponent } from '../sub/edit-subcategoria/edit-subcategoria.component';
-import { DeleteService } from 'src/app/services/delete.service';
-import iziToast from 'izitoast';
+import { DeleteService } from 'src/app/demo/services/delete.service';
 interface Column {
   field: string;
   header: string;
@@ -19,14 +18,15 @@ interface Column {
 @Component({
   selector: 'app-index-categoria',
   templateUrl: './index-categoria.component.html',
-  styleUrl: './index-categoria.component.scss'
+    styleUrl: './index-categoria.component.scss',
+   providers: [MessageService]
 })
 export class IndexCategoriaComponent {
   categorias!: TreeNode[];
   constcategorias=[];
   clonedProducts: { [s: string]: any } = {};
   token = this.helperservice.token();
-  constructor(private listService: ListService,private router: Router, private updateservice:UpdateService, private helperservice:HelperService,private modalService: NgbModal,private deleteService:DeleteService) { }
+  constructor(private listService: ListService,private router: Router, private updateservice:UpdateService, private helperservice:HelperService,private modalService: NgbModal,private deleteService:DeleteService,private messageService: MessageService) { }
   cols!: Column[];
   async ngOnInit() {
     this.loading=true;
@@ -93,318 +93,7 @@ export class IndexCategoriaComponent {
       this.loading = false;
     }
   }
-  getFileSystemNodesData() {
-    return [  
-        {  
-            "data":{  
-                "name":"Applications",
-                "size":"200mb",
-                "type":"Folder"
-            },
-            "children":[  
-                {  
-                    "data":{  
-                        "name":"Angular",
-                        "size":"25mb",
-                        "type":"Folder"
-                    },
-                    "children":[  
-                        {  
-                            "data":{  
-                                "name":"angular.app",
-                                "size":"10mb",
-                                "type":"Application"
-                            }
-                        },
-                        {  
-                            "data":{  
-                                "name":"cli.app",
-                                "size":"10mb",
-                                "type":"Application"
-                            }
-                        },
-                        {  
-                            "data":{  
-                                "name":"mobile.app",
-                                "size":"5mb",
-                                "type":"Application"
-                            }
-                        }
-                    ]
-                },
-                {  
-                    "data":{  
-                        "name":"editor.app",
-                        "size":"25mb",
-                        "type":"Application"
-                    }
-                },
-                {  
-                    "data":{  
-                        "name":"settings.app",
-                        "size":"50mb",
-                        "type":"Application"
-                    }
-                }
-            ]
-        },
-        {  
-            "data":{  
-                "name":"Cloud",
-                "size":"20mb",
-                "type":"Folder"
-            },
-            "children":[  
-                {  
-                    "data":{  
-                        "name":"backup-1.zip",
-                        "size":"10mb",
-                        "type":"Zip"
-                    }
-                },
-                {  
-                    "data":{  
-                        "name":"backup-2.zip",
-                        "size":"10mb",
-                        "type":"Zip"
-                    }
-                }
-            ]
-        },
-        {  
-            "data": {  
-                "name":"Desktop",
-                "size":"150kb",
-                "type":"Folder"
-            },
-            "children":[  
-                {  
-                    "data":{  
-                        "name":"note-meeting.txt",
-                        "size":"50kb",
-                        "type":"Text"
-                    }
-                },
-                {  
-                    "data":{  
-                        "name":"note-todo.txt",
-                        "size":"100kb",
-                        "type":"Text"
-                    }
-                }
-            ]
-        },
-        {  
-            "data":{  
-                "name":"Documents",
-                "size":"75kb",
-                "type":"Folder"
-            },
-            "children":[
-                {  
-                    "data":{  
-                        "name":"Work",
-                        "size":"55kb",
-                        "type":"Folder"
-                    },
-                    "children":[  
-                        {  
-                            "data":{  
-                                "name":"Expenses.doc",
-                                "size":"30kb",
-                                "type":"Document"
-                            }
-                        },
-                        {  
-                            "data":{  
-                                "name":"Resume.doc",
-                                "size":"25kb",
-                                "type":"Resume"
-                            }
-                        }
-                    ]
-                },
-                {  
-                    "data":{  
-                        "name":"Home",
-                        "size":"20kb",
-                        "type":"Folder"
-                    },
-                    "children":[  
-                        {  
-                            "data":{  
-                                "name":"Invoices",
-                                "size":"20kb",
-                                "type":"Text"
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {  
-            "data": {  
-                "name":"Downloads",
-                "size":"25mb",
-                "type":"Folder"
-            },
-            "children":[  
-                {  
-                    "data": {  
-                        "name":"Spanish",
-                        "size":"10mb",
-                        "type":"Folder"
-                    },
-                    "children":[  
-                        {  
-                            "data":{  
-                                "name":"tutorial-a1.txt",
-                                "size":"5mb",
-                                "type":"Text"
-                            }
-                        },
-                        {  
-                            "data":{  
-                                "name":"tutorial-a2.txt",
-                                "size":"5mb",
-                                "type":"Text"
-                            }
-                        }
-                    ]
-                },
-                {  
-                    "data":{  
-                        "name":"Travel",
-                        "size":"15mb",
-                        "type":"Text"
-                    },
-                    "children":[  
-                        {  
-                            "data":{  
-                                "name":"Hotel.pdf",
-                                "size":"10mb",
-                                "type":"PDF"
-                            }
-                        },
-                        {  
-                            "data":{  
-                                "name":"Flight.pdf",
-                                "size":"5mb",
-                                "type":"PDF"
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {  
-            "data": {  
-                "name":"Main",
-                "size":"50mb",
-                "type":"Folder"
-            },
-            "children":[  
-                {  
-                    "data":{  
-                        "name":"bin",
-                        "size":"50kb",
-                        "type":"Link"
-                    }
-                },
-                {  
-                    "data":{  
-                        "name":"etc",
-                        "size":"100kb",
-                        "type":"Link"
-                    }
-                },
-                {  
-                    "data":{  
-                        "name":"var",
-                        "size":"100kb",
-                        "type":"Link"
-                    }
-                }
-            ]
-        },
-        {  
-            "data":{  
-                "name":"Other",
-                "size":"5mb",
-                "type":"Folder"
-            },
-            "children":[  
-                {  
-                    "data":{  
-                        "name":"todo.txt",
-                        "size":"3mb",
-                        "type":"Text"
-                    }
-                },
-                {  
-                    "data":{  
-                        "name":"logo.png",
-                        "size":"2mb",
-                        "type":"Picture"
-                    }
-                }
-            ]
-        },
-        {  
-            "data":{  
-                "name":"Pictures",
-                "size":"150kb",
-                "type":"Folder"
-            },
-            "children":[  
-                {  
-                    "data":{  
-                        "name":"barcelona.jpg",
-                        "size":"90kb",
-                        "type":"Picture"
-                    }
-                },
-                {  
-                    "data":{  
-                        "name":"primeng.png",
-                        "size":"30kb",
-                        "type":"Picture"
-                    }
-                },
-                {  
-                    "data":{  
-                        "name":"prime.jpg",
-                        "size":"30kb",
-                        "type":"Picture"
-                    }
-                }
-            ]
-        },
-        {  
-            "data":{  
-                "name":"Videos",
-                "size":"1500mb",
-                "type":"Folder"
-            },
-            "children":[  
-                {  
-                    "data":{  
-                        "name":"primefaces.mkv",
-                        "size":"1000mb",
-                        "type":"Video"
-                    }
-                },
-                {  
-                    "data":{  
-                        "name":"intro.avi",
-                        "size":"500mb",
-                        "type":"Video"
-                    }
-                }
-            ]
-        }
-    ]
-}
+
     editRow(id:any,cat:boolean){
         console.log(id);
         this.modalService.dismissAll();
@@ -445,32 +134,17 @@ export class IndexCategoriaComponent {
             if (this.iddelete.cat) {
                 this.deleteService.eliminarCategoria(this.token, this.iddelete._id, data).subscribe(response => {
                     console.log(response.data);
-                    iziToast.success({
-                        title: 'Eliminación',
-                        position: 'bottomRight',
-                        message: 'completado'
-                    });
+                    this.messageService.add({severity: 'success', summary: 'Eliminación', detail: 'completado'});
+
                 }, error => {
-                    iziToast.error({
-                        title: '(' + error.status + ')',
-                        position: 'bottomRight',
-                        message: error.error.message,
-                    });
+                    this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
                 });
             } else {
                 this.deleteService.eliminarSubcategoria(this.token, this.iddelete._id, data).subscribe(response => {
                     console.log(response.data);
-                    iziToast.success({
-                        title: 'Eliminación',
-                        position: 'bottomRight',
-                        message: 'completado'
-                    });
+                     this.messageService.add({severity: 'success', summary: 'Eliminación', detail: 'completado'});
                 }, error => {
-                    iziToast.error({
-                        title: '(' + error.status + ')',
-                        position: 'bottomRight',
-                        message: error.error.message,
-                    });
+                   this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
                 });
             }
         }

@@ -1,19 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CreateService } from 'src/app/services/create.service';
+import { CreateService } from 'src/app/demo/services/create.service';
 import { Router } from '@angular/router';
-import iziToast from 'izitoast';
-import { HelperService } from 'src/app/services/helper.service';
+import { HelperService } from 'src/app/demo/services/helper.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-create-estado-actividad-proyecto',
   templateUrl: './create-estado-actividad-proyecto.component.html',
-  styleUrl: './create-estado-actividad-proyecto.component.scss'
+  styleUrl: './create-estado-actividad-proyecto.component.scss',
+  providers: [MessageService]
 })
 export class CreateEstadoActividadProyectoComponent implements OnInit {
   estadoIncidenteForm: FormGroup<any>;
   model: boolean=true;
-  constructor(private fb: FormBuilder,private createService:CreateService,private router: Router,private helper:HelperService){
+  constructor(private fb: FormBuilder,private createService:CreateService,private router: Router,private helper:HelperService,private messageService: MessageService,){
     this.estadoIncidenteForm = this.fb.group({
       nombre: ['', Validators.required]
     });
@@ -44,10 +45,7 @@ export class CreateEstadoActividadProyectoComponent implements OnInit {
       this.createService.registrarEstadoActividadProyecto(this.token,this.estadoIncidenteForm.value).subscribe(response=>{
         console.log(response);
         if(response.data){
-          iziToast.success({
-            title:'Listo',
-            message:'Ingresado correctamente'
-          });
+          this.messageService.add({severity: 'success', summary: 'Ingresado', detail: 'Correcto'});
           setTimeout(() => {
             this.router.navigate(["/home"]);
           }, 2000);

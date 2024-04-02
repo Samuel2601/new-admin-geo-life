@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { ListService } from 'src/app/services/list.service';
+import { ListService } from 'src/app/demo/services/list.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UpdateService } from 'src/app/services/update.service';
-import { HelperService } from 'src/app/services/helper.service';
+import { UpdateService } from 'src/app/demo/services/update.service';
+import { HelperService } from 'src/app/demo/services/helper.service';
 @Component({
   selector: 'app-index-subcategoria',
   templateUrl: './index-subcategoria.component.html',

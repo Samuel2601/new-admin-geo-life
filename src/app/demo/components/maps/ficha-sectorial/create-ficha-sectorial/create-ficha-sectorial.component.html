@@ -1,176 +1,231 @@
 <ng-container *ngIf="model">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 class="modal-title">Nueva Ficha Sectorial</h2>
-      <button type="button" class="btn-close" aria-label="Close" (click)="DimissModal()"></button>
-    </div>
+    <p-toast></p-toast>
 
-     <div class="modal-body">
-      <p-toast></p-toast>
-      <ng-container  *ngIf=" load_form" >
-        <form [formGroup]="fichaSectorialForm" (ngSubmit)="registrarFichaSectorial()">
-          <div class="mb-3">
-            <label for="direccion_geo" class="form-label">Dirección Geográfica</label>
-            <input type="text" class="form-control" id="direccion_geo" name="direccion_geo" formControlName="direccion_geo" required readonly>
-          </div>
-          <div class="mb-3">
-            <label for="actividad" class="form-label">Actividad de Proyecto</label>
-            <select class="form-select" id="actividad" name="actividad" formControlName="actividad" required>
-              <option *ngFor="let actividad of actividadesProyecto" [value]="actividad._id">{{ actividad.nombre }}</option>
-            </select>
-          </div> 
-          <div class="mb-3">
-            <label for="fecha_evento" class="form-label">Fecha del Evento: </label>
-            <p-calendar  id="fecha_evento" name="fecha_evento" formControlName="fecha_evento" [showTime]="true" [showSeconds]="true" [showIcon]="true" inputId="buttondisplay"></p-calendar>
-          </div>
-  
-          <div class="mb-3">
-            <label for="descripcion" class="form-label">Descripción</label>
-            <input type="text" class="form-control" id="descripcion" name="descripcion" formControlName="descripcion" required>
-          </div>
-          
-          <div class="mb-3">
-            <label for="estado" class="form-label">Estado de Actividad de Proyecto</label>
-            <select class="form-select" id="estado" name="estado" formControlName="estado" required>
-              <option *ngFor="let estado of estadosActividadProyecto" [value]="estado._id">{{ estado.nombre }}</option>
-            </select>
-          </div>         
-          
-          <div class="mb-3">
-            <label for="observacion" class="form-label">Observación</label>
-            <textarea class="form-control" id="observacion" name="observacion" formControlName="observacion"></textarea>
-          </div>
-          
-          <div class="mb-3"  *ngIf="!upload">
-            <p-button label="Subir de Nuevo" severity="warning" (onClick)="upload=true;imagenesSeleccionadas=[];selectedFiles=[]" icon="pi pi-trash"></p-button>
-          </div>
-          <div class="mb-3" *ngIf="(imagenesSeleccionadas.length<=3||upload)&&isMobil()">
-            <label for="formFileMultiple" class="form-label">Añade fotos</label>
-            <button class="btn btn-primary" type="button" (click)="tomarFotoYEnviar($event)"><i class="bi bi-camera-fill"></i></button>
-          </div>
-
-          <div class="mb-3">
-  
-            <p-toast></p-toast>
-           
-            <p-fileUpload *ngIf="(imagenesSeleccionadas.length<=3||upload) && !isMobil()" 
-            chooseLabel="Seleccionar" uploadLabel="Cargar" cancelLabel="Cancelar" 
-            name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" (onUpload)="onFilesSelected($event)" [multiple]="true" accept="image/*"  [maxFileSize]="5000000" [fileLimit]="3"
-            invalidFileLimitMessageSummary="Se superó el número máximo de archivos">
-                <ng-template pTemplate="content">
-                    <ul *ngIf="selectedFiles.length">
-                        <li *ngFor="let itemfile of selectedFiles;let i = index"> {{ itemfile.name }} - {{ itemfile.size }} bytes</li>
-                    </ul>
-                  
-                </ng-template>
-            </p-fileUpload>                 
-          </div> 
-  
-          <div class="mb-3"  *ngIf="load_carrusel">
-  
-            <p-galleria [value]="imagenesSeleccionadas" [showIndicators]="true" [showThumbnails]="false" [showIndicatorsOnItem]="true" indicatorsPosition="left" [responsiveOptions]="responsiveOptions" [containerStyle]="{ 'max-width': '100%', 'margin-top': '2em' }">
-              <ng-template pTemplate="item" let-item>
-                <p-image [src]="item.itemImageSrc" alt="Image" [width]="!isMobil() ? '470' : responsiveimage()" height="320"></p-image>
-              </ng-template>
-              <ng-template pTemplate="indicator" let-index>
-                  <span style="color: #e9ecef; cursor: pointer">
-                      {{ index + 1 }}
-                  </span>
-              </ng-template>
-          </p-galleria>
-  
-          </div>
-      
-  
-          <button type="submit" class="btn btn-primary">
-            <i class="bi bi-save"></i> Guardar
-          </button>
-        </form>
-      </ng-container>
-      
-      <ng-container  *ngIf="!load_form" >
-        <div class="text-center">
-          <div class="spinner-border text-success" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>            
-      </ng-container>
-    </div>
-  </div>   
-</ng-container>
-<ng-container *ngIf="!model">
-    <div class="wrapper">
-        <div class="sidebar" data-color="danger" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
-          <app-sidebar></app-sidebar>
-          <div class="sidebar-background" style="background-image: url(./assets/img/sidebar-4.jpg)"></div>
-        </div>
-        <div class="main-panel">
-          <app-navbar></app-navbar>
-      
-          <div class="main-content">
-            <div class="container-fluid">
-              <div class="card">
-                <div class="card-header">
-                  <div class="row">
-                    <div class="col-auto">
-                      <h2>Nueva Ficha Sectorial</h2>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <p-toast></p-toast>
-                  <ng-container *ngIf="!load_form">
-                    <form [formGroup]="fichaSectorialForm" (ngSubmit)="registrarFichaSectorial()">
-                      <div class="mb-3">
-                        <label for="descripcion" class="form-label">Descripción</label>
-                        <input type="text" class="form-control" id="descripcion" name="descripcion" formControlName="descripcion" required>
-                      </div>
-                      <div class="mb-3">
-                        <label for="direccion_geo" class="form-label">Dirección Geográfica</label>
-                        <input type="text" class="form-control" id="direccion_geo" name="direccion_geo" formControlName="direccion_geo" required>
-                      </div>
-                      <div class="mb-3">
-                        <label for="estado" class="form-label">Estado de Actividad de Proyecto</label>
-                        <select class="form-select" id="estado" name="estado" formControlName="estado" required>
-                          <option *ngFor="let estado of estadosActividadProyecto" [value]="estado._id">{{ estado.nombre }}</option>
-                        </select>
-                      </div>                  
-                      <div class="mb-3">
-                        <label for="actividad" class="form-label">Actividad de Proyecto</label>
-                        <select class="form-select" id="actividad" name="actividad" formControlName="actividad" required>
-                          <option *ngFor="let actividad of actividadesProyecto" [value]="actividad._id">{{ actividad.nombre }}</option>
-                        </select>
-                      </div>                  
-                      <div class="mb-3">
-                        <label for="fecha_evento" class="form-label">Fecha del Evento</label>
-                        <input type="date" class="form-control" id="fecha_evento" name="fecha_evento" formControlName="fecha_evento">
-                      </div>
-                      <div class="mb-3">
-                        <label for="observacion" class="form-label">Observación</label>
-                        <textarea class="form-control" id="observacion" name="observacion" formControlName="observacion"></textarea>
-                      </div>
-                      <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-save"></i> Guardar
-                      </button>
-                    </form>
-                  </ng-container>
-               
-
-                  <ng-container  *ngIf="!load_form" >
-                    <div class="text-center">
-                      <div class="spinner-border text-success" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                      </div>
-                    </div>            
-                  </ng-container>
-                </div>
-              </div>
+    <p-dialog
+        header="Header"
+        [(visible)]="mostrar"
+        [modal]="true"
+        [style]="{ width: '50rem' }"
+        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    >
+        <ng-template pTemplate="header">
+            <div
+                class="inline-flex align-items-center justify-content-center gap-2"
+            >
+                <h2 class="modal-title">Nueva Ficha Sectorial</h2>
             </div>
-          </div> 
-          
-          <div>
-            <app-footer></app-footer>
-          </div>
+        </ng-template>
+        <div class="card">
+            <ng-container *ngIf="load_form">
+                <form
+                    [formGroup]="fichaSectorialForm"
+                    (ngSubmit)="registrarFichaSectorial()"
+                >
+                    <div class="grid">
+                        <div class="mb-3">
+                            <h4 for="direccion_geo" class="form-label">
+                                Dirección Geográfica:
+                                {{
+                                    fichaSectorialForm.get("direccion_geo")
+                                        .value
+                                }}
+                            </h4>
+                        </div>
+                    </div>
+
+                    <div class="grid">
+                        <div class="p-col-12 p-md-6">
+                            <div class="mb-3">
+                                <h4 for="actividad" class="form-label">
+                                    Actividad de Proyecto
+                                </h4>
+                                <p-dropdown
+                                    id="actividad"
+                                    name="actividad"
+                                    formControlName="actividad"
+                                    [options]="actividadesProyecto"
+                                    optionLabel="nombre"
+                                    [showClear]="true"
+                                ></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="p-col-12 p-md-6">
+                            <div class="mb-3">
+                                <h4 for="fecha_evento" class="form-label">
+                                    Fecha del Evento:
+                                </h4>
+                                <p-calendar
+                                    id="fecha_evento"
+                                    name="fecha_evento"
+                                    formControlName="fecha_evento"
+                                    [showTime]="true"
+                                    [showSeconds]="true"
+                                    [showIcon]="true"
+                                    inputId="buttondisplay"
+                                ></p-calendar>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="p-col-12 p-md-6">
+                            <div class="mb-3">
+                                <h4 for="estado" class="form-label">
+                                    Estado de Actividad de Proyecto
+                                </h4>
+                                <p-dropdown
+                                    id="estado"
+                                    name="estado"
+                                    formControlName="estado"
+                                    [options]="estadosActividadProyecto"
+                                    optionLabel="nombre"
+                                    [showClear]="true"
+                                ></p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="p-col-12 p-md-6">
+                            <div class="mb-3">
+                                <h4 for="descripcion" class="form-label">
+                                    Descripción
+                                </h4>
+                                <textarea
+                                    rows="5"
+                                    cols="30"
+                                    pInputTextarea
+                                    id="descripcion"
+                                    name="descripcion"
+                                    formControlName="descripcion"
+                                    required
+                                ></textarea>
+                            </div>
+                        </div>
+                        <div class="p-col-12 p-md-6">
+                            <div class="mb-3">
+                                <h4 for="observacion" class="form-label">
+                                    Observación
+                                </h4>
+                                <textarea
+                                    rows="5"
+                                    cols="30"
+                                    pInputTextarea
+                                    class="form-control"
+                                    id="observacion"
+                                    name="observacion"
+                                    formControlName="observacion"
+                                ></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3" *ngIf="!upload">
+                        <p-button
+                            label="Subir de Nuevo"
+                            severity="warning"
+                            (onClick)="
+                                upload = true;
+                                imagenesSeleccionadas = [];
+                                selectedFiles = []
+                            "
+                            icon="pi pi-trash"
+                        ></p-button>
+                    </div>
+                    <div
+                        class="mb-3"
+                        *ngIf="
+                            (imagenesSeleccionadas.length <= 3 || upload) &&
+                            isMobil()
+                        "
+                    >
+                        <h4 for="formFileMultiple" class="form-label">
+                            Añade fotos
+                        </h4>
+                        <button
+                            class="btn btn-primary"
+                            type="button"
+                            (click)="tomarFotoYEnviar($event)"
+                        >
+                            <i class="bi bi-camera-fill"></i>
+                        </button>
+                    </div>
+                    <div class="mb-3">
+                        <p-toast></p-toast>
+                        <p-fileUpload
+                            *ngIf="
+                                (imagenesSeleccionadas.length <= 3 || upload) &&
+                                !isMobil()
+                            "
+                            chooseLabel="Seleccionar"
+                            uploadLabel="Cargar"
+                            cancelLabel="Cancelar"
+                            name="demo[]"
+                            url="https://www.primefaces.org/cdn/api/upload.php"
+                            (onUpload)="onFilesSelected($event)"
+                            [multiple]="true"
+                            accept="image/*"
+                            [maxFileSize]="5000000"
+                            [fileLimit]="3"
+                            invalidFileLimitMessageSummary="Se superó el número máximo de archivos"
+                        >
+                            <ng-template pTemplate="content">
+                                <ul *ngIf="selectedFiles.length">
+                                    <li
+                                        *ngFor="
+                                            let itemfile of selectedFiles;
+                                            let i = index
+                                        "
+                                    >
+                                        {{ itemfile.name }} -
+                                        {{ itemfile.size }} bytes
+                                    </li>
+                                </ul>
+                            </ng-template>
+                        </p-fileUpload>
+                    </div>
+                    <div class="mb-3" *ngIf="load_carrusel">
+                        <p-galleria
+                            [value]="imagenesSeleccionadas"
+                            [showIndicators]="true"
+                            [showThumbnails]="false"
+                            [showIndicatorsOnItem]="true"
+                            indicatorsPosition="left"
+                            [responsiveOptions]="responsiveOptions"
+                            [containerStyle]="{
+                                'max-width': '100%',
+                                'margin-top': '2em'
+                            }"
+                        >
+                            <ng-template pTemplate="item" let-item>
+                                <p-image
+                                    [src]="item.itemImageSrc"
+                                    alt="Image"
+                                    [width]="
+                                        !isMobil() ? '470' : responsiveimage()
+                                    "
+                                    height="320"
+                                ></p-image>
+                            </ng-template>
+                            <ng-template pTemplate="indicator" let-index>
+                                <span style="color: #e9ecef; cursor: pointer">{{
+                                    index + 1
+                                }}</span>
+                            </ng-template>
+                        </p-galleria>
+                    </div>
+                    <p-button
+                        label="Guardar"
+                        icon="bi bi-save"
+                        (click)="registrarFichaSectorial()"
+                    ></p-button>
+                </form>
+            </ng-container>
+            <ng-container *ngIf="!load_form">
+                <div class="text-center">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+            </ng-container>
         </div>
-      </div>
+    </p-dialog>
 </ng-container>

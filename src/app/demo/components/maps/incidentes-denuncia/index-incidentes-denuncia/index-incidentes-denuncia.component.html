@@ -12,10 +12,15 @@
         <div
             class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2"
         >
-            <span class="font-bold white-space-nowrap mb-2"
-                >Listado de Ficha Técnica:</span
-            >
-            <span class="font-bold white-space-nowrap mb-2">{{ valor }}</span>
+            <div class="grid">
+                <span class="p-col-6 p-md-6 font-bold white-space-nowrap mb-2"
+                    >Listado de Ficha Incidentes:</span
+                >
+                <span
+                    class="p-col-6 p-md-6 font-bold white-space-nowrap mb-2"
+                    >{{ valor }}</span
+                >
+            </div>
             <div
                 class="d-flex flex-row align-items-center justify-content-center flex-wrap"
             >
@@ -69,7 +74,7 @@
                                 'contains'
                             )
                         "
-                        placeholder="Search keyword"
+                        placeholder="Buscar"
                     />
                 </span>
             </div>
@@ -258,6 +263,354 @@
     </p-table>
 </p-dialog>
 
+<div class="card" *ngIf="modal == false">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-lg-auto">
+                <h2>Listado de incidente/Denuncia</h2>
+            </div>
+            <div class="col-sm-auto">
+                <a
+                    class="btn btn-primary float-end"
+                    *ngIf="check.IndexEstadoIncidenteComponent"
+                    (click)="llamarmodal()"
+                    ><i class="bi bi-substack"></i
+                ></a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <p-table
+            styleClass="p-datatable-striped"
+            #dt1
+            [value]="incidentesDenuncias"
+            dataKey="_id"
+            [rows]="10"
+            [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            [loading]="load_lista"
+            [paginator]="true"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+            [globalFilterFields]="[
+                'direccion_geo.nombre',
+                'categoria.nombre',
+                'subcategoria.nombre',
+                'ciudadano.nombres',
+                'estado.nombre'
+            ]"
+            [sortMode]="'multiple'"
+        >
+            <ng-template pTemplate="caption">
+                <div class="flex">
+                    <button
+                        pButton
+                        label=""
+                        class="p-button-outlined"
+                        icon="pi pi-filter-slash"
+                        (click)="clear(dt1)"
+                    ></button>
+                    <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <input
+                            pInputText
+                            type="text"
+                            (input)="
+                                dt1.filterGlobal(
+                                    $any($event.target).value,
+                                    'contains'
+                                )
+                            "
+                            placeholder="Search keyword"
+                        />
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 3rem">#</th>
+                    <th style="min-width: 10rem">
+                        <div class="flex align-items-center">
+                            Dirección
+                            <p-columnFilter
+                                type="text"
+                                field="direccion_geo.nombre"
+                                display="menu"
+                            ></p-columnFilter>
+                            <th
+                                pSortableColumn="direccion_geo.nombre"
+                                style="width: 20%"
+                            >
+                                <p-sortIcon
+                                    field="direccion_geo.nombre"
+                                ></p-sortIcon>
+                            </th>
+                        </div>
+                    </th>
+                    <th style="min-width: 10rem">
+                        <div class="flex align-items-center">
+                            Categoría
+                            <p-columnFilter
+                                type="text"
+                                field="categoria.nombre"
+                                display="menu"
+                            ></p-columnFilter>
+                            <th
+                                pSortableColumn="categoria.nombre"
+                                style="width: 20%"
+                            >
+                                <p-sortIcon
+                                    field="categoria.nombre"
+                                ></p-sortIcon>
+                            </th>
+                        </div>
+                    </th>
+                    <th style="min-width: 10rem">
+                        <div class="flex align-items-center">
+                            Subcategoría
+                            <p-columnFilter
+                                type="text"
+                                field="subcategoria.nombre"
+                                display="menu"
+                            ></p-columnFilter>
+                            <th
+                                pSortableColumn="subcategoria.nombre"
+                                style="width: 20%"
+                            >
+                                <p-sortIcon
+                                    field="subcategoria.nombre"
+                                ></p-sortIcon>
+                            </th>
+                        </div>
+                    </th>
+                    <th style="min-width: 15rem">
+                        <div class="flex align-items-center">
+                            Ciudadano
+                            <p-columnFilter
+                                type="text"
+                                field="ciudadano.nombres"
+                                display="menu"
+                            ></p-columnFilter>
+                            <th
+                                pSortableColumn="ciudadano.nombre"
+                                style="width: 20%"
+                            >
+                                <p-sortIcon
+                                    field="ciudadano.nombre"
+                                ></p-sortIcon>
+                            </th>
+                        </div>
+                    </th>
+                    <th style="min-width: 7rem">
+                        <div class="flex align-items-center">
+                            Estado
+                            <p-columnFilter
+                                type="text"
+                                field="estado.nombre"
+                                display="menu"
+                            ></p-columnFilter>
+                            <th
+                                pSortableColumn="estado.nombre"
+                                style="width: 20%"
+                            >
+                                <p-sortIcon field="estado.nombre"></p-sortIcon>
+                            </th>
+                        </div>
+                    </th>
+                    <th style="min-width: 10rem" *ngIf="!isMobil()">
+                        <div class="flex align-items-center">
+                            Descripción
+                            <p-columnFilter
+                                type="text"
+                                field="descripcion"
+                                display="menu"
+                            ></p-columnFilter>
+                            <th
+                                pSortableColumn="descripcion"
+                                style="width: 20%"
+                            >
+                                <p-sortIcon field="descripcion"></p-sortIcon>
+                            </th>
+                        </div>
+                    </th>
+                    <th style="min-width: 10rem" *ngIf="!isMobil()">
+                        <div class="flex align-items-center">
+                            Encargado
+                            <p-columnFilter
+                                type="text"
+                                field="encargado.nombre"
+                                display="menu"
+                            ></p-columnFilter>
+                            <th
+                                pSortableColumn="encargado.nombre"
+                                style="width: 20%"
+                            >
+                                <p-sortIcon
+                                    field="encargado.nombre"
+                                ></p-sortIcon>
+                            </th>
+                        </div>
+                    </th>
+                    <th style="min-width: 10rem" *ngIf="!isMobil()">
+                        <div class="flex align-items-center">
+                            Respuesta
+                            <p-columnFilter
+                                type="text"
+                                field="respuesta"
+                                display="menu"
+                            ></p-columnFilter>
+                            <th pSortableColumn="respuesta" style="width: 20%">
+                                <p-sortIcon field="respuesta"></p-sortIcon>
+                            </th>
+                        </div>
+                    </th>
+                    <th style="min-width: 10rem">
+                        <div class="flex align-items-center">Foto</div>
+                    </th>
+                    <!-- Agrega las columnas restantes según tu necesidad -->
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-incidente let-rowIndex="rowIndex">
+                <tr>
+                    <td (click)="isMobil() && openModal(modalContent)">
+                        {{ rowIndex + 1 }}
+                    </td>
+                    <td>
+                        {{ incidente.direccion_geo.nombre }}
+                    </td>
+                    <td>
+                        {{ incidente.categoria.nombre }}
+                    </td>
+                    <td>
+                        {{ incidente.subcategoria.nombre }}
+                    </td>
+                    <td>
+                        {{ incidente.ciudadano.nombres }}
+                    </td>
+                    <td>
+                        <p-tag
+                            [value]="incidente.estado.nombre"
+                            [severity]="getSeverity(incidente.estado.nombre)"
+                        ></p-tag>
+                    </td>
+                    <td *ngIf="!isMobil()">{{ incidente.descripcion }}</td>
+                    <td *ngIf="!isMobil()">
+                        <ng-container *ngIf="incidente.encargado">{{
+                            incidente.encargado.nombres
+                        }}</ng-container>
+                        <ng-container *ngIf="!incidente.encargado"
+                            >--</ng-container
+                        >
+                    </td>
+                    <td *ngIf="!isMobil()">
+                        <ng-container *ngIf="incidente.respuesta">{{
+                            incidente.respuesta
+                        }}</ng-container>
+                        <ng-container *ngIf="!incidente.respuesta"
+                            >--</ng-container
+                        >
+                    </td>
+                    <td (click)="stopPropagation($event); displayBasic = true">
+                        <img
+                            [src]="
+                                url +
+                                'helper/obtener_portada/' +
+                                incidente.foto[0]
+                            "
+                            class="navbar-brand-img mx-auto"
+                            style="max-height: 4rem !important; cursor: pointer"
+                            alt="..."
+                            (click)="
+                                openModalimagen(incidente.foto);
+                                this.displayBasic = true
+                            "
+                        />
+                    </td>
+                    <!-- Agrega las columnas restantes según tu necesidad -->
+                    <!-- Agrega el modal al final del componente -->
+                    <ng-template #modalContent let-modal>
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="modal-basic-title">
+                                    Detalles de la Ficha Sectorial
+                                </h4>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    aria-label="Close"
+                                    (click)="modal.dismiss()"
+                                ></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Contenido del modal -->
+                                <p>
+                                    <strong>Categoría:</strong>
+                                    {{ incidente.categoria.nombre }}
+                                </p>
+                                <p>
+                                    <strong>Subcategoría:</strong>
+                                    {{ incidente.subcategoria.nombre }}
+                                </p>
+                                <p
+                                    (click)="
+                                        irMap(incidente.direccion_geo, $event)
+                                    "
+                                >
+                                    <strong>Dirección Geográfica:</strong>
+                                    {{ incidente.direccion_geo.nombre }}
+                                </p>
+                                <p>
+                                    <strong>Estado:</strong>
+                                    <span
+                                        [ngClass]="
+                                            'badge text-bg-' +
+                                            checkstatus[incidente.estado.orden]
+                                        "
+                                        >{{ incidente.estado.nombre }}</span
+                                    >
+                                </p>
+                                <p>
+                                    <strong>Ciudadano:</strong>
+                                    {{ incidente.ciudadano.nombres }}
+                                </p>
+                                <p>
+                                    <strong>Descripción:</strong>
+                                    {{ incidente.descripcion }}
+                                </p>
+                                <p>
+                                    <strong>Respuesta:</strong
+                                    ><ng-container
+                                        *ngIf="incidente.respuesta"
+                                        >{{ incidente.respuesta }}</ng-container
+                                    >
+                                    <ng-container *ngIf="!incidente.respuesta"
+                                        >--</ng-container
+                                    >
+                                </p>
+                                <p>
+                                    <strong>Encargado:</strong
+                                    ><ng-container
+                                        *ngIf="incidente.encargado"
+                                        >{{
+                                            incidente.encargado.nombres
+                                        }}</ng-container
+                                    >
+                                    <ng-container *ngIf="!incidente.encargado"
+                                        >--</ng-container
+                                    >
+                                </p>
+                            </div>
+                        </div>
+                    </ng-template>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5">No se encontraron incidentes.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
 <p-galleria
     [value]="imagenModal"
     [(visible)]="displayBasic"

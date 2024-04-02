@@ -79,9 +79,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
     }
   }
   set vermodal(val: boolean){  
-    this.helperservice.deshabilitarMapa();
-    setTimeout(() => {      
-    }, 500);
+    this.helperservice.cerrarincidente();
   }
 
   onTouchStart(event: TouchEvent) {

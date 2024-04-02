@@ -1,24 +1,31 @@
-<table *ngIf="labelsmobil.length>0">
+<h4 *ngIf="!valor">Listado de Barrios por Categoría de Incidencia</h4>
+<table *ngIf="labelsmobil.length > 0">
     <thead>
         <th>N°</th>
         <th>Categoria</th>
     </thead>
     <tbody>
-        <tr *ngFor="let item of labelsmobil,let i = index">
-            <td>{{i+1}}:</td>
-            <td> {{item}} ({{basicData.datasets[0].data[i]}})</td>
+        <tr *ngFor="let item of labelsmobil; let i = index">
+            <td>{{ i + 1 }}:</td>
+            <td>
+                {{ item }}
+                :
+                {{ sumaValores[i] }}
+            </td>
         </tr>
     </tbody>
 </table>
-<p-scrollPanel  styleClass="custombar1">
+
+<p-scrollPanel styleClass="custombar1">
     <div class="card" [style.width]="isMobil() ? '80%' : ''">
-        <p-chart type="bar" [data]="basicData" [options]="options" ></p-chart>
+        <p-chart type="bar" [data]="basicData" [options]="options"></p-chart>
     </div>
 </p-scrollPanel>
 
-<p-scrollPanel  styleClass="custombar2" *ngIf="!modal">
+<p-scrollPanel styleClass="custombar2" *ngIf="!modal">
     <div class="card">
-        <p-table styleClass="p-datatable-striped"
+        <p-table
+            styleClass="p-datatable-striped"
             #dt1
             [value]="constIncidente"
             dataKey="_id"
@@ -28,64 +35,137 @@
             [loading]="loading"
             [paginator]="true"
             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
-            [globalFilterFields]="['direccion_geo.nombre', 'categoria.nombre', 'subcategoria.nombre', 'ciudadano.nombres', 'estado.nombre']"
+            [globalFilterFields]="[
+                'direccion_geo.nombre',
+                'categoria.nombre',
+                'subcategoria.nombre',
+                'ciudadano.nombres',
+                'estado.nombre'
+            ]"
             [sortMode]="'multiple'"
-            >
+        >
             <ng-template pTemplate="caption">
                 <div class="flex">
-                    <button pButton label="" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+                    <button
+                        pButton
+                        label=""
+                        class="p-button-outlined"
+                        icon="pi pi-filter-slash"
+                        (click)="clear(dt1)"
+                    ></button>
                     <span class="p-input-icon-left ml-auto">
                         <i class="pi pi-search"></i>
-                        <input pInputText type="text" (input)="dt1.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
-                        
+                        <input
+                            pInputText
+                            type="text"
+                            (input)="
+                                dt1.filterGlobal(
+                                    $any($event.target).value,
+                                    'contains'
+                                )
+                            "
+                            placeholder="Search keyword"
+                        />
                     </span>
-                    
                 </div>
             </ng-template>
             <ng-template pTemplate="header">
                 <tr>
-                    <th style="width:3rem">#</th>
-                    <th style="min-width:15rem">
+                    <th style="width: 3rem">#</th>
+                    <th style="min-width: 15rem">
                         <div class="flex align-items-center">
                             Dirección
-                            <p-columnFilter type="text" field="direccion_geo.nombre" display="menu"></p-columnFilter>
-                            <th pSortableColumn="direccion_geo.nombre" style="width:20%"><p-sortIcon field="direccion_geo.nombre"></p-sortIcon></th>
+                            <p-columnFilter
+                                type="text"
+                                field="direccion_geo.nombre"
+                                display="menu"
+                            ></p-columnFilter>
+                            <th
+                                pSortableColumn="direccion_geo.nombre"
+                                style="width: 20%"
+                            >
+                                <p-sortIcon
+                                    field="direccion_geo.nombre"
+                                ></p-sortIcon>
+                            </th>
                         </div>
                     </th>
-                    <th style="min-width:15rem">
+                    <th style="min-width: 15rem">
                         <div class="flex align-items-center">
                             Categoría
-                            <p-columnFilter type="text" field="categoria.nombre" display="menu"></p-columnFilter>
-                            <th pSortableColumn="categoria.nombre" style="width:20%"><p-sortIcon field="categoria.nombre"></p-sortIcon></th>
+                            <p-columnFilter
+                                type="text"
+                                field="categoria.nombre"
+                                display="menu"
+                            ></p-columnFilter>
+                            <th
+                                pSortableColumn="categoria.nombre"
+                                style="width: 20%"
+                            >
+                                <p-sortIcon
+                                    field="categoria.nombre"
+                                ></p-sortIcon>
+                            </th>
                         </div>
                     </th>
-                    <th style="min-width:15rem">
+                    <th style="min-width: 15rem">
                         <div class="flex align-items-center">
                             Subcategoría
-                            <p-columnFilter type="text" field="subcategoria.nombre" display="menu"></p-columnFilter>
-                            <th pSortableColumn="subcategoria.nombre" style="width:20%"><p-sortIcon field="subcategoria.nombre"></p-sortIcon></th>
+                            <p-columnFilter
+                                type="text"
+                                field="subcategoria.nombre"
+                                display="menu"
+                            ></p-columnFilter>
+                            <th
+                                pSortableColumn="subcategoria.nombre"
+                                style="width: 20%"
+                            >
+                                <p-sortIcon
+                                    field="subcategoria.nombre"
+                                ></p-sortIcon>
+                            </th>
                         </div>
                     </th>
-                    <th style="min-width:15rem">
+                    <th style="min-width: 15rem">
                         <div class="flex align-items-center">
                             Ciudadano
-                            <p-columnFilter type="text" field="ciudadano.nombres" display="menu"></p-columnFilter>
-                            <th pSortableColumn="ciudadano.nombre" style="width:20%"><p-sortIcon field="ciudadano.nombre"></p-sortIcon></th>
+                            <p-columnFilter
+                                type="text"
+                                field="ciudadano.nombres"
+                                display="menu"
+                            ></p-columnFilter>
+                            <th
+                                pSortableColumn="ciudadano.nombre"
+                                style="width: 20%"
+                            >
+                                <p-sortIcon
+                                    field="ciudadano.nombre"
+                                ></p-sortIcon>
+                            </th>
                         </div>
                     </th>
-                    <th style="min-width:10rem">
+                    <th style="min-width: 10rem">
                         <div class="flex align-items-center">
                             Estado
-                            <p-columnFilter type="text" field="estado.nombre" display="menu"></p-columnFilter>
-                            <th pSortableColumn="estado.nombre" style="width:20%"><p-sortIcon field="estado.nombre"></p-sortIcon></th>
+                            <p-columnFilter
+                                type="text"
+                                field="estado.nombre"
+                                display="menu"
+                            ></p-columnFilter>
+                            <th
+                                pSortableColumn="estado.nombre"
+                                style="width: 20%"
+                            >
+                                <p-sortIcon field="estado.nombre"></p-sortIcon>
+                            </th>
                         </div>
                     </th>
                     <!-- Agrega las columnas restantes según tu necesidad -->
                 </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-incidente  let-rowIndex="rowIndex">
+            <ng-template pTemplate="body" let-incidente let-rowIndex="rowIndex">
                 <tr>
-                    <td>{{rowIndex+1}}</td>  
+                    <td>{{ rowIndex + 1 }}</td>
                     <td>
                         {{ incidente.direccion_geo.nombre }}
                     </td>
@@ -99,7 +179,10 @@
                         {{ incidente.ciudadano.nombres }}
                     </td>
                     <td>
-                        <p-tag [value]="incidente.estado.nombre" [severity]="getSeverity(incidente.estado.nombre)"></p-tag>
+                        <p-tag
+                            [value]="incidente.estado.nombre"
+                            [severity]="getSeverity(incidente.estado.nombre)"
+                        ></p-tag>
                     </td>
                     <!-- Agrega las columnas restantes según tu necesidad -->
                 </tr>
@@ -111,6 +194,4 @@
             </ng-template>
         </p-table>
     </div>
-
-    
 </p-scrollPanel>

@@ -2,8 +2,8 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateActividadProyectoComponent } from '../create-actividad-proyecto/create-actividad-proyecto.component';
-import { ListService } from 'src/app/services/list.service';
-import { HelperService } from 'src/app/services/helper.service';
+import { ListService } from 'src/app/demo/services/list.service';
+import { HelperService } from 'src/app/demo/services/helper.service';
 @Component({
   selector: 'app-index-actividad-proyecto',
   templateUrl: './index-actividad-proyecto.component.html',

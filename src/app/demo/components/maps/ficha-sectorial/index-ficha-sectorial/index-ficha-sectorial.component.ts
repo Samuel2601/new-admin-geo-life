@@ -1,18 +1,19 @@
 import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ListService } from 'src/app/services/list.service';
+import { ListService } from 'src/app/demo/services/list.service';
 import { IndexEstadoActividadProyectoComponent } from '../estado-actividad-proyecto/index-estado-actividad-proyecto/index-estado-actividad-proyecto.component';
 import { IndexActividadProyectoComponent } from '../actividad-proyecto/index-actividad-proyecto/index-actividad-proyecto.component';
-import { HelperService } from 'src/app/services/helper.service';
-import iziToast from 'izitoast';
+import { HelperService } from 'src/app/demo/services/helper.service';
 import { Router } from '@angular/router';
-import { GLOBAL } from 'src/app/services/GLOBAL';
+import { GLOBAL } from 'src/app/demo/services/GLOBAL';
 import { Capacitor } from '@capacitor/core';
 import { Table } from 'primeng/table';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-index-ficha-sectorial',
   templateUrl: './index-ficha-sectorial.component.html',
-  styleUrl: './index-ficha-sectorial.component.scss'
+  styleUrl: './index-ficha-sectorial.component.scss',
+  providers: [MessageService]
 })
 export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   public url = GLOBAL.url;
@@ -47,11 +48,10 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   deshabilitarMapaDesdeIndexFichaSectorial(event: MouseEvent) {
     this.stopPropagation(event);
     this.helperservice.deshabilitarMapa();
-    this.helperservice.enablehandliClick();
   }
   load_lista=true;
   fichasectorial:any=[];
-  constructor(private router: Router,private listService:ListService,private modalService: NgbModal,private helperservice:HelperService){
+  constructor(private router: Router,private listService:ListService,private modalService: NgbModal,private helperservice:HelperService,private messageService: MessageService){
   
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -68,11 +68,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
     }
   }
   set vermodal(val: boolean){  
-    this.helperservice.disablehandliClick();    
-    this.helperservice.deshabilitarMapa();
-    setTimeout(() => {      
-    this.helperservice.enablehandliClick();
-    }, 500);
+    this.helperservice.cerrarficha();
   }
   check:any={};
   async ngOnInit(): Promise<void> {
@@ -97,7 +93,8 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   openModal(content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', windowClass: 'custom-modal' });
   }
-  
+  visible: boolean = false;
+  option: any;
   token = this.helperservice.token();
   listarficha(){
     if(!this.modal)this.helperservice.llamarspinner();
@@ -118,11 +115,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
         if(error.error.message=='InvalidToken'){
           this.router.navigate(["/inicio"]);
         }else{
-          iziToast.error({
-            title: ('('+error.status+')').toString(),
-            position: 'bottomRight',
-            message: error.error.message,
-          });
+           this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
         }  
       });
     }else{
@@ -136,11 +129,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
         if(error.error.message=='InvalidToken'){
             this.router.navigate(["/inicio"]);
           }else{
-            iziToast.error({
-              title: ('('+error.status+')').toString(),
-              position: 'bottomRight',
-              message: error.error.message,
-            });
+            this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
           }
       });
     }
@@ -227,10 +216,16 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
 
   openModalimagen(url: any) {
     this.imagenModal = url;
+     console.log('imagenModal',this.imagenModal);
     this.imagenAMostrar = this.imagenModal[0];
-    const modalRef = this.modalService.open(this.modalContent, { size: 'lg' });
+    //const modalRef = this.modalService.open(this.modalContent, { size: 'lg' });
   }
-  
+  @Output() imagenModalChange: EventEmitter<any> = new EventEmitter<any>();
+  updateImagenModal(value: any) {
+    this.imagenModal = value;
+    console.log('imagenModal',this.imagenModal);
+    this.imagenModalChange.emit(this.imagenModal);
+  }
   openimagen(url: any) {
     this.imagenModal = url;
     this.imagenAMostrar = this.imagenModal[0];

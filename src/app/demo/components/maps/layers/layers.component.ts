@@ -4,7 +4,7 @@ import * as L from 'leaflet';
 import { Location, LocationStrategy, PathLocationStrategy, PopStateEvent } from '@angular/common';
 import * as turf from '@turf/turf';
 import { GLOBAL } from 'src/app/demo/services/GLOBAL';
-import { Subscription, debounceTime } from 'rxjs';
+import { Subscription, debounceTime, map } from 'rxjs';
 import { Capacitor, Plugins } from '@capacitor/core';
 const { Geolocation } = Plugins;
 import { MenuItem, MenuItemCommandEvent, MessageService} from 'primeng/api';
@@ -21,6 +21,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Loader } from '@googlemaps/js-api-loader';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import { DashboardModule } from '../../dashboard/dashboard.module';
+import { CreateFichaSectorialComponent } from '../ficha-sectorial/create-ficha-sectorial/create-ficha-sectorial.component';
+import { CreateIncidentesDenunciaComponent } from '../incidentes-denuncia/create-incidentes-denuncia/create-incidentes-denuncia.component';
 interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
   id?: string;
 }
@@ -119,6 +122,18 @@ export class LayersComponent implements OnInit{
   }
 
   async ngOnInit() {
+     try {
+      this.check.IndexFichaSectorialComponent = this.helperService.decryptData('IndexFichaSectorialComponent') ||false; //await this.helperService.checkPermiso('IndexFichaSectorialComponent') || false;
+      this.check.IndexIncidentesDenunciaComponent = this.helperService.decryptData('IndexIncidentesDenunciaComponent')|| false;
+      this.check.CreateIncidentesDenunciaComponent = this.helperService.decryptData('CreateIncidentesDenunciaComponent') || false;
+      this.check.CreateFichaSectorialComponent = this.helperService.decryptData('CreateFichaSectorialComponent') || false;
+      this.check.CreateDireccionGeoComponent = this.helperService.decryptData('CreateDireccionGeoComponent')|| false;
+      this.check.DashboardComponent = this.helperService.decryptData('DashboardComponent')|| false;
+    } catch (error) {
+      
+      console.error('Error al verificar permisos:', error);
+      this.router.navigate(['/error']);
+    }
     this.updateItem();
     await this.getWFSgeojson(this.urlgeoser);
     this.helperService.setMapComponent(this); 
@@ -171,10 +186,10 @@ export class LayersComponent implements OnInit{
             tooltipPosition:'right',
            // hideDelay:1000,
           },
-         // visible: (this.opcionb||false)  && this.check.IndexFichaSectorialComponent,
+          visible: (this.opcionb||false)  && this.check.IndexFichaSectorialComponent,
           command: () => {
             //this.stopPropagation(event.originalEvent);
-           // this.fichaTecnica();             
+            this.fichaTecnica();             
           }
       },
       {
@@ -184,10 +199,10 @@ export class LayersComponent implements OnInit{
             tooltipPosition:'right',
            // hideDelay:1000,
           },
-         // visible:(this.opcionb||false) &&this.check.CreateFichaSectorialComponent,
+          visible:(this.opcionb||false) &&this.check.CreateFichaSectorialComponent,
           command: () => {
             //this.stopPropagation(event.originalEvent);
-            //this.nuevoFicha(); 
+            this.nuevoFicha(); 
           }
       },
       {
@@ -197,10 +212,10 @@ export class LayersComponent implements OnInit{
             tooltipPosition:'right',
             //hideDelay:1000,
           },
-        //  visible:(this.opcionb||false) &&this.check.IndexIncidentesDenunciaComponent,
+         visible:(this.opcionb||false) &&this.check.IndexIncidentesDenunciaComponent,
           command: () => {
             //this.stopPropagation(event.originalEvent);
-           // this.incidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
+            this.incidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
         
           }
       },
@@ -211,10 +226,10 @@ export class LayersComponent implements OnInit{
           tooltipPosition:'right',
           //hideDelay:1000,
         },
-        //visible:(this.opcionb||false)&&this.check.CreateIncidentesDenunciaComponent && !(!this.latitud && !this.longitud),
+        visible:(this.opcionb||false)&&this.check.CreateIncidentesDenunciaComponent && !(!this.latitud && !this.longitud),
         command: () => {
           //this.stopPropagation(event.originalEvent);
-          //this.nuevoIncidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
+          this.nuevoIncidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
   
         }
       }
@@ -471,7 +486,6 @@ export class LayersComponent implements OnInit{
   
   
   actualizarpoligono() {
-    console.log(this.arr_polygon);
     this.arr_polygon.forEach((polygon: google.maps.Polygon) => {
         polygon.setOptions({
             fillColor: this.fillColor,
@@ -573,7 +587,8 @@ export class LayersComponent implements OnInit{
                 bounds.extend(latlng);
               });
             });
-            this.mapCustom.fitBounds(bounds);
+            this.mapCustom.panToBounds(bounds);
+           // this.mapCustom.fitBounds(bounds); //zoom automatico
           }
         }        
       }
@@ -591,6 +606,10 @@ export class LayersComponent implements OnInit{
             
             console.log('El usuario está dentro del polígono:', feature);
             console.log(feature);
+            this.opcionb = feature;
+            if (this.check.DashboardComponent&&this.isMobil()) {
+              this.sidebarVisible = true;
+            }
             this.poligonoview(true, feature);
             buscarbol = true;
             break;            
@@ -606,6 +625,11 @@ export class LayersComponent implements OnInit{
   levantarpopup(polygon: any, feature: any) {
     //this.canpopup = true;
     const featureId = feature.id;
+    if (this.check.DashboardComponent&&this.isMobil()) {
+      this.sidebarVisible = true;
+    }
+    this.opcionb = feature;
+
     polygon.addListener('click', (event:any) => {
       if(!this.popupsMostrados[featureId]){
           // Cerrar el popup actualmente abierto
@@ -744,6 +768,57 @@ export class LayersComponent implements OnInit{
 
     this.updateItem();
 }
-
+  fichaTecnica() {
+   this.controlFullScreem();
+    this.mostrarficha=false;
+    this.mostrarincidente=false;
+    if(this.opcionb){
+      this.mostrarficha=true;
+    } 
+    if(this.mapCustom){      
+      //this.map.off('click', this.onClickHandlerMap);
+      if(this.mostrarficha){
+      } 
+    }   
+  }
+  incidente() {
+     this.controlFullScreem();
+    this.mostrarficha=false;
+    this.mostrarincidente=false;
+    if(this.opcionb){
+      this.mostrarincidente=true;
+    } 
+    if(this.mapCustom){
+      if(this.mostrarincidente){
+      }
+    }
+  }
   
+  nuevoFicha() {
+   this.controlFullScreem();
+    const data = this.opcionb; // JSON que quieres enviar
+    this.modalService.dismissAll();
+    const modalRef = this.modalService.open(CreateFichaSectorialComponent, { centered: true });
+    modalRef.componentInstance.data = data; 
+  }
+  async nuevoIncidente() {
+    this.controlFullScreem();
+    const data = this.opcionb; // JSON que quieres enviar
+    this.modalService.dismissAll();    
+    const modalRef = this.modalService.open(CreateIncidentesDenunciaComponent, { centered: true });
+    modalRef.componentInstance.data = data; 
+    modalRef.componentInstance.direccion={latitud:this.latitud,longitud:this.longitud}
+    
+  }
+  controlFullScreem() {
+    const elementToSendFullscreen = this.mapCustom.getDiv().firstChild as HTMLElement;
+    if (this.isFullscreen(elementToSendFullscreen)) {
+      this.mapCustom.setOptions( {mapTypeControl:true} );
+          this.load_fullscreen = false;
+          this.addtemplateSP();
+          this.addtemplateFR();
+          this.exitFullscreen();
+    }
+  
+  }
 }

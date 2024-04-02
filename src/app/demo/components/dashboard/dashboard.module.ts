@@ -16,6 +16,7 @@ import { StackbarriofichaComponent } from './stackbarrioficha/stackbarrioficha.c
 import { SplitterModule } from 'primeng/splitter';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { TagModule } from 'primeng/tag';
+import { InputTextModule } from 'primeng/inputtext';
 @NgModule({
     imports: [
         CommonModule,
@@ -29,13 +30,18 @@ import { TagModule } from 'primeng/tag';
         DashboardsRoutingModule,
         SplitterModule,
         ScrollPanelModule,
-        TagModule
+        TagModule,
+        InputTextModule
     ],
     declarations: [DashboardComponent,
         StackBarriosComponent,
         StackFichasComponent,
         StackIncidentesComponent,
         StackbarriofichaComponent
+    ],
+    exports: [
+        StackFichasComponent,
+        StackIncidentesComponent
     ]
 })
 export class DashboardModule { }

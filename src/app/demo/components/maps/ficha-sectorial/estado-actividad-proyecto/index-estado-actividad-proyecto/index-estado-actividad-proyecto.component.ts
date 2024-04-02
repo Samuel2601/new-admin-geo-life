@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateEstadoActividadProyectoComponent } from '../create-estado-actividad-proyecto/create-estado-actividad-proyecto.component';
 import { Router } from '@angular/router';
-import { ListService } from 'src/app/services/list.service';
-import { HelperService } from 'src/app/services/helper.service';
+import { ListService } from 'src/app/demo/services/list.service';
+import { HelperService } from 'src/app/demo/services/helper.service';
 
 @Component({
   selector: 'app-index-estado-actividad-proyecto',

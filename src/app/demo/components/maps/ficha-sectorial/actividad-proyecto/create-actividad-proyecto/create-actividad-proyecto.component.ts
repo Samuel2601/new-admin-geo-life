@@ -1,19 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import iziToast from 'izitoast';
-import { CreateService } from 'src/app/services/create.service';
-import { HelperService } from 'src/app/services/helper.service';
+import { MessageService } from 'primeng/api';
+import { CreateService } from 'src/app/demo/services/create.service';
+import { HelperService } from 'src/app/demo/services/helper.service';
 
 @Component({
   selector: 'app-create-actividad-proyecto',
   templateUrl: './create-actividad-proyecto.component.html',
-  styleUrl: './create-actividad-proyecto.component.scss'
+  styleUrl: './create-actividad-proyecto.component.scss',
+  providers: [MessageService]
 })
-export class CreateActividadProyectoComponent {
+export class CreateActividadProyectoComponent implements OnInit{
   estadoIncidenteForm: FormGroup<any>;
   model: boolean=true;
-  constructor(private fb: FormBuilder,private createService:CreateService,private router: Router,private helper:HelperService){
+  constructor(private fb: FormBuilder,private createService:CreateService,private router: Router,private helper:HelperService,private messageService: MessageService,){
     this.estadoIncidenteForm = this.fb.group({
       nombre: ['', Validators.required]
     });
@@ -37,10 +38,7 @@ export class CreateActividadProyectoComponent {
         this.createService.registrarTipoActividadProyecto(this.token, this.estadoIncidenteForm.value).subscribe(response => {
             console.log(response);
             if(response.data){
-              iziToast.success({
-                title:'Listo',
-                message:'Ingresado correctamente'
-              });
+              this.messageService.add({severity: 'success', summary: 'Listo', detail: 'Ingresado correctamente'});
               setTimeout(() => {
                 this.router.navigate(["/home"]);
               }, 2000);

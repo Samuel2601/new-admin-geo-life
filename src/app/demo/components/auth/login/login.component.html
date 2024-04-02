@@ -28,18 +28,20 @@
                 style="border-radius: 53px"
             >
                 <div class="text-center mb-5">
-                    <img
-                        [src]="
-                            fotoUsuario
-                                ? url +
-                                  'helper/obtener_portada_avatar/' +
-                                  fotoUsuario
-                                : 'assets/demo/images/login/avatar.png'
-                        "
-                        alt="Image"
-                        height="50"
-                        class="mb-3"
-                    />
+                    <p-avatar size="large" shape="circle">
+                        <img
+                            [src]="
+                                fotoUsuario
+                                    ? url +
+                                      'helper/obtener_portada_avatar/' +
+                                      fotoUsuario
+                                    : 'assets/demo/images/login/avatar.png'
+                            "
+                            alt="Image"
+                            height="50"
+                            class="mb-3"
+                        />
+                    </p-avatar>
                     <div class="text-900 text-3xl font-medium mb-3">
                         Binvenido
                         <span *ngIf="nombreUsuario"

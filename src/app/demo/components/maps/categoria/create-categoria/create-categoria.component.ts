@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import iziToast from 'izitoast';
-import { CreateService } from 'src/app/services/create.service';
-import { HelperService } from 'src/app/services/helper.service';
+import { MessageService } from 'primeng/api';
+import { CreateService } from 'src/app/demo/services/create.service';
+import { HelperService } from 'src/app/demo/services/helper.service';
 @Component({
   selector: 'app-create-categoria',
   templateUrl: './create-categoria.component.html',
-  styleUrl: './create-categoria.component.scss'
+  styleUrl: './create-categoria.component.scss',
+  providers: [MessageService]
 })
 export class CreateCategoriaComponent implements OnInit{
   categoriaForm: FormGroup;
-  constructor(private fb: FormBuilder,private createService:CreateService,private router: Router,private helper:HelperService){
+  constructor(private fb: FormBuilder,private createService:CreateService,private router: Router,private helper:HelperService,private messageService: MessageService,){
     this.categoriaForm = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required]
@@ -33,10 +34,7 @@ export class CreateCategoriaComponent implements OnInit{
       this.createService.registrarCategoria(token, data).subscribe(response => {
         console.log(response);
         if(response.data){
-          iziToast.success({
-            title:'Listo',
-            message:'Ingresado correctamente'
-          });
+          this.messageService.add({severity: 'success', summary: 'Listo', detail: 'Ingresado correctamente'});
           setTimeout(() => {
             this.router.navigate(["/categorias"]);
           }, 2000);

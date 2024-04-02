@@ -42,6 +42,9 @@ export class LoginComponent implements OnInit{
     }
 
   async ngOnInit() {
+    if (this.helper.token()) {
+      this.router.navigate(["/maps"]);
+    }
     this.setHeight();
     window.addEventListener('resize', () => {
       this.setHeight();

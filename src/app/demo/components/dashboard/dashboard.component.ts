@@ -1,14 +1,15 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Product } from '../../api/product';
 import { ProductService } from '../../service/product.service';
 import { Subscription, debounceTime } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import { HelperService } from '../../services/helper.service';
 
 @Component({
     templateUrl: './dashboard.component.html',
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     items!: MenuItem[];
 
@@ -20,14 +21,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     subscription!: Subscription;
 
-    constructor(private productService: ProductService, public layoutService: LayoutService) {
+    constructor(private productService: ProductService, public layoutService: LayoutService,private helper:HelperService) {
         this.subscription = this.layoutService.configUpdate$
         .pipe(debounceTime(25))
         .subscribe((config) => {
             this.initChart();
         });
     }
+    notifica: any = { maxbarrio: undefined,maxficha:undefined,maxfichabarrio:undefined,maxincidente:undefined };
 
+    ngAfterViewInit(): void {
+        this.notifica.maxbarrio = this.helper.maximoStbarrioComponent();
+        this.notifica.maxficha = this.helper.maximoStFichaComponent();
+        this.notifica.maxfichabarrio = this.helper.maximoStbarrioficha();
+        this.notifica.maxincidente = this.helper.maximoStincidenteComponent();
+        console.log('Notificacion',this.notifica);
+    }
+
+    private subscriptions: Subscription[] = [];
     ngOnInit() {
         this.initChart();
         this.productService.getProductsSmall().then(data => this.products = data);
@@ -36,7 +47,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
             { label: 'Add New', icon: 'pi pi-fw pi-plus' },
             { label: 'Remove', icon: 'pi pi-fw pi-minus' }
         ];
+        this.subscriptions.push(this.helper.stbarrioComponent.subscribe(() => this.actualizarMaximos()));
+        this.subscriptions.push(this.helper.stfichaComponent.subscribe(() => this.actualizarMaximos()));
+        this.subscriptions.push(this.helper.stincidenteComponent.subscribe(() => this.actualizarMaximos()));
+        this.subscriptions.push(this.helper.stbarrioficha.subscribe(() => this.actualizarMaximos()));
+  
     }
+
+  private actualizarMaximos(): void {
+    this.notifica.maxbarrio = this.helper.maximoStbarrioComponent();
+    this.notifica.maxficha = this.helper.maximoStFichaComponent();
+    this.notifica.maxfichabarrio = this.helper.maximoStbarrioficha();
+    this.notifica.maxincidente = this.helper.maximoStincidenteComponent();
+    console.log('Notificacion', this.notifica);
+  }
 
     initChart() {
         const documentStyle = getComputedStyle(document.documentElement);
@@ -101,5 +125,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (this.subscription) {
             this.subscription.unsubscribe();
         }
+          this.subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 }

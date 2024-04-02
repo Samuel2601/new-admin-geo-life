@@ -1,4 +1,5 @@
-<p-splitter [style]="{ height: '100px' }" styleClass="mb-5">
+<h4>Listado de Incidentes o denuncias por Barrio</h4>
+<p-splitter [style]="{ height: '100px' }" styleClass="mb-5" *ngIf="!modal">
     <ng-template pTemplate>
         <div class="col flex align-items-center justify-content-center">
             <p-button
@@ -25,11 +26,15 @@
 </p-splitter>
 <p-scrollPanel styleClass="custombar1">
     <div class="card">
-        <p-chart type="bar" [data]="basicData" [options]="options"></p-chart>
+        <p-chart
+            [type]="!modal ? 'bar' : 'pie'"
+            [data]="basicData"
+            [options]="options"
+        ></p-chart>
     </div>
 </p-scrollPanel>
 
-<p-scrollPanel styleClass="custombar2">
+<p-scrollPanel styleClass="custombar2" *ngIf="!modal">
     <div class="card">
         <p-table
             styleClass="p-datatable-striped"
@@ -71,7 +76,7 @@
                                     'contains'
                                 )
                             "
-                            placeholder="Search keyword"
+                            placeholder="Buscar"
                         />
                     </span>
                 </div>

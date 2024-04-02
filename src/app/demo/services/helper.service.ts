@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, Subject, catchError, map, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, catchError, map, throwError } from 'rxjs';
 import { AdminService } from './admin.service';
 import { FilterService } from './filter.service';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
@@ -8,6 +8,10 @@ import { SpinnerComponent } from 'src/app/layout/spinner.component';
 import { LayersComponent } from '../components/maps/layers/layers.component';
 import * as CryptoJS from 'crypto-js';
 import { Capacitor } from '@capacitor/core';
+import { StackBarriosComponent } from '../components/dashboard/stack-barrios/stack-barrios.component';
+import { StackFichasComponent } from '../components/dashboard/stack-fichas/stack-fichas.component';
+import { StackIncidentesComponent } from '../components/dashboard/stack-incidentes/stack-incidentes.component';
+import { StackbarriofichaComponent } from '../components/dashboard/stackbarrioficha/stackbarrioficha.component';
 @Injectable({
   providedIn: 'root'
 })
@@ -154,7 +158,52 @@ export class HelperService {
   setMapComponent(mapComponent: LayersComponent) {
     this.mapComponent = mapComponent;
   }
+  cerrarincidente() {
+    if (this.mapComponent) {
+      this.mapComponent.mostrarincidente = false;
+    }
+  }
+  cerrarficha() {
+    if (this.mapComponent) {
+      this.mapComponent.mostrarficha = false;
+    }
+  }
+
+  stbarrioComponent: BehaviorSubject<StackBarriosComponent | null> = new BehaviorSubject(null);
+   stfichaComponent: BehaviorSubject<StackFichasComponent | null> = new BehaviorSubject(null);
+   stincidenteComponent: BehaviorSubject<StackIncidentesComponent | null> = new BehaviorSubject(null);
+   stbarrioficha: BehaviorSubject<StackbarriofichaComponent | null> = new BehaviorSubject(null);
 
 
+  setStbarrioComponent(stbarrioComponent: StackBarriosComponent) {
+    this.stbarrioComponent.next(stbarrioComponent);
+  }
 
+  setStfichaComponent(stfichaComponent: StackFichasComponent) {
+    this.stfichaComponent.next(stfichaComponent);
+  }
+
+  setStincidenteComponent(stincidenteComponent: StackIncidentesComponent) {
+    this.stincidenteComponent.next(stincidenteComponent);
+  }
+
+  setStbarrioficha(stbarrioficha: StackbarriofichaComponent) {
+    this.stbarrioficha.next(stbarrioficha);
+  }
+
+   maximoStbarrioComponent() {
+    return this.stbarrioComponent.value ? this.stbarrioComponent.value.encontrarMaximo() : undefined;
+  }
+
+  maximoStFichaComponent() {
+    return this.stfichaComponent.value ? this.stfichaComponent.value.encontrarMaximo() : undefined;
+  }
+
+  maximoStincidenteComponent() {
+    return this.stincidenteComponent.value ? this.stincidenteComponent.value.encontrarMaximo() : undefined;
+  }
+
+  maximoStbarrioficha() {
+    return this.stbarrioficha.value ? this.stbarrioficha.value.encontrarMaximo() : undefined;
+  }
 }

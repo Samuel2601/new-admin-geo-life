@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import iziToast from 'izitoast';
-import { FilterService } from 'src/app/services/filter.service';
-import { HelperService } from 'src/app/services/helper.service';
-import { ListService } from 'src/app/services/list.service';
-import { UpdateService } from 'src/app/services/update.service';
+import { MessageService } from 'primeng/api';
+import { FilterService } from 'src/app/demo/services/filter.service';
+import { HelperService } from 'src/app/demo/services/helper.service';
+import { ListService } from 'src/app/demo/services/list.service';
+import { UpdateService } from 'src/app/demo/services/update.service';
 
 interface AutoCompleteCompleteEvent {
   originalEvent: Event;
@@ -14,13 +14,14 @@ interface AutoCompleteCompleteEvent {
 @Component({
   selector: 'app-edit-subcategoria',
   templateUrl: './edit-subcategoria.component.html',
-  styleUrl: './edit-subcategoria.component.scss'
+  styleUrl: './edit-subcategoria.component.scss',
+   providers: [MessageService]
 })
 export class EditSubcategoriaComponent implements OnInit {
   id:any;
   subcategoria:any;
   token=this.helper.token();
-  constructor(private obtener:FilterService,private update:UpdateService,private helper:HelperService,private modalService: NgbModal, private listar:ListService){
+  constructor(private obtener:FilterService,private update:UpdateService,private helper:HelperService,private modalService: NgbModal, private listar:ListService,private messageService: MessageService,){
 
   }
   async ngOnInit() {
@@ -79,21 +80,13 @@ export class EditSubcategoriaComponent implements OnInit {
       if(response.data){
         let data=response.data;
         console.log(data);
-        iziToast.success({
-          title:'Actualizado',
-          position:'bottomRight',
-          message:data.nombre
-        });
+         this.messageService.add({severity: 'success', summary: 'Ingreso', detail: 'Bienvenido'});
         setTimeout(() => {          
           this.modalService.dismissAll();
         }, 1000);
       }
     },error=>{
-      iziToast.error({
-        title:'ERROR',
-        position:'bottomRight',
-        message:error.error.message
-      });
+     this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
     });
   }
 }

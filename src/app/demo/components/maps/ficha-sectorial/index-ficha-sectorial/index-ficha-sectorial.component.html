@@ -5,334 +5,656 @@
 (touchmove)="onTouchMove($event)" 
 (touchend)="onTouchEnd()"
 -->
-<p-dialog header="Header" [modal]="false" [(visible)]="vermodal" [position]="'bottom'"  [style]="{width: '50vw'}" [maximizable]="true" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
-  <ng-template pTemplate="header">
-      <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2">
-          <span class="font-bold white-space-nowrap mb-2">Listado de Ficha Técnica:</span> <span class="font-bold white-space-nowrap mb-2">{{valor}}</span> 
-          <div class="d-flex flex-row align-items-center justify-content-center flex-wrap"
-              *ngIf="check.IndexActividadProyectoComponent || check.IndexEstadoActividadProyectoComponent">
-              <a class="btn btn-primary me-2 mb-2" *ngIf="check.IndexActividadProyectoComponent" (click)="llamarmodal2()">
-                  <i class="bi bi-substack"></i>Actividades</a>
-              <a class="btn btn-primary me-2 mb-2" *ngIf="check.IndexEstadoActividadProyectoComponent" (click)="llamarmodal()">
-                  <i class="bi bi-stack"></i>Estados</a>                    
-          </div>          
-      </div>
-  </ng-template>
-  <p-table styleClass="p-datatable-striped"
-  #dt1
-  [value]="fichasectorial"
-  dataKey="_id"
-  [rows]="10"
-  [showCurrentPageReport]="true"
-  [rowsPerPageOptions]="[10, 25, 50]"
-  [loading]="load_lista"
-  [paginator]="true"
-  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
-  [globalFilterFields]="['direccion_geo', 'actividad.nombre', 'encargado.nombres', 'estado.nombre']"
-  [sortMode]="'multiple'"
-  >
-  <ng-template pTemplate="caption">
-      <div class="flex">
-          <button pButton label="" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
-          <span class="p-input-icon-left ml-auto">
-              <i class="pi pi-search"></i>
-              <input pInputText type="text" (input)="dt1.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
-          </span>
-          
-      </div>
-  </ng-template>
-  <ng-template pTemplate="header">
-      <tr>
-          <th style="min-width:15rem" *ngIf="!modal">
-              <div class="flex align-items-center">
-                  Dirección
-                  <p-columnFilter type="text" field="direccion_geo" display="menu"></p-columnFilter>
-                  <th pSortableColumn="direccion_geo" style="width:20%"><p-sortIcon field="direccion_geo"></p-sortIcon></th>
-              </div>
-          </th>
-          <th style="min-width:15rem">
-              <div class="flex align-items-center">
-                  Actividad
-                  <p-columnFilter type="text" field="actividad.nombre" display="menu"></p-columnFilter>
-                  <th pSortableColumn="actividad.nombre" style="width:20%"><p-sortIcon field="actividad.nombre"></p-sortIcon></th>
-              </div>
-          </th>
-          <th style="min-width:15rem">
-              <div class="flex align-items-center">
-                  Fecha del evento
-                  <p-columnFilter type="text" field="fecha_evento" display="menu"></p-columnFilter>
-                  <th pSortableColumn="fecha_evento" style="width:20%"><p-sortIcon field="fecha_evento"></p-sortIcon></th>
-              </div>
-          </th>
-          <th style="min-width:15rem">
-              <div class="flex align-items-center">
-                  Encargado
-                  <p-columnFilter type="text" field="encargado.nombres" display="menu"></p-columnFilter>
-                  <th pSortableColumn="encargado.nombre" style="width:20%"><p-sortIcon field="encargado.nombre"></p-sortIcon></th>
-              </div>
-          </th>
-          <th style="min-width:10rem">
-              <div class="flex align-items-center">
-                  Estado
-                  <p-columnFilter type="text" field="estado.nombre" display="menu"></p-columnFilter>
-                  <th pSortableColumn="estado.nombre" style="width:20%"><p-sortIcon field="estado.nombre"></p-sortIcon></th>
-              </div>
-          </th>
-          <!-- Agrega las columnas restantes según tu necesidad -->
-      </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-incidente>
-      <tr (click)="openModal(modalContent)">
-          <td *ngIf="!modal">
-              {{ incidente.direccion_geo }}
-          </td>
-          <td (click)="incidente.foto && incidente.foto.length>0&&stopPropagation($event)">
-            <span *ngIf="incidente.foto && incidente.foto.length>0" class="pi pi-image" style="vertical-align: middle"  (click)="openModalimagen(incidente.foto);"></span>
-              {{ incidente.actividad.nombre }}
-              
-          </td>
-          <td>
-              {{ incidente.fecha_evento | date:'medium':'es' }}
-          </td>
-          <td>
-              {{ incidente.encargado.nombres }}
-          </td>
-          <td>
-            
-              <p-tag [value]="incidente.estado.nombre" [severity]="getSeverity(incidente.estado.nombre)" > </p-tag>
-          </td>
-            <!-- Agrega el modal al final del componente -->
-          <ng-template #modalContent let-modal>
-            <div class="modal-content" >
-              <div class="modal-header">
-                <h4 class="modal-title" id="modal-basic-title">Detalles de la Ficha Sectorial</h4>
-                <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
-              </div>
-              <div class="modal-body">
-                <!-- Contenido del modal -->
-                <p><strong>Actividad:</strong> {{ incidente.actividad.nombre }}</p>
-                <p><strong>Descripción:</strong> {{ incidente.descripcion }}</p>
-                <p><strong>Encargado:</strong> {{ incidente.encargado.nombres }}</p>
-                <p><strong>Estado:</strong> {{ incidente.estado.nombre }}</p>
-                <p><strong>Fecha Evento:</strong> {{ incidente.fecha_evento | date:'dd/MM/yyyy' }}</p>
-                <p><strong>Observación:</strong> {{ incidente.observacion }}</p>
-                <p *ngIf="incidente.foto && incidente.foto.length>0 "> <button class="btn btn-primary" (click)="openModalimagen(incidente.foto)" >Fotos</button></p>
-              </div>
+<p-toast></p-toast>
+<p-dialog
+    header="Header"
+    [modal]="false"
+    [(visible)]="vermodal"
+    [position]="'bottom'"
+    [style]="{ width: '50vw', 'z-index': 10000 }"
+    [maximizable]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+>
+    <ng-template pTemplate="header">
+        <div
+            class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2"
+        >
+            <div class="grid">
+                <span class="p-col-6 p-md-6 font-bold white-space-nowrap mb-2"
+                    >Listado de Ficha Técnica:</span
+                >
+                <span
+                    class="p-col-6 p-md-6 font-bold white-space-nowrap mb-2"
+                    >{{ valor }}</span
+                >
             </div>
-          </ng-template>
-      </tr>
-  </ng-template>
-  <ng-template pTemplate="emptymessage">
-      <tr>
-          <td colspan="5">No se encontraron incidentes.</td>
-      </tr>
-  </ng-template>
-</p-table>
+
+            <div
+                class="d-flex flex-row align-items-center justify-content-center flex-wrap"
+                [ngClass]="{
+                    'd-none':
+                        check.IndexActividadProyectoComponent &&
+                        check.IndexEstadoActividadProyectoComponent,
+                    'd-sm-flex':
+                        !check.IndexActividadProyectoComponent ||
+                        !check.IndexEstadoActividadProyectoComponent
+                }"
+            >
+                <a
+                    class="btn btn-primary me-2 mb-2"
+                    *ngIf="check.IndexActividadProyectoComponent"
+                    (click)="llamarmodal2()"
+                >
+                    <i class="bi bi-substack"></i> Actividades
+                </a>
+                <a
+                    class="btn btn-primary me-2 mb-2"
+                    *ngIf="check.IndexEstadoActividadProyectoComponent"
+                    (click)="llamarmodal()"
+                >
+                    <i class="bi bi-stack"></i> Estados
+                </a>
+            </div>
+        </div>
+    </ng-template>
+    <p-table
+        styleClass="p-datatable-striped"
+        #dt1
+        [value]="fichasectorial"
+        dataKey="_id"
+        [rows]="10"
+        [showCurrentPageReport]="true"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [loading]="load_lista"
+        [paginator]="true"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        [globalFilterFields]="[
+            'direccion_geo',
+            'actividad.nombre',
+            'encargado.nombres',
+            'estado.nombre'
+        ]"
+        [sortMode]="'multiple'"
+    >
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <button
+                    pButton
+                    label=""
+                    class="p-button-outlined"
+                    icon="pi pi-filter-slash"
+                    (click)="clear(dt1)"
+                ></button>
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <input
+                        pInputText
+                        type="text"
+                        (input)="
+                            dt1.filterGlobal(
+                                $any($event.target).value,
+                                'contains'
+                            )
+                        "
+                        placeholder="Buscar"
+                    />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="min-width: 15rem" *ngIf="!modal">
+                    <div class="flex align-items-center">
+                        Dirección
+                        <p-columnFilter
+                            type="text"
+                            field="direccion_geo"
+                            display="menu"
+                        ></p-columnFilter>
+                        <th pSortableColumn="direccion_geo" style="width: 20%">
+                            <p-sortIcon field="direccion_geo"></p-sortIcon>
+                        </th>
+                    </div>
+                </th>
+                <th style="min-width: 10rem">
+                    <div class="flex align-items-center">
+                        Actividad
+                        <p-columnFilter
+                            type="text"
+                            field="actividad.nombre"
+                            display="menu"
+                        ></p-columnFilter>
+                        <th
+                            pSortableColumn="actividad.nombre"
+                            style="width: 20%"
+                        >
+                            <p-sortIcon field="actividad.nombre"></p-sortIcon>
+                        </th>
+                    </div>
+                </th>
+                <th style="min-width: 15rem">
+                    <div class="flex align-items-center">
+                        Fecha del evento
+                        <p-columnFilter
+                            type="text"
+                            field="fecha_evento"
+                            display="menu"
+                        ></p-columnFilter>
+                        <th pSortableColumn="fecha_evento" style="width: 20%">
+                            <p-sortIcon field="fecha_evento"></p-sortIcon>
+                        </th>
+                    </div>
+                </th>
+                <th style="min-width: 10rem">
+                    <div class="flex align-items-center">
+                        Encargado
+                        <p-columnFilter
+                            type="text"
+                            field="encargado.nombres"
+                            display="menu"
+                        ></p-columnFilter>
+                        <th
+                            pSortableColumn="encargado.nombre"
+                            style="width: 20%"
+                        >
+                            <p-sortIcon field="encargado.nombre"></p-sortIcon>
+                        </th>
+                    </div>
+                </th>
+                <th style="min-width: 10rem">
+                    <div class="flex align-items-center">
+                        Estado
+                        <p-columnFilter
+                            type="text"
+                            field="estado.nombre"
+                            display="menu"
+                        ></p-columnFilter>
+                        <th pSortableColumn="estado.nombre" style="width: 20%">
+                            <p-sortIcon field="estado.nombre"></p-sortIcon>
+                        </th>
+                    </div>
+                </th>
+                <!-- Agrega las columnas restantes según tu necesidad -->
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-incidente>
+            <tr (click)="visible = true; option = incidente">
+                <td *ngIf="!modal">
+                    {{ incidente.direccion_geo }}
+                </td>
+                <td
+                    (click)="
+                        incidente.foto &&
+                            incidente.foto.length > 0 &&
+                            stopPropagation($event)
+                    "
+                >
+                    <span
+                        *ngIf="incidente.foto && incidente.foto.length > 0"
+                        class="pi pi-image"
+                        style="vertical-align: middle"
+                        (click)="
+                            displayBasic = true; openModalimagen(incidente.foto)
+                        "
+                    ></span>
+                    {{ incidente.actividad.nombre }}
+                </td>
+
+                <td>
+                    {{ incidente.fecha_evento | date : "medium" : "es" }}
+                </td>
+                <td>
+                    {{ incidente.encargado.nombres }}
+                </td>
+                <td>
+                    <p-tag
+                        [value]="incidente.estado.nombre"
+                        [severity]="getSeverity(incidente.estado.nombre)"
+                    >
+                    </p-tag>
+                </td>
+                <!-- Agrega el modal al final del componente -->
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5">No se encontraron incidentes.</td>
+            </tr>
+        </ng-template>
+    </p-table>
 </p-dialog>
 
-
-
 <ng-container *ngIf="!modal">
-  <div class="wrapper">
-    <div class="sidebar" data-color="danger" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
-      <app-sidebar></app-sidebar>
-      <div class="sidebar-background" style="background-image: url(./assets/img/sidebar-4.jpg)"></div>
-    </div>
-    <div class="main-panel">
-      <app-navbar></app-navbar>
-      <div class="main-content">
-        <div class="card">
-          <div class="card-header">
+    <div class="card">
+        <div class="card-header">
             <div class="row">
-              <div class="col-lg-auto">
-                <h2>Listado de Ficha Técnica</h2>
-              </div>
-              <div class="col-sm-auto"  *ngIf="check.IndexActividadProyectoComponent||check.IndexEstadoActividadProyectoComponent">
-                <a class="btn btn-primary float-end"   *ngIf="check.IndexActividadProyectoComponent" (click)="llamarmodal()"><i class="bi bi-stack"></i></a>
-                <a class="btn btn-primary float-end" *ngIf="check.IndexEstadoActividadProyectoComponent"  (click)="llamarmodal2()"><i class="bi bi-substack"></i></a> 
-              </div>
+                <div class="col-lg-auto">
+                    <h2>Listado de Ficha Técnica</h2>
+                </div>
+                <div
+                    class="col-sm-auto"
+                    *ngIf="
+                        check.IndexActividadProyectoComponent ||
+                        check.IndexEstadoActividadProyectoComponent
+                    "
+                >
+                    <a
+                        class="btn btn-primary float-end"
+                        *ngIf="check.IndexActividadProyectoComponent"
+                        (click)="llamarmodal()"
+                        ><i class="bi bi-stack"></i
+                    ></a>
+                    <a
+                        class="btn btn-primary float-end"
+                        *ngIf="check.IndexEstadoActividadProyectoComponent"
+                        (click)="llamarmodal2()"
+                        ><i class="bi bi-substack"></i
+                    ></a>
+                </div>
             </div>
-          </div>
-          <div class="card-body">
+        </div>
+        <div class="card-body">
             <p-toast></p-toast>
 
-            <p-table styleClass="p-datatable-striped"
-            #dt1
-            [value]="fichasectorial"
-            dataKey="_id"
-            [rows]="10"
-            [showCurrentPageReport]="true"
-            [rowsPerPageOptions]="[10, 25, 50]"
-            [loading]="load_lista"
-            [paginator]="true"
-            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
-            [globalFilterFields]="['direccion_geo', 'actividad.nombre', 'encargado.nombres', 'estado.nombre']"
-            [sortMode]="'multiple'"
+            <p-table
+                styleClass="p-datatable-striped"
+                #dt1
+                [value]="fichasectorial"
+                dataKey="_id"
+                [rows]="10"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                [loading]="load_lista"
+                [paginator]="true"
+                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                [globalFilterFields]="[
+                    'direccion_geo',
+                    'actividad.nombre',
+                    'encargado.nombres',
+                    'estado.nombre'
+                ]"
+                [sortMode]="'multiple'"
             >
-            <ng-template pTemplate="caption">
-                <div class="flex">
-                    <button pButton label="" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
-                    <span class="p-input-icon-left ml-auto">
-                        <i class="pi pi-search"></i>
-                        <input pInputText type="text" (input)="dt1.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
-                    </span>
-                    
-                </div>
-            </ng-template>
-            <ng-template pTemplate="header">
-                <tr>
-                  <th style="width:3rem">#</th>
-                    <th style="min-width:8rem">
-                        <div class="flex align-items-center">
-                            Actividad
-                            <p-columnFilter type="text" field="actividad.nombre" display="menu"></p-columnFilter>
-                            <th pSortableColumn="actividad.nombre" style="width:20%"><p-sortIcon field="actividad.nombre"></p-sortIcon></th>
-                        </div>
-                    </th>
-                    <th style="min-width:8rem">
-                      <div class="flex align-items-center">
-                          Dirección
-                          <p-columnFilter type="text" field="direccion_geo" display="menu"></p-columnFilter>
-                          <th pSortableColumn="direccion_geo" style="width:20%"><p-sortIcon field="direccion_geo"></p-sortIcon></th>
-                      </div>
-                    </th>
-                    <th style="min-width:15rem">
-                      <div class="flex align-items-center">
-                          Descripción
-                          <p-columnFilter type="text" field="descripcion" display="menu"></p-columnFilter>
-                          <th pSortableColumn="descripcion" style="width:20%"><p-sortIcon field="descripcion"></p-sortIcon></th>
-                      </div>
-                    </th>
-                    <th style="min-width:8rem">
-                        <div class="flex align-items-center">
-                            Fecha del evento
-                            <p-columnFilter type="text" field="fecha_evento" display="menu"></p-columnFilter>
-                            <th pSortableColumn="fecha_evento" style="width:20%"><p-sortIcon field="fecha_evento"></p-sortIcon></th>
-                        </div>
-                    </th>
-                    <th style="min-width:8rem">
-                        <div class="flex align-items-center">
-                            Encargado
-                            <p-columnFilter type="text" field="encargado.nombres" display="menu"></p-columnFilter>
-                            <th pSortableColumn="encargado.nombre" style="width:20%"><p-sortIcon field="encargado.nombre"></p-sortIcon></th>
-                        </div>
-                    </th>
-                    <th style="min-width:8rem">
-                        <div class="flex align-items-center">
-                            Estado
-                            <p-columnFilter type="text" field="estado.nombre" display="menu"></p-columnFilter>
-                            <th pSortableColumn="estado.nombre" style="width:20%"><p-sortIcon field="estado.nombre"></p-sortIcon></th>
-                        </div>
-                    </th>
-                    <th style="min-width:10rem">
-                      <div class="flex align-items-center">
-                          Observación
-                          <p-columnFilter type="text" field="observacion" display="menu"></p-columnFilter>
-                          <th pSortableColumn="observacion" style="width:20%"><p-sortIcon field="observacion"></p-sortIcon></th>
-                      </div>
-                  </th>
-                    <th>
-                      Foto
-                    </th>
-                    <!-- Agrega las columnas restantes según tu necesidad -->
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-incidente let-rowIndex="rowIndex">
-                <tr>        
-                  <td>{{rowIndex+1}}</td>            
-                    <td>
-                        {{ incidente.actividad.nombre }}                        
-                    </td>
-                    <td>
-                      {{ incidente.direccion_geo }}
-                    </td>
-                    <td>
-                      {{ incidente.descripcion }}
-                    </td>
-                    <td>
-                        {{ incidente.fecha_evento | date:'medium':'es' }}
-                    </td>
-                    <td>
-                        {{ incidente.encargado.nombres }}
-                    </td>
-                    <td>
-                      
-                        <p-tag [value]="incidente.estado.nombre" [severity]="getSeverity(incidente.estado.nombre)" > </p-tag>
-                    </td>
-                    <td>
-                      {{ incidente.observacion }}
-                    </td>
-                    <td>
-                      <img  *ngIf="incidente.foto &&incidente.foto .length>0"  [src]="url + 'helper/obtener_portada_ficha/' + incidente.foto[0]" class="navbar-brand-img mx-auto" style="max-height: 4rem !important; cursor: pointer;" alt="..." (click)="openimagen(incidente.foto); this.displayBasic=true;" />
-                    </td>                    
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="5">No se encontraron incidentes.</td>
-                </tr>
-            </ng-template>
-          </p-table>
+                <ng-template pTemplate="caption">
+                    <div class="flex">
+                        <button
+                            pButton
+                            label=""
+                            class="p-button-outlined"
+                            icon="pi pi-filter-slash"
+                            (click)="clear(dt1)"
+                        ></button>
+                        <span class="p-input-icon-left ml-auto">
+                            <i class="pi pi-search"></i>
+                            <input
+                                pInputText
+                                type="text"
+                                (input)="
+                                    dt1.filterGlobal(
+                                        $any($event.target).value,
+                                        'contains'
+                                    )
+                                "
+                                placeholder="Search keyword"
+                            />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">#</th>
+                        <th style="min-width: 8rem">
+                            <div class="flex align-items-center">
+                                Actividad
+                                <p-columnFilter
+                                    type="text"
+                                    field="actividad.nombre"
+                                    display="menu"
+                                ></p-columnFilter>
+                                <th
+                                    pSortableColumn="actividad.nombre"
+                                    style="width: 20%"
+                                >
+                                    <p-sortIcon
+                                        field="actividad.nombre"
+                                    ></p-sortIcon>
+                                </th>
+                            </div>
+                        </th>
+                        <th style="min-width: 8rem">
+                            <div class="flex align-items-center">
+                                Dirección
+                                <p-columnFilter
+                                    type="text"
+                                    field="direccion_geo"
+                                    display="menu"
+                                ></p-columnFilter>
+                                <th
+                                    pSortableColumn="direccion_geo"
+                                    style="width: 20%"
+                                >
+                                    <p-sortIcon
+                                        field="direccion_geo"
+                                    ></p-sortIcon>
+                                </th>
+                            </div>
+                        </th>
+                        <th style="min-width: 15rem">
+                            <div class="flex align-items-center">
+                                Descripción
+                                <p-columnFilter
+                                    type="text"
+                                    field="descripcion"
+                                    display="menu"
+                                ></p-columnFilter>
+                                <th
+                                    pSortableColumn="descripcion"
+                                    style="width: 20%"
+                                >
+                                    <p-sortIcon
+                                        field="descripcion"
+                                    ></p-sortIcon>
+                                </th>
+                            </div>
+                        </th>
+                        <th style="min-width: 8rem">
+                            <div class="flex align-items-center">
+                                Fecha del evento
+                                <p-columnFilter
+                                    type="text"
+                                    field="fecha_evento"
+                                    display="menu"
+                                ></p-columnFilter>
+                                <th
+                                    pSortableColumn="fecha_evento"
+                                    style="width: 20%"
+                                >
+                                    <p-sortIcon
+                                        field="fecha_evento"
+                                    ></p-sortIcon>
+                                </th>
+                            </div>
+                        </th>
+                        <th style="min-width: 8rem">
+                            <div class="flex align-items-center">
+                                Encargado
+                                <p-columnFilter
+                                    type="text"
+                                    field="encargado.nombres"
+                                    display="menu"
+                                ></p-columnFilter>
+                                <th
+                                    pSortableColumn="encargado.nombre"
+                                    style="width: 20%"
+                                >
+                                    <p-sortIcon
+                                        field="encargado.nombre"
+                                    ></p-sortIcon>
+                                </th>
+                            </div>
+                        </th>
+                        <th style="min-width: 8rem">
+                            <div class="flex align-items-center">
+                                Estado
+                                <p-columnFilter
+                                    type="text"
+                                    field="estado.nombre"
+                                    display="menu"
+                                ></p-columnFilter>
+                                <th
+                                    pSortableColumn="estado.nombre"
+                                    style="width: 20%"
+                                >
+                                    <p-sortIcon
+                                        field="estado.nombre"
+                                    ></p-sortIcon>
+                                </th>
+                            </div>
+                        </th>
+                        <th style="min-width: 10rem">
+                            <div class="flex align-items-center">
+                                Observación
+                                <p-columnFilter
+                                    type="text"
+                                    field="observacion"
+                                    display="menu"
+                                ></p-columnFilter>
+                                <th
+                                    pSortableColumn="observacion"
+                                    style="width: 20%"
+                                >
+                                    <p-sortIcon
+                                        field="observacion"
+                                    ></p-sortIcon>
+                                </th>
+                            </div>
+                        </th>
+                        <th>Foto</th>
+                        <!-- Agrega las columnas restantes según tu necesidad -->
+                    </tr>
+                </ng-template>
+                <ng-template
+                    pTemplate="body"
+                    let-incidente
+                    let-rowIndex="rowIndex"
+                >
+                    <tr>
+                        <td>{{ rowIndex + 1 }}</td>
+                        <td>
+                            {{ incidente.actividad.nombre }}
+                        </td>
+                        <td>
+                            {{ incidente.direccion_geo }}
+                        </td>
+                        <td>
+                            {{ incidente.descripcion }}
+                        </td>
+                        <td>
+                            {{
+                                incidente.fecha_evento | date : "medium" : "es"
+                            }}
+                        </td>
+                        <td>
+                            {{ incidente.encargado.nombres }}
+                        </td>
+                        <td>
+                            <p-tag
+                                [value]="incidente.estado.nombre"
+                                [severity]="
+                                    getSeverity(incidente.estado.nombre)
+                                "
+                            >
+                            </p-tag>
+                        </td>
+                        <td>
+                            {{ incidente.observacion }}
+                        </td>
+                        <td>
+                            <img
+                                *ngIf="
+                                    incidente.foto && incidente.foto.length > 0
+                                "
+                                [src]="
+                                    url +
+                                    'helper/obtener_portada_ficha/' +
+                                    incidente.foto[0]
+                                "
+                                class="navbar-brand-img mx-auto"
+                                style="
+                                    max-height: 4rem !important;
+                                    cursor: pointer;
+                                "
+                                alt="..."
+                                (click)="
+                                    openimagen(incidente.foto);
+                                    this.displayBasic = true
+                                "
+                            />
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="5">No se encontraron incidentes.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
         </div>
-        </div>
-      </div> 
-
-      <div>
-        <app-footer></app-footer>
-      </div>
     </div>
-  </div>
 </ng-container>
 
-
 <ng-template #contentimage let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title">Imagenes</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-
-    <div id="carouselExample" class="carousel slide carousel-fade" data-bs-ride="carousel">
-      <div class="carousel-indicators">
-        <button *ngFor="let imagen of imagenModal; let i = index" type="button" data-bs-target="#carouselExample" [attr.data-bs-slide-to]="i" [class.active]="i === 0"></button>
-      </div>
-      <div class="carousel-inner" style="height: 70vh;">
-        <div *ngFor="let imagen of imagenModal; let i = index" class="carousel-item" [class.active]="i === 0">
-          <img [src]="url + 'helper/obtener_portada_ficha/' + imagen" class="d-block w-100" alt="Imagen" />
+    <div class="modal-header">
+        <h4 class="modal-title">Imagenes</h4>
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div
+            id="carouselExample"
+            class="carousel slide carousel-fade"
+            data-bs-ride="carousel"
+        >
+            <div class="carousel-indicators">
+                <button
+                    *ngFor="let imagen of imagenModal; let i = index"
+                    type="button"
+                    data-bs-target="#carouselExample"
+                    [attr.data-bs-slide-to]="i"
+                    [class.active]="i === 0"
+                ></button>
+            </div>
+            <div class="carousel-inner" style="height: 70vh">
+                <div
+                    *ngFor="let imagen of imagenModal; let i = index"
+                    class="carousel-item"
+                    [class.active]="i === 0"
+                >
+                    <img
+                        [src]="url + 'helper/obtener_portada_ficha/' + imagen"
+                        class="d-block w-100"
+                        alt="Imagen"
+                    />
+                </div>
+            </div>
+            <button
+                class="carousel-control-prev"
+                type="button"
+                data-bs-target="#carouselExample"
+                data-bs-slide="prev"
+            >
+                <span
+                    class="carousel-control-prev-icon"
+                    aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+                class="carousel-control-next"
+                type="button"
+                data-bs-target="#carouselExample"
+                data-bs-slide="next"
+            >
+                <span
+                    class="carousel-control-next-icon"
+                    aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
+
+        <!-- Galería de imágenes con miniaturas -->
+        <div class="d-flex justify-content-center mt-3">
+            <div
+                *ngFor="let imagen of imagenModal.slice(0, 3); let i = index"
+                class="m-1"
+            >
+                <img
+                    [src]="url + 'helper/obtener_portada_ficha/' + imagen"
+                    class="img-thumbnail"
+                    style="cursor: pointer; max-width: 100px; max-height: 100px"
+                    (click)="mostrarImagen(i)"
+                />
+            </div>
+        </div>
     </div>
-    
-    <!-- Galería de imágenes con miniaturas -->
-    <div class="d-flex justify-content-center mt-3">
-      <div *ngFor="let imagen of imagenModal.slice(0, 3); let i = index" class="m-1">
-        <img [src]="url + 'helper/obtener_portada_ficha/' + imagen" class="img-thumbnail" style="cursor: pointer; max-width: 100px; max-height: 100px;" (click)="mostrarImagen(i)" />
-      </div>
-    </div>
-         
-  </div>
-  
-  
 </ng-template>
 
-<p-galleria [value]="imagenModal" [(visible)]="displayBasic" [responsiveOptions]="responsiveOptions" [containerStyle]="{'max-width': '50%'}" [numVisible]="9"
-[circular]="true" [fullScreen]="true" [showItemNavigators]="true">
-<ng-template pTemplate="item" let-item>
-    <img [src]="url + 'helper/obtener_portada_ficha/' + item" style="width: 100%; display: block;"/>
-</ng-template>
-<ng-template pTemplate="thumbnail" let-item>
-    <div class="grid grid-nogutter justify-content-center">
-        <img [src]="url + 'helper/obtener_portada_ficha/' + item" style="display: block;"  style="width: 30%;"/>
-    </div>
-</ng-template>
+<p-galleria
+    [value]="imagenModal"
+    [(visible)]="displayBasic"
+    [responsiveOptions]="responsiveOptions"
+    [containerStyle]="{ 'max-width': '50%' }"
+    [numVisible]="9"
+    [circular]="true"
+    [fullScreen]="true"
+    [showItemNavigators]="true"
+>
+    <ng-template pTemplate="item" let-item>
+        <img
+            [src]="url + 'helper/obtener_portada_ficha/' + item"
+            style="width: 100%; display: block"
+        />
+    </ng-template>
+    <ng-template pTemplate="thumbnail" let-item>
+        <div class="grid grid-nogutter justify-content-center">
+            <img
+                [src]="url + 'helper/obtener_portada_ficha/' + item"
+                style="display: block"
+                style="width: 30%"
+            />
+        </div>
+    </ng-template>
 </p-galleria>
+
+<p-dialog
+    *ngIf="option"
+    header="Detalles de la Ficha Sectorial"
+    [(visible)]="visible && option"
+    [modal]="false"
+    [style]="{ width: '50vw' }"
+>
+    <div class="modal-body">
+        <p>
+            <strong>Actividad:</strong>
+            {{ option.actividad.nombre }}
+        </p>
+        <p>
+            <strong>Descripción:</strong>
+            {{ option.descripcion }}
+        </p>
+        <p>
+            <strong>Encargado:</strong>
+            {{ option.encargado.nombres }}
+        </p>
+        <p>
+            <strong>Estado:</strong>
+            <p-tag
+                [value]="option.estado.nombre"
+                [severity]="getSeverity(option.estado.nombre)"
+            >
+            </p-tag>
+        </p>
+        <p>
+            <strong>Fecha Evento:</strong>
+            {{ option.fecha_evento | date : "dd/MM/yyyy" }}
+        </p>
+        <p>
+            <strong>Observación:</strong>
+            {{ option.observacion }}
+        </p>
+        <p *ngIf="option.foto && option.foto.length > 0">
+            <p-button
+                label="Fotos"
+                icon="pi pi-images"
+                (click)="displayBasic = true; openModalimagen(option.foto)"
+            ></p-button>
+        </p>
+    </div>
+</p-dialog>

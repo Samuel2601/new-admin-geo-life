@@ -19,14 +19,17 @@ export class StackFichasComponent implements OnInit{
   
   basicData:any={};
   basicOptions: any;
-
-  async ngOnInit() {
+sumaValores: number[] = [];
+    async ngOnInit() {
+       
+        console.log('llamado');
     await this.getWFSgeojson(this.urlgeoser);
     if(this.valor&&this.filtro){
-      this.cargar();
+     await this.cargar();
     }else{
-      this.rankin();
+     await this.rankin();
     }
+    this.sumaValores = this.calcularSumaValores();
   }
 
   token=this.helper.token();
@@ -91,9 +94,42 @@ export class StackFichasComponent implements OnInit{
         console.log(this.basicData);
       // Actualizar la vista
       this.canvas();
-
+      
       this.loading = false;
+       this.helper.setStfichaComponent(this);
   }
+  encontrarMaximo(): { label: string; valor: number; } {
+
+      let maximoValor = 0;
+      let maximoLabel = '';
+      // Obtener todos los valores de los datasets combinados en un solo array
+      // Obtener la suma de los valores de los datasets
+      const sumaValores = this.basicData.datasets.length > 1 ? this.basicData.datasets.reduce((acc: number[], dataset: any) => {
+          dataset.data.forEach((valor: number, index: number) => {
+              acc[index] = (acc[index] || 0) + valor;
+          });
+          return acc;
+      }, []) : this.basicData.datasets[0];
+    
+      // Encontrar el valor máximo y su correspondiente label
+      sumaValores.forEach((valor: number, index: number) => {
+          if (valor > maximoValor) {
+              maximoValor = valor;
+              maximoLabel = this.basicData.labels[index];
+          }
+      });
+      
+      return { label: this.labelsmobil[parseInt(maximoLabel)-1], valor: maximoValor };
+    }
+    
+   calcularSumaValores(): number[] {
+    return this.basicData.datasets.reduce((acc: number[], dataset: any) => {
+        dataset.data.forEach((valor: number, index: number) => {
+            acc[index] = (acc[index] || 0) + valor;
+        });
+        return acc;
+    }, []);
+}
 
   
   
@@ -138,17 +174,17 @@ export class StackFichasComponent implements OnInit{
             data,
             label: elementbarr,
             backgroundColor: this.modal ? [
-                getComputedStyle(document.documentElement).getPropertyValue('--bs-blue'),
-                getComputedStyle(document.documentElement).getPropertyValue('--bs-indigo'),
-                getComputedStyle(document.documentElement).getPropertyValue('--bs-purple'),
-                getComputedStyle(document.documentElement).getPropertyValue('--bs-pink'),
-                getComputedStyle(document.documentElement).getPropertyValue('--bs-red'),
-                getComputedStyle(document.documentElement).getPropertyValue('--bs-orange'),
-                getComputedStyle(document.documentElement).getPropertyValue('--bs-yellow'),
-                getComputedStyle(document.documentElement).getPropertyValue('--bs-teal'),
-                getComputedStyle(document.documentElement).getPropertyValue('--bs-cyan'),
-                getComputedStyle(document.documentElement).getPropertyValue('--bs-info'),
-                getComputedStyle(document.documentElement).getPropertyValue('--bs-green'),
+                getComputedStyle(document.documentElement).getPropertyValue('--blue-500'),
+                getComputedStyle(document.documentElement).getPropertyValue('--green-500'),
+                getComputedStyle(document.documentElement).getPropertyValue('--yellow-500'),
+                getComputedStyle(document.documentElement).getPropertyValue('--cyan-500'),
+                getComputedStyle(document.documentElement).getPropertyValue('--pink-500'),
+                getComputedStyle(document.documentElement).getPropertyValue('--indigo-500'),
+                getComputedStyle(document.documentElement).getPropertyValue('--teal-500'),
+                getComputedStyle(document.documentElement).getPropertyValue('--orange-500'),
+                getComputedStyle(document.documentElement).getPropertyValue('--bluegray-500'),
+                getComputedStyle(document.documentElement).getPropertyValue('--purple-500'),
+                getComputedStyle(document.documentElement).getPropertyValue('--red-500'),
             ] : undefined,
             borderWidth: 1,
             type: 'bar',

@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CreateService } from 'src/app/services/create.service';
-import { ListService } from 'src/app/services/list.service';
-import { AdminService } from 'src/app/services/admin.service';
+import { CreateService } from 'src/app/demo/services/create.service';
+import { ListService } from 'src/app/demo/services/list.service';
+import { AdminService } from 'src/app/demo/services/admin.service';
 import { Router } from '@angular/router';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Plugins, Capacitor } from '@capacitor/core';
-import iziToast from 'izitoast';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
-import { HelperService } from 'src/app/services/helper.service';
+import { HelperService } from 'src/app/demo/services/helper.service';
 import { MessageService } from 'primeng/api';
 const { Geolocation } = Plugins;
 import { GalleriaModule } from 'primeng/galleria';
 @Component({
   selector: 'app-create-incidentes-denuncia',
   templateUrl: './create-incidentes-denuncia.component.html',
-  styleUrl: './create-incidentes-denuncia.component.scss'
+  styleUrl: './create-incidentes-denuncia.component.scss',
+  providers: [MessageService]
 })
 export class CreateIncidentesDenunciaComponent implements OnInit{
 
@@ -43,7 +43,8 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
   data:any
   direccion:any
   geolocation:any;
-  mostrar:boolean=true;
+  mostrar: boolean = false;
+
   DimissModal() {
     this.modalService.dismissAll();
   }
@@ -142,13 +143,14 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     }
   }
   token=this.helper.token();
-  selectcategoria(target:any){
+  selectcategoria(event:any){
     if(!this.token){
       this.modalService.dismissAll();
       throw this.router.navigate(["/inicio"]);
     }
-    if(target.value){
-      this.listService.listarSubcategorias(this.token,'categoria',target.value).subscribe(
+    if (event.value) {
+      const id = event.value._id;
+      this.listService.listarSubcategorias(this.token,'categoria',id).subscribe(
         response => {
           console.log(response)
           this.subcategorias = response.data;
@@ -158,11 +160,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
           if(error.error.message=='InvalidToken'){
             this.router.navigate(["/inicio"]);
           }else{
-            iziToast.error({
-              title: ('('+error.status+')').toString(),
-              position: 'bottomRight',
-              message: error.error.message,
-            });
+            this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
           }
         }
       );
@@ -177,18 +175,14 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
       response => {
         this.categorias = response.data;
         console.log(response.data);
-        this.mostrar=false;
+        this.mostrar=true;
       },
       error => {
         console.log(error);
         if(error.error.message=='InvalidToken'){
           this.router.navigate(["/inicio"]);
         }else{
-          iziToast.error({
-            title: ('('+error.status+')').toString(),
-            position: 'bottomRight',
-            message: error.error.message,
-          });
+          this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
         }
       }
     );
@@ -340,18 +334,10 @@ selectedFiles: File[] = [];
         
       this.upload=false;
       if(this.selectedFiles.length==2){
-        iziToast.info({
-          title:'INFO:',
-          position:'bottomRight',
-          message:'Solo puede enviar 1 imangenes más'
-        });
+         this.messageService.add({severity: 'info', summary: 'MAX img', detail: 'Solo puede enviar 1 imangenes más'});
       }
     } else {
-      iziToast.warning({
-        title:'Error:',
-        position:'bottomRight',
-        message:'Solo puede enviar 3 imangenes'
-      });
+       this.messageService.add({severity: 'warning', summary: 'MAX img', detail: 'Solo puede enviar 3 imangenes'});
       this.load_carrusel=true;
       console.error('Error al obtener la cadena base64 de la imagen.');
     }
@@ -373,16 +359,14 @@ selectedFiles: File[] = [];
     if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
+    console.log(this.nuevoIncidenteDenuncia);
     this.nuevoIncidenteDenuncia.ciudadano=this.adminservice.identity(this.token);
     
     this.createService.registrarIncidenteDenuncia(this.token, this.nuevoIncidenteDenuncia,this.selectedFiles).subscribe(response => {
       // Manejar la respuesta del servidor
       console.log(response);
       if(response.data){
-        iziToast.success({
-          title:'Listo',
-          message:'Ingresado correctamente'
-        });
+       this.messageService.add({severity: 'success', summary: 'Ingresado', detail: 'Correctamente'});
         this.modalService.dismissAll();
       }
     }, error => {
@@ -391,11 +375,7 @@ selectedFiles: File[] = [];
       if(error.error.message=='InvalidToken'){
         this.router.navigate(["/inicio"]);
       }else{
-        iziToast.error({
-          title: ('('+error.status+')').toString(),
-          position: 'bottomRight',
-          message: error.error.message,
-        });
+       this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
       }
     });
    

@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CreateService } from 'src/app/services/create.service';
-import { ListService } from 'src/app/services/list.service';
-import { AdminService } from 'src/app/services/admin.service';
+import { CreateService } from 'src/app/demo/services/create.service';
+import { ListService } from 'src/app/demo/services/list.service';
+import { AdminService } from 'src/app/demo/services/admin.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import iziToast from 'izitoast';
 import { Capacitor } from '@capacitor/core';
-import { HelperService } from 'src/app/services/helper.service';
+import { HelperService } from 'src/app/demo/services/helper.service';
 import { MessageService } from 'primeng/api';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
@@ -15,7 +14,8 @@ import { GalleriaModule } from 'primeng/galleria';
 @Component({
   selector: 'app-create-ficha-sectorial',
   templateUrl: './create-ficha-sectorial.component.html',
-  styleUrl: './create-ficha-sectorial.component.scss'
+  styleUrl: './create-ficha-sectorial.component.scss',
+  providers: [MessageService]
 })
 export class CreateFichaSectorialComponent implements OnInit {
   fichaSectorialForm: FormGroup<any>;
@@ -28,13 +28,14 @@ export class CreateFichaSectorialComponent implements OnInit {
       descripcion: ['', Validators.required],
       encargado: ['', Validators.required],
       direccion_geo: ['', Validators.required],
-      estado: ['', Validators.required],
-      actividad: ['', Validators.required],
+      estado: [undefined, Validators.required],
+      actividad: [undefined, Validators.required],
       fecha_evento: [''],
       observacion: ['']
     });
   }
-  token=this.helper.token();
+  token = this.helper.token();
+  mostrar: boolean = false;
   ngOnInit(): void {
     if(!this.token){
       throw this.router.navigate(["/inicio"]);
@@ -87,11 +88,7 @@ export class CreateFichaSectorialComponent implements OnInit {
       if(error.error.message=='InvalidToken'){
         this.router.navigate(["/inicio"]);
       }else{
-        iziToast.error({
-          title: ('('+error.status+')').toString(),
-          position: 'bottomRight',
-          message: error.error.message,
-        });
+        this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
       }
     });
   }
@@ -103,18 +100,15 @@ export class CreateFichaSectorialComponent implements OnInit {
     this.listarService.listarTiposActividadesProyecto(this.token).subscribe(response=>{
       console.log(response);
       if(response.data.length>0){
-        this.actividadesProyecto=response.data;
+        this.actividadesProyecto = response.data;
+        this.mostrar = true;
       }
     },error=>{
       console.error(error);
       if(error.error.message=='InvalidToken'){
         this.router.navigate(["/inicio"]);
       }else{
-        iziToast.error({
-          title: ('('+error.status+')').toString(),
-          position: 'bottomRight',
-          message: error.error.message,
-        });
+        this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
       }
     });
   }
@@ -227,16 +221,14 @@ export class CreateFichaSectorialComponent implements OnInit {
   load_form=true;
 
   registrarFichaSectorial() {
-    this.load_form=false;
+    this.load_form = false;
+    console.log("fichaSectorialForm",this.fichaSectorialForm);
     if (this.fichaSectorialForm?.valid) {
       if (this.token && this.fichaSectorialForm.value) {
         this.createService.registrarActividadProyecto(this.token, this.fichaSectorialForm.value,this.selectedFiles).subscribe(response => {
           console.log(response);
           if(response.data){
-            iziToast.success({
-              title:'Listo',
-              message:'Ingresado correctamente'
-            });
+            this.messageService.add({severity: 'success', summary: 'Listo', detail: 'Ingresado correctamente'});
             this.modalService.dismissAll();
           }
         }, error => {
@@ -244,11 +236,7 @@ export class CreateFichaSectorialComponent implements OnInit {
           if(error.error.message=='InvalidToken'){
             this.router.navigate(["/inicio"]);
           }else{
-            iziToast.error({
-              title: ('('+error.status+')').toString(),
-              position: 'bottomRight',
-              message: error.error.message,
-            });
+             this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
           } 
         });
       }else{
@@ -257,7 +245,7 @@ export class CreateFichaSectorialComponent implements OnInit {
         }
       }
     }else{
-      console.log(this.fichaSectorialForm.valid);
+      console.log(this.fichaSectorialForm);
     }
   }
   responsiveimage():string{
@@ -299,18 +287,10 @@ export class CreateFichaSectorialComponent implements OnInit {
         }, 1000);
         this.upload=false;
       if(this.selectedFiles.length==2){
-        iziToast.info({
-          title:'INFO:',
-          position:'bottomRight',
-          message:'Solo puede enviar 1 imangenes más'
-        });
+     this.messageService.add({severity: 'info', summary: 'MAX img', detail: 'Solo puede enviar 1 imangenes más'});
       }
     } else {
-      iziToast.warning({
-        title:'Error:',
-        position:'bottomRight',
-        message:'Solo puede enviar 3 imangenes'
-      });
+    this.messageService.add({severity: 'warning', summary: 'MAX img', detail: 'Solo puede enviar 3 imangenes'});
       console.error('Error al obtener la cadena base64 de la imagen.');
     }
   }

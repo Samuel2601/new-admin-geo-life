@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { HelperService } from 'src/app/demo/services/helper.service';
@@ -17,11 +17,11 @@ export class StackbarriofichaComponent {
 
   }
  
-  
+  @Input() modal: any = false;
   basicData:any={};
   basicOptions: any;
   async ngOnInit() {
-  
+ 
 
 
     await this.getWFSgeojson(this.urlgeoser);
@@ -71,11 +71,28 @@ export class StackbarriofichaComponent {
     
     // Actualizar la vista
     this.canvas();
-  
+    console.log(this.encontrarMaximo());
     this.loading = false;
+     this.helper.setStbarrioficha(this);
   }
-  
-  
+  encontrarMaximo(): { label: string; valor: number; } {
+
+      let maximoValor = 0;
+      let maximoLabel = '';
+      // Obtener todos los valores de los datasets combinados en un solo array
+      // Obtener la suma de los valores de los datasets
+      const sumaValores =  this.basicData.datasets[0].data;
+    
+      // Encontrar el valor máximo y su correspondiente label
+      sumaValores.forEach((valor: number, index: number) => {
+          if (valor > maximoValor) {
+              maximoValor = valor;
+              maximoLabel = this.basicData.labels[index];
+          }
+      });
+      
+      return { label: maximoLabel, valor: maximoValor };
+  }
 
   async cargar(){
     this.loading=true;

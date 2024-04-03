@@ -7,6 +7,7 @@ import { IndexIncidentesDenunciaComponent } from './incidentes-denuncia/index-in
 import { CreateCategoriaComponent } from './categoria/create-categoria/create-categoria.component';
 import { IndexSubcategoriaComponent } from './categoria/sub/index-subcategoria/index-subcategoria.component';
 import { CreateSubcategoriaComponent } from './categoria/sub/create-subcategoria/create-subcategoria.component';
+import { AdminComponent } from './admin/admin.component';
 
 
 @NgModule({
@@ -17,8 +18,10 @@ import { CreateSubcategoriaComponent } from './categoria/sub/create-subcategoria
         { path: 'subcategoria', component: IndexSubcategoriaComponent },
         { path: 'create-subcategoria', component: CreateSubcategoriaComponent },
         { path: 'ficha-sectorial', component: IndexFichaSectorialComponent },
-        { path: 'incidente', component: IndexIncidentesDenunciaComponent },
-        //{ path: 'error', loadChildren: () => import('./layers/layers.component').then(m => m.LayersComponent) },
+        { path: 'incidente', component: IndexIncidentesDenunciaComponent },       
+       { path: 'administracion', component: AdminComponent },
+        //{ path: '', loadChildren: () => import('./layers/layers.component').then(m => m.LayersComponent) },
+
     ])],
     exports: [RouterModule]
 })

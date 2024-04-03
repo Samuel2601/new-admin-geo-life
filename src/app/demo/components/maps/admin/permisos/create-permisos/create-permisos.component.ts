@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CreateService } from 'src/app/services/create.service';
-import { HelperService } from 'src/app/services/helper.service';
-import { ListService } from 'src/app/services/list.service';
+import { CreateService } from 'src/app/demo/services/create.service';
+import { HelperService } from 'src/app/demo/services/helper.service';
+import { ListService } from 'src/app/demo/services/list.service';
 
 @Component({
   selector: 'app-create-permisos',

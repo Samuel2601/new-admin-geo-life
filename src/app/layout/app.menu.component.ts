@@ -18,11 +18,33 @@ export class AppMenuComponent implements OnInit {
                 label: 'Mapa',
                 items: [
                     { label: 'Mapa', icon: 'pi pi-fw pi-map', routerLink: ['/maps'] },
-                    { label: 'Categoria', icon: 'pi pi-fw pi-folder', routerLink: ['/maps/categoria'] },
-                    { label: 'Incidente', icon: 'pi pi-fw pi-exclamation-triangle', routerLink: ['/maps/incidente'] },
-                    { label: 'Ficha', icon: 'pi pi-fw pi-file-edit', routerLink: ['/maps/ficha-sectorial'] }
                 ]
             },
+            {
+                label: 'Categoria',
+                items: [
+                    { label: 'Categoria', icon: 'pi pi-fw pi-folder', routerLink: ['/maps/categoria'] },
+                ]
+            },
+            {
+                label: 'Incidente',
+                items: [
+                    { label: 'Incidente', icon: 'pi pi-fw pi-exclamation-triangle', routerLink: ['/maps/incidente'] },
+                ]
+            },
+            {
+                label: 'Ficha',
+                items: [
+                    { label: 'Ficha', icon: 'pi pi-fw pi-file-edit', routerLink: ['/maps/ficha-sectorial'] },
+                ]
+            },
+            {
+                label: 'Administración',
+                items: [
+                    { label: 'Administración', icon: 'pi pi-fw pi-cog', routerLink: ['/maps/administracion'] },
+                ]
+            },
+            
             {
                 label: 'Panel de Control',
                 items: [

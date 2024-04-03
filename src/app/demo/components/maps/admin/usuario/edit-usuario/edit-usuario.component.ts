@@ -1,19 +1,20 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { FilterService } from 'src/app/services/filter.service';
+import { FilterService } from 'src/app/demo/services/filter.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AdminService } from 'src/app/services/admin.service';
-import iziToast from 'izitoast';
-import { UpdateService } from 'src/app/services/update.service';
+import { AdminService } from 'src/app/demo/services/admin.service';
+import { UpdateService } from 'src/app/demo/services/update.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { GLOBAL } from 'src/app/services/GLOBAL';
+import { GLOBAL } from 'src/app/demo/services/GLOBAL';
 import { Capacitor } from '@capacitor/core';
-import { HelperService } from 'src/app/services/helper.service';
-import { ListService } from '../../../../services/list.service';
+import { HelperService } from 'src/app/demo/services/helper.service';
+import { ListService } from 'src/app/demo/services/list.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-edit-usuario',
   templateUrl: './edit-usuario.component.html',
-  styleUrl: './edit-usuario.component.scss'
+  styleUrl: './edit-usuario.component.scss',
+  providers: [MessageService]
 })
 export class EditUsuarioComponent implements OnInit, AfterViewInit{
   datauser:any;
@@ -25,7 +26,7 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
     private router:Router,
     private _filterservice: FilterService,
     private adminservice:AdminService,
-    private updateservice:UpdateService,private modalService: NgbModal, private helper:HelperService,private list:ListService){ }
+    private updateservice:UpdateService,private modalService: NgbModal, private helper:HelperService,private list:ListService,private messageService: MessageService,){ }
 
   ngAfterViewInit(): void {
     this._route.params.subscribe((params) => {
@@ -78,11 +79,7 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
       this.datauser.password='';
       console.log(this.datauser);
     },error=>{
-      iziToast.error({
-        title: ('('+error.status+')').toString(),
-        position: 'bottomRight',
-        message: error.error.message,
-      });
+      this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
     });
   }
   updateUser(){

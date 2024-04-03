@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ListService } from 'src/app/services/list.service';
+import { ListService } from 'src/app/demo/services/list.service';
 import { CreatePermisosComponent } from '../create-permisos/create-permisos.component';
-import { UpdateService } from 'src/app/services/update.service';
-import iziToast from 'izitoast';
-import { HelperService } from 'src/app/services/helper.service';
+import { UpdateService } from 'src/app/demo/services/update.service';
+import { HelperService } from 'src/app/demo/services/helper.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-index-permisos',
   templateUrl: './index-permisos.component.html',
-  styleUrl: './index-permisos.component.scss'
+  styleUrl: './index-permisos.component.scss',
+  providers: [MessageService]
 })
 export class IndexPermisosComponent {
   permisos:any=[];
@@ -17,7 +18,7 @@ export class IndexPermisosComponent {
   roles:any
   rolselect: string[] = [];
 
-  constructor(private listService: ListService,private modalService: NgbModal, private updateServices:UpdateService,private helper:HelperService) { }
+  constructor(private listService: ListService,private modalService: NgbModal, private updateServices:UpdateService,private helper:HelperService,private messageService: MessageService,) { }
 
   ngOnInit(): void {
     this.listarCategorias();
@@ -79,7 +80,9 @@ export class IndexPermisosComponent {
     // Guardar los cambios de la categoría
     console.log('Guardar cambios de la categoría:', categoria);
       // Agregar roles seleccionados al permiso
-      this.updateServices.actualizarPermisos(this.token,categoria._id,categoria).subscribe(response=>{iziToast.success({title:'Ingresado',position:'bottomRight',message:response.message})});
+      this.updateServices.actualizarPermisos(this.token,categoria._id,categoria).subscribe(response=>{
+        this.messageService.add({severity: 'success', summary: 'Ingresado', detail: response.message});
+      });
 
   }
 

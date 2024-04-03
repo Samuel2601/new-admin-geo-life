@@ -534,9 +534,14 @@ export class LayersComponent implements OnInit{
     if (typeof featurecall !== 'string') {
       const feature = featurecall;
     if (ver) {
-      this.mostrarpoligono();      
+      if(this.capaActiva){
+        this.arr_polygon.forEach((polygon: google.maps.Polygon) => {
+          polygon.setMap(null);
+        });
+        this.capaActiva=false;
+      }    
       //this.myControl.setValue(feature.properties.nombre);
-      //this.opcionb = feature;
+      this.opcionb = feature;
       console.log(this.opcionb);
     }
       const geometry = feature.geometry;
@@ -587,8 +592,8 @@ export class LayersComponent implements OnInit{
                 bounds.extend(latlng);
               });
             });
-            this.mapCustom.panToBounds(bounds);
-           // this.mapCustom.fitBounds(bounds); //zoom automatico
+           // this.mapCustom.panToBounds(bounds);
+            this.mapCustom.fitBounds(bounds); //zoom automatico
           }
         }        
       }
@@ -607,9 +612,9 @@ export class LayersComponent implements OnInit{
             console.log('El usuario está dentro del polígono:', feature);
             console.log(feature);
             this.opcionb = feature;
-            if (this.check.DashboardComponent&&this.isMobil()) {
+            /*if (this.check.DashboardComponent&&this.isMobil()) {
               this.sidebarVisible = true;
-            }
+            }*/
             this.poligonoview(true, feature);
             buscarbol = true;
             break;            
@@ -625,12 +630,14 @@ export class LayersComponent implements OnInit{
   levantarpopup(polygon: any, feature: any) {
     //this.canpopup = true;
     const featureId = feature.id;
-    if (this.check.DashboardComponent&&this.isMobil()) {
-      this.sidebarVisible = true;
+    if(this.capaActiva){
+
+      this.opcionb=false;
     }
-    this.opcionb = feature;
+    //
 
     polygon.addListener('click', (event:any) => {
+      console.log("632",!this.popupsMostrados[featureId], this.capaActiva,this.opcionb);
       if(!this.popupsMostrados[featureId]){
           // Cerrar el popup actualmente abierto
           if (this.openInfoWindow) {
@@ -658,9 +665,21 @@ export class LayersComponent implements OnInit{
           //this.canpopup=false;
       } else {
         this.popupsMostrados={}
-        this.latitud = event.latLng.lat();
-        this.longitud = event.latLng.lng();
-        this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono');
+        if(this.capaActiva){
+          this.opcionb = feature;
+          if (this.check.DashboardComponent&&this.isMobil()) {
+            this.sidebarVisible = true;
+          }else{
+            this.latitud = event.latLng.lat();
+            this.longitud = event.latLng.lng();
+            this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono');
+          }
+        }else{
+          
+          this.latitud = event.latLng.lat();
+          this.longitud = event.latLng.lng();
+          this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono');
+        }
       }
       
     });

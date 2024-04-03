@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ListService } from 'src/app/services/list.service';
-import { CreateService } from 'src/app/services/create.service';
+import { ListService } from 'src/app/demo/services/list.service';
+import { CreateService } from 'src/app/demo/services/create.service';
 import { Router } from '@angular/router';
-import { HelperService } from 'src/app/services/helper.service';
-import iziToast from 'izitoast';
+import { HelperService } from 'src/app/demo/services/helper.service';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-create-encargado-categoria',
   templateUrl: './create-encargado-categoria.component.html',
-  styleUrl: './create-encargado-categoria.component.scss'
+  styleUrl: './create-encargado-categoria.component.scss',
+  providers: [MessageService]
 })
 export class CreateEncargadoCategoriaComponent implements OnInit {
   encargadosSeleccionados: any[] = [];
@@ -17,7 +18,7 @@ export class CreateEncargadoCategoriaComponent implements OnInit {
   usuarios: any[] = [];
   subcategoriaForm: FormGroup;
   token=this.helper.token();
-  constructor(private fb: FormBuilder,private listService: ListService, private createService:CreateService,private router: Router,private helper:HelperService){
+  constructor(private fb: FormBuilder,private listService: ListService, private createService:CreateService,private router: Router,private helper:HelperService,private messageService: MessageService,){
     this.subcategoriaForm = this.fb.group({
       categoria: ['', Validators.required]
     });
@@ -61,13 +62,9 @@ export class CreateEncargadoCategoriaComponent implements OnInit {
     if(this.encargadosSeleccionados.length>0&&this.categoriaselect){
       this.createService.registrarEncargadoCategoria(this.token,{encargado:this.encargadosSeleccionados,categoria:this.categoriaselect}).subscribe(response=>{
         console.log(response)
-        iziToast.success({title:'Ingresado',position:'bottomRight',message:response.message});
+        this.messageService.add({severity: 'success', summary: 'Ingresado', detail: response.message});
       },error=>{
-        iziToast.error({
-          title: ('('+error.status+')').toString(),
-          position: 'bottomRight',
-          message: error.error.message,
-        });
+        this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
       })
     }
   }

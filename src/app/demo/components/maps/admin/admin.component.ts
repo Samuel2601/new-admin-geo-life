@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HelperService } from 'src/app/services/helper.service';
+import { HelperService } from 'src/app/demo/services/helper.service';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',

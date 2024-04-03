@@ -4,6 +4,7 @@ import { MessageService } from 'primeng/api';
 import { FilterService } from 'src/app/demo/services/filter.service';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { UpdateService } from 'src/app/demo/services/update.service';
+import { DialogService, DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 @Component({
   selector: 'app-edit-categoria',
   templateUrl: './edit-categoria.component.html',
@@ -14,11 +15,12 @@ export class EditCategoriaComponent implements OnInit {
   id:any;
   categoria:any;
   token=this.helper.token();
-  constructor(private obtener:FilterService,private update:UpdateService,private helper:HelperService,private modalService: NgbModal,private messageService: MessageService,){
+  constructor(private obtener:FilterService,private update:UpdateService,private helper:HelperService,private modalService: NgbModal,private messageService: MessageService, private config: DynamicDialogConfig){
 
   }
+   
   ngOnInit(): void {
-    console.log(this.id);
+    this.id = this.config.data.id;
     this.obtenerCategoria();
   }
   loadcategoria=false;
@@ -26,7 +28,7 @@ export class EditCategoriaComponent implements OnInit {
     this.loadcategoria=false;
     this.obtener.obtenerCategoria(this.token,this.id).subscribe(response=>{
       this.categoria=response.data;
-      console.log(this.categoria);
+      //console.log(this.categoria);
     });
     setTimeout(() => {
       this.loadcategoria=true;

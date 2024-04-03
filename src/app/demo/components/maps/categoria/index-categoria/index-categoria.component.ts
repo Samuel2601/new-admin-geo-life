@@ -6,11 +6,11 @@ import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
 import { UpdateService } from 'src/app/demo/services/update.service';
 import { CreateCategoriaComponent } from '../create-categoria/create-categoria.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateSubcategoriaComponent } from '../sub/create-subcategoria/create-subcategoria.component';
 import { EditCategoriaComponent } from '../edit-categoria/edit-categoria.component';
 import { EditSubcategoriaComponent } from '../sub/edit-subcategoria/edit-subcategoria.component';
 import { DeleteService } from 'src/app/demo/services/delete.service';
+import { DialogService,DynamicDialogRef } from 'primeng/dynamicdialog';
 interface Column {
   field: string;
   header: string;
@@ -26,7 +26,7 @@ export class IndexCategoriaComponent {
   constcategorias=[];
   clonedProducts: { [s: string]: any } = {};
   token = this.helperservice.token();
-  constructor(private listService: ListService,private router: Router, private updateservice:UpdateService, private helperservice:HelperService,private modalService: NgbModal,private deleteService:DeleteService,private messageService: MessageService) { }
+  constructor(private listService: ListService,private router: Router, private updateservice:UpdateService, private helperservice:HelperService,private deleteService:DeleteService,private messageService: MessageService,private dialogService: DialogService) { }
   cols!: Column[];
   async ngOnInit() {
     this.loading=true;
@@ -71,7 +71,7 @@ export class IndexCategoriaComponent {
               cat:false
             }
           }));
-          console.log('children',children);
+          //console.log('children',children);
           return {
             data: {
               nombre: categoria.nombre,
@@ -83,46 +83,62 @@ export class IndexCategoriaComponent {
           };
         }));
         this.categorias = categorias;
-        console.log(this.categorias);
+        //console.log(this.categorias);
       } else {
         throw new Error('No se pudo obtener la lista de categorías');
       }
     } catch (error) {
-      console.error('Error al listar categorías y subcategorías', error);
+      //console.error('Error al listar categorías y subcategorías', error);
     } finally {
       this.loading = false;
     }
   }
-
+  isMobil() {
+    return this.helperservice.isMobil();
+  }
     editRow(id:any,cat:boolean){
-        console.log(id);
-        this.modalService.dismissAll();
+        //console.log(id);
         if(cat){
-            const modalRef = this.modalService.open(EditCategoriaComponent, { centered: true });    
-            modalRef.componentInstance.id=id;
-        }else{
-            const modalRef = this.modalService.open(EditSubcategoriaComponent, { centered: true });    
-            modalRef.componentInstance.id=id;
+            const modalRef = this.dialogService.open(EditCategoriaComponent, {
+            header: 'Editar Categoría',
+            width: this.isMobil()? '100%':'70%',
+            data: { id: id },
+          });    
+        } else {
+           const modalRef = this.dialogService.open(EditSubcategoriaComponent, {
+            header: 'Editar Subcategoría',
+            width: this.isMobil()? '100%':'70%',
+            data: { id: id },
+          });  
         }
     }
     responsemodal:any;
     iddelete:any;
-    @ViewChild('Confirmar') Confirmar: TemplateRef<any> | undefined;
-    load_btn_delte=true;
-   async remoRow(row:any,cat:boolean){
-        this.iddelete=row;
-        console.log(row);
-        if(cat){
-            this.responsemodal = await this.deleteService.verificarCategoria(this.token,this.iddelete._id).toPromise();
-        }else{
-            this.responsemodal = await this.deleteService.verificarSubCategoria(this.token,this.iddelete._id).toPromise();
-            console.log(this.responsemodal);
-        }
-        const modalRef = this.modalService.open(this.Confirmar, { centered: true,size: 'lg'  }); 
+    @ViewChild('Confirmar') Confirmar!: TemplateRef<any>;
+  load_btn_delte = true;
+  visibledelete = false;
+  async remoRow(row: any, cat: boolean) {
+    this.iddelete = undefined;
+    //console.log(row);
+      if(cat){
+          this.responsemodal = await this.deleteService.verificarCategoria(this.token,row._id).toPromise();
+      }else{
+          this.responsemodal = await this.deleteService.verificarSubCategoria(this.token,row._id).toPromise();
+          //console.log(this.responsemodal);
+      }
+    setTimeout(() => {
+      this.iddelete = row;
+      setTimeout(() => {        
+        this.visibledelete = true;
+      }, 200);
+    }, 200);
+       
+       
+        //const modalRef = this.dialogService.open(this.Confirmar, { centered: true,size: 'lg'  }); 
     }
     respaldo!:any;
     eliminarCategoria() {
-        console.log(this.respaldo, this.iddelete);
+        //console.log(this.respaldo, this.iddelete);
         if (this.iddelete) {
             const data: any = {}; // Corrección: usa const en lugar de let para data
             if (this.respaldo) {
@@ -133,7 +149,7 @@ export class IndexCategoriaComponent {
             }
             if (this.iddelete.cat) {
                 this.deleteService.eliminarCategoria(this.token, this.iddelete._id, data).subscribe(response => {
-                    console.log(response.data);
+                    //console.log(response.data);
                     this.messageService.add({severity: 'success', summary: 'Eliminación', detail: 'completado'});
 
                 }, error => {
@@ -141,7 +157,7 @@ export class IndexCategoriaComponent {
                 });
             } else {
                 this.deleteService.eliminarSubcategoria(this.token, this.iddelete._id, data).subscribe(response => {
-                    console.log(response.data);
+                    //console.log(response.data);
                      this.messageService.add({severity: 'success', summary: 'Eliminación', detail: 'completado'});
                 }, error => {
                    this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
@@ -155,14 +171,14 @@ export class IndexCategoriaComponent {
   onRowEditInit(categoria: any) {
     this.clonedProducts[categoria._id as string] = { ...categoria };
     // Iniciar la edición de la categoría
-    console.log('Iniciar edición de la categoría:', categoria);
+    //console.log('Iniciar edición de la categoría:', categoria);
   }
 
   onRowEditSave(categoria: any) {
     // Guardar los cambios de la categoría
-    console.log('Guardar cambios de la categoría:', categoria);
-    this.updateservice.actualizarCategoria(this.token,categoria._id,categoria).subscribe(response=>{console.log(response)},error=>{
-      console.log(error);
+    //console.log('Guardar cambios de la categoría:', categoria);
+    this.updateservice.actualizarCategoria(this.token,categoria._id,categoria).subscribe(response=>{//console.log(response)},error=>{
+      //console.log(error);
     });
 
   }
@@ -170,7 +186,7 @@ export class IndexCategoriaComponent {
   onRowEditCancel(categoria: any, rowIndex: number) {
     // Cancelar la edición de la categoría
     this.categorias[rowIndex]=this.clonedProducts[categoria._id];
-    console.log('Cancelar edición de la categoría:', categoria);
+    //console.log('Cancelar edición de la categoría:', categoria);
     
   }
 
@@ -179,6 +195,12 @@ export class IndexCategoriaComponent {
   }
 
   confirmarEliminacion(categoria: any) {
-    console.log('Eliminar la categoría:', categoria);
+    //console.log('Eliminar la categoría:', categoria);
+  }
+
+  get options(): any[] {
+    return this.responsemodal.cantidadSubcategorias
+      ? this.listadocategoria.filter(item => item.nombre !== this.iddelete.nombre)
+      : this.listadosubcategoria.filter(item => item.nombre !== this.iddelete.nombre);
   }
 }

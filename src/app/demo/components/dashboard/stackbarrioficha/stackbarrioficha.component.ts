@@ -40,7 +40,7 @@ export class StackbarriofichaComponent {
           this.constFicha = response.data;
         }
       } catch (error) {
-        console.error('Error al obtener incidentes:', error);
+        //console.error('Error al obtener incidentes:', error);
         this.loading = false;
         return;
       }
@@ -71,7 +71,7 @@ export class StackbarriofichaComponent {
     
     // Actualizar la vista
     this.canvas();
-    console.log(this.encontrarMaximo());
+    ////console.log(this.encontrarMaximo());
     this.loading = false;
      this.helper.setStbarrioficha(this);
   }
@@ -133,7 +133,7 @@ export class StackbarriofichaComponent {
 }
 options:any
 canvas(){
-  console.log(this.constFicha);
+  ////console.log(this.constFicha);
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');

@@ -65,7 +65,7 @@ import { DividerModule } from 'primeng/divider';
 import { DockModule } from 'primeng/dock';
 import { DragDropModule } from 'primeng/dragdrop';
 import { DropdownModule } from 'primeng/dropdown';
-import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { EditorModule } from 'primeng/editor';
 import { FieldsetModule } from 'primeng/fieldset';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -138,8 +138,13 @@ import { InputIconModule } from 'primeng/inputicon';
 import { StepperModule } from 'primeng/stepper';
 import { FloatLabelModule } from 'primeng/floatlabel';
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { IndexDireccionGeoComponent } from './direccion-geo/index-direccion-geo/index-direccion-geo.component';
+import { CreateDireccionGeoComponent } from './direccion-geo/create-direccion-geo/create-direccion-geo.component';
+import { EditDireccionGeoComponent } from './direccion-geo/edit-direccion-geo/edit-direccion-geo.component';
 @NgModule({  
   imports: [
+    NgbModule,
     CommonModule,
     MapsRoutingModule,
     SidebarModule,
@@ -242,7 +247,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
     ProgressSpinnerModule,
     RippleModule,
     StyleClassModule,
-    FloatLabelModule
+    FloatLabelModule,
   ],
   declarations: [LayersComponent, IndexIncidentesDenunciaComponent,
     IndexEstadoIncidenteComponent,
@@ -272,8 +277,12 @@ import { FloatLabelModule } from 'primeng/floatlabel';
     IndexPermisosComponent,
     CreateEncargadoCategoriaComponent,
     EditEncargadoCategoriaComponent,
-    IndexEncargadoCategoriaComponent
+    IndexEncargadoCategoriaComponent,
+    IndexDireccionGeoComponent,
+    CreateDireccionGeoComponent,
+    EditDireccionGeoComponent
   ],
-  providers: [ MessageService],
+  providers: [MessageService,DialogService],
+  bootstrap: [IndexUsuarioComponent]
 })
 export class MapsModule { }

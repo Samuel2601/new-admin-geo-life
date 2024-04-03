@@ -17,10 +17,10 @@ export class AdminComponent implements OnInit{
       this.check.IndexRolUserComponent = this.helperService.decryptData('IndexRolUserComponent') || false;
       this.check.IndexEncargadoCategoriaComponent = this.helperService.decryptData('IndexEncargadoCategoriaComponent') || false;
       this.check.IndexPermisosComponent = this.helperService.decryptData('IndexPermisosComponent')  || false;
-      console.log(this.check);
+      ////console.log(this.check);
     } catch (error) {
       
-      console.error('Error al verificar permisos:', error);
+      //console.error('Error al verificar permisos:', error);
       this.router.navigate(['/error']);
       
     }
@@ -29,7 +29,7 @@ export class AdminComponent implements OnInit{
     for (const key in this.check) {
       if (this.check[key] && !found) {
         this.selected = key; // Assuming the keys are in the format 'IndexXxxComponent'
-        console.log(this.selected);
+        ////console.log(this.selected);
         found = true;
       }
     }

@@ -79,7 +79,7 @@ export class LoginComponent implements OnInit{
   }
 
     async postLogin() {
-        console.log(this.loginForm,this.loginForm.valid);
+        ////console.log(this.loginForm,this.loginForm.valid);
     if (this.loginForm.valid) {
       let user = {
         correo: this.loginForm.get("correo")?.value,
@@ -91,10 +91,10 @@ export class LoginComponent implements OnInit{
         user.time=7;
         user.tipo='days';
         }
-        console.log(user);
+        ////console.log(user);
       this._adminService.login_admin(user).subscribe((response:any)=>{
         if (response.token) {
-          console.log(response.data);
+         // //console.log(response.data);
           const data = response.data;
           if (data) {
             this.cookieService.set('nombreUsuario', data.nombres);
@@ -122,7 +122,7 @@ export class LoginComponent implements OnInit{
         }   
        },
        error => {
-           console.error(error);
+          // //console.error(error);
            this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
        });
      

@@ -79,9 +79,9 @@ export class AdminService {
 			sessionStorage.clear();
 			return 0;
 		}
-		console.log(diferencia,expiracion,ahora,expiracion>ahora);
+		//console.log(diferencia,expiracion,ahora,expiracion>ahora);
 		// Devolver el objeto con el tiempo restante formateado
-		console.log({ dias, horas, minutos, segundos });
+		//console.log({ dias, horas, minutos, segundos });
 		return diferencia ;
 	}
 	isAuthenticate() {
@@ -90,7 +90,7 @@ export class AdminService {
 		try {
 			const helper = new JwtHelperService();
 			var decodedToken = helper.decodeToken(token);
-			console.log(decodedToken);
+			//console.log(decodedToken);
 			if (!token) {
 				localStorage.clear();
 				sessionStorage.clear();
@@ -109,7 +109,7 @@ export class AdminService {
 				return false;
 			}
 		} catch (error) {
-			//console.log(error);
+			////console.log(error);
 			localStorage.clear();
 			sessionStorage.clear();
 			return false;

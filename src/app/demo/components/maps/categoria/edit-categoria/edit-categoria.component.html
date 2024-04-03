@@ -5,13 +5,6 @@
             Editar Categoría:
             <span *ngIf="loadcategoria"> {{ categoria.nombre }} </span>
         </h5>
-        <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            (click)="cerrar()"
-        ></button>
     </div>
     <div class="modal-body">
         <ng-container *ngIf="!loadcategoria">
@@ -37,46 +30,44 @@
                 borderRadius="16px"
             ></p-skeleton>
         </ng-container>
-        <ng-container *ngIf="loadcategoria">
-            <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label"
-                    >Nombre de Categoria</label
-                >
-                <input
-                    type="email"
-                    class="form-control"
-                    id="exampleFormControlInput1"
-                    placeholder="Nombre de Categoria"
-                    pInputText
-                    [(ngModel)]="categoria.nombre"
-                />
-            </div>
-            <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label"
-                    >Descripción</label
-                >
-                <textarea
-                    class="form-control"
-                    id="exampleFormControlTextarea1"
-                    rows="5"
-                    cols="30"
-                    pInputTextarea
-                    [(ngModel)]="categoria.descripcion"
-                ></textarea>
-            </div>
-        </ng-container>
+        <div class="p-fluid p-formgrid grid">
+            <ng-container *ngIf="loadcategoria">
+                <div class="field col-12 md:col-6">
+                    <label for="nombre" class="form-label"
+                        >Nombre de Categoria</label
+                    >
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="nombre"
+                        placeholder="Nombre de Categoria"
+                        pInputText
+                        [(ngModel)]="categoria.nombre"
+                    />
+                </div>
+                <div class="field col-12 md:col-6">
+                    <label for="descripcion" class="form-label"
+                        >Descripción</label
+                    >
+                    <textarea
+                        class="form-control"
+                        id="descripcion"
+                        rows="5"
+                        cols="30"
+                        pInputTextarea
+                        [(ngModel)]="categoria.descripcion"
+                    ></textarea>
+                </div>
+            </ng-container>
+        </div>
     </div>
-    <div class="modal-footer">
+    <div class="d-flex justify-content-end mt-3">
         <button
             type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-            (click)="cerrar()"
-        >
-            Concelar
-        </button>
-        <button type="button" class="btn btn-primary" (click)="updateCate()">
-            Guardar
-        </button>
+            pButton
+            label="Guardar"
+            class="btn btn-primary"
+            (click)="updateCate()"
+        ></button>
     </div>
 </div>

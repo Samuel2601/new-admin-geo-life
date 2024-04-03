@@ -2,6 +2,8 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from "./service/app.layout.service";
 import { GLOBAL } from '../demo/services/GLOBAL';
+import { HelperService } from '../demo/services/helper.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-topbar',
@@ -17,10 +19,15 @@ export class AppTopBarComponent {
     @ViewChild('topbarmenubutton') topbarMenuButton!: ElementRef;
 
     @ViewChild('topbarmenu') menu!: ElementRef;
-
-    constructor(public layoutService: LayoutService) { }
-    logout():void{
+    
+    constructor(public layoutService: LayoutService, private helper: HelperService,private router: Router,) { }
+    token = this.helper.token()||undefined;
+    logout(): void {
         sessionStorage.clear();
-        location.reload();
-      }
+        localStorage.clear();
+        this.router.navigate(["/maps"]).then(() => {
+            window.location.reload();
+        });
+    }
+
 }

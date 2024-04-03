@@ -23,7 +23,7 @@ export class UpdateService {
     formData.append('estado', data.estado);
     formData.append('nombres', data.nombres);
     formData.append('password', data.password);
-    formData.append('rol_user', data.rol_user);
+    formData.append('rol_user', data.rol_user._id?data.rol_user._id:data.rol_user);
     formData.append('telefono', data.telefono);
     formData.append('foto', file);
 

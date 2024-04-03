@@ -40,7 +40,7 @@ export class StackBarriosComponent implements OnInit {
           this.constIncidente = response.data;
         }
       } catch (error) {
-        console.error('Error al obtener incidentes:', error);
+        ////console.error('Error al obtener incidentes:', error);
         this.loading = false;
         return;
       }
@@ -81,7 +81,7 @@ export class StackBarriosComponent implements OnInit {
       let maximoLabel = '';
       // Obtener todos los valores de los datasets combinados en un solo array
     // Obtener la suma de los valores de los datasets
-    console.log("DAtaset",this.basicData.datasets,this.basicData);
+    ////console.log("DAtaset",this.basicData.datasets,this.basicData);
       const sumaValores = this.basicData.datasets[0].data;
     
       // Encontrar el valor máximo y su correspondiente label

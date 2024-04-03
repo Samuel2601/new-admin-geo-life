@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MessageService } from 'primeng/api';
+import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { FilterService } from 'src/app/demo/services/filter.service';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
@@ -21,11 +22,12 @@ export class EditSubcategoriaComponent implements OnInit {
   id:any;
   subcategoria:any;
   token=this.helper.token();
-  constructor(private obtener:FilterService,private update:UpdateService,private helper:HelperService,private modalService: NgbModal, private listar:ListService,private messageService: MessageService,){
+  constructor(private obtener:FilterService,private update:UpdateService,private helper:HelperService,private modalService: NgbModal, private listar:ListService,private messageService: MessageService,private config: DynamicDialogConfig){
 
   }
   async ngOnInit() {
-    console.log(this.id);
+    //console.log(this.id);
+     this.id = this.config.data.id;
     this.loadcategoria=false;
     try{
 
@@ -67,7 +69,7 @@ export class EditSubcategoriaComponent implements OnInit {
   async obtenerCategoria(){
     this.obtener.obtenerSubcategoria(this.token,this.id).subscribe(response=>{
       this.subcategoria=response.data;
-      console.log(this.subcategoria);
+      //console.log(this.subcategoria);
     });
    
   }
@@ -79,7 +81,7 @@ export class EditSubcategoriaComponent implements OnInit {
     this.update.actualizarSubcategoria(this.token,this.id,this.subcategoria).subscribe(response=>{
       if(response.data){
         let data=response.data;
-        console.log(data);
+        //console.log(data);
          this.messageService.add({severity: 'success', summary: 'Ingreso', detail: 'Bienvenido'});
         setTimeout(() => {          
           this.modalService.dismissAll();

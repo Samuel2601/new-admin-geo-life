@@ -45,7 +45,6 @@
                                     formControlName="actividad"
                                     [options]="actividadesProyecto"
                                     optionLabel="nombre"
-                                    [showClear]="true"
                                 ></p-dropdown>
                             </div>
                         </div>
@@ -78,7 +77,6 @@
                                     formControlName="estado"
                                     [options]="estadosActividadProyecto"
                                     optionLabel="nombre"
-                                    [showClear]="true"
                                 ></p-dropdown>
                             </div>
                         </div>
@@ -133,7 +131,7 @@
                     <div
                         class="mb-3"
                         *ngIf="
-                            (imagenesSeleccionadas.length <= 3 || upload) &&
+                            (imagenesSeleccionadas.length < 3 || upload) &&
                             isMobil()
                         "
                     >
@@ -152,7 +150,7 @@
                         <p-toast></p-toast>
                         <p-fileUpload
                             *ngIf="
-                                (imagenesSeleccionadas.length <= 3 || upload) &&
+                                (imagenesSeleccionadas.length < 3 || upload) &&
                                 !isMobil()
                             "
                             chooseLabel="Seleccionar"

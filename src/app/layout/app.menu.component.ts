@@ -23,7 +23,23 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Categoria',
                 items: [
-                    { label: 'Categoria', icon: 'pi pi-fw pi-folder', routerLink: ['/maps/categoria'] },
+                    {
+                        label: 'Categoria', icon: 'pi pi-fw  pi-folder',
+                        items: [
+                            {
+                                label: 'Listado', icon: 'pi pi-fw pi-folder-open', routerLink: ['/maps/categoria'],
+                               
+                            },
+                            {
+                                label: 'Nuevo', icon: 'pi pi-fw pi-folder-open', routerLink: ['/maps/categoria/create-categoria'],
+                                
+                            },
+                        ]
+                    },
+                    {
+                        label: 'Subcategoria', icon: 'pi pi-fw pi-folder',routerLink: ['/maps/subcategoria/create-subcategoria'],
+                       
+                    }
                 ]
             },
             {
@@ -48,10 +64,9 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Panel de Control',
                 items: [
-                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }
+                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/dashboard'] }
                 ]
-            },
-           
+            },           
         ];
     }
 }

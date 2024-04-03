@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { HelperService } from 'src/app/services/helper.service';
-import { ListService } from 'src/app/services/list.service';
+import { HelperService } from 'src/app/demo/services/helper.service';
+import { ListService } from 'src/app/demo/services/list.service';
 
 @Component({
   selector: 'app-index-direccion-geo',
@@ -21,10 +21,10 @@ export class IndexDireccionGeoComponent {
     this.listService.listarDireccionesGeo(this.token).subscribe(
       response => {
         this.direccionesGeo = response.data;
-        console.log(response.data);
+        //console.log(response.data);
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
   }
@@ -32,18 +32,18 @@ export class IndexDireccionGeoComponent {
   onRowEditInit(categoria: any) {
     this.clonedProducts[categoria._id as string] = { ...categoria };
     // Iniciar la edición de la categoría
-    console.log('Iniciar edición de la categoría:', categoria);
+    //console.log('Iniciar edición de la categoría:', categoria);
   }
 
   onRowEditSave(categoria: any) {
     // Guardar los cambios de la categoría
-    console.log('Guardar cambios de la categoría:', categoria);
+    //console.log('Guardar cambios de la categoría:', categoria);
 
   }
 
   onRowEditCancel(categoria: any, rowIndex: number) {
     // Cancelar la edición de la categoría
-    console.log('Cancelar edición de la categoría:', categoria);
+    //console.log('Cancelar edición de la categoría:', categoria);
 
   }
 
@@ -52,6 +52,6 @@ export class IndexDireccionGeoComponent {
 }
 
   confirmarEliminacion(categoria: any) {
-    console.log('Eliminar la categoría:', categoria);
+    //console.log('Eliminar la categoría:', categoria);
   }
 }

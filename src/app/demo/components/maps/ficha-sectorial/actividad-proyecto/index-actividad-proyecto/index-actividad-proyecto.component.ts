@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateActividadProyectoComponent } from '../create-actividad-proyecto/create-actividad-proyecto.component';
 import { ListService } from 'src/app/demo/services/list.service';
 import { HelperService } from 'src/app/demo/services/helper.service';
+import { DialogService } from 'primeng/dynamicdialog';
 @Component({
   selector: 'app-index-actividad-proyecto',
   templateUrl: './index-actividad-proyecto.component.html',
@@ -13,7 +14,7 @@ export class IndexActividadProyectoComponent implements OnInit {
   model:boolean=true;
   actividadPro:any={};
 
-  constructor(private modalService: NgbModal,private router: Router,private listService:ListService,private helper:HelperService){
+  constructor(private modalService: NgbModal,private router: Router,private listService:ListService,private helper:HelperService,private dialogService: DialogService){
 
   }
   cerrarModal() {
@@ -36,15 +37,19 @@ export class IndexActividadProyectoComponent implements OnInit {
       throw this.router.navigate(["/inicio"]);
     }
     this.listService.listarTiposActividadesProyecto(this.token).subscribe(response=>{
-      console.log(response);
+      //console.log(response);
       if(response.data){
         this.actividadPro=response.data;
       }
     });
   }
-
+ isMobil() {
+    return this.helper.isMobil();
+  }
   abrirModal(){
-    this.modalService.dismissAll();
-    this.modalService.open(CreateActividadProyectoComponent, { centered: true });
+    this.dialogService.open(CreateActividadProyectoComponent,  {
+        header: 'Nueva Actividad',
+        width: this.isMobil() ? '100%' : '50%',
+    });
   }
 }

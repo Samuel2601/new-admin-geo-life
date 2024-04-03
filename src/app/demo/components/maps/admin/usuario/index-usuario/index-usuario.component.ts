@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GLOBAL } from 'src/app/demo/services/GLOBAL';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
 import { EditUsuarioComponent } from '../edit-usuario/edit-usuario.component';
 import { Capacitor } from '@capacitor/core';
-
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 @Component({
   selector: 'app-index-usuario',
   templateUrl: './index-usuario.component.html',
@@ -19,8 +18,15 @@ export class IndexUsuarioComponent implements OnInit{
   usuariosconst:any[]=[];
   token=this.helperservice.token();
   categoria:any;
-  valor:any;
-  constructor(private router: Router,private listService:ListService,private modalService: NgbModal,private helperservice:HelperService){
+  valor: any;
+  opciones=[
+      { label: 'Nombre', value: 'nombres' },
+      { label: 'Correo', value: 'correo' },
+      { label: 'Teléfono', value: 'telefono' },
+      { label: 'Cédula', value: 'cedula' },
+      { label: 'Rol', value: 'rol_user' }
+  ]
+  constructor(private router: Router,private listService:ListService,private helperservice:HelperService,private dialogService: DialogService){
   
   }
   ngOnInit() {  
@@ -34,16 +40,16 @@ export class IndexUsuarioComponent implements OnInit{
         this.usuarios=response.data;
         this.usuariosconst=response.data;
         this.ordenaryfiltrar('rol_user',undefined,this.orden);
-        console.log(this.usuarios);
+        ////console.log(this.usuarios);
         this.load_lista=false; 
       }
     },error=>{
-      console.log(error);
+      //console.log(error);
     });
   }
   orden:any='asc';
   ordenaryfiltrar(categoria?: any, valor?: any, orden?: 'asc' | 'desc') {
-    console.log(categoria, valor, orden);
+    ////console.log(categoria, valor, orden);
     if (categoria && valor) {
         // Filtrar por categoría y valor
         if (categoria == 'rol_user') {
@@ -114,13 +120,14 @@ export class IndexUsuarioComponent implements OnInit{
     return this.helperservice.isMobil();
   }
   editrow(id:any){
-    this.modalService.dismissAll();
-    const modalRef = this.modalService.open(EditUsuarioComponent, { centered: true,size: 'lg' });
-    console.log(id);
-    modalRef.componentInstance.id = id; 
+    const modalRef = this.dialogService.open(EditUsuarioComponent, {
+      header: 'Editar Usuario',
+      width: this.isMobil()? '100%':'70%',
+      data: { id: id },
+    });
   }
   openModal(content: any) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+    this.dialogService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
   stopPropagation(event: MouseEvent) {
     event.stopPropagation();

@@ -22,7 +22,7 @@ export class StackFichasComponent implements OnInit{
 sumaValores: number[] = [];
     async ngOnInit() {
        
-        console.log('llamado');
+        ////console.log('llamado');
     await this.getWFSgeojson(this.urlgeoser);
     if(this.valor&&this.filtro){
      await this.cargar();
@@ -47,14 +47,14 @@ sumaValores: number[] = [];
             if (response.data) {
                 this.constFicha = response.data;
             }
-            console.log(this.constFicha);
+            ////console.log(this.constFicha);
         } catch (error) {
-            console.error('Error al obtener incidentes:', error);
+            //console.error('Error al obtener incidentes:', error);
             this.loading = false;
             return;
         }
     }
-    console.log(this.constFicha);
+    ////console.log(this.constFicha);
     // Obtener valores únicos de actividad.nombre
     const actividadsUnicas = [...new Set(this.constFicha.map((incidente: any) => incidente.actividad.nombre))];
     const barriosUnicos = [...new Set(this.constFicha.map((incidente: any) => incidente.direccion_geo))];
@@ -77,7 +77,7 @@ sumaValores: number[] = [];
             type: 'bar',
         };
     });
-      console.log("datasets",datasets);
+      ////console.log("datasets",datasets);
 
       this.basicData.datasets = datasets.flat(); // Utiliza flat para aplanar el arreglo de arreglos
 
@@ -91,7 +91,7 @@ sumaValores: number[] = [];
     }else{
         this.basicData.labels = actividadsUnicas;
     }
-        console.log(this.basicData);
+        ////console.log(this.basicData);
       // Actualizar la vista
       this.canvas();
       
@@ -143,18 +143,18 @@ sumaValores: number[] = [];
     if (this.constFicha.length === 0) {
         try {
             const response: any = await this.listar.listarFichaSectorial(this.token,this.filtro,this.valor).toPromise();
-            console.log(response);
+            ////console.log(response);
             if (response.data) {
                 this.constFicha = response.data;
             }
-            console.log(response);
+            ////console.log(response);
         } catch (error) {
-            console.error('Error al obtener incidentes:', error);
+            //console.error('Error al obtener incidentes:', error);
             this.loading = false;
             return;
         }
     }
-    console.log(this.constFicha);
+    ////console.log(this.constFicha);
     // Obtener valores únicos de actividad.nombre
     const actividadsUnicas = [...new Set(this.constFicha.map((incidente: any) => incidente.actividad.nombre))];
     const barriosUnicos = [...new Set(this.constFicha.map((incidente: any) => incidente.direccion_geo))];
@@ -190,7 +190,7 @@ sumaValores: number[] = [];
             type: 'bar',
         };
     });
-      console.log("datasets",datasets);
+      ////console.log("datasets",datasets);
 
       this.basicData.datasets = datasets.flat(); // Utiliza flat para aplanar el arreglo de arreglos
     if(this.modal){
@@ -203,7 +203,7 @@ sumaValores: number[] = [];
     }else{
         this.basicData.labels = actividadsUnicas;
     }
-    console.log(this.basicData);
+    ////console.log(this.basicData);
       // Actualizar la vista
       this.canvas();
 

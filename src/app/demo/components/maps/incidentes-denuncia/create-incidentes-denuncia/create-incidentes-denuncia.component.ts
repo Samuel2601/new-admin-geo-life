@@ -52,9 +52,9 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
   async checkPermissions() {
     const result = await  Geolocation['requestPermissions']();
     if (result.location === 'granted') {
-      console.log('Permiso de ubicación concedido');
+      //console.log('Permiso de ubicación concedido');
     } else {
-      console.log('Permiso de ubicación denegado');
+      //console.log('Permiso de ubicación denegado');
     }
   }
   async tomarFoto() {
@@ -90,11 +90,11 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
         .then(response => response.json())
         .then(data => {
              this.geolocation = data;
-            console.log('Dirección:', data,data.display_name);
+            //console.log('Dirección:', data,data.display_name);
             return data;
         })
         .catch(error => {
-            console.error('Error al realizar la solicitud:', error);
+            //console.error('Error al realizar la solicitud:', error);
         });
   }
   
@@ -115,8 +115,8 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     });
     try {
       //this.getLocation();
-      console.log(this.data);
-      console.log(this.direccion);
+      //console.log(this.data);
+      //console.log(this.direccion);
       await Promise.all([
         this.obtenerDireccion(this.direccion.latitud, this.direccion.longitud),
         this.listarCategorias()
@@ -135,11 +135,11 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
           alert('Latitude: ' + position.coords.latitude + ', Longitude: ' + position.coords.longitude);
         },
         (error) => {
-          console.error('Error getting location: ' + error.message);
+          //console.error('Error getting location: ' + error.message);
         }
       );
     } else {
-      console.error('Geolocation is not supported by this browser.');
+      //console.error('Geolocation is not supported by this browser.');
     }
   }
   token=this.helper.token();
@@ -152,11 +152,11 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
       const id = event.value._id;
       this.listService.listarSubcategorias(this.token,'categoria',id).subscribe(
         response => {
-          console.log(response)
+          //console.log(response)
           this.subcategorias = response.data;
         },
         error => {
-          console.log(error);
+          //console.log(error);
           if(error.error.message=='InvalidToken'){
             this.router.navigate(["/inicio"]);
           }else{
@@ -174,11 +174,11 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     this.listService.listarCategorias(this.token).subscribe(
       response => {
         this.categorias = response.data;
-        console.log(response.data);
+        //console.log(response.data);
         this.mostrar=true;
       },
       error => {
-        console.log(error);
+        //console.log(error);
         if(error.error.message=='InvalidToken'){
           this.router.navigate(["/inicio"]);
         }else{
@@ -245,7 +245,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
 mostrargale=false;
   onFilesSelected(event: any): void {
     this.mostrargale=false;
-    console.log(event);
+    //console.log(event);
     this.load_carrusel = false;
     const files: FileList = event.files;
 
@@ -257,7 +257,7 @@ mostrargale=false;
 
     this.messageService.add({severity: 'info', summary: 'File Uploaded', detail: this.selectedFiles.length+'Imagenes subidas'});
 
-    console.log(this.selectedFiles,this.imagenesSeleccionadas );
+    //console.log(this.selectedFiles,this.imagenesSeleccionadas );
     setTimeout(() => {
       this.upload=false;
     this.mostrargale=true;
@@ -339,7 +339,7 @@ selectedFiles: File[] = [];
     } else {
        this.messageService.add({severity: 'warning', summary: 'MAX img', detail: 'Solo puede enviar 3 imangenes'});
       this.load_carrusel=true;
-      console.error('Error al obtener la cadena base64 de la imagen.');
+      //console.error('Error al obtener la cadena base64 de la imagen.');
     }
   }
 
@@ -348,7 +348,7 @@ selectedFiles: File[] = [];
     this.imagenesSeleccionadas.splice(index, 1);
      // Eliminar la imagen del arreglo selectedFiles
     this.selectedFiles.splice(index, 1);
-    console.log(this.selectedFiles,this.imagenesSeleccionadas);
+    //console.log(this.selectedFiles,this.imagenesSeleccionadas);
     setTimeout(() => {        
       this.load_carrusel = true;
     }, 500);
@@ -359,19 +359,19 @@ selectedFiles: File[] = [];
     if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
-    console.log(this.nuevoIncidenteDenuncia);
+    //console.log(this.nuevoIncidenteDenuncia);
     this.nuevoIncidenteDenuncia.ciudadano=this.adminservice.identity(this.token);
     
     this.createService.registrarIncidenteDenuncia(this.token, this.nuevoIncidenteDenuncia,this.selectedFiles).subscribe(response => {
       // Manejar la respuesta del servidor
-      console.log(response);
+      //console.log(response);
       if(response.data){
        this.messageService.add({severity: 'success', summary: 'Ingresado', detail: 'Correctamente'});
         this.modalService.dismissAll();
       }
     }, error => {
       // Manejar errores
-      console.error(error);
+      //console.error(error);
       if(error.error.message=='InvalidToken'){
         this.router.navigate(["/inicio"]);
       }else{

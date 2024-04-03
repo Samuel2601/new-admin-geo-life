@@ -44,7 +44,7 @@ export class CreateEstadoIncidenteComponent implements OnInit {
       }
       if (this.token && this.estadoIncidenteForm.value) {
         this.createService.registrarEstadoIncidente(this.token, this.estadoIncidenteForm.value).subscribe(response => {
-          console.log(response);
+          //console.log(response);
           if(response.data){
             this.messageService.add({severity: 'success', summary: 'Ingreso', detail: 'Correcto'});
             setTimeout(() => {
@@ -53,7 +53,7 @@ export class CreateEstadoIncidenteComponent implements OnInit {
           }
         }, error => {
           // Manejar errores
-          console.error(error);
+          //console.error(error);
         });
       }
     }

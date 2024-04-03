@@ -31,7 +31,7 @@ export class CreateSubcategoriaComponent implements OnInit{
     }
     this.listService.listarCategorias(this.token).subscribe(response => {
       this.categorias = response.data;
-      console.log(response);
+      //console.log(response);
     });
   }
   registrarSubcategoria() {
@@ -39,9 +39,9 @@ export class CreateSubcategoriaComponent implements OnInit{
       if(!this.token){
         throw this.router.navigate(["/inicio"]);
       }
-      console.log(this.subcategoriaForm);
+      //console.log(this.subcategoriaForm);
     this.createService.registrarSubcategoria(this.token, this.subcategoriaForm.value).subscribe(response => {
-        console.log(response);
+        //console.log(response);
         if(response.data){
           this.messageService.add({severity: 'success', summary: 'Ingreso', detail: 'Correctamente'});
           setTimeout(() => {

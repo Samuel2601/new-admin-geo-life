@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.notifica.maxficha = this.helper.maximoStFichaComponent();
         this.notifica.maxfichabarrio = this.helper.maximoStbarrioficha();
         this.notifica.maxincidente = this.helper.maximoStincidenteComponent();
-        console.log('Notificacion',this.notifica);
+       // //console.log('Notificacion',this.notifica);
     }
 
     private subscriptions: Subscription[] = [];
@@ -59,7 +59,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.notifica.maxficha = this.helper.maximoStFichaComponent();
     this.notifica.maxfichabarrio = this.helper.maximoStbarrioficha();
     this.notifica.maxincidente = this.helper.maximoStincidenteComponent();
-    console.log('Notificacion', this.notifica);
+   // //console.log('Notificacion', this.notifica);
   }
 
     initChart() {

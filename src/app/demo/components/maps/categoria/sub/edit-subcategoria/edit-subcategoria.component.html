@@ -5,13 +5,6 @@
             Editar Categoría:
             <span *ngIf="loadcategoria"> {{ subcategoria.nombre }} </span>
         </h5>
-        <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            (click)="cerrar()"
-        ></button>
     </div>
     <div class="modal-body">
         <ng-container *ngIf="!loadcategoria">
@@ -38,60 +31,54 @@
             ></p-skeleton>
         </ng-container>
         <ng-container *ngIf="loadcategoria">
-            <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label"
-                    >Categoria: {{ subcategoria.categoria.nombre }}
-                </label>
-                <select
-                    class="form-select"
-                    aria-label="Default select example"
-                    [(ngModel)]="subcategoria.categoria"
-                >
-                    <ng-container *ngFor="let item of arrayCategoria">
-                        <option [ngValue]="item">{{ item.nombre }}</option>
-                    </ng-container>
-                </select>
-            </div>
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-12 md:col-6 mb-3">
+                    <label for="categoria" class="form-label"
+                        >Categoría: {{ subcategoria.categoria.nombre }}</label
+                    >
+                    <p-dropdown
+                        [options]="arrayCategoria"
+                        [(ngModel)]="subcategoria.categoria"
+                        optionLabel="nombre"
+                    ></p-dropdown>
+                </div>
 
-            <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label"
-                    >Nombre de Sub Categoria</label
-                >
-                <input
-                    type="email"
-                    class="form-control"
-                    id="exampleFormControlInput1"
-                    placeholder="Nombre de Categoria"
-                    pInputText
-                    [(ngModel)]="subcategoria.nombre"
-                />
-            </div>
-            <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label"
-                    >Descripción</label
-                >
-                <textarea
-                    class="form-control"
-                    id="exampleFormControlTextarea1"
-                    rows="5"
-                    cols="30"
-                    pInputTextarea
-                    [(ngModel)]="subcategoria.descripcion"
-                ></textarea>
+                <div class="field col-12 md:col-6 mb-3">
+                    <label for="nombre" class="form-label"
+                        >Nombre de Sub Categoría</label
+                    >
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="nombre"
+                        placeholder="Nombre de Sub Categoría"
+                        pInputText
+                        [(ngModel)]="subcategoria.nombre"
+                    />
+                </div>
+                <div class="field col-12 md:col-6 mb-3">
+                    <label for="descripcion" class="form-label"
+                        >Descripción</label
+                    >
+                    <textarea
+                        class="form-control"
+                        id="descripcion"
+                        rows="5"
+                        cols="30"
+                        pInputTextarea
+                        [(ngModel)]="subcategoria.descripcion"
+                    ></textarea>
+                </div>
             </div>
         </ng-container>
     </div>
-    <div class="modal-footer">
+    <div class="d-flex justify-content-end mt-3">
         <button
             type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-            (click)="cerrar()"
-        >
-            Concelar
-        </button>
-        <button type="button" class="btn btn-primary" (click)="updateCate()">
-            Guardar
-        </button>
+            pButton
+            label="Guardar"
+            class="btn btn-primary"
+            (click)="updateCate()"
+        ></button>
     </div>
 </div>

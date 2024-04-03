@@ -32,7 +32,7 @@ export class CreateCategoriaComponent implements OnInit{
         descripcion: this.categoriaForm.value.descripcion
       };
       this.createService.registrarCategoria(token, data).subscribe(response => {
-        console.log(response);
+        ////console.log(response);
         if(response.data){
           this.messageService.add({severity: 'success', summary: 'Listo', detail: 'Ingresado correctamente'});
           setTimeout(() => {
@@ -42,7 +42,7 @@ export class CreateCategoriaComponent implements OnInit{
         // Aquí puedes manejar la respuesta del servidor, como mostrar un mensaje de éxito o redirigir a otra página
       });
     } else {
-      console.log(this.categoriaForm);
+      //console.log(this.categoriaForm);
       // Aquí puedes mostrar un mensaje de error o realizar alguna otra acción si el formulario no es válido
     }
   }

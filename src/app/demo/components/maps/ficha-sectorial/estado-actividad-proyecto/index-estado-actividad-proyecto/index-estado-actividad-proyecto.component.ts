@@ -4,6 +4,7 @@ import { CreateEstadoActividadProyectoComponent } from '../create-estado-activid
 import { Router } from '@angular/router';
 import { ListService } from 'src/app/demo/services/list.service';
 import { HelperService } from 'src/app/demo/services/helper.service';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-index-estado-actividad-proyecto',
@@ -13,12 +14,10 @@ import { HelperService } from 'src/app/demo/services/helper.service';
 export class IndexEstadoActividadProyectoComponent implements OnInit{
   actividadEstado:any={};
   model:boolean=true;
-  constructor(private modalService: NgbModal,private router: Router,private listService:ListService,private helper:HelperService){
+  constructor(private dialogService: DialogService,private router: Router,private listService:ListService,private helper:HelperService){
    
   }
-  cerrarModal() {
-    this.modalService.dismissAll();
-}
+
   ngOnInit(): void {
     this.router.events.subscribe((val) => {
       // Verificar la ruta actual y ajustar el valor de model
@@ -43,8 +42,13 @@ export class IndexEstadoActividadProyectoComponent implements OnInit{
 
     });
   }
+   isMobil() {
+    return this.helper.isMobil();
+  }
   abrirModal(){
-    this.modalService.dismissAll();
-    this.modalService.open(CreateEstadoActividadProyectoComponent, { centered: true });
+    this.dialogService.open(CreateEstadoActividadProyectoComponent,  {
+        header: 'Nuevo Estado de Actividad Proyecto',
+        width: this.isMobil() ? '100%' : '50%',
+    });
   }
 }

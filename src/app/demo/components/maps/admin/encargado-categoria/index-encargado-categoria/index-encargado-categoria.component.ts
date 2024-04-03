@@ -26,10 +26,10 @@ export class IndexEncargadoCategoriaComponent {
     this.listService.listarEncargadosCategorias(token).subscribe(
       response => {
         this.encargadosCategoria = response.data;
-        console.log(response.data);
+        ////console.log(response.data);
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
   }
@@ -46,18 +46,18 @@ export class IndexEncargadoCategoriaComponent {
   onRowEditInit(categoria: any) {
     this.clonedProducts[categoria._id as string] = { ...categoria };
     // Iniciar la edición de la categoría
-    console.log('Iniciar edición de la categoría:', categoria);
+    ////console.log('Iniciar edición de la categoría:', categoria);
   }
 
   onRowEditSave(categoria: any) {
     // Guardar los cambios de la categoría
-    console.log('Guardar cambios de la categoría:', categoria);
+    ////console.log('Guardar cambios de la categoría:', categoria);
 
   }
 
   onRowEditCancel(categoria: any, rowIndex: number) {
     // Cancelar la edición de la categoría
-    console.log('Cancelar edición de la categoría:', categoria);
+    ////console.log('Cancelar edición de la categoría:', categoria);
 
   }
 
@@ -66,6 +66,6 @@ export class IndexEncargadoCategoriaComponent {
 }
 
   confirmarEliminacion(categoria: any) {
-    console.log('Eliminar la categoría:', categoria);
+    ////console.log('Eliminar la categoría:', categoria);
   }
 }

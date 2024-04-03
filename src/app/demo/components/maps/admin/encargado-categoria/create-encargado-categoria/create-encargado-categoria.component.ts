@@ -35,7 +35,7 @@ export class CreateEncargadoCategoriaComponent implements OnInit {
     }
     this.listService.listarCategorias(token).subscribe(response => {
       this.categorias = response.data;
-      console.log(response);
+      ////console.log(response);
     });
   }
   listarUsuarios() {
@@ -44,7 +44,7 @@ export class CreateEncargadoCategoriaComponent implements OnInit {
     }
     this.listService.listarUsuarios(this.token,'rol_user.orden',2).subscribe(response => {
       this.usuarios = response.data;
-      console.log(response);
+      ////console.log(response);
     });
   }
   eliminarEncargado(id: any): void {
@@ -52,7 +52,7 @@ export class CreateEncargadoCategoriaComponent implements OnInit {
   }
   
   agregarEncargado(target:any){
-    console.log(target.value);
+    ////console.log(target.value);
     this.encargadosSeleccionados.push(target.value);
   }
   userfilter(id:any){
@@ -61,7 +61,7 @@ export class CreateEncargadoCategoriaComponent implements OnInit {
   registrarEncargo(){
     if(this.encargadosSeleccionados.length>0&&this.categoriaselect){
       this.createService.registrarEncargadoCategoria(this.token,{encargado:this.encargadosSeleccionados,categoria:this.categoriaselect}).subscribe(response=>{
-        console.log(response)
+        ////console.log(response)
         this.messageService.add({severity: 'success', summary: 'Ingresado', detail: response.message});
       },error=>{
         this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});

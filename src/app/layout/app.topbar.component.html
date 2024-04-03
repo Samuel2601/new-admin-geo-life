@@ -40,6 +40,7 @@
             <span>Notificaciones</span>
         </button>
         <button
+            *ngIf="!token"
             class="p-link layout-topbar-button"
             [routerLink]="'/auth/login'"
         >
@@ -58,6 +59,26 @@
             <span>Perfil</span>
         </button>
         <button
+            *ngIf="token"
+            class="p-link layout-topbar-button"
+            [routerLink]="'/maps/edit-user'"
+        >
+            <i class="pi pi-user" *ngIf="!foto"></i>
+            <p-avatar *ngIf="foto" size="large" shape="circle">
+                <img
+                    [src]="url + 'helper/obtener_portada_avatar/' + foto"
+                    width="40"
+                    height="50"
+                    alt="Your profile picture"
+                    class="img-fluid"
+                    style="object-fit: cover; border-radius: 50%"
+                />
+            </p-avatar>
+
+            <span>Perfil</span>
+        </button>
+        <button
+            *ngIf="token"
             class="p-link layout-topbar-button"
             (click)="logout()"
         >

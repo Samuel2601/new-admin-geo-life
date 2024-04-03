@@ -2,61 +2,74 @@
     <div class="card-header">
         <div class="row">
             <div class="col-auto">
-                <h2>Nueva Sub-Categorías</h2>
+                <h2>Nueva Sub-Categoría</h2>
             </div>
         </div>
     </div>
     <div class="card-body">
         <p-toast></p-toast>
-        <div class="table-responsive-sm">
-            <form
-                [formGroup]="subcategoriaForm"
-                (ngSubmit)="registrarSubcategoria()"
-            >
-                <div class="mb-3">
+        <div class="table-responsive-sm" *ngIf="categorias">
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-12 md:col-6">
                     <label for="categoria" class="form-label">Categoría</label>
-                    <select
-                        id="categoria"
-                        class="form-select"
-                        formControlName="categoria"
+                    <p-dropdown
+                        appendTo="body"
+                        [options]="categorias"
                         [(ngModel)]="subcategoriaForm.categoria"
-                        required
+                        optionLabel="name"
+                        [showClear]="true"
+                        placeholder="Selecciona una"
                     >
-                        <option
-                            *ngFor="let categoria of categorias"
-                            [value]="categoria._id"
-                        >
-                            {{ categoria.nombre }}
-                        </option>
-                    </select>
+                        <ng-template pTemplate="selectedItem">
+                            <div
+                                class="flex align-items-center gap-2"
+                                *ngIf="subcategoriaForm.categoria"
+                            >
+                                <div>
+                                    {{ subcategoriaForm.categoria.nombre }}
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-item pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ item.nombre }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
                 </div>
-                <div class="mb-3">
+                <div class="field col-12 md:col-6">
                     <label for="nombre" class="form-label">Nombre</label>
                     <input
                         type="text"
+                        pInputText
                         class="form-control"
                         id="nombre"
-                        formControlName="nombre"
                         [(ngModel)]="subcategoriaForm.nombre"
                         required
                     />
                 </div>
-                <div class="mb-3">
+                <div class="field col-12 md:col-6">
                     <label for="descripcion" class="form-label"
                         >Descripción</label
                     >
                     <textarea
+                        pInputTextarea
                         class="form-control"
                         id="descripcion"
-                        formControlName="descripcion"
                         [(ngModel)]="subcategoriaForm.descripcion"
                         required
                     ></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-save"></i> Guardar
+                <button
+                    type="submit"
+                    pButton
+                    label="Guardar"
+                    class="btn btn-primary"
+                    (click)="registrarSubcategoria()"
+                >
+                    <i class="bi bi-save"></i>
                 </button>
-            </form>
+            </div>
         </div>
     </div>
 </div>

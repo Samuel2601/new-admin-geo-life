@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ListService } from 'src/app/demo/services/list.service';
 import { IndexEstadoActividadProyectoComponent } from '../estado-actividad-proyecto/index-estado-actividad-proyecto/index-estado-actividad-proyecto.component';
 import { IndexActividadProyectoComponent } from '../actividad-proyecto/index-actividad-proyecto/index-actividad-proyecto.component';
@@ -9,6 +8,7 @@ import { GLOBAL } from 'src/app/demo/services/GLOBAL';
 import { Capacitor } from '@capacitor/core';
 import { Table } from 'primeng/table';
 import { MessageService } from 'primeng/api';
+import { DialogService,DynamicDialogRef } from 'primeng/dynamicdialog';
 @Component({
   selector: 'app-index-ficha-sectorial',
   templateUrl: './index-ficha-sectorial.component.html',
@@ -51,7 +51,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   }
   load_lista=true;
   fichasectorial:any=[];
-  constructor(private router: Router,private listService:ListService,private modalService: NgbModal,private helperservice:HelperService,private messageService: MessageService){
+  constructor(private router: Router,private listService:ListService,private helperservice:HelperService,private messageService: MessageService,private dialogService: DialogService){
   
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -72,14 +72,14 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   }
   check:any={};
   async ngOnInit(): Promise<void> {
-    console.log(this.modal);
+    //console.log(this.modal);
     if(!this.modal)this.helperservice.llamarspinner();
     try {
       this.check.IndexEstadoActividadProyectoComponent = this.helperservice.decryptData('IndexEstadoActividadProyectoComponent')  || false;
       this.check.IndexActividadProyectoComponent = this.helperservice.decryptData('IndexActividadProyectoComponent') || false;
-      console.log(this.check);
+      //console.log(this.check);
     } catch (error) {
-      console.error('Error al verificar permisos:', error);
+      //console.error('Error al verificar permisos:', error);
       this.router.navigate(['/error']);
     }
   
@@ -90,9 +90,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   isMobil() {
     return this.helperservice.isMobil();
   }
-  openModal(content: any) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', windowClass: 'custom-modal' });
-  }
+
   visible: boolean = false;
   option: any;
   token = this.helperservice.token();
@@ -104,13 +102,13 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
     }
     if(this.filtro&&this.valor){
       this.listService.listarFichaSectorial(this.token,this.filtro,this.valor).subscribe(response=>{
-        console.log(response);
+        //console.log(response);
         if(response.data){
           this.fichasectorial=response.data;
           this.load_lista=false;
         }
       },error=>{
-        console.error(error);
+        //console.error(error);
         this.load_lista=false;
         if(error.error.message=='InvalidToken'){
           this.router.navigate(["/inicio"]);
@@ -120,11 +118,11 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
       });
     }else{
       this.listService.listarFichaSectorial(this.token).subscribe(response=>{
-        console.log(response);
+        //console.log(response);
         this.fichasectorial=response.data;
         this.load_lista=false;
       },error=>{
-        console.error(error);
+        //console.error(error);
         this.load_lista=false;
         if(error.error.message=='InvalidToken'){
             this.router.navigate(["/inicio"]);
@@ -135,14 +133,20 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
     }
     if(!this.modal)this.helperservice.cerrarspinner();
   }
-  llamarmodal2(){
-    this.modalService.dismissAll();
-    this.modalService.open(IndexActividadProyectoComponent, { centered: true });
+  llamarmodal2() {
+      const modalRef = this.dialogService.open(IndexActividadProyectoComponent, {
+          header: '',
+          width: this.isMobil() ? '100%' : '70%',
+      });
   }
-  llamarmodal(){
-    this.modalService.dismissAll();
-    this.modalService.open(IndexEstadoActividadProyectoComponent, { centered: true });
+
+  llamarmodal() {
+      const modalRef = this.dialogService.open(IndexEstadoActividadProyectoComponent, {
+          header: '',
+          width: this.isMobil() ? '100%' : '70%',
+      });
   }
+
   stopPropagation(event: MouseEvent) {
     event.stopPropagation();
   }
@@ -216,20 +220,20 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
 
   openModalimagen(url: any) {
     this.imagenModal = url;
-     console.log('imagenModal',this.imagenModal);
+     //console.log('imagenModal',this.imagenModal);
     this.imagenAMostrar = this.imagenModal[0];
-    //const modalRef = this.modalService.open(this.modalContent, { size: 'lg' });
+    //const modalRef = this.dialogService.open(this.modalContent, { size: 'lg' });
   }
   @Output() imagenModalChange: EventEmitter<any> = new EventEmitter<any>();
   updateImagenModal(value: any) {
     this.imagenModal = value;
-    console.log('imagenModal',this.imagenModal);
+    //console.log('imagenModal',this.imagenModal);
     this.imagenModalChange.emit(this.imagenModal);
   }
   openimagen(url: any) {
     this.imagenModal = url;
     this.imagenAMostrar = this.imagenModal[0];
-    //const modalRef = this.modalService.open(this.modalContent, { size: 'lg' });
+    //const modalRef = this.dialogService.open(this.modalContent, { size: 'lg' });
   }
   imagenAMostrar:any;
   mostrarImagen(index: number) {

@@ -46,7 +46,7 @@ export class CreateFichaSectorialComponent implements OnInit {
       if (direccionGeoControl) {
         direccionGeoControl.setValue(this.data.properties.nombre);
       } else {
-        console.error('El control "direccion_geo" no está definido en el formulario.');
+        //console.error('El control "direccion_geo" no está definido en el formulario.');
       }
     } else {
       this.router.navigate(['/home']);
@@ -57,7 +57,7 @@ export class CreateFichaSectorialComponent implements OnInit {
       if (indentr) {
         indentr.setValue(ident);
       } else {
-        console.error('El control "direccion_geo" no está definido en el formulario.');
+        //console.error('El control "direccion_geo" no está definido en el formulario.');
       }
     } else {
       this.router.navigate(['/inicio']);
@@ -79,12 +79,12 @@ export class CreateFichaSectorialComponent implements OnInit {
       throw this.router.navigate(["/inicio"]);
     }
     this.listarService.listarEstadosActividadesProyecto(this.token).subscribe(response=>{
-      console.log(response);
+      //console.log(response);
       if(response.data.length>0){
         this.estadosActividadProyecto=response.data;
       }
     },error=>{
-      console.error(error);
+      //console.error(error);
       if(error.error.message=='InvalidToken'){
         this.router.navigate(["/inicio"]);
       }else{
@@ -98,13 +98,13 @@ export class CreateFichaSectorialComponent implements OnInit {
       throw this.router.navigate(["/inicio"]);
     }
     this.listarService.listarTiposActividadesProyecto(this.token).subscribe(response=>{
-      console.log(response);
+      //console.log(response);
       if(response.data.length>0){
         this.actividadesProyecto = response.data;
         this.mostrar = true;
       }
     },error=>{
-      console.error(error);
+      //console.error(error);
       if(error.error.message=='InvalidToken'){
         this.router.navigate(["/inicio"]);
       }else{
@@ -169,7 +169,7 @@ export class CreateFichaSectorialComponent implements OnInit {
 
     this.messageService.add({severity: 'info', summary: 'File Uploaded', detail: this.selectedFiles.length+'Imagenes subidas'});
 
-    console.log(this.selectedFiles,this.imagenesSeleccionadas );
+    //console.log(this.selectedFiles,this.imagenesSeleccionadas );
     setTimeout(() => {
     this.load_carrusel=true;
     }, 1000);
@@ -177,7 +177,7 @@ export class CreateFichaSectorialComponent implements OnInit {
     this.upload=false;
     /*
     const files: FileList = event.target.files;
-    console.log(files);
+    //console.log(files);
     if(!this.isMobil()){
       this.imagenesSeleccionadas=[];
       this.selectedFiles=[];
@@ -213,7 +213,7 @@ export class CreateFichaSectorialComponent implements OnInit {
     this.imagenesSeleccionadas.splice(index, 1);
      // Eliminar la imagen del arreglo selectedFiles
     this.selectedFiles.splice(index, 1);
-    console.log(this.selectedFiles,this.imagenesSeleccionadas);
+    //console.log(this.selectedFiles,this.imagenesSeleccionadas);
     setTimeout(() => {        
       this.load_carrusel = true;
     }, 500);
@@ -222,17 +222,17 @@ export class CreateFichaSectorialComponent implements OnInit {
 
   registrarFichaSectorial() {
     this.load_form = false;
-    console.log("fichaSectorialForm",this.fichaSectorialForm);
+    //console.log("fichaSectorialForm",this.fichaSectorialForm);
     if (this.fichaSectorialForm?.valid) {
       if (this.token && this.fichaSectorialForm.value) {
         this.createService.registrarActividadProyecto(this.token, this.fichaSectorialForm.value,this.selectedFiles).subscribe(response => {
-          console.log(response);
+          //console.log(response);
           if(response.data){
             this.messageService.add({severity: 'success', summary: 'Listo', detail: 'Ingresado correctamente'});
             this.modalService.dismissAll();
           }
         }, error => {
-          console.error(error);
+          //console.error(error);
           if(error.error.message=='InvalidToken'){
             this.router.navigate(["/inicio"]);
           }else{
@@ -245,7 +245,7 @@ export class CreateFichaSectorialComponent implements OnInit {
         }
       }
     }else{
-      console.log(this.fichaSectorialForm);
+      //console.log(this.fichaSectorialForm);
     }
   }
   responsiveimage():string{
@@ -291,7 +291,7 @@ export class CreateFichaSectorialComponent implements OnInit {
       }
     } else {
     this.messageService.add({severity: 'warning', summary: 'MAX img', detail: 'Solo puede enviar 3 imangenes'});
-      console.error('Error al obtener la cadena base64 de la imagen.');
+      //console.error('Error al obtener la cadena base64 de la imagen.');
     }
   }
 }

@@ -134,6 +134,7 @@ export class LayersComponent implements OnInit{
       console.error('Error al verificar permisos:', error);
       this.router.navigate(['/error']);
     }
+    console.log(this.check);
     this.updateItem();
     await this.getWFSgeojson(this.urlgeoser);
     this.helperService.setMapComponent(this); 
@@ -141,7 +142,8 @@ export class LayersComponent implements OnInit{
   }
   //CARGA DE TEMPLATE
   updateItem(){
-    this.loadspeed=false;
+    this.loadspeed = false;
+    console.log(this.opcionb);
     this.items = [
       {
         icon: 'bi bi-crosshair',
@@ -226,7 +228,7 @@ export class LayersComponent implements OnInit{
           tooltipPosition:'right',
           //hideDelay:1000,
         },
-        visible:(this.opcionb||false)&&this.check.CreateIncidentesDenunciaComponent && !(!this.latitud && !this.longitud),
+        visible:((this.opcionb||false)&&this.check.CreateIncidentesDenunciaComponent && !(!this.latitud && !this.longitud))||!this.token,
         command: () => {
           //this.stopPropagation(event.originalEvent);
           this.nuevoIncidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
@@ -304,8 +306,8 @@ export class LayersComponent implements OnInit{
       }
       return data;
     } catch (error) {
-      console.log('error:',error);
-      //console.log('Error fetching WFS geojson:', error);
+      //console.log('error:',error);
+      ////console.log('Error fetching WFS geojson:', error);
       return null;
     }
   }
@@ -315,7 +317,7 @@ export class LayersComponent implements OnInit{
         var aux=[];
         aux.push(data.features);
         this.lista_feature=aux[0];
-        //console.log(this.lista_feature);
+        ////console.log(this.lista_feature);
         this.filter = this.lista_feature;
       }
     }
@@ -403,7 +405,7 @@ export class LayersComponent implements OnInit{
         this.longitud = e.latLng.lng();
         this.myControl.setValue((this.latitud+';'+this.longitud).toString());
       
-        this.updateItem();
+        
         
         
           if(!this.mostrarficha&&this.check.CreateIncidentesDenunciaComponent||!this.token){
@@ -542,7 +544,7 @@ export class LayersComponent implements OnInit{
       }    
       //this.myControl.setValue(feature.properties.nombre);
       this.opcionb = feature;
-      console.log(this.opcionb);
+      //console.log(this.opcionb);
     }
       const geometry = feature.geometry;
       const properties = feature.properties;
@@ -609,14 +611,15 @@ export class LayersComponent implements OnInit{
           
           if (turf.booleanContains(poligono, puntoUsuario)) {
             
-            console.log('El usuario está dentro del polígono:', feature);
-            console.log(feature);
+            //console.log('El usuario está dentro del polígono:', feature);
+            //console.log(feature);
             this.opcionb = feature;
             /*if (this.check.DashboardComponent&&this.isMobil()) {
               this.sidebarVisible = true;
             }*/
             this.poligonoview(true, feature);
             buscarbol = true;
+            this.updateItem();
             break;            
           }
       }           
@@ -637,7 +640,7 @@ export class LayersComponent implements OnInit{
     //
 
     polygon.addListener('click', (event:any) => {
-      console.log("632",!this.popupsMostrados[featureId], this.capaActiva,this.opcionb);
+      //console.log("632",!this.popupsMostrados[featureId], this.capaActiva,this.opcionb);
       if(!this.popupsMostrados[featureId]){
           // Cerrar el popup actualmente abierto
           if (this.openInfoWindow) {
@@ -697,10 +700,10 @@ export class LayersComponent implements OnInit{
   async getLocation() {
     if(this.isMobil()){
       const permission = await Geolocation['requestPermissions']();
-      //console.log(permission);
+      ////console.log(permission);
       if (permission !== 'granted') {
         const coordinates = await Geolocation['getCurrentPosition']();
-        //console.log(coordinates);
+        ////console.log(coordinates);
       }
     }else{
       this.messageService.add({ severity: 'info', summary: 'Info', detail: 'Tu ubicación puede ser no exacta' });
@@ -708,7 +711,7 @@ export class LayersComponent implements OnInit{
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {          
-          //console.log(position,position.coords.longitude, position.coords.latitude);
+          ////console.log(position,position.coords.longitude, position.coords.latitude);
           this.latitud = position.coords.latitude;
           this.longitud = position.coords.longitude;
           this.updateItem();
@@ -719,11 +722,11 @@ export class LayersComponent implements OnInit{
           //await this.buscarfeature(this.latitud,this.longitud);
         },
         (error) => {
-          //console.error('Error getting location: ' + error.message);
+          ////console.error('Error getting location: ' + error.message);
         }
       );
     } else {
-      //console.error('Geolocation is not supported by this browser.');
+      ////console.error('Geolocation is not supported by this browser.');
     }
   }
   filterOptions(event?: any) {
@@ -778,7 +781,7 @@ export class LayersComponent implements OnInit{
             this.arr_wifi.forEach(marker => marker.setMap(this.mapCustom));
         }        
         this.capaActivaWIFI = false;
-        console.log(this.arr_wifi);
+        //console.log(this.arr_wifi);
         //this.capaActivaWIFIpop = true;
     } else {
         this.arr_wifi.forEach(marker => marker.setMap(null));
@@ -821,13 +824,17 @@ export class LayersComponent implements OnInit{
     modalRef.componentInstance.data = data; 
   }
   async nuevoIncidente() {
-    this.controlFullScreem();
-    const data = this.opcionb; // JSON que quieres enviar
-    this.modalService.dismissAll();    
-    const modalRef = this.modalService.open(CreateIncidentesDenunciaComponent, { centered: true });
-    modalRef.componentInstance.data = data; 
-    modalRef.componentInstance.direccion={latitud:this.latitud,longitud:this.longitud}
-    
+    if (!this.token) {
+      this.router.navigate(["/auth/login"]);
+    } else {
+       this.controlFullScreem();
+      const data = this.opcionb; // JSON que quieres enviar
+      this.modalService.dismissAll();    
+      const modalRef = this.modalService.open(CreateIncidentesDenunciaComponent, { centered: true });
+      modalRef.componentInstance.data = data; 
+      modalRef.componentInstance.direccion = { latitud: this.latitud, longitud: this.longitud };      
+    } 
+   
   }
   controlFullScreem() {
     const elementToSendFullscreen = this.mapCustom.getDiv().firstChild as HTMLElement;

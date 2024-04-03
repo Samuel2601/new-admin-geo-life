@@ -8,18 +8,20 @@ import { CreateCategoriaComponent } from './categoria/create-categoria/create-ca
 import { IndexSubcategoriaComponent } from './categoria/sub/index-subcategoria/index-subcategoria.component';
 import { CreateSubcategoriaComponent } from './categoria/sub/create-subcategoria/create-subcategoria.component';
 import { AdminComponent } from './admin/admin.component';
+import { EditUsuarioComponent } from './admin/usuario/edit-usuario/edit-usuario.component';
 
 
 @NgModule({
     imports: [RouterModule.forChild([
         { path: '', component: LayersComponent },
         { path: 'categoria', component: IndexCategoriaComponent },
-        { path: 'create-categoria', component: CreateCategoriaComponent },
+        { path: 'categoria/create-categoria', component: CreateCategoriaComponent },
         { path: 'subcategoria', component: IndexSubcategoriaComponent },
-        { path: 'create-subcategoria', component: CreateSubcategoriaComponent },
+        { path: 'subcategoria/create-subcategoria', component: CreateSubcategoriaComponent },
         { path: 'ficha-sectorial', component: IndexFichaSectorialComponent },
         { path: 'incidente', component: IndexIncidentesDenunciaComponent },       
-       { path: 'administracion', component: AdminComponent },
+        { path: 'administracion', component: AdminComponent },
+        { path: 'edit-user', component: EditUsuarioComponent },
         //{ path: '', loadChildren: () => import('./layers/layers.component').then(m => m.LayersComponent) },
 
     ])],

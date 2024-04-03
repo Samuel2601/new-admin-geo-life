@@ -29,6 +29,9 @@ export class CreateActividadProyectoComponent implements OnInit{
       }
     });
   }
+    isMobil() {
+    return this.helper.isMobil();
+  }
   token=this.helper.token();
   registrarActividadP() {
     if (this.estadoIncidenteForm.valid) {
@@ -36,7 +39,7 @@ export class CreateActividadProyectoComponent implements OnInit{
           throw this.router.navigate(["/inicio"]);
         }
         this.createService.registrarTipoActividadProyecto(this.token, this.estadoIncidenteForm.value).subscribe(response => {
-            console.log(response);
+            //console.log(response);
             if(response.data){
               this.messageService.add({severity: 'success', summary: 'Listo', detail: 'Ingresado correctamente'});
               setTimeout(() => {
@@ -44,7 +47,7 @@ export class CreateActividadProyectoComponent implements OnInit{
               }, 2000);
             }
         }, error => {
-            console.error(error);
+            //console.error(error);
         });
     }
   }

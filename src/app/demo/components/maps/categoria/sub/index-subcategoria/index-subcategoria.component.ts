@@ -34,7 +34,7 @@ export class IndexSubcategoriaComponent {
         this.load_lista=false;
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
     this.helperservice.cerrarspinner();
@@ -42,14 +42,14 @@ export class IndexSubcategoriaComponent {
   onRowEditInit(subcategoria: any) {
     this.clonedProducts[subcategoria._id as string] = { ...subcategoria };
     // Iniciar la edición de la categoría
-    console.log('Iniciar edición de la categoría:', subcategoria);
+    //console.log('Iniciar edición de la categoría:', subcategoria);
   }
 
   onRowEditSave(subcategoria: any) {
     // Guardar los cambios de la categoría
-    console.log('Guardar cambios de la categoría:', subcategoria);
-    this.updateservice.actualizarSubcategoria(this.token,subcategoria._id,subcategoria).subscribe(response=>{console.log(response)},error=>{
-      console.log(error);
+    //console.log('Guardar cambios de la categoría:', subcategoria);
+    this.updateservice.actualizarSubcategoria(this.token,subcategoria._id,subcategoria).subscribe(response=>{//console.log(response)},error=>{
+      //console.log(error);
     });
 
   }
@@ -57,7 +57,7 @@ export class IndexSubcategoriaComponent {
   onRowEditCancel(subcategoria: any, rowIndex: number) {
     // Cancelar la edición de la categoría
     this.subcategorias[rowIndex]=this.clonedProducts[subcategoria._id];
-    console.log('Cancelar edición de la categoría:', subcategoria, this.subcategorias[rowIndex]);
+    //console.log('Cancelar edición de la categoría:', subcategoria, this.subcategorias[rowIndex]);
     
     
   }
@@ -67,6 +67,6 @@ export class IndexSubcategoriaComponent {
   }
 
   confirmarEliminacion(categoria: any) {
-    console.log('Eliminar la categoría:', categoria);
+    //console.log('Eliminar la categoría:', categoria);
   }
 }

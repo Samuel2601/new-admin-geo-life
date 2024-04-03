@@ -60,7 +60,7 @@ export class HelperService {
       const response = await this.filterService.tienePermiso(token, componente, rolUsuario._id).toPromise();
       return response.data ? true : false;
     } catch (error) {
-      //console.error('Error al verificar el permiso:', error);
+      ////console.error('Error al verificar el permiso:', error);
       return false;
     }
   }
@@ -68,12 +68,12 @@ export class HelperService {
   listpermisos(save?:boolean) {
     const token = this.token();
     if (!token) {
-      console.error('Token no válido');
+      //console.error('Token no válido');
       return;
     }
     const rolUsuario = this.adminService.roluser(token);
     if (!rolUsuario) {
-      console.error('Rol de usuario no válido');
+      //console.error('Rol de usuario no válido');
       return;
     }
     this.filterService.listpermisos(token, rolUsuario._id)
@@ -92,7 +92,7 @@ export class HelperService {
         }
         },
         error => {
-          console.error('Error al obtener permisos:', error);
+          //console.error('Error al obtener permisos:', error);
         }
       );
   }
@@ -109,6 +109,7 @@ export class HelperService {
     const encrypte=sessionStorage.getItem(encryptedData)||localStorage.getItem(encryptedData);
     if(encrypte){
       const decryptedData = CryptoJS.AES.decrypt(encrypte, this.key).toString(CryptoJS.enc.Utf8);      
+      console.log(decryptedData);
       return decryptedData?true:false;
     }else{
       return false;
@@ -140,15 +141,15 @@ export class HelperService {
     }
     this.llamadasActivas++;
       
-      //console.log(this.llamadasActivas);
+      ////console.log(this.llamadasActivas);
   }
 
   cerrarspinner(){
     this.llamadasActivas--;
-   // console.log(this.llamadasActivas);
+   // //console.log(this.llamadasActivas);
     if(this.llamadasActivas==0){
       setTimeout(() => {      
-        //console.log('Cerrando');
+        ////console.log('Cerrando');
         this.modalService.dismissAll();
         }, 500);
     }

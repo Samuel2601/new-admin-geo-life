@@ -36,6 +36,9 @@ export class CreateEstadoActividadProyectoComponent implements OnInit {
   cerrarModal() {
     this.model = false; // Cambia model a false cuando se cierra el modal
   }
+   isMobil() {
+    return this.helper.isMobil();
+  }
   token = this.helper.token();
   registrarEstadoActividadP() {
     if(this.estadoIncidenteForm.valid){
@@ -43,7 +46,7 @@ export class CreateEstadoActividadProyectoComponent implements OnInit {
         throw this.router.navigate(["/inicio"]);
       }
       this.createService.registrarEstadoActividadProyecto(this.token,this.estadoIncidenteForm.value).subscribe(response=>{
-        console.log(response);
+        //console.log(response);
         if(response.data){
           this.messageService.add({severity: 'success', summary: 'Ingresado', detail: 'Correcto'});
           setTimeout(() => {
@@ -51,7 +54,7 @@ export class CreateEstadoActividadProyectoComponent implements OnInit {
           }, 2000);
         }
       },error=>{
-        console.error(error);
+        //console.error(error);
       });
     }
   }

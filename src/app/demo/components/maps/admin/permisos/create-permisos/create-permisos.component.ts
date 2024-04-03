@@ -71,13 +71,13 @@ export class CreatePermisosComponent implements OnInit{
     });
   }
   addrol(id:any){
-    console.log(id,this.rol);
+    ////console.log(id,this.rol);
     this.newpermiso.rolesPermitidos.push(this.rol);
   }
   enviar(){
-    console.log(this.newpermiso);
+    ////console.log(this.newpermiso);
     this.createService.registrarPermiso(this.token,this.newpermiso).subscribe(response=>{
-      console.log(response);
+      //console.log(response);
     });
   }
   DimissModal(){

@@ -39,11 +39,11 @@ export class IndexEstadoIncidenteComponent implements OnInit {
       throw this.router.navigate(["/inicio"]);
     }
     this.listarService.listarEstadosIncidentes(this.token).subscribe(response=>{
-      console.log(response);
+      //console.log(response);
       this.incidentesDenuncias=response.data;
       this.load_lista=false;
     },error=>{
-      console.error(error);
+      //console.error(error);
       this.load_lista=false;
       if(error.error.message=='InvalidToken'){
         this.router.navigate(["/inicio"]);

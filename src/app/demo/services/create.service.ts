@@ -183,8 +183,8 @@ export class CreateService {
   }
   
   async compressor(image: any): Promise<Blob> {
-    console.log('originalFile instanceof Blob', image instanceof Blob); // true
-    console.log(`originalFile size ${image.size / 1024 / 1024} MB`);
+    //console.log('originalFile instanceof Blob', image instanceof Blob); // true
+    //console.log(`originalFile size ${image.size / 1024 / 1024} MB`);
   
     const options = {
       maxSizeMB: 1,
@@ -194,12 +194,12 @@ export class CreateService {
     try {
       // Comprime la imagen
       const compressedFile = await imageCompression(image, options);
-      console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
-      console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+      //console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
+      //console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
   
       return compressedFile;
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       throw error;
     }
   }

@@ -47,12 +47,12 @@ export class StackIncidentesComponent implements OnInit {
                 this.constIncidente = response.data;
             }
         } catch (error) {
-            console.error('Error al obtener incidentes:', error);
+            //console.error('Error al obtener incidentes:', error);
             this.loading = false;
             return;
         }
     }
-    console.log(this.constIncidente);
+//    //console.log(this.constIncidente);
     // Obtener valores únicos de categoria.nombre
     const categoriasUnicas = [...new Set(this.constIncidente.map((incidente: any) => incidente.categoria.nombre))];
     const barriosUnicos = [...new Set(this.constIncidente.map((incidente: any) => incidente.direccion_geo.nombre))];
@@ -75,7 +75,7 @@ export class StackIncidentesComponent implements OnInit {
             type: 'bar',
         };
     });
-      console.log("datasets",datasets);
+      ////console.log("datasets",datasets);
 
       this.basicData.datasets = datasets.flat(); // Utiliza flat para aplanar el arreglo de arreglos
     if(this.modal){
@@ -89,11 +89,11 @@ export class StackIncidentesComponent implements OnInit {
         this.basicData.labels = categoriasUnicas;
     }
       
-    console.log(this.basicData);
+    ////console.log(this.basicData);
       // Actualizar la vista
       this.canvas();
       this.sumaValores = this.calcularSumaValores();
-      console.log(this.encontrarMaximo());
+      ////console.log(this.encontrarMaximo());
       this.loading = false;
        this.helper.setStincidenteComponent(this);
     }
@@ -122,7 +122,7 @@ export class StackIncidentesComponent implements OnInit {
   }
     sumaValores: number[] = [];
     calcularSumaValores(): number[] {
-        console.log("Sumar valores",this.basicData);
+        ////console.log("Sumar valores",this.basicData);
     return this.basicData.datasets.reduce((acc: number[], dataset: any) => {
         dataset.data.forEach((valor: number, index: number) => {
             acc[index] = (acc[index] || 0) + valor;
@@ -145,12 +145,12 @@ export class StackIncidentesComponent implements OnInit {
                 this.constIncidente = response.data;
             }
         } catch (error) {
-            console.error('Error al obtener incidentes:', error);
+            ////console.error('Error al obtener incidentes:', error);
             this.loading = false;
             return;
         }
     }
-    console.log(this.constIncidente);
+    ////console.log(this.constIncidente);
     // Obtener valores únicos de categoria.nombre
     const categoriasUnicas = [...new Set(this.constIncidente.map((incidente: any) => incidente.categoria.nombre))];
     const barriosUnicos = [...new Set(this.constIncidente.map((incidente: any) => incidente.direccion_geo.nombre))];
@@ -186,7 +186,7 @@ export class StackIncidentesComponent implements OnInit {
             type: 'bar',
         };        
     });
-      console.log("datasets",datasets);
+      ////console.log("datasets",datasets);
 
       this.basicData.datasets = datasets.flat(); // Utiliza flat para aplanar el arreglo de arreglos
 
@@ -200,7 +200,7 @@ export class StackIncidentesComponent implements OnInit {
     }else{
         this.basicData.labels = categoriasUnicas;
     }
-    console.log(this.basicData);
+    ////console.log(this.basicData);
       // Actualizar la vista
       this.canvas();
 

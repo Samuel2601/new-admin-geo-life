@@ -3,7 +3,6 @@ import { FilterService } from 'src/app/demo/services/filter.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminService } from 'src/app/demo/services/admin.service';
 import { UpdateService } from 'src/app/demo/services/update.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GLOBAL } from 'src/app/demo/services/GLOBAL';
 import { Capacitor } from '@capacitor/core';
 import { HelperService } from 'src/app/demo/services/helper.service';
@@ -26,24 +25,10 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
     private router:Router,
     private _filterservice: FilterService,
     private adminservice:AdminService,
-    private updateservice:UpdateService,private modalService: NgbModal, private helper:HelperService,private list:ListService,private messageService: MessageService,){ }
+    private updateservice:UpdateService, private helper:HelperService,private list:ListService,private messageService: MessageService,){ }
 
   ngAfterViewInit(): void {
-    this._route.params.subscribe((params) => {
-      if(params['id']){
-        this.id = params['id'];
-      }
-      if(this.id != this.adminservice.identity(this.token)){
-        this.editing=false;
-      }
-      if(!this.id){
-       this.id= this.adminservice.identity(this.token);
-       this.editing=true;
-      }
-      this.listarRol();
-        this.obteneruser(this.id);
-      
-    });
+   
   }
 
   token:any = this.helper.token();
@@ -60,7 +45,21 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
     if(!this.token){
       this.router.navigate(["/inicio"]);
     }
-
+    this._route.params.subscribe((params) => {
+      if(params['id']){
+        this.id = params['id'];
+      }
+      if(this.id != this.adminservice.identity(this.token)){
+        this.editing=false;
+      }
+      if(!this.id){
+       this.id= this.adminservice.identity(this.token);
+       this.editing=true;
+      }
+      this.listarRol();
+        this.obteneruser(this.id);
+      
+    });
   }
   listrol!:any[];
   listarRol(){
@@ -77,7 +76,7 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
     this._filterservice.obtenerUsuario(this.token,id).subscribe(response=>{
       this.datauser=response.data;
       this.datauser.password='';
-      console.log(this.datauser);
+      ////console.log(this.datauser);
     },error=>{
       this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
     });
@@ -99,13 +98,10 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
   desactivarHover() {
     this.hover = false;
   }
-  DimissModal(){
-    this.modalService.dismissAll();
-  }
 
-  onFilesSelected(event: any): void {
+  onFilesSelected2(event: any): void {
     const files: FileList = event.target.files;
-    console.log(files);
+    ////console.log(files);
     if (files && files.length > 0) {
       for (let i = 0; i < Math.min(files.length, 3); i++) {
         const file = files[i];
@@ -123,9 +119,15 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
           this.nombreArchivo=e.target.result;
         };
         reader.readAsDataURL(file);
-        console.log(file)
+        console.log(file,this.nombreArchivo)
         this.archivoSeleccionado=file;        
       }
     }
+  }
+    onFilesSelected(event: any): void {
+      const files: FileList = event.files;
+      this.nombreArchivo = URL.createObjectURL(files[0]);
+      this.archivoSeleccionado = files[0];
+
   }
 }

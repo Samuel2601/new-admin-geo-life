@@ -1,13 +1,12 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CreateService } from 'src/app/services/create.service';
-import { ListService } from 'src/app/services/list.service';
-import { AdminService } from 'src/app/services/admin.service';
+import { CreateService } from 'src/app/demo/services/create.service';
+import { ListService } from 'src/app/demo/services/list.service';
+import { AdminService } from 'src/app/demo/services/admin.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import iziToast from 'izitoast';
-import { GLOBAL } from 'src/app/services/GLOBAL';
-import { HelperService } from 'src/app/services/helper.service';
+import { GLOBAL } from 'src/app/demo/services/GLOBAL';
+import { HelperService } from 'src/app/demo/services/helper.service';
 @Component({
   selector: 'app-create-direccion-geo',
   templateUrl: './create-direccion-geo.component.html',
@@ -46,7 +45,7 @@ export class CreateDireccionGeoComponent implements OnInit, AfterViewInit {
       if (direccionGeoControl) {
         direccionGeoControl.setValue(this.valor.properties.nombre);
       } else {
-        console.error('El control "direccion_geo" no está definido en el formulario.');
+        //console.error('El control "direccion_geo" no está definido en el formulario.');
       }
     } else {
      // this.router.navigate(['/home']);
@@ -79,7 +78,7 @@ export class CreateDireccionGeoComponent implements OnInit, AfterViewInit {
   }
   onFilesSelected(event: any): void {
     const files: FileList = event.target.files;
-    console.log(files);
+    //console.log(files);
     if (files && files.length > 0) {
       for (let i = 0; i < Math.min(files.length, 3); i++) {
         const file = files[i];
@@ -97,7 +96,7 @@ export class CreateDireccionGeoComponent implements OnInit, AfterViewInit {
           this.nombreArchivo=e.target.result;
         };
         reader.readAsDataURL(file);
-        console.log(file)
+        //console.log(file)
         this.archivoSeleccionado=file;        
       }
     }
@@ -107,26 +106,26 @@ export class CreateDireccionGeoComponent implements OnInit, AfterViewInit {
     if (this.fichaSectorialForm?.valid) {
       if (this.token && this.fichaSectorialForm.value) {
         this.createService.registrarDireccionGeo(this.token, this.valor.id,this.archivoSeleccionado).subscribe(response => {
-          console.log(response);
+          //console.log(response);
           if(response.data){
-            iziToast.success({
+            /*iziToast.success({
               title:'Listo',
               message:'Ingresado correctamente'
-            });
+            });*/
             setTimeout(() => {
              location.reload();
             }, 1000);
           }
         }, error => {
-          console.error(error);
+          //console.error(error);
           if(error.error.message=='InvalidToken'){
             this.router.navigate(["/inicio"]);
           }else{
-            iziToast.error({
+            /*iziToast.error({
               title: ('('+error.status+')').toString(),
               position: 'bottomRight',
               message: error.error.message,
-            });
+            });*/
           } 
         });
       }else{
@@ -135,7 +134,7 @@ export class CreateDireccionGeoComponent implements OnInit, AfterViewInit {
         }
       }
     }else{
-      console.log(this.fichaSectorialForm.valid);
+      //console.log(this.fichaSectorialForm.valid);
     }
   }
 }

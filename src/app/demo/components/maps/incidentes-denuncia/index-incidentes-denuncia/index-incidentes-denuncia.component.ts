@@ -123,9 +123,9 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
     if(!this.modal)this.helperservice.llamarspinner();
     try {
       this.check.IndexEstadoIncidenteComponent = this.helperservice.decryptData('IndexEstadoIncidenteComponent')  || false;
-      //console.log(this.check);
+      ////console.log(this.check);
     } catch (error) {
-      //console.error('Error al verificar permisos:', error);
+      ////console.error('Error al verificar permisos:', error);
       this.router.navigate(['/error']);
     }
   
@@ -144,7 +144,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   }
   irMap(direccion:any,event:any){
     event.stopPropagation();
-    //console.log('Marcando');
+    ////console.log('Marcando');
     //this.helperservice.marcarlugar(direccion.latitud,direccion.longitud,'Incidente del Ciudadano');
     const carficha = document.getElementById("card-ficha");
     if (carficha) {
@@ -162,13 +162,13 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
 
     if(this.filtro&&this.valor){
       this.listService.listarIncidentesDenuncias(this.token,this.filtro,this.valor,true).subscribe(response=>{
-        //console.log(response);
+        ////console.log(response);
         if(response.data){
           this.incidentesDenuncias=response.data;
           this.load_lista=false;
         }
       },error=>{
-        console.error(error);
+        //console.error(error);
         this.load_lista=false;
         if(error.error.message=='InvalidToken'){
           this.router.navigate(["/inicio"]);
@@ -178,11 +178,11 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
       });
     }else{
       this.listService.listarIncidentesDenuncias(this.token).subscribe(response=>{
-        //console.log(response);
+        ////console.log(response);
         this.incidentesDenuncias=response.data;
         this.load_lista=false;
       },error=>{
-        console.error(error);
+        //console.error(error);
         this.load_lista=false;
         if(error.error.message=='InvalidToken'){
             this.router.navigate(["/inicio"]);

@@ -29,10 +29,10 @@ export class IndexPermisosComponent {
     this.listService.ListarPermisos(this.token).subscribe(
       response => {
         this.permisos = response.data;
-        console.log(response.data);
+        ////console.log(response.data);
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
   }
@@ -49,7 +49,7 @@ export class IndexPermisosComponent {
   
   addrol(permiso:any,rol: any){
     permiso.rolesPermitidos.push(rol);
-    console.log(permiso);
+    ////console.log(permiso);
   }
 
   deleterol(permiso: any, rolId: any) {
@@ -57,7 +57,7 @@ export class IndexPermisosComponent {
     if (index !== -1) {
       permiso.rolesPermitidos.splice(index, 1);
     }
-    console.log(permiso);
+    ////console.log(permiso);
   }
   listarrol(){
     this.listService.listarRolesUsuarios(this.token).subscribe(response=>{
@@ -73,12 +73,12 @@ export class IndexPermisosComponent {
   onRowEditInit(categoria: any) {
     this.clonedProducts[categoria._id as string] = { ...categoria };
     // Iniciar la edición de la categoría
-    console.log('Iniciar edición de la categoría:', categoria);
+    ////console.log('Iniciar edición de la categoría:', categoria);
   }
 
   onRowEditSave(categoria: any) {
     // Guardar los cambios de la categoría
-    console.log('Guardar cambios de la categoría:', categoria);
+    ////console.log('Guardar cambios de la categoría:', categoria);
       // Agregar roles seleccionados al permiso
       this.updateServices.actualizarPermisos(this.token,categoria._id,categoria).subscribe(response=>{
         this.messageService.add({severity: 'success', summary: 'Ingresado', detail: response.message});
@@ -88,7 +88,7 @@ export class IndexPermisosComponent {
 
   onRowEditCancel(categoria: any, rowIndex: number) {
     // Cancelar la edición de la categoría
-    console.log('Cancelar edición de la categoría:', categoria);
+    ////console.log('Cancelar edición de la categoría:', categoria);
 
   }
 
@@ -97,10 +97,10 @@ export class IndexPermisosComponent {
 }
 
   confirmarEliminacion(categoria: any) {
-    console.log('Eliminar la categoría:', categoria);
+    //console.log('Eliminar la categoría:', categoria);
   }
   verDetalles(permiso: any) {
     // Implementa aquí la lógica para mostrar los detalles del permiso
-    console.log('Detalles del permiso:', permiso);
+    //console.log('Detalles del permiso:', permiso);
 }
 }

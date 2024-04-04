@@ -38,11 +38,11 @@ interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
 export class LayersComponent implements OnInit{
   @ViewChildren(SpeedDial) speedDials: QueryList<SpeedDial> | undefined;
   @ViewChild('formulariomap', { static: true }) formularioMapRef!: ElementRef;
-  /*loader = new Loader({
+  loader = new Loader({
     apiKey: "AIzaSyAnO4FEgIlMcRRB0NY5bn_h_EQzdyNUoPo",
     version: "weekly",
     libraries: ["places"]
-  });*/
+  });
   mapOptions = {
     center: {
       lat: 0,
@@ -123,6 +123,7 @@ export class LayersComponent implements OnInit{
   }
 
   async ngOnInit() {
+    if(!this.token)this.router.navigate(["/auth/login"]);
      try {
       this.check.IndexFichaSectorialComponent = this.helperService.decryptData('IndexFichaSectorialComponent') ||false; //await this.helperService.checkPermiso('IndexFichaSectorialComponent') || false;
       this.check.IndexIncidentesDenunciaComponent = this.helperService.decryptData('IndexIncidentesDenunciaComponent')|| false;
@@ -340,21 +341,24 @@ export class LayersComponent implements OnInit{
     }
   //INICIALIZADOR DEL MAPA
   initmap() {
-    const haightAshbury = { lat: 0.977035, lng: -79.655415 };
-    this.mapCustom = new google.maps.Map(document.getElementById("map") as HTMLElement, {
-      zoom: 15,
-      center: haightAshbury,
-      mapTypeId: "terrain",
-      fullscreenControl: false,
-      mapTypeControlOptions: {
-        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-        position: google.maps.ControlPosition.TOP_CENTER,
-      }
+    this.loader.load().then(() => {
+     const haightAshbury = { lat: 0.977035, lng: -79.655415 };
+      this.mapCustom = new google.maps.Map(document.getElementById("map") as HTMLElement, {
+        zoom: 15,
+        center: haightAshbury,
+        mapTypeId: "terrain",
+        fullscreenControl: false,
+        mapTypeControlOptions: {
+          style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+          position: google.maps.ControlPosition.TOP_CENTER,
+        }
+      });
+      this.initFullscreenControl();
+      this.mapCustom.addListener('click', (event:any) => {
+        this.onClickHandlerMap(event);
+      });
     });
-    this.initFullscreenControl();
-    this.mapCustom.addListener('click', (event:any) => {
-      this.onClickHandlerMap(event);
-    });
+   
   }
     initFullscreenControl(): void {
       const elementToSendFullscreen = this.mapCustom.getDiv().firstChild as HTMLElement;

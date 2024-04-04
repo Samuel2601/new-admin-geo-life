@@ -7,98 +7,6 @@
 >
     <p-toast></p-toast>
     <div class="flex flex-wrap">
-        <div
-            class="w-full lg:w-6 p-4 lg:p-7"
-            style="background-color: rgba(255, 255, 255, 0.7)"
-        >
-            <img
-                src="assets/icon/icono.png"
-                alt="Image"
-                height="50"
-                class="mb-6"
-            />
-            <div class="text-xl text-900 font-500 mb-3">
-                Bienvido Esmeraldas
-            </div>
-
-            <p class="text-600 line-height-3 mt-0 mb-6">
-                Su privacidad es importante para nosotros. Los datos que nos
-                proporcione son estrictamente confidenciales y no serán
-                compartidos con terceros. Solo recopilamos información esencial
-                para establecer contacto y brindarle el mejor servicio posible.
-            </p>
-            <ul class="list-none p-0 m-0">
-                <li class="flex align-items-start mb-4">
-                    <div>
-                        <span
-                            class="flex align-items-center justify-content-center bg-purple-400"
-                            style="
-                                width: 38px;
-                                height: 38px;
-                                border-radius: 10px;
-                            "
-                            ><i class="text-xl text-white pi pi-inbox"></i
-                        ></span>
-                    </div>
-
-                    <div class="ml-3">
-                        <span class="font-medium text-900"
-                            >Denuncias e Incidentes</span
-                        >
-                        <p class="mt-2 mb-0 text-600 line-height-3">
-                            Esta función está diseñada para recopilar
-                            información sobre cualquier inconveniente dentro del
-                            poblado, permitiéndonos brindar una rápida respuesta
-                            a la ciudadanía.
-                        </p>
-                    </div>
-                </li>
-                <li class="flex align-items-start mb-4">
-                    <div>
-                        <span
-                            class="flex align-items-center justify-content-center bg-purple-400"
-                            style="
-                                width: 38px;
-                                height: 38px;
-                                border-radius: 10px;
-                            "
-                            ><i class="text-xl text-white pi pi-shield"></i
-                        ></span>
-                    </div>
-                    <div class="ml-3">
-                        <span class="font-medium text-900">Seguridad</span>
-                        <p class="mt-2 mb-0 text-600 line-height-3">
-                            Nos comprometemos a asegurar sus datos y a no
-                            divulgarlos bajo ninguna circunstancia.
-                        </p>
-                    </div>
-                </li>
-                <li class="flex align-items-start">
-                    <div>
-                        <span
-                            class="flex align-items-center justify-content-center bg-purple-400"
-                            style="
-                                width: 38px;
-                                height: 38px;
-                                border-radius: 10px;
-                            "
-                            ><i class="text-xl text-white pi pi-globe"></i
-                        ></span>
-                    </div>
-                    <div class="ml-3">
-                        <span class="font-medium text-900"
-                            >Disponibilidad garantizada</span
-                        >
-                        <p class="mt-2 mb-0 text-600 line-height-3">
-                            Nuestro sitio web está diseñado para garantizar su
-                            disponibilidad las 24 horas del día, los 7 días de
-                            la semana, para que pueda acceder a él en cualquier
-                            momento que lo necesite.
-                        </p>
-                    </div>
-                </li>
-            </ul>
-        </div>
         <div class="w-full lg:w-6 p-4 lg:p-7 surface-card">
             <form (ngSubmit)="registrarse()" [formGroup]="formulario">
                 <p-stepper [(activeStep)]="active">
@@ -290,6 +198,98 @@
                     >Incia sesión</a
                 >
             </div>
+        </div>
+        <div
+            class="w-full lg:w-6 p-4 lg:p-7"
+            style="background-color: rgba(255, 255, 255, 0.7)"
+        >
+            <img
+                src="assets/icon/logo.png"
+                alt="Image"
+                height="50"
+                class="mb-6"
+            />
+            <div class="text-xl text-900 font-500 mb-3">
+                Bienvido Esmeraldas
+            </div>
+
+            <p class="text-600 line-height-3 mt-0 mb-6">
+                Su privacidad es importante para nosotros. Los datos que nos
+                proporcione son estrictamente confidenciales y no serán
+                compartidos con terceros. Solo recopilamos información esencial
+                para establecer contacto y brindarle el mejor servicio posible.
+            </p>
+            <ul class="list-none p-0 m-0">
+                <li class="flex align-items-start mb-4">
+                    <div>
+                        <span
+                            class="flex align-items-center justify-content-center bg-purple-400"
+                            style="
+                                width: 38px;
+                                height: 38px;
+                                border-radius: 10px;
+                            "
+                            ><i class="text-xl text-white pi pi-inbox"></i
+                        ></span>
+                    </div>
+
+                    <div class="ml-3">
+                        <span class="font-medium text-900"
+                            >Denuncias e Incidentes</span
+                        >
+                        <p class="mt-2 mb-0 text-600 line-height-3">
+                            Esta función está diseñada para recopilar
+                            información sobre cualquier inconveniente dentro del
+                            poblado, permitiéndonos brindar una rápida respuesta
+                            a la ciudadanía.
+                        </p>
+                    </div>
+                </li>
+                <li class="flex align-items-start mb-4">
+                    <div>
+                        <span
+                            class="flex align-items-center justify-content-center bg-purple-400"
+                            style="
+                                width: 38px;
+                                height: 38px;
+                                border-radius: 10px;
+                            "
+                            ><i class="text-xl text-white pi pi-shield"></i
+                        ></span>
+                    </div>
+                    <div class="ml-3">
+                        <span class="font-medium text-900">Seguridad</span>
+                        <p class="mt-2 mb-0 text-600 line-height-3">
+                            Nos comprometemos a asegurar sus datos y a no
+                            divulgarlos bajo ninguna circunstancia.
+                        </p>
+                    </div>
+                </li>
+                <li class="flex align-items-start">
+                    <div>
+                        <span
+                            class="flex align-items-center justify-content-center bg-purple-400"
+                            style="
+                                width: 38px;
+                                height: 38px;
+                                border-radius: 10px;
+                            "
+                            ><i class="text-xl text-white pi pi-globe"></i
+                        ></span>
+                    </div>
+                    <div class="ml-3">
+                        <span class="font-medium text-900"
+                            >Disponibilidad garantizada</span
+                        >
+                        <p class="mt-2 mb-0 text-600 line-height-3">
+                            Nuestro sitio web está diseñado para garantizar su
+                            disponibilidad las 24 horas del día, los 7 días de
+                            la semana, para que pueda acceder a él en cualquier
+                            momento que lo necesite.
+                        </p>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

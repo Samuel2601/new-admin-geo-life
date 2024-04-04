@@ -14,7 +14,7 @@
         >
             <div class="grid">
                 <span class="p-col-6 p-md-6 font-bold white-space-nowrap mb-2"
-                    >Listado de Ficha Incidentes:</span
+                    >Listado de Incidentes:</span
                 >
                 <span
                     class="p-col-6 p-md-6 font-bold white-space-nowrap mb-2"
@@ -24,13 +24,13 @@
             <div
                 class="d-flex flex-row align-items-center justify-content-center flex-wrap"
             >
-                <a
-                    class="btn btn-primary me-2 mb-2"
+                <p-button
+                    label="Actividades"
+                    icon="pi pi-substack"
                     *ngIf="check.IndexEstadoIncidenteComponent"
                     (click)="llamarmodal()"
                 >
-                    <i class="bi bi-substack"></i>Actividades</a
-                >
+                </p-button>
             </div>
         </div>
     </ng-template>
@@ -265,17 +265,22 @@
 
 <div class="card" *ngIf="modal == false">
     <div class="card-header">
-        <div class="row">
-            <div class="col-lg-auto">
-                <h2>Listado de incidente/Denuncia</h2>
-            </div>
-            <div class="col-sm-auto">
-                <a
-                    class="btn btn-primary float-end"
-                    *ngIf="check.IndexEstadoIncidenteComponent"
-                    (click)="llamarmodal()"
-                    ><i class="bi bi-substack"></i
-                ></a>
+        <div
+            class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2"
+        >
+            <div class="col-12">
+                <div class="p-fluid p-formgrid grid">
+                    <h3>Listado de Incidente/Denuncia</h3>
+                </div>
+                <div class="flex pt-4 justify-content-end">
+                    <p-button
+                        label="Estados"
+                        icon="pi pi-bell"
+                        *ngIf="check.IndexEstadoIncidenteComponent"
+                        (click)="llamarmodal()"
+                    >
+                    </p-button>
+                </div>
             </div>
         </div>
     </div>
@@ -320,7 +325,7 @@
                                     'contains'
                                 )
                             "
-                            placeholder="Search keyword"
+                            placeholder="Buscar"
                         />
                     </span>
                 </div>

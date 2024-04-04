@@ -13,9 +13,11 @@
         <p-toast></p-toast>
         <div class="table-responsive-sm" *ngIf="actividadPro">
             <p-table
-                appendTo="body"
                 [value]="actividadPro"
                 [tableStyle]="{ 'min-width': '50rem' }"
+                [paginator]="true"
+                [rows]="10"
+                [rowsPerPageOptions]="[5, 10, 20]"
             >
                 <ng-template pTemplate="header">
                     <tr>

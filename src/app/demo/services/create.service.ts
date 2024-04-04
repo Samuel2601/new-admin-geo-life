@@ -14,13 +14,42 @@ export class CreateService {
 	constructor(private http: HttpClient) {
 		this.url = GLOBAL.url+'create/';
 	}
-  registrarUsuario(token: any, data: any): Observable<any> {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: token,
-    });
+  registrarUsuario(data: any): Observable<any> {
+   let headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post(this.url + 'registrar_usuario', data, { headers: headers });
   }
+  /*
+  registrarUsuario(token: any, data: any, formulario: FormGroup): Observable<any> {
+    let headers = new HttpHeaders({
+      Authorization: token,
+    });
+    const formData = new FormData();
+    formData.append('nombre', data);
+
+    const foto = formulario.get('foto')?.value;
+    if (foto instanceof File) {
+      // Llama a la función compressor para comprimir la imagen
+      return new Observable((observer) => {
+        this.compressor(foto).then(compressedFile => {
+          formData.append('foto', compressedFile);
+
+          // Envía la imagen comprimida al servidor
+          this.http.post(this.url + 'registrar_usuario', formData, { headers: headers })
+            .subscribe(
+              (response) => {
+                observer.next(response);
+                observer.complete();
+              },
+              (error) => observer.error(error)
+            );
+        }, error => observer.error(error));
+      });
+    } else {
+      // Enviar sin foto si no se proporciona una imagen
+      return this.http.post(this.url + 'registrar_usuario', formData, { headers: headers });
+    }
+  }*/
+
 
   registrarActividadProyecto(token: any, data: any, fotos: File[]): Observable<any> {
     let headers = new HttpHeaders({

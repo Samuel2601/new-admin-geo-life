@@ -63,7 +63,7 @@
                         id="correo"
                         type="text"
                         formControlName="correo"
-                        placeholder="Email address"
+                        placeholder="Correo Eléctronico"
                         pInputText
                         class="w-full md:w-30rem mb-5"
                         style="padding: 1rem"
@@ -72,12 +72,12 @@
                     <label
                         for="password1"
                         class="block text-900 font-medium text-xl mb-2"
-                        >Password</label
+                        >Contraseña</label
                     >
                     <p-password
                         id="password1"
                         formControlName="pass"
-                        placeholder="Password"
+                        placeholder="Contraseña"
                         [toggleMask]="true"
                         styleClass="mb-5"
                         inputStyleClass="w-full p-3 md:w-30rem"
@@ -93,13 +93,23 @@
                                 styleClass="mr-2"
                                 formControlName="save"
                             ></p-checkbox>
-                            <label for="rememberme1">Remember me</label>
+                            <label for="rememberme1"
+                                >Recordar dispositivo</label
+                            >
                         </div>
                         <a
                             class="font-medium no-underline ml-2 text-right cursor-pointer"
                             style="color: var(--primary-color)"
+                            [routerLink]="'/auth/signup'"
+                            >No tienes una cuenta?</a
+                        >
+                        <!--
+<a
+                            class="font-medium no-underline ml-2 text-right cursor-pointer"
+                            style="color: var(--primary-color)"
                             >Forgot password?</a
                         >
+                        -->
                     </div>
                     <button
                         pButton

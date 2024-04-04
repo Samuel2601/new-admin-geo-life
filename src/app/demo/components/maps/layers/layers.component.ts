@@ -24,6 +24,7 @@ import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { DashboardModule } from '../../dashboard/dashboard.module';
 import { CreateFichaSectorialComponent } from '../ficha-sectorial/create-ficha-sectorial/create-ficha-sectorial.component';
 import { CreateIncidentesDenunciaComponent } from '../incidentes-denuncia/create-incidentes-denuncia/create-incidentes-denuncia.component';
+import { DashboardComponent } from '../../dashboard/dashboard.component';
 interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
   id?: string;
 }
@@ -132,7 +133,7 @@ export class LayersComponent implements OnInit{
     } catch (error) {
       
       console.error('Error al verificar permisos:', error);
-      this.router.navigate(['/error']);
+      this.router.navigate(['/notfound']);
     }
     console.log(this.check);
     this.updateItem();
@@ -156,6 +157,22 @@ export class LayersComponent implements OnInit{
         command: () => {          
           this.getLocation();
       
+        },
+      },
+       {
+        icon: 'pi pi-chart-bar',
+        tooltipOptions: {
+          tooltipLabel:'Estadística',
+          tooltipPosition:'right',
+         //hideDelay:1000,
+        },
+        visible:this.token&&this.opcionb&&this.check.DashboardComponent?true:false,
+         command: () => {   
+           console.log(this.token && this.opcionb && this.check.DashboardComponent,
+             this.token ,
+              this.opcionb ,
+           this.check.DashboardComponent);
+          this.sidebarVisible=true
         },
       },
       {
@@ -228,7 +245,7 @@ export class LayersComponent implements OnInit{
           tooltipPosition:'right',
           //hideDelay:1000,
         },
-        visible:((this.opcionb||false)&&this.check.CreateIncidentesDenunciaComponent && !(!this.latitud && !this.longitud))||!this.token,
+        visible:((this.opcionb?true:false)&&this.check.CreateIncidentesDenunciaComponent && !(!this.latitud && !this.longitud))||(!this.token&&this.opcionb?true:false),
         command: () => {
           //this.stopPropagation(event.originalEvent);
           this.nuevoIncidente();//this.messageService.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted' });
@@ -404,13 +421,7 @@ export class LayersComponent implements OnInit{
         this.latitud = e.latLng.lat();
         this.longitud = e.latLng.lng();
         this.myControl.setValue((this.latitud+';'+this.longitud).toString());
-      
-        
-        
-        
-          if(!this.mostrarficha&&this.check.CreateIncidentesDenunciaComponent||!this.token){
-            this.addMarker({lat: this.latitud, lng: this.longitud},'Ubicación');
-          }
+          
           this.poligonoposition();
       }
     }
@@ -627,6 +638,9 @@ export class LayersComponent implements OnInit{
     if (!buscarbol) {
       this.messageService.add({ severity: 'info', summary: 'Info', detail: 'Tu ubicación no se encuentra dentro de uno de los barrios' });
     }
+    if(!this.mostrarficha&&this.check.CreateIncidentesDenunciaComponent||!this.token){
+      this.addMarker({lat: this.latitud, lng: this.longitud},buscarbol?'Poligono':'Ubicación',buscarbol?this.opcionb.properties.nombre:undefined);
+    }
   }
   popupsMostrados: { [key: string]: boolean } = {};
 
@@ -645,10 +659,8 @@ export class LayersComponent implements OnInit{
           // Cerrar el popup actualmente abierto
           if (this.openInfoWindow) {
             this.openInfoWindow.close();
-          }
-          // Abrir un nuevo popup con el nombre del barrio
-          const infoWindow = new google.maps.InfoWindow({
-            content: `<img src="${this.url}helper/obtener_portada_barrio/${feature.id}" alt="Descripción de la imagen" class="imagen-popup" style="
+        }
+        const content= feature.properties.parr? `<img src="${this.url}helper/obtener_portada_barrio/${feature.id}" alt="Descripción de la imagen" class="imagen-popup" style="
             width: 100%;
             height: 150px;
             object-fit: cover;
@@ -659,7 +671,18 @@ export class LayersComponent implements OnInit{
               <li><strong>Parroquia:</strong> ${feature.properties.parr}</li>                          
             </ul>
           </div>
+          `: `<img src="${this.url}helper/obtener_portada_barrio/${feature.id}" alt="Descripción de la imagen" class="imagen-popup" style="
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+          ">
+          <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
+            <b style="text-align: center;">${feature.properties.nombre}</b>
+          </div>
           `
+          // Abrir un nuevo popup con el nombre del barrio
+          const infoWindow = new google.maps.InfoWindow({
+            content:content
           });
           infoWindow.setPosition(event.latLng);
           infoWindow.open(this.mapCustom);
@@ -667,21 +690,22 @@ export class LayersComponent implements OnInit{
           this.popupsMostrados[featureId] = true;
           //this.canpopup=false;
       } else {
-        this.popupsMostrados={}
-        if(this.capaActiva){
+        //this.popupsMostrados={}
+        if (this.capaActiva) {
+          this.popupsMostrados={}
           this.opcionb = feature;
           if (this.check.DashboardComponent&&this.isMobil()) {
             this.sidebarVisible = true;
           }else{
             this.latitud = event.latLng.lat();
             this.longitud = event.latLng.lng();
-            this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono');
+            this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono',feature.properties.nombre);
           }
         }else{
           
           this.latitud = event.latLng.lat();
           this.longitud = event.latLng.lng();
-          this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono');
+          this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono',feature.properties.nombre);
         }
       }
       

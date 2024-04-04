@@ -12,7 +12,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 })
 export class IndexActividadProyectoComponent implements OnInit {
   model:boolean=true;
-  actividadPro:any={};
+  actividadPro:any=[];
 
   constructor(private modalService: NgbModal,private router: Router,private listService:ListService,private helper:HelperService,private dialogService: DialogService){
 

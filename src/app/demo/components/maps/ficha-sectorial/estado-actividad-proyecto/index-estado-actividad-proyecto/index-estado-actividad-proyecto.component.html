@@ -11,9 +11,9 @@
     </div>
     <div class="modal-body">
         <p-toast></p-toast>
-        <div class="table-responsive-sm" *ngIf="actividadEstado">
+        <div class="table-responsive-sm">
             <p-table
-                appendTo="body"
+                *ngIf="actividadEstado"
                 [value]="actividadEstado"
                 [paginator]="true"
                 [rows]="10"

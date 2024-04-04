@@ -18,7 +18,12 @@ export class CreateCategoriaComponent implements OnInit{
       descripcion: ['', Validators.required]
     });
   }
+  check: any={ };
   ngOnInit(): void {
+    this.check.CreateCategoriaComponent = this.helper.decryptData('CreateCategoriaComponent') || false;
+        if (!this.check.CreateCategoriaComponent) {
+            this.router.navigate(['/notfound']);
+        }
 
   }
   registrarCategoria(){

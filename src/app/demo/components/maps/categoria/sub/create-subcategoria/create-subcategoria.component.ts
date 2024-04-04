@@ -21,7 +21,12 @@ export class CreateSubcategoriaComponent implements OnInit{
       descripcion: ['', Validators.required]
     });
   }
+  check: any = {};
   ngOnInit() {
+     this.check.CreateSubcategoriaComponent = this.helper.decryptData('CreateSubcategoriaComponent') || false;
+        if (!this.check.CreateSubcategoriaComponent) {
+            this.router.navigate(['/notfound']);
+        }
     this.listarCategorias();
   }
   token=this.helper.token();

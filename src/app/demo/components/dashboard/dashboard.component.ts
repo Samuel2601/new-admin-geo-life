@@ -5,6 +5,7 @@ import { ProductService } from '../../service/product.service';
 import { Subscription, debounceTime } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { HelperService } from '../../services/helper.service';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './dashboard.component.html',
@@ -21,7 +22,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     subscription!: Subscription;
 
-    constructor(private productService: ProductService, public layoutService: LayoutService,private helper:HelperService) {
+    constructor(private productService: ProductService, public layoutService: LayoutService,private helper:HelperService,private router: Router) {
         this.subscription = this.layoutService.configUpdate$
         .pipe(debounceTime(25))
         .subscribe((config) => {
@@ -37,9 +38,14 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.notifica.maxincidente = this.helper.maximoStincidenteComponent();
        // //console.log('Notificacion',this.notifica);
     }
-
+    check:any={};
     private subscriptions: Subscription[] = [];
     ngOnInit() {
+        this.check.AdminComponent = this.helper.decryptData('AdminComponent') || false;
+        if (!this.check.AdminComponent) {
+            this.router.navigate(['/notfound']);
+        }
+        
         this.initChart();
         this.productService.getProductsSmall().then(data => this.products = data);
 

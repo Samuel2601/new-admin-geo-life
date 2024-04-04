@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService, TreeNode } from 'primeng/api';
 import { Table } from 'primeng/table';
@@ -21,14 +21,19 @@ interface Column {
     styleUrl: './index-categoria.component.scss',
    providers: [MessageService]
 })
-export class IndexCategoriaComponent {
+export class IndexCategoriaComponent implements OnInit{
   categorias!: TreeNode[];
   constcategorias=[];
   clonedProducts: { [s: string]: any } = {};
   token = this.helperservice.token();
   constructor(private listService: ListService,private router: Router, private updateservice:UpdateService, private helperservice:HelperService,private deleteService:DeleteService,private messageService: MessageService,private dialogService: DialogService) { }
   cols!: Column[];
+  check: any = {};
   async ngOnInit() {
+    this.check.IndexCategoriaComponent = this.helperservice.decryptData('IndexCategoriaComponent') || false;
+        if (!this.check.IndexCategoriaComponent) {
+            this.router.navigate(['/notfound']);
+        }
     this.loading=true;
     await this.listarCategorias();
     this.cols = [

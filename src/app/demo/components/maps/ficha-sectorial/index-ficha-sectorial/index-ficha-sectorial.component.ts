@@ -72,15 +72,20 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   }
   check:any={};
   async ngOnInit(): Promise<void> {
+    
     //console.log(this.modal);
     if(!this.modal)this.helperservice.llamarspinner();
     try {
+      this.check.IndexFichaSectorialComponent = this.helperservice.decryptData('IndexFichaSectorialComponent') || false;
+      if (!this.check.IndexFichaSectorialComponent) {
+         this.router.navigate(['/notfound']);
+      }
       this.check.IndexEstadoActividadProyectoComponent = this.helperservice.decryptData('IndexEstadoActividadProyectoComponent')  || false;
       this.check.IndexActividadProyectoComponent = this.helperservice.decryptData('IndexActividadProyectoComponent') || false;
       //console.log(this.check);
     } catch (error) {
       //console.error('Error al verificar permisos:', error);
-      this.router.navigate(['/error']);
+      this.router.navigate(['/notfound']);
     }
   
     this.listarficha();

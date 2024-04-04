@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ListService } from 'src/app/demo/services/list.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateEstadoIncidenteComponent } from '../create-estado-incidente/create-estado-incidente.component';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { MessageService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-index-estado-incidente',
@@ -18,7 +17,7 @@ export class IndexEstadoIncidenteComponent implements OnInit {
   incidentesDenuncias: any[] = [];
   model: boolean=true;
   load_lista:boolean=true;
-  constructor(private fb: FormBuilder,private listarService:ListService,private router: Router,private modalService: NgbModal,private helper:HelperService,private messageService: MessageService){
+  constructor(private fb: FormBuilder,private listarService:ListService,private router: Router,private helper:HelperService,private messageService: MessageService,private dialogService: DialogService){
 
   }
   ngOnInit(): void {
@@ -52,9 +51,14 @@ export class IndexEstadoIncidenteComponent implements OnInit {
       }      
     });
   }
+   isMobil() {
+    return this.helper.isMobil();
+  }
   abrirSegundoModal() {
-    this.modalService.dismissAll();
-    this.modalService.open(CreateEstadoIncidenteComponent, { centered: true });
+     this.dialogService.open(CreateEstadoIncidenteComponent, {
+          header: '',
+          width: this.isMobil() ? '100%' : '70%',
+      });
   }
 
   abrirModal() {

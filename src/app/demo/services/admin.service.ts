@@ -84,6 +84,14 @@ export class AdminService {
 		//console.log({ dias, horas, minutos, segundos });
 		return diferencia ;
 	}
+	getCiudadano( id: string): Observable<any> {
+		let headers = new HttpHeaders().set('Content-Type', 'application/json');
+		return this._http.get(this.url + 'getciudadano/' + id, { headers: headers });
+	}
+	verificarCorreo( id: string): Observable<any> {
+		let headers = new HttpHeaders().set('Content-Type', 'application/json');
+		return this._http.get(this.url + 'verificarcorreo/' + id, { headers: headers });
+	}
 	isAuthenticate() {
 		const token: any = sessionStorage.getItem('token');
 

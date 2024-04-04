@@ -227,23 +227,31 @@
 <ng-container *ngIf="!modal">
     <div class="card">
         <div class="card-header">
-            <h2>Listado de Ficha Técnica</h2>
-            <button
-                *ngIf="check.IndexActividadProyectoComponent"
-                pButton
-                label="Actividades"
-                icon="pi pi-stack"
-                class="p-button-rounded p-button-text p-button-success"
-                (click)="llamarmodal()"
-            ></button>
-            <button
-                *ngIf="check.IndexEstadoActividadProyectoComponent"
-                pButton
-                label="Estados"
-                icon="pi pi-substack"
-                class="p-button-rounded p-button-text p-button-success"
-                (click)="llamarmodal2()"
-            ></button>
+            <div
+                class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2"
+            >
+                <div class="col-12">
+                    <div class="p-fluid p-formgrid grid">
+                        <h3>Listado de Ficha Técnica</h3>
+                    </div>
+                    <div class="flex pt-4 justify-content-end">
+                        <button
+                            *ngIf="check.IndexActividadProyectoComponent"
+                            pButton
+                            label="Actividades"
+                            icon="pi pi-box"
+                            (click)="llamarmodal()"
+                        ></button>
+                        <button
+                            *ngIf="check.IndexEstadoActividadProyectoComponent"
+                            pButton
+                            label="Estados"
+                            icon="pi pi-bell"
+                            (click)="llamarmodal2()"
+                        ></button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="card-body">

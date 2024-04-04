@@ -8,6 +8,7 @@ import { HelperService } from 'src/app/demo/services/helper.service';
 import { Capacitor } from '@capacitor/core';
 import { Table } from 'primeng/table';
 import { MessageService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
 @Component({
   selector: 'app-index-incidentes-denuncia',
   templateUrl: './index-incidentes-denuncia.component.html',
@@ -16,7 +17,7 @@ import { MessageService } from 'primeng/api';
 })
 export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   public url = GLOBAL.url;
-  constructor(private router: Router,private listService: ListService,private modalService: NgbModal,private helperservice:HelperService,private messageService: MessageService,) { }
+  constructor(private router: Router,private listService: ListService,private modalService: NgbModal,private helperservice:HelperService,private messageService: MessageService,private dialogService: DialogService) { }
   
   load_lista=true;
 
@@ -122,19 +123,25 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   async ngOnInit(): Promise<void> {
     if(!this.modal)this.helperservice.llamarspinner();
     try {
-      this.check.IndexEstadoIncidenteComponent = this.helperservice.decryptData('IndexEstadoIncidenteComponent')  || false;
+       this.check.IndexIncidentesDenunciaComponent = this.helperservice.decryptData('IndexIncidentesDenunciaComponent') || false;
+      this.check.IndexEstadoIncidenteComponent = this.helperservice.decryptData('IndexEstadoIncidenteComponent') || false;
+      if (!this.check.IndexIncidentesDenunciaComponent) {
+        this.router.navigate(['/notfound']); 
+      }
       ////console.log(this.check);
     } catch (error) {
       ////console.error('Error al verificar permisos:', error);
-      this.router.navigate(['/error']);
+      this.router.navigate(['/notfound']);
     }
   
     this.listarIncidentesDenuncias();
     if(this.modal==false)this.helperservice.cerrarspinner();
   }
   llamarmodal(){
-    this.modalService.dismissAll();
-    this.modalService.open(IndexEstadoIncidenteComponent, { centered: true });
+    this.dialogService.open(IndexEstadoIncidenteComponent, {
+          header: '',
+          width: this.isMobil() ? '100%' : '70%',
+      });
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['filtro'] || changes['valor']){

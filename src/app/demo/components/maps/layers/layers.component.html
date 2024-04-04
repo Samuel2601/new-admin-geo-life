@@ -2,8 +2,7 @@
     [(visible)]="sidebarVisible"
     id="sidebar"
     (onHide)="sidebarVisible = false"
-    [fullScreen]="isMobil() ? true : false"
-    [position]="!isMobil() ? 'right' : 'null'"
+    [position]="'right'"
     styleClass="w-30rem"
     role="region"
 >
@@ -72,6 +71,8 @@
                 </p-autoComplete>
                 <label for="float-label">Buscar Barrio</label>
             </span>
+            <!--
+
             <p-button
                 *ngIf="!this.isMobil() && opcionb"
                 icon="pi pi-chart-bar"
@@ -80,6 +81,7 @@
                 [attr.aria-expanded]="sidebarVisible ? true : false"
             >
             </p-button>
+            -->
         </div>
 
         <div class="card" id="map" style="min-height: 50rem"></div>

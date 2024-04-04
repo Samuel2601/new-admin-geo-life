@@ -8,12 +8,12 @@ import { Capacitor } from '@capacitor/core';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
 import { MessageService } from 'primeng/api';
-
+import { DynamicDialogConfig, DialogService} from 'primeng/dynamicdialog';
 @Component({
   selector: 'app-edit-usuario',
   templateUrl: './edit-usuario.component.html',
   styleUrl: './edit-usuario.component.scss',
-  providers: [MessageService]
+  providers: [MessageService,DialogService]
 })
 export class EditUsuarioComponent implements OnInit, AfterViewInit{
   datauser:any;
@@ -25,7 +25,7 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
     private router:Router,
     private _filterservice: FilterService,
     private adminservice:AdminService,
-    private updateservice:UpdateService, private helper:HelperService,private list:ListService,private messageService: MessageService,){ }
+    private updateservice:UpdateService, private helper:HelperService,private list:ListService,private messageService: MessageService,private config: DynamicDialogConfig,private dialogService: DialogService){ }
 
   ngAfterViewInit(): void {
    
@@ -33,34 +33,36 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
 
   token:any = this.helper.token();
   id:any
-  ngOnInit(): void {
+ngOnInit(): void {
+  if (this.config && this.config.data && this.config.data.id) {
+    this.id = this.config.data.id;
+    this.modal = true; // Si config.data.id está definido, se trata de un dialog
+  } else {
     this.router.events.subscribe((val) => {
-      // Verificar la ruta actual y ajustar el valor de model
-      if (this.router.url == '/user-profile') {
-        this.modal = false; // Si la ruta es /create-estado-incidente, model es false
+      // Verificar la ruta actual y ajustar el valor de modal
+      if (this.router.url == '/maps/edit-user') {
+        this.modal = false; // Si la ruta es /maps/edit-user, modal es false
       } else {
-        this.modal = true; // En cualquier otra ruta, model es true
+        this.modal = true; // En cualquier otra ruta, modal es true
       }
     });
-    if(!this.token){
-      this.router.navigate(["/inicio"]);
+    if (!this.token) {
+      this.router.navigate(["/maps"]);
     }
-    this._route.params.subscribe((params) => {
-      if(params['id']){
-        this.id = params['id'];
-      }
-      if(this.id != this.adminservice.identity(this.token)){
-        this.editing=false;
-      }
-      if(!this.id){
-       this.id= this.adminservice.identity(this.token);
-       this.editing=true;
-      }
-      this.listarRol();
-        this.obteneruser(this.id);
-      
-    });
   }
+
+  if (!this.id) {
+    this.id = this.adminservice.identity(this.token);
+    this.editing = true;
+  } else {
+    this.editing = this.id != this.adminservice.identity(this.token);
+  }
+
+  this.listarRol();
+  this.obteneruser(this.id);    
+}
+
+
   listrol!:any[];
   listarRol(){
     this.list.listarRolesUsuarios(this.token).subscribe(response=>{
@@ -76,7 +78,7 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit{
     this._filterservice.obtenerUsuario(this.token,id).subscribe(response=>{
       this.datauser=response.data;
       this.datauser.password='';
-      ////console.log(this.datauser);
+      console.log(this.datauser);
     },error=>{
       this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
     });

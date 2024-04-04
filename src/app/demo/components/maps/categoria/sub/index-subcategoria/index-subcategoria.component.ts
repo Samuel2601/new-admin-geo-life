@@ -16,9 +16,12 @@ export class IndexSubcategoriaComponent {
   constructor(private listService: ListService,private route: ActivatedRoute,private router: Router,private updateservice:UpdateService,private helperservice:HelperService) {
     this.id = this.route.snapshot.queryParamMap.get('id');
    }
-
+  check: any = {};
   ngOnInit(): void {
-   
+   this.check.IndexSubcategoriaComponent = this.helperservice.decryptData('IndexSubcategoriaComponent') || false;
+        if (!this.check.IndexSubcategoriaComponent) {
+            this.router.navigate(['/notfound']);
+        }
     this.listarSubcategorias();
   }
   token=this.helperservice.token();

@@ -13,6 +13,10 @@ export class AdminComponent implements OnInit{
   async ngOnInit(): Promise<void> {
     this.helperService.llamarspinner();
     try {
+      this.check.AdminComponent = this.helperService.decryptData('AdminComponent') || false;
+      if (!this.check.AdminComponent) {
+        this.router.navigate(['/notfound']);
+      }
       this.check.IndexUsuarioComponent = this.helperService.decryptData('IndexUsuarioComponent')  || false;
       this.check.IndexRolUserComponent = this.helperService.decryptData('IndexRolUserComponent') || false;
       this.check.IndexEncargadoCategoriaComponent = this.helperService.decryptData('IndexEncargadoCategoriaComponent') || false;
@@ -21,7 +25,7 @@ export class AdminComponent implements OnInit{
     } catch (error) {
       
       //console.error('Error al verificar permisos:', error);
-      this.router.navigate(['/error']);
+      this.router.navigate(['/notfound']);
       
     }
     this.helperService.cerrarspinner();

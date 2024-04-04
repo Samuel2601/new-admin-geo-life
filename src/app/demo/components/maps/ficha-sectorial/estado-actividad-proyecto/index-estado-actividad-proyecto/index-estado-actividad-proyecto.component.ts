@@ -12,7 +12,7 @@ import { DialogService } from 'primeng/dynamicdialog';
   styleUrl: './index-estado-actividad-proyecto.component.scss'
 })
 export class IndexEstadoActividadProyectoComponent implements OnInit{
-  actividadEstado:any={};
+  actividadEstado:any=[];
   model:boolean=true;
   constructor(private dialogService: DialogService,private router: Router,private listService:ListService,private helper:HelperService){
    

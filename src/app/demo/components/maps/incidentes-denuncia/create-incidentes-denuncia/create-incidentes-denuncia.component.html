@@ -33,7 +33,6 @@
                         optionLabel="nombre"
                         [filter]="true"
                         filterPlaceholder="Buscar categoría"
-                        [showClear]="true"
                         [required]="true"
                         (onChange)="selectcategoria($event)"
                     ></p-dropdown>
@@ -49,7 +48,6 @@
                         optionLabel="nombre"
                         [filter]="true"
                         filterPlaceholder="Buscar subcategoría"
-                        [showClear]="true"
                         [required]="true"
                     ></p-dropdown>
                 </div>
@@ -70,7 +68,7 @@
 
                 <div class="mb-3" *ngIf="!upload">
                     <p-button
-                        label="Subir de Nuevo"
+                        label="Eliminar Fotos"
                         severity="warning"
                         (onClick)="
                             upload = true;

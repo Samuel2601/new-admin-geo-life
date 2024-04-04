@@ -431,7 +431,8 @@ export class LayersComponent implements OnInit{
     }
   popupStates: boolean[] = [];
   // Adds a marker to the map and push to the array.
-  addMarker(position: google.maps.LatLng | google.maps.LatLngLiteral, tipo: 'Wifi' | 'Poligono' | 'Ubicación',message?: string,){
+  addMarker(position: google.maps.LatLng | google.maps.LatLngLiteral, tipo: 'Wifi' | 'Poligono' | 'Ubicación', message?: string,) {
+    this.updateItem();
     this.deleteMarkers('Ubicación');
     const map = this.mapCustom
     const marker = new google.maps.Marker({
@@ -559,6 +560,7 @@ export class LayersComponent implements OnInit{
       }    
       //this.myControl.setValue(feature.properties.nombre);
       this.opcionb = feature;
+      this.updateItem();
       //console.log(this.opcionb);
     }
       const geometry = feature.geometry;
@@ -643,7 +645,8 @@ export class LayersComponent implements OnInit{
       this.messageService.add({ severity: 'info', summary: 'Info', detail: 'Tu ubicación no se encuentra dentro de uno de los barrios' });
     }
     if(!this.mostrarficha&&this.check.CreateIncidentesDenunciaComponent||!this.token){
-      this.addMarker({lat: this.latitud, lng: this.longitud},buscarbol?'Poligono':'Ubicación',buscarbol?this.opcionb.properties.nombre:undefined);
+      this.addMarker({ lat: this.latitud, lng: this.longitud }, buscarbol ? 'Poligono' : 'Ubicación', buscarbol ? this.opcionb.properties.nombre : undefined);
+      
     }
   }
   popupsMostrados: { [key: string]: boolean } = {};

@@ -58,7 +58,6 @@
                                     name="fecha_evento"
                                     formControlName="fecha_evento"
                                     [showTime]="true"
-                                    [showSeconds]="true"
                                     [showIcon]="true"
                                     inputId="buttondisplay"
                                 ></p-calendar>
@@ -118,7 +117,7 @@
 
                     <div class="mb-3" *ngIf="!upload">
                         <p-button
-                            label="Subir de Nuevo"
+                            label="Eliminar Fotos"
                             severity="warning"
                             (onClick)="
                                 upload = true;
@@ -138,13 +137,13 @@
                         <h4 for="formFileMultiple" class="form-label">
                             Añade fotos
                         </h4>
-                        <button
+                        <p-button
                             class="btn btn-primary"
                             type="button"
                             (click)="tomarFotoYEnviar($event)"
                         >
                             <i class="bi bi-camera-fill"></i>
-                        </button>
+                        </p-button>
                     </div>
                     <div class="mb-3">
                         <p-toast></p-toast>
@@ -211,7 +210,7 @@
                         </p-galleria>
                     </div>
                     <p-button
-                        label="Guardar"
+                        label="Registrar"
                         icon="bi bi-save"
                         (click)="registrarFichaSectorial()"
                     ></p-button>

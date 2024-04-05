@@ -17,6 +17,9 @@ import { SplitterModule } from 'primeng/splitter';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
+import { BadgeModule } from 'primeng/badge';
+import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
 @NgModule({
     imports: [
         CommonModule,
@@ -31,7 +34,10 @@ import { InputTextModule } from 'primeng/inputtext';
         SplitterModule,
         ScrollPanelModule,
         TagModule,
-        InputTextModule
+        InputTextModule,
+        BadgeModule,
+        AvatarGroupModule,
+        AvatarModule
     ],
     declarations: [DashboardComponent,
         StackBarriosComponent,

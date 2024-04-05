@@ -105,7 +105,19 @@
                     </div>
                 </div>
 
-                <div class="mb-3" *ngIf="!upload"></div>
+                <div class="mb-3" *ngIf="!isMobil() && !upload">
+                    <p-button
+                        *ngIf="imagenesSeleccionadas.length > 0"
+                        label="Borrar Fotos"
+                        severity="warning"
+                        (onClick)="
+                            upload = true;
+                            imagenesSeleccionadas = [];
+                            selectedFiles = []
+                        "
+                        icon="pi pi-trash"
+                    ></p-button>
+                </div>
                 <div class="mb-3" *ngIf="isMobil()">
                     <h4 for="formFileMultiple" class="form-label">
                         Añade fotos
@@ -119,7 +131,7 @@
                         <i class="bi bi-camera-fill"></i>
                     </p-button>
                     <p-button
-                        *ngIf="imagenesSeleccionadas.length > 1"
+                        *ngIf="imagenesSeleccionadas.length > 0"
                         label=""
                         severity="warning"
                         (onClick)="

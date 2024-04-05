@@ -55,9 +55,10 @@
                 ></textarea>
             </div>
 
-            <div class="mb-3" *ngIf="!upload">
+            <div class="mb-3" *ngIf="!isMobil() && !upload">
                 <p-button
-                    label=""
+                    *ngIf="imagenesSeleccionadas.length > 0"
+                    label="Borrar Fotos"
                     severity="warning"
                     (onClick)="
                         upload = true;
@@ -100,20 +101,27 @@
                     </ng-template>
                 </p-fileUpload>
             </div>
-
-            <div
-                class="mb-3"
-                *ngIf="
-                    (imagenesSeleccionadas.length < 3 || upload) && isMobil()
-                "
-            >
+            <div class="mb-3" *ngIf="isMobil()">
                 <h4 for="formFileMultiple" class="form-label">Añade fotos</h4>
                 <p-button
-                    label=""
-                    *ngIf="imagenesSeleccionadas.length <= 3"
-                    (click)="tomarFotoYEnviar($event)"
+                    *ngIf="imagenesSeleccionadas.length < 3 || upload"
+                    class="btn btn-primary"
+                    type="button"
                     severity="help"
-                    icon="bi bi-camera-fill"
+                    (click)="tomarFotoYEnviar($event)"
+                >
+                    <i class="bi bi-camera-fill"></i>
+                </p-button>
+                <p-button
+                    *ngIf="imagenesSeleccionadas.length > 0"
+                    label=""
+                    severity="warning"
+                    (onClick)="
+                        upload = true;
+                        imagenesSeleccionadas = [];
+                        selectedFiles = []
+                    "
+                    icon="pi pi-trash"
                 ></p-button>
             </div>
 

@@ -10,7 +10,14 @@
             <td>
                 {{ item }}
                 :
-                {{ sumaValores[i] }}
+                <p-avatar
+                    [label]="sumaValores[i].toString()"
+                    styleClass="mr-2"
+                    [style]="{
+                        'background-color': getBackgroundColor(i),
+                        color: 'var(--primary-color-text)'
+                    }"
+                ></p-avatar>
             </td>
         </tr>
     </tbody>

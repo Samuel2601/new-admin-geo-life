@@ -19,41 +19,26 @@
         <div
             class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2"
         >
-            <div class="grid">
-                <span class="p-col-6 p-md-6 font-bold white-space-nowrap mb-2"
-                    >Listado de Ficha Técnica:</span
-                >
-                <span
-                    class="p-col-6 p-md-6 font-bold white-space-nowrap mb-2"
-                    >{{ valor }}</span
-                >
-            </div>
-
-            <div
-                class="d-flex flex-row align-items-center justify-content-center flex-wrap"
-                [ngClass]="{
-                    'd-none':
-                        check.IndexActividadProyectoComponent &&
-                        check.IndexEstadoActividadProyectoComponent,
-                    'd-sm-flex':
-                        !check.IndexActividadProyectoComponent ||
-                        !check.IndexEstadoActividadProyectoComponent
-                }"
-            >
-                <a
-                    class="btn btn-primary me-2 mb-2"
-                    *ngIf="check.IndexActividadProyectoComponent"
-                    (click)="llamarmodal2()"
-                >
-                    <i class="bi bi-substack"></i> Actividades
-                </a>
-                <a
-                    class="btn btn-primary me-2 mb-2"
-                    *ngIf="check.IndexEstadoActividadProyectoComponent"
-                    (click)="llamarmodal()"
-                >
-                    <i class="bi bi-stack"></i> Estados
-                </a>
+            <div class="col-12">
+                <div class="p-fluid p-formgrid grid">
+                    <h3>Listado de Ficha Técnica</h3>
+                </div>
+                <div class="flex pt-4 justify-content-end">
+                    <button
+                        *ngIf="check.IndexActividadProyectoComponent"
+                        pButton
+                        label="Actividades"
+                        icon="pi pi-box"
+                        (click)="llamarmodal2()"
+                    ></button>
+                    <button
+                        *ngIf="check.IndexEstadoActividadProyectoComponent"
+                        pButton
+                        label="Estados"
+                        icon="pi pi-bell"
+                        (click)="llamarmodal()"
+                    ></button>
+                </div>
             </div>
         </div>
     </ng-template>
@@ -306,24 +291,6 @@
                         <th style="width: 3rem">#</th>
                         <th style="min-width: 8rem">
                             <div class="flex align-items-center">
-                                Actividad
-                                <p-columnFilter
-                                    type="text"
-                                    field="actividad.nombre"
-                                    display="menu"
-                                ></p-columnFilter>
-                                <th
-                                    pSortableColumn="actividad.nombre"
-                                    style="width: 20%"
-                                >
-                                    <p-sortIcon
-                                        field="actividad.nombre"
-                                    ></p-sortIcon>
-                                </th>
-                            </div>
-                        </th>
-                        <th style="min-width: 8rem">
-                            <div class="flex align-items-center">
                                 Sector
                                 <p-columnFilter
                                     type="text"
@@ -340,6 +307,25 @@
                                 </th>
                             </div>
                         </th>
+                        <th style="min-width: 8rem">
+                            <div class="flex align-items-center">
+                                Actividad
+                                <p-columnFilter
+                                    type="text"
+                                    field="actividad.nombre"
+                                    display="menu"
+                                ></p-columnFilter>
+                                <th
+                                    pSortableColumn="actividad.nombre"
+                                    style="width: 20%"
+                                >
+                                    <p-sortIcon
+                                        field="actividad.nombre"
+                                    ></p-sortIcon>
+                                </th>
+                            </div>
+                        </th>
+
                         <th style="min-width: 15rem">
                             <div class="flex align-items-center">
                                 Descripción
@@ -439,14 +425,15 @@
                     let-incidente
                     let-rowIndex="rowIndex"
                 >
-                    <tr>
+                    <tr (click)="visible = true; option = incidente">
                         <td>{{ rowIndex + 1 }}</td>
-                        <td>
-                            {{ incidente.actividad.nombre }}
-                        </td>
                         <td>
                             {{ incidente.direccion_geo }}
                         </td>
+                        <td>
+                            {{ incidente.actividad.nombre }}
+                        </td>
+
                         <td>
                             {{ incidente.descripcion }}
                         </td>
@@ -487,6 +474,7 @@
                                 "
                                 alt="..."
                                 (click)="
+                                    stopPropagation($event);
                                     openimagen(incidente.foto);
                                     this.displayBasic = true
                                 "

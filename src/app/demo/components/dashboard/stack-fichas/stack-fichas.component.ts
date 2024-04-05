@@ -208,6 +208,34 @@ sumaValores: number[] = [];
       this.canvas();
 
       this.loading = false;
+    }
+    getBackgroundColor(index: number): string {
+    switch (index) {
+        case 0:
+            return getComputedStyle(document.documentElement).getPropertyValue('--blue-500');
+        case 1:
+            return getComputedStyle(document.documentElement).getPropertyValue('--green-500');
+        case 2:
+            return getComputedStyle(document.documentElement).getPropertyValue('--yellow-500');
+        case 3:
+            return getComputedStyle(document.documentElement).getPropertyValue('--cyan-500');
+        case 4:
+            return getComputedStyle(document.documentElement).getPropertyValue('--pink-500');
+        case 5:
+            return getComputedStyle(document.documentElement).getPropertyValue('--indigo-500');
+        case 6:
+            return getComputedStyle(document.documentElement).getPropertyValue('--teal-500');
+        case 7:
+            return getComputedStyle(document.documentElement).getPropertyValue('--orange-500');
+        case 8:
+            return getComputedStyle(document.documentElement).getPropertyValue('--bluegray-500');
+        case 9:
+            return getComputedStyle(document.documentElement).getPropertyValue('--purple-500');
+        case 10:
+            return getComputedStyle(document.documentElement).getPropertyValue('--red-500');
+        default:
+            return '';
+    }
 }
 
 options: any;

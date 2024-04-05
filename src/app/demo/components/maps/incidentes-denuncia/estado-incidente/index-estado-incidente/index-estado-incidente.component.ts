@@ -6,6 +6,7 @@ import { CreateEstadoIncidenteComponent } from '../create-estado-incidente/creat
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
+import { App } from '@capacitor/app';
 
 @Component({
   selector: 'app-index-estado-incidente',
@@ -55,9 +56,12 @@ export class IndexEstadoIncidenteComponent implements OnInit {
     return this.helper.isMobil();
   }
   abrirSegundoModal() {
-     this.dialogService.open(CreateEstadoIncidenteComponent, {
+     const modalRef =this.dialogService.open(CreateEstadoIncidenteComponent, {
           header: '',
           width: this.isMobil() ? '100%' : '70%',
+     });
+    App.addListener('backButton', data => {
+       modalRef.close();
       });
   }
 

@@ -9,6 +9,7 @@ import { Capacitor } from '@capacitor/core';
 import { Table } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 import { DialogService,DynamicDialogRef } from 'primeng/dynamicdialog';
+import { App } from '@capacitor/app';
 @Component({
   selector: 'app-index-ficha-sectorial',
   templateUrl: './index-ficha-sectorial.component.html',
@@ -143,12 +144,18 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
           header: '',
           width: this.isMobil() ? '100%' : '70%',
       });
+    App.addListener('backButton', data => {
+       modalRef.close();
+      });
   }
 
   llamarmodal() {
       const modalRef = this.dialogService.open(IndexEstadoActividadProyectoComponent, {
           header: '',
           width: this.isMobil() ? '100%' : '70%',
+      });
+    App.addListener('backButton', data => {
+       modalRef.close();
       });
   }
 

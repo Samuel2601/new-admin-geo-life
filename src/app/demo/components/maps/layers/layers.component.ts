@@ -7,6 +7,7 @@ import { GLOBAL } from 'src/app/demo/services/GLOBAL';
 import { Subscription, debounceTime, map } from 'rxjs';
 import { Capacitor, Plugins } from '@capacitor/core';
 const { Geolocation } = Plugins;
+import { App } from '@capacitor/app';
 import { MenuItem, MenuItemCommandEvent, MessageService} from 'primeng/api';
 declare global {
   interface JQueryStatic {
@@ -25,7 +26,8 @@ import { DashboardModule } from '../../dashboard/dashboard.module';
 import { CreateFichaSectorialComponent } from '../ficha-sectorial/create-ficha-sectorial/create-ficha-sectorial.component';
 import { CreateIncidentesDenunciaComponent } from '../incidentes-denuncia/create-incidentes-denuncia/create-incidentes-denuncia.component';
 import { DashboardComponent } from '../../dashboard/dashboard.component';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+
 interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
   id?: string;
 }
@@ -111,7 +113,7 @@ export class LayersComponent implements OnInit{
   backgroundColor=getComputedStyle(document.documentElement).getPropertyValue('--surface-0');
 
   subscription!: Subscription;
-  constructor(private modalService: NgbModal,private elementRef: ElementRef,private helperService:HelperService,private router: Router,private layoutService: LayoutService,private messageService: MessageService,private dialogService: DialogService){
+  constructor(private modalService: NgbModal,private elementRef: ElementRef,private helperService:HelperService,private router: Router,private layoutService: LayoutService,private messageService: MessageService,private dialogService: DialogService,private ref: DynamicDialogRef){
     this.subscription = this.layoutService.configUpdate$
         .pipe(debounceTime(25))
         .subscribe((config) => {
@@ -122,8 +124,17 @@ export class LayersComponent implements OnInit{
             this.actualizarpoligono();
         });
   }
-
+  ngOnDestroy() {
+        if (this.ref) {
+            this.ref.close();
+        }
+  }
   async ngOnInit() {
+  App.addListener('backButton', data => {
+        this.sidebarVisible ? this.sidebarVisible = false : '';
+        this.mostrarficha ? this.mostrarficha = false : '';
+        this.mostrarincidente ? this.mostrarincidente = false : '';
+      });
     if(!this.token)this.router.navigate(["/auth/login"]);
      try {
       this.check.IndexFichaSectorialComponent = this.helperService.decryptData('IndexFichaSectorialComponent') ||false; //await this.helperService.checkPermiso('IndexFichaSectorialComponent') || false;
@@ -137,7 +148,6 @@ export class LayersComponent implements OnInit{
       console.error('Error al verificar permisos:', error);
       this.router.navigate(['/notfound']);
     }
-    console.log(this.check);
     this.updateItem();
     await this.getWFSgeojson(this.urlgeoser);
     this.helperService.setMapComponent(this); 
@@ -851,10 +861,13 @@ export class LayersComponent implements OnInit{
     //const modalRef = this.modalService.open(CreateFichaSectorialComponent, { centered: true });
     //modalRef.componentInstance.data = data; 
 
-     this.dialogService.open(CreateFichaSectorialComponent, {
+    this.ref =  this.dialogService.open(CreateFichaSectorialComponent, {
           header: '',
           width: this.isMobil() ? '100%' : '70%',
           data: { data: data },
+    });
+     App.addListener('backButton', data => {
+       this.ref.close();
       });
   }
   nuevoIncidente() {
@@ -868,12 +881,14 @@ export class LayersComponent implements OnInit{
       modalRef.componentInstance.data = data; 
       modalRef.componentInstance.direccion = { latitud: this.latitud, longitud: this.longitud };  
       */
-      this.dialogService.open(CreateIncidentesDenunciaComponent, {
+     this.ref =  this.dialogService.open(CreateIncidentesDenunciaComponent, {
           header: '',
           width: this.isMobil() ? '100%' : '70%',
           data: { data: data , direccion:{ latitud: this.latitud, longitud: this.longitud }},
       });
-
+   App.addListener('backButton', data => {
+     this.ref.destroy();
+      });
     } 
    
   }

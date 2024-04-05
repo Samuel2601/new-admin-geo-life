@@ -26,6 +26,7 @@ import { ListIncidentesComponent } from './list-incidentes/list-incidentes.compo
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { GalleriaModule } from 'primeng/galleria';
+import { DialogService } from 'primeng/dynamicdialog';
 @NgModule({
     imports: [
         CommonModule,
@@ -59,6 +60,7 @@ import { GalleriaModule } from 'primeng/galleria';
     exports: [
         StackFichasComponent,
         StackIncidentesComponent
-    ]
+    ],
+    providers: [DialogService],
 })
 export class DashboardModule { }

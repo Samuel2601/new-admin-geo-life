@@ -65,7 +65,7 @@ import { DividerModule } from 'primeng/divider';
 import { DockModule } from 'primeng/dock';
 import { DragDropModule } from 'primeng/dragdrop';
 import { DropdownModule } from 'primeng/dropdown';
-import { DialogService, DynamicDialogConfig, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { EditorModule } from 'primeng/editor';
 import { FieldsetModule } from 'primeng/fieldset';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -142,6 +142,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { IndexDireccionGeoComponent } from './direccion-geo/index-direccion-geo/index-direccion-geo.component';
 import { CreateDireccionGeoComponent } from './direccion-geo/create-direccion-geo/create-direccion-geo.component';
 import { EditDireccionGeoComponent } from './direccion-geo/edit-direccion-geo/edit-direccion-geo.component';
+
 @NgModule({  
   imports: [
     NgbModule,
@@ -282,7 +283,7 @@ import { EditDireccionGeoComponent } from './direccion-geo/edit-direccion-geo/ed
     CreateDireccionGeoComponent,
     EditDireccionGeoComponent
   ],
-  providers: [MessageService,DialogService,DynamicDialogConfig],
+  providers: [MessageService,DialogService,DynamicDialogConfig,DynamicDialogRef],
   bootstrap: [IndexUsuarioComponent]
 })
 export class MapsModule { }

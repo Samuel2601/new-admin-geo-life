@@ -31,8 +31,11 @@
             [value]="usuarios"
             *ngIf="usuarios.length > 0 && !load_lista"
             [scrollable]="true"
-            [scrollHeight]="'400px'"
             [responsive]="true"
+            [rows]="10"
+            [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            [paginator]="true"
         >
             <ng-template pTemplate="header">
                 <tr>

@@ -11,6 +11,7 @@ import { EditCategoriaComponent } from '../edit-categoria/edit-categoria.compone
 import { EditSubcategoriaComponent } from '../sub/edit-subcategoria/edit-subcategoria.component';
 import { DeleteService } from 'src/app/demo/services/delete.service';
 import { DialogService,DynamicDialogRef } from 'primeng/dynamicdialog';
+import { App } from '@capacitor/app';
 interface Column {
   field: string;
   header: string;
@@ -108,13 +109,19 @@ export class IndexCategoriaComponent implements OnInit{
             header: 'Editar Categoría',
             width: this.isMobil()? '100%':'70%',
             data: { id: id },
-          });    
+            });  
+          App.addListener('backButton', data => {
+            modalRef.close();
+          });
         } else {
            const modalRef = this.dialogService.open(EditSubcategoriaComponent, {
             header: 'Editar Subcategoría',
             width: this.isMobil()? '100%':'70%',
             data: { id: id },
-          });  
+           });  
+          App.addListener('backButton', data => {
+            modalRef.close();
+          });
         }
     }
     responsemodal:any;

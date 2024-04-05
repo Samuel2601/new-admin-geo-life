@@ -13,10 +13,14 @@
                 <p-avatar
                     [label]="sumaValores[i].toString()"
                     styleClass="mr-2"
-                    [style]="{
-                        'background-color': getBackgroundColor(i),
-                        color: 'var(--primary-color-text)'
-                    }"
+                    [style]="
+                        filtro
+                            ? {
+                                  'background-color': getBackgroundColor(i),
+                                  color: 'var(--primary-color-text)'
+                              }
+                            : null
+                    "
                 ></p-avatar>
             </td>
         </tr>

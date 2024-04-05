@@ -6,6 +6,7 @@ import { ListService } from 'src/app/demo/services/list.service';
 import { EditUsuarioComponent } from '../edit-usuario/edit-usuario.component';
 import { Capacitor } from '@capacitor/core';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { App } from '@capacitor/app';
 @Component({
   selector: 'app-index-usuario',
   templateUrl: './index-usuario.component.html',
@@ -125,6 +126,9 @@ export class IndexUsuarioComponent implements OnInit{
       width: this.isMobil()? '100%':'70%',
       data: { id: id },
     });
+     App.addListener('backButton', data => {
+       modalRef.close();
+      });
   }
   openModal(content: any) {
     this.dialogService.open(content, { ariaLabelledBy: 'modal-basic-title' });

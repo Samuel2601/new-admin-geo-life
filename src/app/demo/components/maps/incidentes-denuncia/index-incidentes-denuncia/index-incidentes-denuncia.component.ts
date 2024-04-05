@@ -9,6 +9,7 @@ import { Capacitor } from '@capacitor/core';
 import { Table } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
+import { App } from '@capacitor/app';
 @Component({
   selector: 'app-index-incidentes-denuncia',
   templateUrl: './index-incidentes-denuncia.component.html',
@@ -138,9 +139,12 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
     if(this.modal==false)this.helperservice.cerrarspinner();
   }
   llamarmodal(){
-    this.dialogService.open(IndexEstadoIncidenteComponent, {
+    const modalRef=this.dialogService.open(IndexEstadoIncidenteComponent, {
           header: '',
           width: this.isMobil() ? '100%' : '70%',
+    });
+    App.addListener('backButton', data => {
+       modalRef.close();
       });
   }
   ngOnChanges(changes: SimpleChanges): void {

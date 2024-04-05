@@ -5,6 +5,7 @@ import { CreateActividadProyectoComponent } from '../create-actividad-proyecto/c
 import { ListService } from 'src/app/demo/services/list.service';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { DialogService } from 'primeng/dynamicdialog';
+import { App } from '@capacitor/app';
 @Component({
   selector: 'app-index-actividad-proyecto',
   templateUrl: './index-actividad-proyecto.component.html',
@@ -47,9 +48,12 @@ export class IndexActividadProyectoComponent implements OnInit {
     return this.helper.isMobil();
   }
   abrirModal(){
-    this.dialogService.open(CreateActividadProyectoComponent,  {
+    const modalRef=this.dialogService.open(CreateActividadProyectoComponent,  {
         header: 'Nueva Actividad',
         width: this.isMobil() ? '100%' : '50%',
+    });
+    App.addListener('backButton', data => {
+       modalRef.close();
     });
   }
 }

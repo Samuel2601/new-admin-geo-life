@@ -20,6 +20,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
+import { ListFichaComponent } from './list-ficha/list-ficha.component';
+import { ListIncidentesComponent } from './list-incidentes/list-incidentes.component';
+
+import { DialogModule } from 'primeng/dialog';
+import { ToastModule } from 'primeng/toast';
+import { GalleriaModule } from 'primeng/galleria';
 @NgModule({
     imports: [
         CommonModule,
@@ -37,13 +43,18 @@ import { AvatarGroupModule } from 'primeng/avatargroup';
         InputTextModule,
         BadgeModule,
         AvatarGroupModule,
-        AvatarModule
+        AvatarModule,
+        DialogModule,
+        ToastModule,
+        GalleriaModule
     ],
     declarations: [DashboardComponent,
         StackBarriosComponent,
         StackFichasComponent,
         StackIncidentesComponent,
-        StackbarriofichaComponent
+        StackbarriofichaComponent,
+        ListFichaComponent,
+        ListIncidentesComponent
     ],
     exports: [
         StackFichasComponent,

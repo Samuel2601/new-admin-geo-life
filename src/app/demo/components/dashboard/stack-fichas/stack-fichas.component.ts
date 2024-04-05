@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
 import { Table } from 'primeng/table';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
+import { ListFichaComponent } from '../list-ficha/list-ficha.component';
 
 @Component({
   selector: 'app-stack-fichas',
@@ -12,7 +14,7 @@ import { ListService } from 'src/app/demo/services/list.service';
 })
 export class StackFichasComponent implements OnInit{
   urlgeoser="https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson"; 
-  constructor(private messageService: MessageService,private helper:HelperService ,private listar:ListService){
+  constructor(private messageService: MessageService,private helper:HelperService ,private listar:ListService,private dialogService: DialogService){
 
   }
  
@@ -368,9 +370,18 @@ updateCurrentData() {
     this.cargar();
 }
 
-clear(table: Table) {
-  table.clear();
-}
+    clear(table: Table) {
+        table.clear();
+    }
+    
+    filrarficha(id:any) {
+        
+     this.dialogService.open(ListFichaComponent, {
+          header: 'Ficha Sectorial:'+this.labelsmobil[id]+' de '+this.valor,
+         width: this.isMobil() ? '100%' : '70%',
+          data:{filtro:this.filtro,valor:this.valor,actividad:this.labelsmobil[id]}
+      });
+  }
 
 getSeverity(status: string) {
   switch (status.toLowerCase()) {

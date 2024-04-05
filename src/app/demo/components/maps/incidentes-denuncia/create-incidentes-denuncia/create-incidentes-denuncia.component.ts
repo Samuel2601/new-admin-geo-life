@@ -98,7 +98,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
   }
   
   async ngOnInit() {
-     if (this.config && this.config.data && this.config.data.data) {
+    if (this.config && this.config.data && this.config.data.data) {
       this.data = this.config.data.data;
     }
      if (this.config && this.config.data && this.config.data.direccion) {

@@ -10,6 +10,7 @@
             <td>
                 {{ item }}:
                 <p-avatar
+                    (click)="filrarficha(i)"
                     [label]="sumaValores[i].toString()"
                     styleClass="mr-2"
                     [style]="{

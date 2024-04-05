@@ -1,0 +1,218 @@
+<p-toast></p-toast>
+<div
+    class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2"
+>
+    <div class="grid">
+        <span class="p-col-6 p-md-6 font-bold white-space-nowrap mb-2"
+            >Ficha Sectorial:</span
+        >
+        <span class="p-col-6 p-md-6 font-bold white-space-nowrap mb-2">{{
+            valor
+        }}</span>
+    </div>
+</div>
+<p-table
+    styleClass="p-datatable-striped"
+    #dt1
+    [value]="incidentesDenuncias"
+    dataKey="_id"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="load_lista"
+    [paginator]="true"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    [globalFilterFields]="[
+        'direccion_geo',
+        'categoria.nombre',
+        'fecha_evento',
+        'encargado.nombres',
+        'estado.nombre'
+    ]"
+    [sortMode]="'multiple'"
+>
+    <ng-template pTemplate="caption">
+        <div class="flex">
+            <button
+                pButton
+                label=""
+                class="p-button-outlined"
+                icon="pi pi-filter-slash"
+                (click)="clear(dt1)"
+            ></button>
+            <span class="p-input-icon-left ml-auto">
+                <i class="pi pi-search"></i>
+                <input
+                    pInputText
+                    type="text"
+                    (input)="
+                        dt1.filterGlobal($any($event.target).value, 'contains')
+                    "
+                    placeholder="Buscar"
+                />
+            </span>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width: 3rem">#</th>
+            <th style="min-width: 15rem">
+                <div class="flex align-items-center">
+                    Fecha del evento
+                    <p-columnFilter
+                        type="text"
+                        field="fecha_evento"
+                        display="menu"
+                    ></p-columnFilter>
+                    <th pSortableColumn="fecha_evento" style="width: 20%">
+                        <p-sortIcon field="fecha_evento"></p-sortIcon>
+                    </th>
+                </div>
+            </th>
+            <th style="min-width: 15rem">
+                <div class="flex align-items-center">
+                    Encargado
+                    <p-columnFilter
+                        type="text"
+                        field="encargado.nombres"
+                        display="menu"
+                    ></p-columnFilter>
+                    <th pSortableColumn="encargado.nombre" style="width: 20%">
+                        <p-sortIcon field="encargado.nombre"></p-sortIcon>
+                    </th>
+                </div>
+            </th>
+            <th style="min-width: 10rem">
+                <div class="flex align-items-center">
+                    Estado
+                    <p-columnFilter
+                        type="text"
+                        field="estado.nombre"
+                        display="menu"
+                    ></p-columnFilter>
+                    <th pSortableColumn="estado.nombre" style="width: 20%">
+                        <p-sortIcon field="estado.nombre"></p-sortIcon>
+                    </th>
+                </div>
+            </th>
+            <th style="min-width: 10rem">
+                <div class="flex align-items-center">Foto</div>
+            </th>
+            <!-- Agrega las columnas restantes según tu necesidad -->
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-incidente let-rowIndex="rowIndex">
+        <tr (click)="visible = true; option = incidente">
+            <td>{{ rowIndex + 1 }}</td>
+            <td>
+                {{ incidente.fecha_evento | date : "medium" : "es" }}
+            </td>
+            <td>
+                {{ incidente.encargado.nombres }}
+            </td>
+            <td>
+                <p-tag
+                    [value]="incidente.estado.nombre"
+                    [severity]="getSeverity(incidente.estado.nombre)"
+                ></p-tag>
+            </td>
+            <td>
+                <img
+                    *ngIf="incidente.foto && incidente.foto.length > 0"
+                    [src]="
+                        url +
+                        'helper/obtener_portada_ficha/' +
+                        incidente.foto[0]
+                    "
+                    class="navbar-brand-img mx-auto"
+                    style="max-height: 4rem !important; cursor: pointer"
+                    alt="..."
+                    (click)="
+                        stopPropagation($event);
+                        openimagen(incidente.foto);
+                        this.displayBasic = true
+                    "
+                />
+            </td>
+            <!-- Agrega las columnas restantes según tu necesidad -->
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="5">No se encontraron incidentes.</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-galleria
+    [value]="imagenModal"
+    [(visible)]="displayBasic"
+    [responsiveOptions]="responsiveOptions"
+    [containerStyle]="{ 'max-width': '50%' }"
+    [numVisible]="9"
+    [circular]="true"
+    [fullScreen]="true"
+    [showItemNavigators]="true"
+>
+    <ng-template pTemplate="item" let-item>
+        <img
+            [src]="url + 'helper/obtener_portada_ficha/' + item"
+            style="width: 100%; display: block"
+        />
+    </ng-template>
+    <ng-template pTemplate="thumbnail" let-item>
+        <div class="grid grid-nogutter justify-content-center">
+            <img
+                [src]="url + 'helper/obtener_portada_ficha/' + item"
+                style="display: block"
+                style="width: 30%"
+            />
+        </div>
+    </ng-template>
+</p-galleria>
+
+<p-dialog
+    *ngIf="option"
+    header="Detalles de la Ficha Sectorial"
+    [(visible)]="visible && option"
+    [modal]="false"
+    [style]="{ width: '50vw' }"
+>
+    <div class="modal-body">
+        <p>
+            <strong>Actividad:</strong>
+            {{ option.actividad.nombre }}
+        </p>
+        <p>
+            <strong>Descripción:</strong>
+            {{ option.descripcion }}
+        </p>
+        <p>
+            <strong>Encargado:</strong>
+            {{ option.encargado.nombres }}
+        </p>
+        <p>
+            <strong>Estado:</strong>
+            <p-tag
+                [value]="option.estado.nombre"
+                [severity]="getSeverity(option.estado.nombre)"
+            >
+            </p-tag>
+        </p>
+        <p>
+            <strong>Fecha Evento:</strong>
+            {{ option.fecha_evento | date : "dd/MM/yyyy" }}
+        </p>
+        <p>
+            <strong>Observación:</strong>
+            {{ option.observacion }}
+        </p>
+        <p *ngIf="option.foto && option.foto.length > 0">
+            <p-button
+                label="Fotos"
+                icon="pi pi-images"
+                (click)="displayBasic = true; openModalimagen(option.foto)"
+            ></p-button>
+        </p>
+    </div>
+</p-dialog>

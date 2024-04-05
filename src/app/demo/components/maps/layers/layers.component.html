@@ -4,6 +4,7 @@
     (onHide)="sidebarVisible = false"
     [position]="isMobil() ? 'center' : 'right'"
     [fullScreen]="isMobil()"
+    [styleClass]="!isMobil() ? 'w-30rem' : ''"
 >
     <h3 *ngIf="sidebarVisible && opcionb">{{ opcionb.properties.nombre }}</h3>
     <app-stack-fichas

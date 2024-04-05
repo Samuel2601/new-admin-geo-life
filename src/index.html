@@ -21,10 +21,16 @@
             rel="stylesheet"
             href="https://unpkg.com/leaflet/dist/leaflet.css"
         />
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnO4FEgIlMcRRB0NY5bn_h_EQzdyNUoPo"></script>
+        <script>
+            function initMap() {
+                // Aquí puedes inicializar el mapa y realizar cualquier otra configuración necesaria
+                console.log("Mapa inicializado");
+            }
+        </script>
         <script
             async
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnO4FEgIlMcRRB0NY5bn_h_EQzdyNUoPo&callback=console.debug&libraries=maps,marker&v=beta"
+            defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnO4FEgIlMcRRB0NY5bn_h_EQzdyNUoPo&callback=initMap"
         ></script>
     </head>
 

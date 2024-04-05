@@ -130,11 +130,11 @@ export class LayersComponent implements OnInit{
         }
   }
   async ngOnInit() {
-  App.addListener('backButton', data => {
+    App.addListener('backButton', data => {
         this.sidebarVisible ? this.sidebarVisible = false : '';
         this.mostrarficha ? this.mostrarficha = false : '';
         this.mostrarincidente ? this.mostrarincidente = false : '';
-      });
+    });
     if(!this.token)this.router.navigate(["/auth/login"]);
      try {
       this.check.IndexFichaSectorialComponent = this.helperService.decryptData('IndexFichaSectorialComponent') ||false; //await this.helperService.checkPermiso('IndexFichaSectorialComponent') || false;
@@ -438,7 +438,8 @@ export class LayersComponent implements OnInit{
     }
   popupStates: boolean[] = [];
   // Adds a marker to the map and push to the array.
-  addMarker(position: google.maps.LatLng | google.maps.LatLngLiteral, tipo: 'Wifi' | 'Poligono' | 'Ubicación', message?: string,) {
+  addMarker(position: google.maps.LatLng | google.maps.LatLngLiteral, tipo: 'Wifi' | 'Poligono' | 'Ubicación', message?: string, feature?: any) {
+    if (feature) this.opcionb = feature;
     this.updateItem();
     this.deleteMarkers('Ubicación');
     const map = this.mapCustom
@@ -713,13 +714,13 @@ export class LayersComponent implements OnInit{
           }else{
             this.latitud = event.latLng.lat();
             this.longitud = event.latLng.lng();
-            this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono',feature.properties.nombre);
+            this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono',feature.properties.nombre,feature);
           }
         }else{
           
           this.latitud = event.latLng.lat();
           this.longitud = event.latLng.lng();
-          this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono',feature.properties.nombre);
+          this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono',feature.properties.nombre,feature);
         }
       }
       

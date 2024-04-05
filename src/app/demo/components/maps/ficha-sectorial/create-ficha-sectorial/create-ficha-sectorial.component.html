@@ -89,7 +89,7 @@
                                 </h4>
                                 <textarea
                                     rows="5"
-                                    cols="30"
+                                    cols="25"
                                     pInputTextarea
                                     id="descripcion"
                                     name="descripcion"
@@ -105,7 +105,7 @@
                                 </h4>
                                 <textarea
                                     rows="5"
-                                    cols="30"
+                                    cols="25"
                                     pInputTextarea
                                     class="form-control"
                                     id="observacion"
@@ -116,9 +116,22 @@
                         </div>
                     </div>
 
-                    <div class="mb-3" *ngIf="!upload">
+                    <div class="mb-3" *ngIf="!upload"></div>
+                    <div class="mb-3" *ngIf="isMobil()">
+                        <h4 for="formFileMultiple" class="form-label">
+                            Añade fotos
+                        </h4>
                         <p-button
-                            label="Eliminar Fotos"
+                            *ngIf="imagenesSeleccionadas.length < 3 || upload"
+                            class="btn btn-primary"
+                            type="button"
+                            (click)="tomarFotoYEnviar($event)"
+                        >
+                            <i class="bi bi-camera-fill"></i>
+                        </p-button>
+                        <p-button
+                            *ngIf="imagenesSeleccionadas.length > 1"
+                            label=""
                             severity="warning"
                             (onClick)="
                                 upload = true;
@@ -127,24 +140,6 @@
                             "
                             icon="pi pi-trash"
                         ></p-button>
-                    </div>
-                    <div
-                        class="mb-3"
-                        *ngIf="
-                            (imagenesSeleccionadas.length < 3 || upload) &&
-                            isMobil()
-                        "
-                    >
-                        <h4 for="formFileMultiple" class="form-label">
-                            Añade fotos
-                        </h4>
-                        <p-button
-                            class="btn btn-primary"
-                            type="button"
-                            (click)="tomarFotoYEnviar($event)"
-                        >
-                            <i class="bi bi-camera-fill"></i>
-                        </p-button>
                     </div>
                     <div class="mb-3">
                         <p-toast></p-toast>

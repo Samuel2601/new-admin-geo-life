@@ -169,10 +169,6 @@ export class LayersComponent implements OnInit{
         },
         visible:this.token&&this.opcionb&&this.check.DashboardComponent?true:false,
          command: () => {   
-           console.log(this.token && this.opcionb && this.check.DashboardComponent,
-             this.token ,
-              this.opcionb ,
-           this.check.DashboardComponent);
           this.sidebarVisible=true
         },
       },

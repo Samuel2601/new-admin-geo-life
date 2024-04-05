@@ -240,14 +240,14 @@
                             pButton
                             label="Actividades"
                             icon="pi pi-box"
-                            (click)="llamarmodal()"
+                            (click)="llamarmodal2()"
                         ></button>
                         <button
                             *ngIf="check.IndexEstadoActividadProyectoComponent"
                             pButton
                             label="Estados"
                             icon="pi pi-bell"
-                            (click)="llamarmodal2()"
+                            (click)="llamarmodal()"
                         ></button>
                     </div>
                 </div>
@@ -324,7 +324,7 @@
                         </th>
                         <th style="min-width: 8rem">
                             <div class="flex align-items-center">
-                                Dirección
+                                Sector
                                 <p-columnFilter
                                     type="text"
                                     field="direccion_geo"

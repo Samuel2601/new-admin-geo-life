@@ -27,12 +27,11 @@
                 <div class="mb-3">
                     <h4 for="categoria" class="form-label">Categoría</h4>
                     <p-dropdown
+                        appendTo="body"
                         id="categoria"
                         [options]="categorias"
                         [(ngModel)]="nuevoIncidenteDenuncia.categoria"
                         optionLabel="nombre"
-                        [filter]="true"
-                        filterPlaceholder="Buscar categoría"
                         [required]="true"
                         (onChange)="selectcategoria($event)"
                     ></p-dropdown>
@@ -41,13 +40,12 @@
                 <div class="mb-3" *ngIf="subcategorias.length > 0">
                     <h4 for="subcategoria" class="form-label">Subcategoría</h4>
                     <p-dropdown
+                        appendTo="body"
                         id="subcategoria"
                         name="subcategoria"
                         [options]="subcategorias"
                         [(ngModel)]="nuevoIncidenteDenuncia.subcategoria"
                         optionLabel="nombre"
-                        [filter]="true"
-                        filterPlaceholder="Buscar subcategoría"
                         [required]="true"
                     ></p-dropdown>
                 </div>
@@ -68,7 +66,7 @@
 
                 <div class="mb-3" *ngIf="!upload">
                     <p-button
-                        label="Eliminar Fotos"
+                        label=""
                         severity="warning"
                         (onClick)="
                             upload = true;

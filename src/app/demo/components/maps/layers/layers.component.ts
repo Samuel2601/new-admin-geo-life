@@ -25,6 +25,7 @@ import { DashboardModule } from '../../dashboard/dashboard.module';
 import { CreateFichaSectorialComponent } from '../ficha-sectorial/create-ficha-sectorial/create-ficha-sectorial.component';
 import { CreateIncidentesDenunciaComponent } from '../incidentes-denuncia/create-incidentes-denuncia/create-incidentes-denuncia.component';
 import { DashboardComponent } from '../../dashboard/dashboard.component';
+import { DialogService } from 'primeng/dynamicdialog';
 interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
   id?: string;
 }
@@ -110,7 +111,7 @@ export class LayersComponent implements OnInit{
   backgroundColor=getComputedStyle(document.documentElement).getPropertyValue('--surface-0');
 
   subscription!: Subscription;
-  constructor(private modalService: NgbModal,private elementRef: ElementRef,private helperService:HelperService,private router: Router,private layoutService: LayoutService,private messageService: MessageService){
+  constructor(private modalService: NgbModal,private elementRef: ElementRef,private helperService:HelperService,private router: Router,private layoutService: LayoutService,private messageService: MessageService,private dialogService: DialogService){
     this.subscription = this.layoutService.configUpdate$
         .pipe(debounceTime(25))
         .subscribe((config) => {
@@ -847,19 +848,32 @@ export class LayersComponent implements OnInit{
    this.controlFullScreem();
     const data = this.opcionb; // JSON que quieres enviar
     this.modalService.dismissAll();
-    const modalRef = this.modalService.open(CreateFichaSectorialComponent, { centered: true });
-    modalRef.componentInstance.data = data; 
+    //const modalRef = this.modalService.open(CreateFichaSectorialComponent, { centered: true });
+    //modalRef.componentInstance.data = data; 
+
+     this.dialogService.open(CreateFichaSectorialComponent, {
+          header: '',
+          width: this.isMobil() ? '100%' : '70%',
+          data: { data: data },
+      });
   }
-  async nuevoIncidente() {
+  nuevoIncidente() {
     if (!this.token) {
       this.router.navigate(["/auth/login"]);
     } else {
        this.controlFullScreem();
       const data = this.opcionb; // JSON que quieres enviar
-      this.modalService.dismissAll();    
+      /*this.modalService.dismissAll();    
       const modalRef = this.modalService.open(CreateIncidentesDenunciaComponent, { centered: true });
       modalRef.componentInstance.data = data; 
-      modalRef.componentInstance.direccion = { latitud: this.latitud, longitud: this.longitud };      
+      modalRef.componentInstance.direccion = { latitud: this.latitud, longitud: this.longitud };  
+      */
+      this.dialogService.open(CreateIncidentesDenunciaComponent, {
+          header: '',
+          width: this.isMobil() ? '100%' : '70%',
+          data: { data: data , direccion:{ latitud: this.latitud, longitud: this.longitud }},
+      });
+
     } 
    
   }

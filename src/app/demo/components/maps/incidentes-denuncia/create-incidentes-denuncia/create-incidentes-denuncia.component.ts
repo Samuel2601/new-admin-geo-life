@@ -4,7 +4,6 @@ import { CreateService } from 'src/app/demo/services/create.service';
 import { ListService } from 'src/app/demo/services/list.service';
 import { AdminService } from 'src/app/demo/services/admin.service';
 import { Router } from '@angular/router';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Plugins, Capacitor } from '@capacitor/core';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
@@ -12,6 +11,7 @@ import { HelperService } from 'src/app/demo/services/helper.service';
 import { MessageService } from 'primeng/api';
 const { Geolocation } = Plugins;
 import { GalleriaModule } from 'primeng/galleria';
+import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 @Component({
   selector: 'app-create-incidentes-denuncia',
   templateUrl: './create-incidentes-denuncia.component.html',
@@ -26,13 +26,12 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
   model: boolean=true;
   constructor(private fb: FormBuilder,
     private createService:CreateService,
-    public activeModal: NgbActiveModal,
     private router: Router,
     private listService: ListService,
     private adminservice:AdminService,
-    private modalService: NgbModal,
     private helper:HelperService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private config: DynamicDialogConfig,
     ){
     this.nuevoIncidenteDenuncia = this.fb.group({
       categoria: ['', Validators.required],
@@ -46,7 +45,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
   mostrar: boolean = false;
 
   DimissModal() {
-    this.modalService.dismissAll();
+    //this.modalService.dismissAll();
   }
 
   async checkPermissions() {
@@ -99,6 +98,12 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
   }
   
   async ngOnInit() {
+     if (this.config && this.config.data && this.config.data.data) {
+      this.data = this.config.data.data;
+    }
+     if (this.config && this.config.data && this.config.data.direccion) {
+      this.direccion = this.config.data.direccion;
+    }
     this.load_form = false;
     if (this.data) {
       this.nuevoIncidenteDenuncia.direccion_geo = { nombre: this.data.properties.nombre, latitud: this.direccion.latitud, longitud: this.direccion.longitud };
@@ -145,7 +150,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
   token=this.helper.token();
   selectcategoria(event:any){
     if(!this.token){
-      this.modalService.dismissAll();
+      //this.modalService.dismissAll();
       throw this.router.navigate(["/inicio"]);
     }
     if (event.value) {
@@ -168,7 +173,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
   }
   async listarCategorias() {
     if(!this.token){
-      this.modalService.dismissAll();
+      //this.modalService.dismissAll();
       throw this.router.navigate(["/inicio"]);
     }
     this.listService.listarCategorias(this.token).subscribe(
@@ -367,7 +372,7 @@ selectedFiles: File[] = [];
       //console.log(response);
       if(response.data){
        this.messageService.add({severity: 'success', summary: 'Ingresado', detail: 'Correctamente'});
-        this.modalService.dismissAll();
+        //this.modalService.dismissAll();
       }
     }, error => {
       // Manejar errores

@@ -7,6 +7,7 @@ import { AdminService } from 'src/app/demo/services/admin.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GLOBAL } from 'src/app/demo/services/GLOBAL';
 import { HelperService } from 'src/app/demo/services/helper.service';
+import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 @Component({
   selector: 'app-create-direccion-geo',
   templateUrl: './create-direccion-geo.component.html',
@@ -19,7 +20,8 @@ export class CreateDireccionGeoComponent implements OnInit, AfterViewInit {
   estadosActividadProyecto:any=[];
   actividadesProyecto:any=[];
   url=GLOBAL.url;
-  constructor(private modalService: NgbModal,private fb: FormBuilder,private createService:CreateService,private router: Router,private listarService:ListService,private adminservice:AdminService,private helper:HelperService){
+  constructor(private modalService: NgbModal,private fb: FormBuilder,private createService:CreateService,private router: Router,private listarService:ListService,private adminservice:AdminService,private helper:HelperService,
+    private config: DynamicDialogConfig){
     this.fichaSectorialForm = this.fb.group({
       direccion_geo: ['', Validators.required],
     });
@@ -37,7 +39,10 @@ export class CreateDireccionGeoComponent implements OnInit, AfterViewInit {
   token=this.helper.token();
   ngOnInit(): void {
     if(!this.token){
-      throw this.router.navigate(["/inicio"]);
+      throw this.router.navigate(["/auth/login"]);
+    }
+    if (this.config && this.config.data && this.config.data.feature) {
+      this.valor = this.config.data.feature;
     }
     
     if (this.valor) {
@@ -77,8 +82,8 @@ export class CreateDireccionGeoComponent implements OnInit, AfterViewInit {
     this.hover = false;
   }
   onFilesSelected(event: any): void {
-    const files: FileList = event.target.files;
-    //console.log(files);
+    const files: FileList = event.files;
+   
     if (files && files.length > 0) {
       for (let i = 0; i < Math.min(files.length, 3); i++) {
         const file = files[i];

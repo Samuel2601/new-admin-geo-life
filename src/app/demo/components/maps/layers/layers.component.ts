@@ -27,6 +27,7 @@ import { CreateFichaSectorialComponent } from '../ficha-sectorial/create-ficha-s
 import { CreateIncidentesDenunciaComponent } from '../incidentes-denuncia/create-incidentes-denuncia/create-incidentes-denuncia.component';
 import { DashboardComponent } from '../../dashboard/dashboard.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { CreateDireccionGeoComponent } from '../direccion-geo/create-direccion-geo/create-direccion-geo.component';
 
 interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
   id?: string;
@@ -675,34 +676,60 @@ export class LayersComponent implements OnInit{
           if (this.openInfoWindow) {
             this.openInfoWindow.close();
         }
-        const content= feature.properties.parr? `<img src="${this.url}helper/obtener_portada_barrio/${feature.id}" alt="Descripción de la imagen" class="imagen-popup" style="
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-          ">
-          <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
-            <b style="text-align: center;">${feature.properties.nombre}</b>
-            <ul style="list-style-type: none; padding-left: 0;">
-              <li><strong>Parroquia:</strong> ${feature.properties.parr}</li>                          
-            </ul>
-          </div>
-          `: `<img src="${this.url}helper/obtener_portada_barrio/${feature.id}" alt="Descripción de la imagen" class="imagen-popup" style="
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-          ">
-          <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
-            <b style="text-align: center;">${feature.properties.nombre}</b>
-          </div>
-          `
-          // Abrir un nuevo popup con el nombre del barrio
-          const infoWindow = new google.maps.InfoWindow({
-            content:content
+        let content='';
+        const button = document.createElement('button');
+        if(this.check.CreateDireccionGeoComponent){
+          // Crear el elemento de botón
+         
+          button.className = 'p-button p-button-icon-only';
+          button.innerHTML = '<span class="pi pi-camera"></span>';
+          button.addEventListener('click', () => {
+              this.modalcreatedireccion(feature);
           });
-          infoWindow.setPosition(event.latLng);
-          infoWindow.open(this.mapCustom);
-          this.openInfoWindow = infoWindow;
-          this.popupsMostrados[featureId] = true;
+        }
+       
+
+        // Crear el contenido del InfoWindow
+        const contentElement = document.createElement('div');
+        contentElement.innerHTML = feature.properties.parr ? `
+            <img src="${this.url}helper/obtener_portada_barrio/${feature.id}" alt="Descripción de la imagen" class="imagen-popup" style="
+                width: 100%;
+                height: 150px;
+                object-fit: cover;
+            ">
+            <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
+                <b style="text-align: center;">${feature.properties.nombre}</b>
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li><strong>Parroquia:</strong> ${feature.properties.parr}</li>                          
+                </ul>
+            </div>
+        ` : `
+            <img src="${this.url}helper/obtener_portada_barrio/${feature.id}" alt="Descripción de la imagen" class="imagen-popup" style="
+                width: 100%;
+                height: 150px;
+                object-fit: cover;
+            ">
+            <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
+                <b style="text-align: center;">${feature.properties.nombre}</b>
+            </div>
+        `;
+
+        // Agregar el botón al contenido
+        contentElement.appendChild(button);
+
+        // Crear el InfoWindow con el contenido personalizado
+        const infoWindow = new google.maps.InfoWindow({
+            content: contentElement
+        });
+
+        // Posicionar y abrir el InfoWindow
+        infoWindow.setPosition(event.latLng);
+        infoWindow.open(this.mapCustom);
+
+        // Guardar el InfoWindow para poder referenciarlo más tarde si es necesario
+        this.openInfoWindow = infoWindow;
+        this.popupsMostrados[featureId] = true;
+
           //this.canpopup=false;
       } else {
         //this.popupsMostrados={}
@@ -904,4 +931,19 @@ export class LayersComponent implements OnInit{
     }
   
   }
+  modaldireccion:boolean=false;
+  modalcreatedireccion(feature:any){
+    console.log('crear foto');
+    this.sidebarVisible ? this.sidebarVisible = false : '';
+    this.mostrarficha ? this.mostrarficha = false : '';
+    this.mostrarincidente ? this.mostrarincidente = false : '';
+    this.ref =  this.dialogService.open(CreateDireccionGeoComponent, {
+          header: 'Nueva imagen Direcion',
+          width: this.isMobil() ? '100%' : '50%',
+          data: { feature: feature},
+      });
+    App.addListener('backButton', data => {
+    this.ref.destroy();
+      });
+  } 
 }

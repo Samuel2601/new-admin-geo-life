@@ -48,9 +48,7 @@ export class SignupComponent implements OnInit {
                 //this.formulario.get('correo')?.setErrors({ 'status': "VALID" });
               this.formulario.get('nombres')?.disable()
             }
-        }, 1000);
-       
-      
+        }, 1000);   
     });
   }
   consultarcorreo(correo: any) {

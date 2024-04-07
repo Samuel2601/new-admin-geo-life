@@ -39,9 +39,12 @@
                         />
                     </p-avatar>
                     <div class="text-900 text-3xl font-medium mb-3">
-                        Binvenido
+                        
                         <span *ngIf="nombreUsuario"
-                            >, {{ nombreUsuario }}!</span
+                            >Binvenido, {{ nombreUsuario }}!</span
+                        >
+                        <span *ngIf="!nombreUsuario"
+                            >Binvenido!</span
                         >
                     </div>
                     <span class="text-600 font-medium"

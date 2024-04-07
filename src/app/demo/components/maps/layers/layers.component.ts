@@ -677,6 +677,7 @@ export class LayersComponent implements OnInit{
             this.openInfoWindow.close();
         }
         let content='';
+        const contentElement = document.createElement('div');
         const button = document.createElement('button');
         if(this.check.CreateDireccionGeoComponent){
           // Crear el elemento de botón
@@ -686,11 +687,13 @@ export class LayersComponent implements OnInit{
           button.addEventListener('click', () => {
               this.modalcreatedireccion(feature);
           });
+          // Agregar el botón al contenido
+        contentElement.appendChild(button);
         }
        
 
         // Crear el contenido del InfoWindow
-        const contentElement = document.createElement('div');
+        
         contentElement.innerHTML = feature.properties.parr ? `
             <img src="${this.url}helper/obtener_portada_barrio/${feature.id}" alt="Descripción de la imagen" class="imagen-popup" style="
                 width: 100%;
@@ -714,8 +717,7 @@ export class LayersComponent implements OnInit{
             </div>
         `;
 
-        // Agregar el botón al contenido
-        contentElement.appendChild(button);
+        
 
         // Crear el InfoWindow con el contenido personalizado
         const infoWindow = new google.maps.InfoWindow({

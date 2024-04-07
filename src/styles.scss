@@ -31,6 +31,9 @@
 .fullscreen-button {
     margin: 10px !important;
 }   
+.p-speeddial-action{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 1.5);
+  }
 
 $gutter: 1rem; //for primeflex grid system
 @import "assets/layout/styles/layout/layout.scss";

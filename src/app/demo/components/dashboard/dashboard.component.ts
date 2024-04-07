@@ -40,8 +40,8 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     check:any={};
     private subscriptions: Subscription[] = [];
     ngOnInit() {
-        this.check.AdminComponent = this.helper.decryptData('AdminComponent') || false;
-        if (!this.check.AdminComponent) {
+        this.check.DashboardComponent = this.helper.decryptData('DashboardComponent') || false;
+        if (!this.check.DashboardComponent) {
             this.router.navigate(['/notfound']);
         }
         

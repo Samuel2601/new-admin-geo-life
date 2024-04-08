@@ -676,20 +676,9 @@ export class LayersComponent implements OnInit{
           if (this.openInfoWindow) {
             this.openInfoWindow.close();
         }
-        let content='';
         const contentElement = document.createElement('div');
         const button = document.createElement('button');
-        if(this.check.CreateDireccionGeoComponent){
-          // Crear el elemento de botón
-         
-          button.className = 'p-button p-button-icon-only';
-          button.innerHTML = '<span class="pi pi-camera"></span>';
-          button.addEventListener('click', () => {
-              this.modalcreatedireccion(feature);
-          });
-          // Agregar el botón al contenido
-        contentElement.appendChild(button);
-        }
+        
        
 
         // Crear el contenido del InfoWindow
@@ -700,7 +689,7 @@ export class LayersComponent implements OnInit{
                 height: 150px;
                 object-fit: cover;
             ">
-            <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
+            <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px">
                 <b style="text-align: center;">${feature.properties.nombre}</b>
                 <ul style="list-style-type: none; padding-left: 0;">
                     <li><strong>Parroquia:</strong> ${feature.properties.parr}</li>                          
@@ -712,11 +701,21 @@ export class LayersComponent implements OnInit{
                 height: 150px;
                 object-fit: cover;
             ">
-            <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px" (click)="stopPropagation($event)">
+            <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px">
                 <b style="text-align: center;">${feature.properties.nombre}</b>
             </div>
         `;
-
+        if(this.check.CreateDireccionGeoComponent){
+          // Crear el elemento de botón
+         
+          button.className = 'p-button p-button-icon-only';
+          button.innerHTML = '<span class="pi pi-camera"></span>';
+          button.addEventListener('click', () => {
+              this.modalcreatedireccion(feature);
+          });
+          // Agregar el botón al contenido
+        contentElement.appendChild(button);
+        }
         
 
         // Crear el InfoWindow con el contenido personalizado

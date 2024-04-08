@@ -1,30 +1,69 @@
+<div class="card-body">
+    <div class="col-12">
+        <div class="p-fluid p-formgrid grid">
+            <div class="field col-4">
+                <label for="componenteSelect" class="form-label"
+                    >Seleccionar componente
+                </label>
+                <p-dropdown
+                    appendTo="body"
+                    [options]="componentes"
+                    [(ngModel)]="newpermiso.nombreComponente"
+                    optionLabel="componente"
+                    placeholder="Selecicona la Componente"
+                >
+                    <ng-template pTemplate="selectedItem">
+                        <div
+                            class="flex align-items-center gap-2"
+                            *ngIf="newpermiso.nombreComponente"
+                        >
+                            <div>{{ newpermiso.nombreComponente }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-componente pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ componente }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+            </div>
 
-<div class="modal-content">
-  <div class="modal-header">
-    <h2 class="modal-title">Nueva Permiso</h2>
-    <button type="button" class="btn-close" aria-label="Close" (click)="DimissModal()"></button>
-  </div>
-  
-  <div class="modal-body">
-    <form>
-      <div class="mb-3">
-          <label for="componenteSelect" class="form-label">Seleccionar componente</label>
-          <select class="form-select" id="componenteSelect" name="componente" [(ngModel)]="newpermiso.nombreComponente" required>
-            <option value="" disabled selected>Seleccionar...</option>
-            <option *ngFor="let componente of componentes" [value]="componente"> {{ componente }}</option>
-          </select>
+            <div class="field col-4">
+                <label for="rol" class="form-label">Rol</label>
+                <p-multiSelect
+                    appendTo="body"
+                    [options]="roles"
+                    [(ngModel)]="newpermiso.rolesPermitidos"
+                    placeholder="Seleccion los roles"
+                    optionLabel="rol"
+                >
+                    <ng-template let-value pTemplate="selectedItems">
+                        <div
+                            class="inline-flex align-items-center gap-2 px-1"
+                            *ngFor="let option of value"
+                        >
+                            <div>{{ option.nombre }},</div>
+                        </div>
+                        <div *ngIf="!value || value.length === 0">
+                            Select Countries
+                        </div>
+                    </ng-template>
+                    <ng-template let-country pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ country.nombre }}</div>
+                        </div>
+                    </ng-template>
+                </p-multiSelect>
+            </div>
+
+            <button
+                pButton
+                type="submit"
+                class="btn btn-primary"
+                (click)="enviar()"
+            >
+                Guardar
+            </button>
         </div>
-        
-        <div class="mb-3">
-          <label for="rol" class="form-label">Rol</label>
-          <select class="form-select" id="rol" name="rol" [(ngModel)]="rol" (change)="addrol($event.target)" required>
-            <option *ngFor="let rol of roles" [value]="rol._id">{{ rol.nombre }}</option>
-          </select>
-        </div>
-        
-      <button type="submit" class="btn btn-primary" (click)="enviar()">Guardar</button>
-    </form>
-    
-  </div>
+    </div>
 </div>
-

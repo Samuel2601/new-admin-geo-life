@@ -5,6 +5,8 @@ import { CreatePermisosComponent } from '../create-permisos/create-permisos.comp
 import { UpdateService } from 'src/app/demo/services/update.service';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { MessageService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
+import { App } from '@capacitor/app';
 
 @Component({
   selector: 'app-index-permisos',
@@ -18,7 +20,7 @@ export class IndexPermisosComponent {
   roles:any
   rolselect: string[] = [];
 
-  constructor(private listService: ListService,private modalService: NgbModal, private updateServices:UpdateService,private helper:HelperService,private messageService: MessageService,) { }
+  constructor(private listService: ListService,private modalService: NgbModal, private updateServices:UpdateService,private helper:HelperService,private messageService: MessageService,private dialogService: DialogService) { }
 
   ngOnInit(): void {
     this.listarCategorias();
@@ -64,9 +66,17 @@ export class IndexPermisosComponent {
       this.roles=response.data;
     });
   }
+  isMobil() {
+    return this.helper.isMobil();
+  }
   newpermiso(){
-    this.modalService.dismissAll();
-    this.modalService.open(CreatePermisosComponent, { centered: true });
+     const modalRef = this.dialogService.open(CreatePermisosComponent, {
+      header: 'Crear nuevo Permiso',
+      width: this.isMobil()? '100%':'40%'
+    });
+     App.addListener('backButton', data => {
+       modalRef.close();
+      });
   }
 
   editCategoriaId: any | null = null;

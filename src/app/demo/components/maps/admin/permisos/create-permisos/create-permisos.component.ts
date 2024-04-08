@@ -11,7 +11,7 @@ import { ListService } from 'src/app/demo/services/list.service';
 })
 export class CreatePermisosComponent implements OnInit{
   componente:any;
-  componentes = [
+  componentes:string[] = [
     'DashboardComponent',
 'CreateCategoriaComponent',
 'IndexCategoriaComponent',
@@ -54,10 +54,7 @@ export class CreatePermisosComponent implements OnInit{
   ];
   rol:any;
   roles:any;
-  newpermiso:any={
-    nombreComponente:'',
-    rolesPermitidos:[]
-  }
+  newpermiso: any={};
   constructor(private modalService: NgbModal, private listService:ListService,private createService:CreateService,private helper:HelperService){
 
   }
@@ -75,10 +72,10 @@ export class CreatePermisosComponent implements OnInit{
     this.newpermiso.rolesPermitidos.push(this.rol);
   }
   enviar(){
-    ////console.log(this.newpermiso);
-    this.createService.registrarPermiso(this.token,this.newpermiso).subscribe(response=>{
+    console.log(this.newpermiso);
+    /*this.createService.registrarPermiso(this.token,this.newpermiso).subscribe(response=>{
       //console.log(response);
-    });
+    });*/
   }
   DimissModal(){
     this.modalService.dismissAll();

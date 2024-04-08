@@ -1,4 +1,5 @@
 import { Injectable, effect, signal } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { Subject } from 'rxjs';
 
 export interface AppConfig {
@@ -23,12 +24,22 @@ interface LayoutState {
     providedIn: 'root',
 })
 export class LayoutService {
+    private readonly COOKIE_NAME = 'config';
+
     _config: AppConfig = {
         ripple: false,
         inputStyle: 'outlined',
         menuMode: 'static',
         colorScheme: 'light',
-        theme: 'lara-light-indigo',
+        theme: 'saga-green',//'lara-light-indigo',
+        scale: 14,
+    };
+    configConst: AppConfig = {
+        ripple: false,
+        inputStyle: 'outlined',
+        menuMode: 'static',
+        colorScheme: 'light',
+        theme: 'saga-green',//'lara-light-indigo',
         scale: 14,
     };
 
@@ -51,7 +62,7 @@ export class LayoutService {
 
     overlayOpen$ = this.overlayOpen.asObservable();
 
-    constructor() {
+    constructor(private cookieService: CookieService) {
         effect(() => {
             const config = this.config();
             if (this.updateStyle(config)) {
@@ -60,6 +71,20 @@ export class LayoutService {
             this.changeScale(config.scale);
             this.onConfigUpdate();
         });
+    }
+    async saveConfigToCookie() {
+        // Compara las propiedades individuales de la configuración
+        if (
+            this._config.ripple !== this.configConst.ripple ||
+            this._config.inputStyle !== this.configConst.inputStyle ||
+            this._config.menuMode !== this.configConst.menuMode ||
+            this._config.colorScheme !== this.configConst.colorScheme ||
+            this._config.theme !== this.configConst.theme ||
+            this._config.scale !== this.configConst.scale
+        ) {
+            this.cookieService.set(this.COOKIE_NAME, JSON.stringify(this._config));
+            console.log('Guardando', JSON.parse(this.cookieService.get(this.COOKIE_NAME)));
+        }
     }
 
     updateStyle(config: AppConfig) {
@@ -113,8 +138,9 @@ export class LayoutService {
         return !this.isDesktop();
     }
 
-    onConfigUpdate() {
+    async onConfigUpdate() {
         this._config = { ...this.config() };
+        await this.saveConfigToCookie();
         this.configUpdate.next(this.config());
     }
 

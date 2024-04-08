@@ -39,13 +39,10 @@
                         />
                     </p-avatar>
                     <div class="text-900 text-3xl font-medium mb-3">
-                        
                         <span *ngIf="nombreUsuario"
                             >Binvenido, {{ nombreUsuario }}!</span
                         >
-                        <span *ngIf="!nombreUsuario"
-                            >Binvenido!</span
-                        >
+                        <span *ngIf="!nombreUsuario">Binvenido!</span>
                     </div>
                     <span class="text-600 font-medium"
                         >Ingresa para continuar</span
@@ -78,6 +75,7 @@
                         formControlName="pass"
                         placeholder="Contraseña"
                         styleClass="mb-5"
+                        [toggleMask]="true"
                         inputStyleClass="w-full p-3 md:w-30rem"
                         [feedback]="false"
                     ></p-password>

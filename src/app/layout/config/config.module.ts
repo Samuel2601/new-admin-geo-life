@@ -6,7 +6,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ButtonModule } from 'primeng/button';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { AppConfigComponent } from './app.config.component';
-
+import { CookieService } from 'ngx-cookie-service'; 
 @NgModule({
     imports: [
         CommonModule,
@@ -21,6 +21,7 @@ import { AppConfigComponent } from './app.config.component';
     ],
     exports: [
         AppConfigComponent
-    ]
+    ],
+    providers: [CookieService],
 })
 export class AppConfigModule { }

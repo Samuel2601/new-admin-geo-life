@@ -5,6 +5,7 @@ import { CreateService } from 'src/app/demo/services/create.service';
 import { Router } from '@angular/router';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { MessageService } from 'primeng/api';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 @Component({
   selector: 'app-create-encargado-categoria',
   templateUrl: './create-encargado-categoria.component.html',
@@ -17,8 +18,7 @@ export class CreateEncargadoCategoriaComponent implements OnInit {
   categoriaselect:any;
   usuarios: any[] = [];
   subcategoriaForm: FormGroup;
-  token=this.helper.token();
-  constructor(private fb: FormBuilder,private listService: ListService, private createService:CreateService,private router: Router,private helper:HelperService,private messageService: MessageService,){
+  constructor(private fb: FormBuilder,private listService: ListService, private createService:CreateService,private router: Router,private helper:HelperService,private messageService: MessageService,private ref: DynamicDialogRef){
     this.subcategoriaForm = this.fb.group({
       categoria: ['', Validators.required]
     });
@@ -27,13 +27,12 @@ export class CreateEncargadoCategoriaComponent implements OnInit {
     this.listarCategorias();
     this.listarUsuarios();
   }
-
+token = this.helper.token();
   listarCategorias() {
-    const token = sessionStorage.getItem('token'); // Reemplaza 'tu_token' por el token real
-    if(!token){
+    if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
-    this.listService.listarCategorias(token).subscribe(response => {
+    this.listService.listarCategorias(this.token).subscribe(response => {
       this.categorias = response.data;
       ////console.log(response);
     });
@@ -42,7 +41,7 @@ export class CreateEncargadoCategoriaComponent implements OnInit {
     if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
-    this.listService.listarUsuarios(this.token,'rol_user.orden',2).subscribe(response => {
+    this.listService.listarUsuarios(this.token,'rol_user.orden',3).subscribe(response => {
       this.usuarios = response.data;
       ////console.log(response);
     });
@@ -61,8 +60,9 @@ export class CreateEncargadoCategoriaComponent implements OnInit {
   registrarEncargo(){
     if(this.encargadosSeleccionados.length>0&&this.categoriaselect){
       this.createService.registrarEncargadoCategoria(this.token,{encargado:this.encargadosSeleccionados,categoria:this.categoriaselect}).subscribe(response=>{
-        ////console.log(response)
-        this.messageService.add({severity: 'success', summary: 'Ingresado', detail: response.message});
+        //console.log(response)
+        this.messageService.add({ severity: 'success', summary: 'Ingresado', detail: response.message });
+        this.ref.close();
       },error=>{
         this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
       })

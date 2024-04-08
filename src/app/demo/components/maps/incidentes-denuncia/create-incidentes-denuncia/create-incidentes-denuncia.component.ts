@@ -11,7 +11,7 @@ import { HelperService } from 'src/app/demo/services/helper.service';
 import { MessageService } from 'primeng/api';
 const { Geolocation } = Plugins;
 import { GalleriaModule } from 'primeng/galleria';
-import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 @Component({
   selector: 'app-create-incidentes-denuncia',
   templateUrl: './create-incidentes-denuncia.component.html',
@@ -32,6 +32,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     private helper:HelperService,
     private messageService: MessageService,
     private config: DynamicDialogConfig,
+    private ref: DynamicDialogRef
     ){
     this.nuevoIncidenteDenuncia = this.fb.group({
       categoria: ['', Validators.required],
@@ -373,6 +374,7 @@ selectedFiles: File[] = [];
       if(response.data){
        this.messageService.add({severity: 'success', summary: 'Ingresado', detail: 'Correctamente'});
         //this.modalService.dismissAll();
+        this.ref.close();
       }
     }, error => {
       // Manejar errores

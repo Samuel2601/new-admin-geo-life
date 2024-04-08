@@ -20,8 +20,10 @@ export class IndexActividadProyectoComponent implements OnInit {
   }
   cerrarModal() {
     this.modalService.dismissAll();
-}
+  }
+  check:any={};
   ngOnInit(): void {
+    this.check.CreateActividadProyectoComponent = this.helper.decryptData('CreateActividadProyectoComponent') || false;
     this.router.events.subscribe((val) => {
       // Verificar la ruta actual y ajustar el valor de model
       if (this.router.url === '/create-estado-incidente') {

@@ -3,7 +3,7 @@
         <div class="col-auto">
             <h2>Listado de Incidentes y Denuncias</h2>
         </div>
-        <div class="col-6">
+        <div class="col-6" *ngIf="check.CreateEstadoIncidenteComponent">
             <p-button class="btn btn-primary" (click)="abrirSegundoModal()">
                 <i class="bi bi-plus-square-dotted"></i> Nuevo
             </p-button>

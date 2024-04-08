@@ -11,7 +11,7 @@ import { MessageService } from 'primeng/api';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { GalleriaModule } from 'primeng/galleria';
-import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 @Component({
   selector: 'app-create-ficha-sectorial',
   templateUrl: './create-ficha-sectorial.component.html',
@@ -24,7 +24,10 @@ export class CreateFichaSectorialComponent implements OnInit {
   actividadesProyecto:any=[];
   model: boolean=true;
   data:any
-  constructor(private modalService: NgbModal,private config: DynamicDialogConfig,private fb: FormBuilder,private createService:CreateService,private router: Router,private listarService:ListService,private adminservice:AdminService,private helper:HelperService,private messageService: MessageService){
+  constructor(private modalService: NgbModal, private config: DynamicDialogConfig, private fb: FormBuilder, private createService: CreateService,
+    private router: Router, private listarService: ListService, private adminservice: AdminService, private helper: HelperService, private messageService: MessageService,
+    private ref: DynamicDialogRef
+  ) {
     this.fichaSectorialForm = this.fb.group({
       descripcion: ['', Validators.required],
       encargado: ['', Validators.required],
@@ -233,7 +236,7 @@ export class CreateFichaSectorialComponent implements OnInit {
           //console.log(response);
           if(response.data){
             this.messageService.add({severity: 'success', summary: 'Listo', detail: 'Ingresado correctamente'});
-            this.modalService.dismissAll();
+            this.ref.close();
           }
         }, error => {
           //console.error(error);

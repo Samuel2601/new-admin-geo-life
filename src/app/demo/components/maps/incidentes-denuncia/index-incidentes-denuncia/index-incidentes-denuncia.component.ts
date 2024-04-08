@@ -10,6 +10,8 @@ import { Table } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { App } from '@capacitor/app';
+import { AdminService } from 'src/app/demo/services/admin.service';
+import { filter } from 'rxjs/operators';
 @Component({
   selector: 'app-index-incidentes-denuncia',
   templateUrl: './index-incidentes-denuncia.component.html',
@@ -18,7 +20,7 @@ import { App } from '@capacitor/app';
 })
 export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   public url = GLOBAL.url;
-  constructor(private router: Router,private listService: ListService,private modalService: NgbModal,private helperservice:HelperService,private messageService: MessageService,private dialogService: DialogService) { }
+  constructor(private router: Router,private listService: ListService,private modalService: NgbModal,private helperservice:HelperService,private messageService: MessageService,private dialogService: DialogService,private admin:AdminService) { }
   
   load_lista=true;
 
@@ -120,12 +122,17 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   incidentesDenuncias:any=[];
 
 
-  check:any={};
+  check: any = {};
+  token = this.helperservice.token();
+  id = this.admin.identity(this.token);
+  rol = this.admin.roluser(this.token);
   async ngOnInit(): Promise<void> {
+    console.log(this.rol);
     if(!this.modal)this.helperservice.llamarspinner();
     try {
        this.check.IndexIncidentesDenunciaComponent = this.helperservice.decryptData('IndexIncidentesDenunciaComponent') || false;
       this.check.IndexEstadoIncidenteComponent = this.helperservice.decryptData('IndexEstadoIncidenteComponent') || false;
+      this.check.TotalFilterIncidente = this.helperservice.decryptData('TotalFilterIncidente') || false;
       if (!this.check.IndexIncidentesDenunciaComponent) {
         this.router.navigate(['/notfound']); 
       }
@@ -134,11 +141,71 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
       ////console.error('Error al verificar permisos:', error);
       this.router.navigate(['/notfound']);
     }
-  
+    await this.buscarencargos();
     this.listarIncidentesDenuncias();
     if(this.modal==false)this.helperservice.cerrarspinner();
   }
-  llamarmodal(){
+  encargos: any[] = [];
+  async buscarencargos() {
+    this.listService.listarEncargadosCategorias(this.token,'encargado',this.id).subscribe(response => {
+      console.log(response);
+      if (response.data) {
+        this.encargos = response.data;
+      }
+    });
+  }
+
+  listarIncidentesDenuncias(): void {
+     if (!this.modal) {
+        this.helperservice.llamarspinner();
+    }
+    this.load_lista = true;
+    if (!this.token) {
+        throw this.router.navigate(["/inicio"]);
+    }
+
+    let filtroServicio = '';
+    let valorServicio : any;
+
+    if (this.filtro && this.valor) {
+        filtroServicio = this.filtro;
+        valorServicio = this.valor;
+    }
+
+    if (!this.check.TotalFilterIncidente) {
+        filtroServicio = 'ciudadano';
+        valorServicio = this.id;
+    }
+
+    this.listService.listarIncidentesDenuncias(this.token, filtroServicio, valorServicio).subscribe(response => {
+        if (response.data) {
+          this.incidentesDenuncias = response.data;
+          console.log(this.incidentesDenuncias);
+            if (this.filtro && this.valor && !this.check.TotalFilterIncidente) {
+                // Si hay filtro y valor, y TotalFilterIncidente es falso, filtrar manualmente
+              this.incidentesDenuncias = this.incidentesDenuncias.filter((ficha: any) => ficha[this.filtro] == this.valor);
+              
+          }
+          if (!this.check.TotalFilterIncidente) {            
+            this.incidentesDenuncias = this.incidentesDenuncias.filter((ficha: any) => this.encargos.find(element=>element.categoria._id ===ficha.categoria._id));
+          }
+          console.log(this.incidentesDenuncias,this.check.TotalFilterIncidente,this.filtro && this.valor);
+            this.load_lista = false;
+        }
+    }, error => {
+        this.load_lista = false;
+        if (error.error.message == 'InvalidToken') {
+            this.router.navigate(["/inicio"]);
+        } else {
+            this.messageService.add({ severity: 'error', summary: ('(' + error.status + ')').toString(), detail: error.error.message || 'Sin conexión' });
+        }
+    });
+
+    if (!this.modal) {
+        this.helperservice.cerrarspinner();
+    }
+  }
+    llamarmodal(){
     const modalRef=this.dialogService.open(IndexEstadoIncidenteComponent, {
           header: '',
           width: this.isMobil() ? '100%' : '70%',
@@ -163,47 +230,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
       carficha.addEventListener('mouseup', this.onTouchEnd.bind(this));
     }    
   }
-  token=this.helperservice.token();
-  listarIncidentesDenuncias(): void {
-    if(this.modal==false)this.helperservice.llamarspinner();
-    this.load_lista=true;
-    if(!this.token){
-      throw this.router.navigate(["/inicio"]);
-    }
-
-    if(this.filtro&&this.valor){
-      this.listService.listarIncidentesDenuncias(this.token,this.filtro,this.valor,true).subscribe(response=>{
-        ////console.log(response);
-        if(response.data){
-          this.incidentesDenuncias=response.data;
-          this.load_lista=false;
-        }
-      },error=>{
-        //console.error(error);
-        this.load_lista=false;
-        if(error.error.message=='InvalidToken'){
-          this.router.navigate(["/inicio"]);
-        }else{
-         this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
-        }  
-      });
-    }else{
-      this.listService.listarIncidentesDenuncias(this.token).subscribe(response=>{
-        ////console.log(response);
-        this.incidentesDenuncias=response.data;
-        this.load_lista=false;
-      },error=>{
-        //console.error(error);
-        this.load_lista=false;
-        if(error.error.message=='InvalidToken'){
-            this.router.navigate(["/inicio"]);
-          }else{
-            this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
-          }
-      });
-    }
-    if(this.modal==false)this.helperservice.cerrarspinner();
-  }
+ 
 
   imagenModal: any[] = [];
   openModal(content: any) {

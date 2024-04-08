@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { DialogService } from 'primeng/dynamicdialog';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
-
+import { CreateEncargadoCategoriaComponent } from '../create-encargado-categoria/create-encargado-categoria.component';
+import { App } from '@capacitor/app';
 @Component({
   selector: 'app-index-encargado-categoria',
   templateUrl: './index-encargado-categoria.component.html',
@@ -12,26 +14,38 @@ export class IndexEncargadoCategoriaComponent {
   encargadosCategoria:any=[];
   clonedProducts: { [s: string]: any } = {};
 
-  constructor(private listService: ListService,private router: Router,private helper:HelperService) { }
+  constructor(private listService: ListService,private router: Router,private helper:HelperService,private dialogService: DialogService) { }
 
   ngOnInit(): void {
     this.listarCategorias();
   }
-
+token = this.helper.token();
   listarCategorias(): void {
-    const token = this.helper.token();
-    if(!token){
+    if(!this.token){
       throw this.router.navigate(["/inicio"]);
     }
-    this.listService.listarEncargadosCategorias(token).subscribe(
+    this.listService.listarEncargadosCategorias(this.token).subscribe(
       response => {
         this.encargadosCategoria = response.data;
-        ////console.log(response.data);
+        console.log(response.data);
       },
       error => {
         //console.log(error);
       }
     );
+  }
+  
+  isMobil() {
+    return this.helper.isMobil();
+  }
+  newencargado() {
+     const modalRef=this.dialogService.open(CreateEncargadoCategoriaComponent, {
+          header: 'Nueva Encargado de Categoria',
+          width: this.isMobil() ? '100%' : '40%',
+    });
+    App.addListener('backButton', data => {
+       modalRef.close();
+      });
   }
   getNombreUsuario(idUsuario: string): string {
     const usuario = this.encargadosCategoria.encargado.find((usuario:any) => usuario._id === idUsuario);

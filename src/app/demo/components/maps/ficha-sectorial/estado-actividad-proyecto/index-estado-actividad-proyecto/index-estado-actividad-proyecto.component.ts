@@ -18,8 +18,9 @@ export class IndexEstadoActividadProyectoComponent implements OnInit{
   constructor(private dialogService: DialogService,private router: Router,private listService:ListService,private helper:HelperService){
    
   }
-
+  check:any={};
   ngOnInit(): void {
+    this.check.CreateEstadoActividadProyectoComponent = this.helper.decryptData('CreateEstadoActividadProyectoComponent') || false;
     this.router.events.subscribe((val) => {
       // Verificar la ruta actual y ajustar el valor de model
       if (this.router.url === '/create-estado-incidente') {

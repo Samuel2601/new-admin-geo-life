@@ -15,13 +15,25 @@
             <div class="text-xl font-bold">
                 <h2>Listado de Categorías</h2>
             </div>
-            <p-button routerLink="/maps/categoria/create-categoria">
+            <p-button
+                routerLink="/maps/categoria/create-categoria"
+                *ngIf="check.CreateCategoriaComponent"
+            >
                 Nueva Categoría
             </p-button>
-            <p-button routerLink="/maps/subcategoria/create-subcategoria">
+            <p-button
+                routerLink="/maps/subcategoria/create-subcategoria"
+                *ngIf="check.CreateSubcategoriaComponent"
+            >
                 Nueva Sub Categoría
             </p-button>
-            <p-button (click)="opcion ? (opcion = false) : (opcion = true)">
+            <p-button
+                (click)="opcion ? (opcion = false) : (opcion = true)"
+                *ngIf="
+                    check.EditCategoriaComponent ||
+                    check.EditSubcategoriaComponent
+                "
+            >
                 Opciones
             </p-button>
         </ng-template>

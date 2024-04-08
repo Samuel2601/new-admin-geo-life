@@ -10,6 +10,7 @@ import { Table } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 import { DialogService,DynamicDialogRef } from 'primeng/dynamicdialog';
 import { App } from '@capacitor/app';
+import { AdminService } from 'src/app/demo/services/admin.service';
 @Component({
   selector: 'app-index-ficha-sectorial',
   templateUrl: './index-ficha-sectorial.component.html',
@@ -19,7 +20,7 @@ import { App } from '@capacitor/app';
 export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   public url = GLOBAL.url;
   @Input() filtro: string | undefined;
-  @Input() valor: number | undefined;
+  @Input() valor: any | undefined;
   @Input() modal: boolean = false;
   @ViewChild('contentimage') modalContent: TemplateRef<any> | undefined;
   clear(table: Table) {
@@ -52,7 +53,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   }
   load_lista=true;
   fichasectorial:any=[];
-  constructor(private router: Router,private listService:ListService,private helperservice:HelperService,private messageService: MessageService,private dialogService: DialogService){
+  constructor(private router: Router,private listService:ListService,private helperservice:HelperService,private messageService: MessageService,private dialogService: DialogService,private admin:AdminService){
   
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -74,7 +75,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   check:any={};
   async ngOnInit(): Promise<void> {
     
-    //console.log(this.modal);
+    console.log(this.id);
     if(!this.modal)this.helperservice.llamarspinner();
     try {
       this.check.IndexFichaSectorialComponent = this.helperservice.decryptData('IndexFichaSectorialComponent') || false;
@@ -83,7 +84,9 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
       }
       this.check.IndexEstadoActividadProyectoComponent = this.helperservice.decryptData('IndexEstadoActividadProyectoComponent')  || false;
       this.check.IndexActividadProyectoComponent = this.helperservice.decryptData('IndexActividadProyectoComponent') || false;
-      //console.log(this.check);
+      this.check.TotalFilter = this.helperservice.decryptData('TotalFilter') || false;
+      
+      console.log(this.check);
     } catch (error) {
       //console.error('Error al verificar permisos:', error);
       this.router.navigate(['/notfound']);
@@ -100,45 +103,52 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   visible: boolean = false;
   option: any;
   token = this.helperservice.token();
-  listarficha(){
-    if(!this.modal)this.helperservice.llamarspinner();
-    this.load_lista=true;
-    if(!this.token){
-      throw this.router.navigate(["/inicio"]);
+  id = this.admin.identity(this.token);
+  listarficha() {
+    if (!this.modal) {
+        this.helperservice.llamarspinner();
     }
-    if(this.filtro&&this.valor){
-      this.listService.listarFichaSectorial(this.token,this.filtro,this.valor).subscribe(response=>{
-        //console.log(response);
-        if(response.data){
-          this.fichasectorial=response.data;
-          this.load_lista=false;
+    this.load_lista = true;
+    if (!this.token) {
+        throw this.router.navigate(["/inicio"]);
+    }
+
+    let filtroServicio = '';
+    let valorServicio : any;
+
+    if (this.filtro && this.valor) {
+        filtroServicio = this.filtro;
+        valorServicio = this.valor;
+    }
+
+    if (!this.check.TotalFilter) {
+        filtroServicio = 'encargado';
+        valorServicio = this.id;
+    }
+
+    this.listService.listarFichaSectorial(this.token, filtroServicio, valorServicio).subscribe(response => {
+        if (response.data) {
+          this.fichasectorial = response.data;
+            if (this.filtro && this.valor && !this.check.TotalFilter) {
+                // Si hay filtro y valor, y TotalFilter es falso, filtrar manualmente
+                this.fichasectorial = this.fichasectorial.filter((ficha:any) => ficha[this.filtro] == this.valor);
+            }
+            this.load_lista = false;
         }
-      },error=>{
-        //console.error(error);
-        this.load_lista=false;
-        if(error.error.message=='InvalidToken'){
-          this.router.navigate(["/inicio"]);
-        }else{
-           this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
-        }  
-      });
-    }else{
-      this.listService.listarFichaSectorial(this.token).subscribe(response=>{
-        //console.log(response);
-        this.fichasectorial=response.data;
-        this.load_lista=false;
-      },error=>{
-        //console.error(error);
-        this.load_lista=false;
-        if(error.error.message=='InvalidToken'){
+    }, error => {
+        this.load_lista = false;
+        if (error.error.message == 'InvalidToken') {
             this.router.navigate(["/inicio"]);
-          }else{
-            this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
-          }
-      });
+        } else {
+            this.messageService.add({ severity: 'error', summary: ('(' + error.status + ')').toString(), detail: error.error.message || 'Sin conexión' });
+        }
+    });
+
+    if (!this.modal) {
+        this.helperservice.cerrarspinner();
     }
-    if(!this.modal)this.helperservice.cerrarspinner();
   }
+
   llamarmodal2() {
       const modalRef = this.dialogService.open(IndexActividadProyectoComponent, {
           header: '',

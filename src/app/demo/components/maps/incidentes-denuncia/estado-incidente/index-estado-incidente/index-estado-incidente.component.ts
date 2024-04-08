@@ -21,7 +21,9 @@ export class IndexEstadoIncidenteComponent implements OnInit {
   constructor(private fb: FormBuilder,private listarService:ListService,private router: Router,private helper:HelperService,private messageService: MessageService,private dialogService: DialogService){
 
   }
+  check: any = {};
   ngOnInit(): void {
+    this.check.CreateEstadoIncidenteComponent = this.helper.decryptData('CreateEstadoIncidenteComponent') || false;
     this.router.events.subscribe((val) => {
       // Verificar la ruta actual y ajustar el valor de model
       if (this.router.url === '/estados-incidente') {

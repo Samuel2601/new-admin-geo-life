@@ -180,7 +180,8 @@ export class LayersComponent implements OnInit{
          //hideDelay:1000,
         },
         visible:this.token&&this.opcionb&&this.check.DashboardComponent?true:false,
-         command: () => {   
+         command: () => {  
+          this.controlFullScreem(); 
           this.sidebarVisible=true
         },
       },
@@ -892,7 +893,7 @@ export class LayersComponent implements OnInit{
 
     this.ref =  this.dialogService.open(CreateFichaSectorialComponent, {
           header: '',
-          width: this.isMobil() ? '100%' : '70%',
+          width: this.isMobil() ? '100%' : '50%',
           data: { data: data },
     });
      App.addListener('backButton', data => {
@@ -912,7 +913,7 @@ export class LayersComponent implements OnInit{
       */
      this.ref =  this.dialogService.open(CreateIncidentesDenunciaComponent, {
           header: '',
-          width: this.isMobil() ? '100%' : '70%',
+          width: this.isMobil() ? '100%' : '50%',
           data: { data: data , direccion:{ latitud: this.latitud, longitud: this.longitud }},
       });
    App.addListener('backButton', data => {

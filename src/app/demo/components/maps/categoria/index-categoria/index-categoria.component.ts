@@ -32,6 +32,11 @@ export class IndexCategoriaComponent implements OnInit{
   check: any = {};
   async ngOnInit() {
     this.check.IndexCategoriaComponent = this.helperservice.decryptData('IndexCategoriaComponent') || false;
+    this.check.EditCategoriaComponent = this.helperservice.decryptData('EditCategoriaComponent') || false;
+    this.check.EditSubcategoriaComponent = this.helperservice.decryptData('EditSubcategoriaComponent') || false;
+    this.check.CreateCategoriaComponent = this.helperservice.decryptData('CreateCategoriaComponent') || false;
+    this.check.CreateSubcategoriaComponent = this.helperservice.decryptData('CreateSubcategoriaComponent') || false;
+    
         if (!this.check.IndexCategoriaComponent) {
             this.router.navigate(['/notfound']);
         }
@@ -104,8 +109,9 @@ export class IndexCategoriaComponent implements OnInit{
   }
     editRow(id:any,cat:boolean){
         //console.log(id);
-        if(cat){
-            const modalRef = this.dialogService.open(EditCategoriaComponent, {
+      if (cat) {
+        if (this.check.EditCategoriaComponent) {
+             const modalRef = this.dialogService.open(EditCategoriaComponent, {
             header: 'Editar Categoría',
             width: this.isMobil()? '100%':'70%',
             data: { id: id },
@@ -114,7 +120,12 @@ export class IndexCategoriaComponent implements OnInit{
             modalRef.close();
           });
         } else {
-           const modalRef = this.dialogService.open(EditSubcategoriaComponent, {
+          this.messageService.add({severity: 'error', summary: 'Lo sentimos', detail: 'No tiene permisos para esto'});
+          }
+           
+      } else {
+        if (this.check.EditCategoriaComponent) {
+            const modalRef = this.dialogService.open(EditSubcategoriaComponent, {
             header: 'Editar Subcategoría',
             width: this.isMobil()? '100%':'70%',
             data: { id: id },
@@ -122,6 +133,10 @@ export class IndexCategoriaComponent implements OnInit{
           App.addListener('backButton', data => {
             modalRef.close();
           });
+        } else {
+          this.messageService.add({severity: 'error', summary: 'Lo sentimos', detail: 'No tiene permisos para esto'});
+          }
+           
         }
     }
     responsemodal:any;

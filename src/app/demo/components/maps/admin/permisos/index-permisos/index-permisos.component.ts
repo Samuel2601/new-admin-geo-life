@@ -23,11 +23,11 @@ export class IndexPermisosComponent {
   constructor(private listService: ListService,private modalService: NgbModal, private updateServices:UpdateService,private helper:HelperService,private messageService: MessageService,private dialogService: DialogService) { }
 
   ngOnInit(): void {
-    this.listarCategorias();
+    this.listarpermisos();
     this.listarrol();
   }
   token = this.helper.token();
-  listarCategorias(): void {     
+  listarpermisos(): void {     
     this.listService.ListarPermisos(this.token).subscribe(
       response => {
         this.permisos = response.data;
@@ -73,9 +73,15 @@ export class IndexPermisosComponent {
      const modalRef = this.dialogService.open(CreatePermisosComponent, {
       header: 'Crear nuevo Permiso',
       width: this.isMobil()? '100%':'40%'
-    });
+     });
+    
      App.addListener('backButton', data => {
        modalRef.close();
+     });
+    modalRef.onClose.subscribe((data) => {
+      if (data) {
+           this.listarpermisos();
+        }         
       });
   }
 

@@ -271,6 +271,9 @@
             <div class="col-12">
                 <div class="p-fluid p-formgrid grid">
                     <h3>Listado de Incidente/Denuncia</h3>
+                    <ng-container *ngFor="let item of encargos">
+                        <p-chip [label]="item.categoria.nombre"></p-chip>
+                    </ng-container>
                 </div>
                 <div class="flex pt-4 justify-content-end">
                     <p-button

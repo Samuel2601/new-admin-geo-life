@@ -19,6 +19,7 @@ import { AppSidebarComponent } from "./app.sidebar.component";
 import { AppLayoutComponent } from "./app.layout.component";
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
+import { ImageModule } from 'primeng/image';
 @NgModule({
     declarations: [
         AppMenuitemComponent,
@@ -29,6 +30,7 @@ import { AvatarGroupModule } from 'primeng/avatargroup';
         AppLayoutComponent,
     ],
     imports: [
+        ImageModule,
         BrowserModule,
         FormsModule,
         HttpClientModule,

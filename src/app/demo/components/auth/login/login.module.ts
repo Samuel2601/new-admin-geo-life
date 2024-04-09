@@ -11,6 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
+import { ImageModule } from 'primeng/image';
 @NgModule({
     imports: [
         CommonModule,
@@ -23,7 +24,8 @@ import { AvatarGroupModule } from 'primeng/avatargroup';
         ReactiveFormsModule,
         ToastModule,
         AvatarGroupModule,
-        AvatarModule
+        AvatarModule,
+        ImageModule
     ],
     declarations: [LoginComponent]
 })

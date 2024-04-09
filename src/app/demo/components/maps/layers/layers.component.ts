@@ -159,7 +159,7 @@ export class LayersComponent implements OnInit{
     this.loadspeed = false;
     console.log(this.opcionb);
     this.items = [
-      {
+    /*  {
         icon: 'bi bi-crosshair',
         tooltipOptions: {
           tooltipLabel:'Ubicación',
@@ -171,7 +171,7 @@ export class LayersComponent implements OnInit{
           this.getLocation();
       
         },
-      },
+      },*/
        {
         icon: 'pi pi-chart-bar',
         tooltipOptions: {
@@ -265,6 +265,7 @@ export class LayersComponent implements OnInit{
     ];
     this.addtemplateSP();  
     this.addtemplateFR();  
+    this.addtemplateBG();
   }
     addtemplateSP() {
       setTimeout(() => {
@@ -286,7 +287,48 @@ export class LayersComponent implements OnInit{
           });
         }
       }, 1000);
+  }
+  addtemplateBG() {
+  setTimeout(() => {
+    this.loadspeed = true;      
+    const speedDial = document.createElement('button');
+    speedDial.className = 'p-button p-button-icon-only';
+    speedDial.innerHTML = '<span class="bi bi-crosshair" style="font-size: 24px;"></span>';
+    speedDial.title = 'Ubicación';
+    speedDial.style.position = 'absolute';
+    speedDial.style.bottom = '10px';
+    speedDial.style.right = '10px';
+    speedDial.style.width = '3rem';
+    speedDial.style.height = '3rem';
+    speedDial.style['border-radius'] = '50%';
+    //speedDial.style.color = '#f90017';
+    //speedDial.style.background = 'var(--surface-0)';
+
+    
+    speedDial.addEventListener('click', () => {
+      this.getLocation();
+    });
+    // Verificar si el speedDial ya está en el mapa antes de agregarlo
+    const customControlDiv = document.createElement('div');
+      customControlDiv.appendChild(speedDial);
+    // Añadir el speedDial al control solo si no está agregado
+    if (!this.isFormularioBG()) {      
+      this.mapCustom.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(customControlDiv);
     }
+  }, 1000);
+  }
+  isFormularioBG(): boolean {
+    // Verificar si el formulario ya está en el mapa
+    const mapControls = this.mapCustom.controls[google.maps.ControlPosition.RIGHT_BOTTOM].getArray();
+    for (let i = 0; i < mapControls.length; i++) {
+      const control = mapControls[i] as HTMLElement;
+      if (control.contains(this.formularioMapRef.nativeElement)) {
+        return true; // El formulario ya está agregado al mapa
+      }
+    }
+    return false; // El formulario no está agregado al mapa
+    }
+
     addtemplateFR() {
       setTimeout(() => { 
         const formularioMap = this.formularioMapRef.nativeElement;

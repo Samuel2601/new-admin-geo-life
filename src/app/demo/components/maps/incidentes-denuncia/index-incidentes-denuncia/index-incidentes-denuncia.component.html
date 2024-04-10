@@ -190,6 +190,7 @@
                         icon="pi pi-external-link"
                         [text]="true"
                         (click)="
+                            stopPropagation($event);
                             marcarsitio(
                                 incidente.direccion_geo,
                                 incidente.categoria.nombre

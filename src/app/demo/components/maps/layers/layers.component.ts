@@ -490,7 +490,7 @@ export class LayersComponent implements OnInit{
     const marker = new google.maps.Marker({
       position,
       map,
-      label:tipo
+      label:tipo,
     });
     // Cerrar el popup actualmente abierto
     if (this.openInfoWindow) {
@@ -500,7 +500,7 @@ export class LayersComponent implements OnInit{
     // Abrir un nuevo popup con el nombre del barrio
     const infoWindow = new google.maps.InfoWindow({
       ariaLabel:tipo,
-      content: message?message:'Marcador'
+      content: message ? message : 'Marcador',      
     });
     infoWindow.setPosition(position);
     infoWindow.open(this.mapCustom);

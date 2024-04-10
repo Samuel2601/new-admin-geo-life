@@ -380,6 +380,7 @@ updateCurrentData() {
      this.ref=this.dialogService.open(ListFichaComponent, {
           header: 'Ficha Sectorial:'+this.labelsmobil[id]+' de '+this.valor,
          width: this.isMobil() ? '100%' : '70%',
+         dismissableMask: true,
           data:{filtro:this.filtro,valor:this.valor,actividad:this.labelsmobil[id]}
      });
         App.addListener('backButton', data => {

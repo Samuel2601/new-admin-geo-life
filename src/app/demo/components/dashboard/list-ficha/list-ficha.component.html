@@ -1,16 +1,4 @@
 <p-toast></p-toast>
-<div
-    class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2"
->
-    <div class="grid">
-        <span class="p-col-6 p-md-6 font-bold white-space-nowrap mb-2"
-            >Ficha Sectorial:</span
-        >
-        <span class="p-col-6 p-md-6 font-bold white-space-nowrap mb-2">{{
-            valor
-        }}</span>
-    </div>
-</div>
 <p-table
     styleClass="p-datatable-striped"
     #dt1
@@ -102,7 +90,7 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-incidente let-rowIndex="rowIndex">
-        <tr (click)="visible = true; option = incidente">
+        <tr (click)="opendialog(incidente)">
             <td>{{ rowIndex + 1 }}</td>
             <td>
                 {{ incidente.fecha_evento | date : "medium" : "es" }}
@@ -143,40 +131,50 @@
         </tr>
     </ng-template>
 </p-table>
-
-<p-galleria
-    [value]="imagenModal"
+<p-dialog
+    header="Galleria"
     [(visible)]="displayBasic"
-    [responsiveOptions]="responsiveOptions"
-    [containerStyle]="{ 'max-width': '50%' }"
-    [numVisible]="9"
-    [circular]="true"
-    [fullScreen]="true"
-    [showItemNavigators]="true"
+    [modal]="true"
+    [appendTo]="'body'"
+    [style]="{ width: isMobil() ? '100%' : '50vw' }"
+    [dismissableMask]="true"
 >
-    <ng-template pTemplate="item" let-item>
-        <img
-            [src]="url + 'helper/obtener_portada_ficha/' + item"
-            style="width: 100%; display: block"
-        />
-    </ng-template>
-    <ng-template pTemplate="thumbnail" let-item>
-        <div class="grid grid-nogutter justify-content-center">
+    <p-galleria
+        [value]="imagenModal"
+        [(visible)]="displayBasic"
+        [responsiveOptions]="responsiveOptions"
+        [containerStyle]="{ 'max-width': '850px' }"
+        [numVisible]="7"
+        [circular]="true"
+        [showItemNavigators]="true"
+        [showThumbnails]="false"
+    >
+        <ng-template pTemplate="item" let-item>
             <img
                 [src]="url + 'helper/obtener_portada_ficha/' + item"
-                style="display: block"
-                style="width: 30%"
+                style="width: 100%; display: block"
             />
-        </div>
-    </ng-template>
-</p-galleria>
+        </ng-template>
+        <ng-template pTemplate="thumbnail" let-item>
+            <div class="grid grid-nogutter justify-content-center">
+                <img
+                    [src]="url + 'helper/obtener_portada_ficha/' + item"
+                    style="display: block"
+                    style="width: 30%"
+                />
+            </div>
+        </ng-template>
+    </p-galleria>
+</p-dialog>
 
 <p-dialog
     *ngIf="option"
+    [appendTo]="'body'"
     header="Detalles de la Ficha Sectorial"
     [(visible)]="visible && option"
-    [modal]="false"
-    [style]="{ width: '50vw' }"
+    [modal]="true"
+    [style]="{ width: isMobil() ? '100%' : '50vw' }"
+    [dismissableMask]="true"
 >
     <div class="modal-body">
         <p>

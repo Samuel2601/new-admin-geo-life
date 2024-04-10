@@ -12,6 +12,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { App } from '@capacitor/app';
 import { AdminService } from 'src/app/demo/services/admin.service';
 import { filter } from 'rxjs/operators';
+import { helpers } from '@turf/turf';
 @Component({
   selector: 'app-index-incidentes-denuncia',
   templateUrl: './index-incidentes-denuncia.component.html',
@@ -205,9 +206,11 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
         this.helperservice.cerrarspinner();
     }
   }
+  balanceFrozen: boolean = true;
     llamarmodal(){
     const modalRef=this.dialogService.open(IndexEstadoIncidenteComponent, {
-          header: '',
+      header: '',
+      dismissableMask: true,
           width: this.isMobil() ? '100%' : '70%',
     });
     App.addListener('backButton', data => {
@@ -253,6 +256,9 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
         el.classList.remove('active');
       }
     });
+  }
+  marcarsitio(direccion:any,nombre?:any) {
+    this.helperservice.marcarLugar(direccion.latitud,direccion.longitud,nombre);
   }
 
   displayBasic: boolean = false;

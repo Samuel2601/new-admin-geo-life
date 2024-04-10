@@ -164,6 +164,11 @@ export class HelperService {
   setMapComponent(mapComponent: LayersComponent) {
     this.mapComponent = mapComponent;
   }
+  marcarLugar(latitud:any,longitud:any,nombres?:any) {
+    if (this.mapComponent) {
+      this.mapComponent.addMarker({ lat: latitud, lng: longitud }, 'Ubicación',nombres);
+    }
+  }
   cerrarincidente() {
     if (this.mapComponent) {
       this.mapComponent.mostrarincidente = false;

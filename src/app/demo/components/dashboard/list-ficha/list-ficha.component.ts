@@ -6,6 +6,7 @@ import { Table } from 'primeng/table';
 import { GLOBAL } from 'src/app/demo/services/GLOBAL';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
+import { App } from '@capacitor/app';
 
 @Component({
   selector: 'app-list-ficha',
@@ -158,8 +159,18 @@ export class ListFichaComponent implements OnInit{
   }
    openimagen(url: any) {
     this.imagenModal = url;
-    this.imagenAMostrar = this.imagenModal[0];
+     this.imagenAMostrar = this.imagenModal[0];
+     App.addListener('backButton', data => {
+       this.displayBasic = false;
+      });
     //const modalRef = this.dialogService.open(this.modalContent, { size: 'lg' });
+  }
+  opendialog(incidente:any) {
+    this.visible = true;
+    this.option = incidente;
+     App.addListener('backButton', data => {
+       this.visible = false;
+      });
   }
   option: any;
   visible: boolean = false;

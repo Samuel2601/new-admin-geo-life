@@ -607,7 +607,7 @@
     header="Detalles de la Ficha Sectorial"
     [(visible)]="visible && option"
     [modal]="false"
-    [style]="{ width: '50vw' }"
+    [style]="{ width: isMobil() ? '100%' : '50vw' }"
 >
     <div class="modal-body">
         <p>
@@ -638,19 +638,23 @@
             <strong>Observación:</strong>
             {{ option.observacion }}
         </p>
-        <p *ngIf="option.foto && option.foto.length > 0">
-            <p-button
-                label="Fotos"
-                icon="pi pi-images"
-                (click)="displayBasic = true; openModalimagen(option.foto)"
-            ></p-button>
-        </p>
-        <p *ngIf="check.EditFichaSectorialComponent">
-            <p-button
-                label="Editar"
-                icon="pi pi-file-edit"
-                (click)="editingrow(option._id)"
-            ></p-button>
-        </p>
+        <div class="flex justify-content-between">
+            <div class="justify-content-between">
+                <p-button
+                    *ngIf="option.foto && option.foto.length > 0"
+                    label="Fotos"
+                    icon="pi pi-images"
+                    (click)="displayBasic = true; openModalimagen(option.foto)"
+                ></p-button>
+            </div>
+            <div class="justify-content-end">
+                <p-button
+                    *ngIf="check.EditFichaSectorialComponent"
+                    label="Editar"
+                    icon="pi pi-file-edit"
+                    (click)="editingrow(option._id)"
+                ></p-button>
+            </div>
+        </div>
     </div>
 </p-dialog>

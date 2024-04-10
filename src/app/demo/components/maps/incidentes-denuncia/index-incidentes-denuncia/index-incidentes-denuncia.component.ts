@@ -206,6 +206,8 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
         this.helperservice.cerrarspinner();
     }
   }
+  visible: boolean = false;
+  option: any;
   balanceFrozen: boolean = true;
     llamarmodal(){
     const modalRef=this.dialogService.open(IndexEstadoIncidenteComponent, {

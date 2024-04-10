@@ -152,7 +152,7 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-incidente let-rowIndex="rowIndex">
-            <tr>
+            <tr (click)="visible = true; option = incidente">
                 <td
                     (click)="isMobil() && openModal(modalContent)"
                     pFrozenColumn
@@ -657,6 +657,76 @@
         </div>
     </ng-template>
 </p-galleria>
+
+<p-dialog
+    *ngIf="option"
+    header="Detalles de la Ficha Sectorial"
+    [(visible)]="visible && option"
+    [modal]="false"
+    [style]="{ width: isMobil() ? '100%' : '50vw' }"
+>
+    <div class="modal-body">
+        <p>
+            <strong>Categoría:</strong>
+            {{ option.categoria.nombre }}
+        </p>
+        <p>
+            <strong>Subcategoría:</strong>
+            {{ option.subcategoria.nombre }}
+        </p>
+        <p>
+            <strong>Dirección Geográfica:</strong>
+            {{ option.direccion_geo.nombre }}
+        </p>
+        <p>
+            <strong>Estado:</strong>
+            <span
+                [ngClass]="'badge text-bg-' + checkstatus[option.estado.orden]"
+                >{{ option.estado.nombre }}</span
+            >
+        </p>
+        <p>
+            <strong>Ciudadano:</strong>
+            {{ option.ciudadano.nombres }}
+        </p>
+        <p>
+            <strong>Descripción:</strong>
+            {{ option.descripcion }}
+        </p>
+        <p>
+            <strong>Respuesta:</strong
+            ><ng-container *ngIf="option.respuesta">{{
+                option.respuesta
+            }}</ng-container>
+            <ng-container *ngIf="!option.respuesta">--</ng-container>
+        </p>
+        <p>
+            <strong>Encargado:</strong
+            ><ng-container *ngIf="option.encargado">{{
+                option.encargado.nombres
+            }}</ng-container>
+            <ng-container *ngIf="!option.encargado">--</ng-container>
+        </p>
+        <div class="flex justify-content-between">
+            <div class="justify-content-between">
+                <p-button
+                    *ngIf="option.foto && option.foto.length > 0"
+                    label="Fotos"
+                    icon="pi pi-images"
+                    (click)="displayBasic = true; openModalimagen(option.foto)"
+                ></p-button>
+            </div>
+            <div class="justify-content-end">
+                <p-button
+                    *ngIf="check.EditFichaSectorialComponent"
+                    label="Editar"
+                    icon="pi pi-file-edit"
+                    (click)="('')"
+                ></p-button>
+            </div>
+        </div>
+    </div>
+</p-dialog>
 
 <!-- <div class="py-2">
      <ng-template #contentimage let-modal>

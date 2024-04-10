@@ -72,7 +72,7 @@ export class ListFichaComponent implements OnInit{
     listarIncidentesDenuncias(): void {
     this.load_lista=true;
     if(!this.token){
-      throw this.router.navigate(["/inicio"]);
+      throw this.router.navigate(["/auth/login"]);
     }
 
     if(this.filtro&&this.valor){
@@ -87,7 +87,7 @@ export class ListFichaComponent implements OnInit{
         //console.error(error);
         this.load_lista=false;
         if(error.error.message=='InvalidToken'){
-          this.router.navigate(["/inicio"]);
+          this.router.navigate(["/auth/login"]);
         }else{
          this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
         }  
@@ -101,7 +101,7 @@ export class ListFichaComponent implements OnInit{
         //console.error(error);
         this.load_lista=false;
         if(error.error.message=='InvalidToken'){
-            this.router.navigate(["/inicio"]);
+            this.router.navigate(["/auth/login"]);
           }else{
             this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
           }

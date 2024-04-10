@@ -40,7 +40,7 @@ export class CreateEstadoIncidenteComponent implements OnInit {
   registrarEstadoIncidente() {
     if (this.estadoIncidenteForm?.valid) {
       if(!this.token){
-        throw this.router.navigate(["/inicio"]);
+        throw this.router.navigate(["/auth/login"]);
       }
       if (this.token && this.estadoIncidenteForm.value) {
         this.createService.registrarEstadoIncidente(this.token, this.estadoIncidenteForm.value).subscribe(response => {

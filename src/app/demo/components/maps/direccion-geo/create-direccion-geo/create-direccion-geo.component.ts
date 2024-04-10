@@ -124,7 +124,7 @@ export class CreateDireccionGeoComponent implements OnInit, AfterViewInit {
         }, error => {
           //console.error(error);
           if(error.error.message=='InvalidToken'){
-            this.router.navigate(["/inicio"]);
+            this.router.navigate(["/auth/login"]);
           }else{
             /*iziToast.error({
               title: ('('+error.status+')').toString(),
@@ -135,7 +135,7 @@ export class CreateDireccionGeoComponent implements OnInit, AfterViewInit {
         });
       }else{
         if(!this.token){
-          throw this.router.navigate(["/inicio"]);
+          throw this.router.navigate(["/auth/login"]);
         }
       }
     }else{

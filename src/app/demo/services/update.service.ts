@@ -32,11 +32,11 @@ export class UpdateService {
 
   actualizarActividadProyecto(token: any, id: string, data: any): Observable<any> {
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
       Authorization: token,
-    });
+    });    
     return this.http.put(this.url + 'actualizar_actividad_proyecto/' + id, data, { headers: headers });
-  }
+}
+
 
   actualizarIncidenteDenuncia(token: any, id: string, data: any): Observable<any> {
     let headers = new HttpHeaders({

@@ -22,7 +22,7 @@ export class IndexEncargadoCategoriaComponent {
 token = this.helper.token();
   listarCategorias(): void {
     if(!this.token){
-      throw this.router.navigate(["/inicio"]);
+      throw this.router.navigate(["/auth/login"]);
     }
     this.listService.listarEncargadosCategorias(this.token).subscribe(
       response => {

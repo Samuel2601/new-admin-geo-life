@@ -152,7 +152,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
   selectcategoria(event:any){
     if(!this.token){
       //this.modalService.dismissAll();
-      throw this.router.navigate(["/inicio"]);
+      throw this.router.navigate(["/auth/login"]);
     }
     if (event.value) {
       const id = event.value._id;
@@ -164,7 +164,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
         error => {
           //console.log(error);
           if(error.error.message=='InvalidToken'){
-            this.router.navigate(["/inicio"]);
+            this.router.navigate(["/auth/login"]);
           }else{
             this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
           }
@@ -175,7 +175,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
   async listarCategorias() {
     if(!this.token){
       //this.modalService.dismissAll();
-      throw this.router.navigate(["/inicio"]);
+      throw this.router.navigate(["/auth/login"]);
     }
     this.listService.listarCategorias(this.token).subscribe(
       response => {
@@ -186,7 +186,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
       error => {
         //console.log(error);
         if(error.error.message=='InvalidToken'){
-          this.router.navigate(["/inicio"]);
+          this.router.navigate(["/auth/login"]);
         }else{
           this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
         }
@@ -363,7 +363,7 @@ selectedFiles: File[] = [];
   crearIncidenteDenuncia(): void {
     this.load_form=false;
     if(!this.token){
-      throw this.router.navigate(["/inicio"]);
+      throw this.router.navigate(["/auth/login"]);
     }
     //console.log(this.nuevoIncidenteDenuncia);
     this.nuevoIncidenteDenuncia.ciudadano=this.adminservice.identity(this.token);
@@ -380,7 +380,7 @@ selectedFiles: File[] = [];
       // Manejar errores
       //console.error(error);
       if(error.error.message=='InvalidToken'){
-        this.router.navigate(["/inicio"]);
+        this.router.navigate(["/auth/login"]);
       }else{
        this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
       }

@@ -142,6 +142,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { IndexDireccionGeoComponent } from './direccion-geo/index-direccion-geo/index-direccion-geo.component';
 import { CreateDireccionGeoComponent } from './direccion-geo/create-direccion-geo/create-direccion-geo.component';
 import { EditDireccionGeoComponent } from './direccion-geo/edit-direccion-geo/edit-direccion-geo.component';
+import { EditFichaSectorialComponent } from './ficha-sectorial/edit-ficha-sectorial/edit-ficha-sectorial.component';
 
 @NgModule({  
   imports: [
@@ -281,7 +282,8 @@ import { EditDireccionGeoComponent } from './direccion-geo/edit-direccion-geo/ed
     IndexEncargadoCategoriaComponent,
     IndexDireccionGeoComponent,
     CreateDireccionGeoComponent,
-    EditDireccionGeoComponent
+    EditDireccionGeoComponent,
+    EditFichaSectorialComponent
   ],
   providers: [MessageService,DialogService,DynamicDialogConfig,DynamicDialogRef],
   bootstrap: [IndexUsuarioComponent]

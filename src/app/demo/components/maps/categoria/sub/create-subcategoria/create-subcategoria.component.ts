@@ -32,7 +32,7 @@ export class CreateSubcategoriaComponent implements OnInit{
   token=this.helper.token();
   listarCategorias() {
     if(!this.token){
-      throw this.router.navigate(["/inicio"]);
+      throw this.router.navigate(["/auth/login"]);
     }
     this.listService.listarCategorias(this.token).subscribe(response => {
       this.categorias = response.data;
@@ -42,7 +42,7 @@ export class CreateSubcategoriaComponent implements OnInit{
   registrarSubcategoria() {
     if (this.subcategoriaForm.valid) {
       if(!this.token){
-        throw this.router.navigate(["/inicio"]);
+        throw this.router.navigate(["/auth/login"]);
       }
       //console.log(this.subcategoriaForm);
     this.createService.registrarSubcategoria(this.token, this.subcategoriaForm.value).subscribe(response => {

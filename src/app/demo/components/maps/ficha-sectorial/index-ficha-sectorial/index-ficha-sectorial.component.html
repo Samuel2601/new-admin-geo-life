@@ -645,5 +645,12 @@
                 (click)="displayBasic = true; openModalimagen(option.foto)"
             ></p-button>
         </p>
+        <p *ngIf="check.EditFichaSectorialComponent">
+            <p-button
+                label="Editar"
+                icon="pi pi-file-edit"
+                (click)="editingrow(option._id)"
+            ></p-button>
+        </p>
     </div>
 </p-dialog>

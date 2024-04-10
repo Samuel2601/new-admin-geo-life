@@ -42,7 +42,7 @@ export class CreateFichaSectorialComponent implements OnInit {
   mostrar: boolean = false;
   ngOnInit(): void {
     if(!this.token){
-      throw this.router.navigate(["/inicio"]);
+      throw this.router.navigate(["/auth/login"]);
     }
     if (this.config && this.config.data && this.config.data.data) {
       this.data = this.config.data.data;
@@ -67,7 +67,7 @@ export class CreateFichaSectorialComponent implements OnInit {
         //console.error('El control "direccion_geo" no está definido en el formulario.');
       }
     } else {
-      this.router.navigate(['/inicio']);
+      this.router.navigate(['/auth/login']);
     }
 
     this.router.events.subscribe((val) => {
@@ -83,7 +83,7 @@ export class CreateFichaSectorialComponent implements OnInit {
   }
   listartEstados(){
     if(!this.token){
-      throw this.router.navigate(["/inicio"]);
+      throw this.router.navigate(["/auth/login"]);
     }
     this.listarService.listarEstadosActividadesProyecto(this.token).subscribe(response=>{
       //console.log(response);
@@ -93,7 +93,7 @@ export class CreateFichaSectorialComponent implements OnInit {
     },error=>{
       //console.error(error);
       if(error.error.message=='InvalidToken'){
-        this.router.navigate(["/inicio"]);
+        this.router.navigate(["/auth/login"]);
       }else{
         this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
       }
@@ -102,7 +102,7 @@ export class CreateFichaSectorialComponent implements OnInit {
 
   listarActividadProyecto(){
     if(!this.token){
-      throw this.router.navigate(["/inicio"]);
+      throw this.router.navigate(["/auth/login"]);
     }
     this.listarService.listarTiposActividadesProyecto(this.token).subscribe(response=>{
       //console.log(response);
@@ -113,7 +113,7 @@ export class CreateFichaSectorialComponent implements OnInit {
     },error=>{
       //console.error(error);
       if(error.error.message=='InvalidToken'){
-        this.router.navigate(["/inicio"]);
+        this.router.navigate(["/auth/login"]);
       }else{
         this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
       }
@@ -241,14 +241,14 @@ export class CreateFichaSectorialComponent implements OnInit {
         }, error => {
           //console.error(error);
           if(error.error.message=='InvalidToken'){
-            this.router.navigate(["/inicio"]);
+            this.router.navigate(["/auth/login"]);
           }else{
              this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
           } 
         });
       }else{
         if(!this.token){
-          throw this.router.navigate(["/inicio"]);
+          throw this.router.navigate(["/auth/login"]);
         }
       }
     }else{

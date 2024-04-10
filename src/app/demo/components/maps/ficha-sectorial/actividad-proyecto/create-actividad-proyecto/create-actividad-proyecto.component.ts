@@ -36,7 +36,7 @@ export class CreateActividadProyectoComponent implements OnInit{
   registrarActividadP() {
     if (this.estadoIncidenteForm.valid) {
         if(!this.token){
-          throw this.router.navigate(["/inicio"]);
+          throw this.router.navigate(["/auth/login"]);
         }
         this.createService.registrarTipoActividadProyecto(this.token, this.estadoIncidenteForm.value).subscribe(response => {
             //console.log(response);

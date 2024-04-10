@@ -29,7 +29,7 @@ export class IndexSubcategoriaComponent {
     this.helperservice.llamarspinner();
     this.load_lista=true;
     if(!this.token){
-      throw this.router.navigate(["/inicio"]);
+      throw this.router.navigate(["/auth/login"]);
     }
     this.listService.listarSubcategorias(this.token,'categoria',this.id).subscribe(
       response => {

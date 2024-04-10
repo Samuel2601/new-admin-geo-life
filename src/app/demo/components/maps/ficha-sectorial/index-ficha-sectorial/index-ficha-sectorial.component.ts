@@ -11,6 +11,7 @@ import { MessageService } from 'primeng/api';
 import { DialogService,DynamicDialogRef } from 'primeng/dynamicdialog';
 import { App } from '@capacitor/app';
 import { AdminService } from 'src/app/demo/services/admin.service';
+import { EditFichaSectorialComponent } from '../edit-ficha-sectorial/edit-ficha-sectorial.component';
 @Component({
   selector: 'app-index-ficha-sectorial',
   templateUrl: './index-ficha-sectorial.component.html',
@@ -82,6 +83,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
       if (!this.check.IndexFichaSectorialComponent) {
          this.router.navigate(['/notfound']);
       }
+      this.check.EditFichaSectorialComponent = this.helperservice.decryptData('EditFichaSectorialComponent') || false;
       this.check.IndexEstadoActividadProyectoComponent = this.helperservice.decryptData('IndexEstadoActividadProyectoComponent')  || false;
       this.check.IndexActividadProyectoComponent = this.helperservice.decryptData('IndexActividadProyectoComponent') || false;
       this.check.TotalFilter = this.helperservice.decryptData('TotalFilter') || false;
@@ -110,7 +112,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
     }
     this.load_lista = true;
     if (!this.token) {
-        throw this.router.navigate(["/inicio"]);
+        throw this.router.navigate(["/auth/login"]);
     }
 
     let filtroServicio = '';
@@ -138,7 +140,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
     }, error => {
         this.load_lista = false;
         if (error.error.message == 'InvalidToken') {
-            this.router.navigate(["/inicio"]);
+            this.router.navigate(["/auth/login"]);
         } else {
             this.messageService.add({ severity: 'error', summary: ('(' + error.status + ')').toString(), detail: error.error.message || 'Sin conexión' });
         }
@@ -290,5 +292,14 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
           numVisible: 1
       }
   ];
-
+  editingrow(id:any) {
+    const modalRef = this.dialogService.open(EditFichaSectorialComponent, {
+          header: 'Editar Ficha Sectorial',
+      width: this.isMobil() ? '100%' : '70%',
+          data:{id:id}
+      });
+    App.addListener('backButton', data => {
+       modalRef.close();
+      });
+  }
 }

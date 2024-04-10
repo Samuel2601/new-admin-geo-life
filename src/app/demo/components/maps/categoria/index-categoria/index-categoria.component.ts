@@ -64,7 +64,7 @@ export class IndexCategoriaComponent implements OnInit{
     this.loading = true;
     this.opcion=false;
     if (!this.token) {
-      this.router.navigate(['/inicio']);
+      this.router.navigate(['/auth/login']);
       return;
     }
   

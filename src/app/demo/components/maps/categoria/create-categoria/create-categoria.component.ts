@@ -30,7 +30,7 @@ export class CreateCategoriaComponent implements OnInit{
     if (this.categoriaForm.valid) {
       const token = this.helper.token();
       if(!token){
-        throw this.router.navigate(["/inicio"]);
+        throw this.router.navigate(["/auth/login"]);
       }
       const data = {
         nombre: this.categoriaForm.value.nombre,

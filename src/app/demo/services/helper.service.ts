@@ -36,6 +36,11 @@ export class HelperService {
         sessionStorage.clear();
         return null;
       }
+    } else {
+      if (this.router.url!== '/auth/login') {
+        this.router.navigate(["/auth/login"]);
+      }
+      
     }
     return token ? token : null;
   }

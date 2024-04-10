@@ -30,7 +30,7 @@ export class CreateEncargadoCategoriaComponent implements OnInit {
 token = this.helper.token();
   listarCategorias() {
     if(!this.token){
-      throw this.router.navigate(["/inicio"]);
+      throw this.router.navigate(["/auth/login"]);
     }
     this.listService.listarCategorias(this.token).subscribe(response => {
       this.categorias = response.data;
@@ -39,7 +39,7 @@ token = this.helper.token();
   }
   listarUsuarios() {
     if(!this.token){
-      throw this.router.navigate(["/inicio"]);
+      throw this.router.navigate(["/auth/login"]);
     }
     this.listService.listarUsuarios(this.token,'rol_user.orden',3).subscribe(response => {
       this.usuarios = response.data;

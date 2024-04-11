@@ -152,6 +152,7 @@
                                         />
                                     </p-iconField>
                                 </div>
+
                                 <div class="field p-fluid">
                                     <p-password
                                         formControlName="password"
@@ -159,6 +160,24 @@
                                         placeholder="Password"
                                         required
                                     />
+                                </div>
+                                <div class="flex pt-4 justify-content-between">
+                                    <p-inputSwitch
+                                        formControlName="checked"
+                                        (onChange)="ver()"
+                                    ></p-inputSwitch>
+                                    <label for="">
+                                        Estas de acuerdo con nuestras politicas
+                                        de seguridad?
+                                    </label>
+                                    <p-button
+                                        icon="pi pi-external-link"
+                                        label="ver"
+                                        (click)="llamarmodal()"
+                                        type="button"
+                                        [text]="true"
+                                        [raised]="true"
+                                    ></p-button>
                                 </div>
                                 <div class="flex pt-4 justify-content-between">
                                     <p-button
@@ -176,7 +195,11 @@
                                         iconPos="right"
                                     />
                                     -->
+
                                     <p-button
+                                        [disabled]="
+                                            !formulario.get('checked').value
+                                        "
                                         label="Enviar"
                                         icon="pi pi-check"
                                         iconPos="right"
@@ -293,7 +316,11 @@
         </div>
     </div>
 </div>
-<p-dialog header="Cargada de datos" [(visible)]="visible" [style]="{ width: '50vw' }">
+<p-dialog
+    header="Cargada de datos"
+    [(visible)]="visible"
+    [style]="{ width: '50vw' }"
+>
     <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
 </p-dialog>
 

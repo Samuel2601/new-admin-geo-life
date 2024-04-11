@@ -5,6 +5,9 @@ import { MessageService } from 'primeng/api';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { CreateService } from 'src/app/demo/services/create.service';
+import { DialogService } from 'primeng/dynamicdialog';
+import { PoliticasComponent } from '../politicas/politicas.component';
+import { App } from '@capacitor/app';
 
 @Component({
   selector: 'app-signup',
@@ -12,14 +15,15 @@ import { CreateService } from 'src/app/demo/services/create.service';
   styleUrls: ['./signup.component.scss'],
   
 })
-export class SignupComponent implements OnInit {
-  constructor(private formBuilder: FormBuilder, private admin: AdminService, private messageService: MessageService,private helper:HelperService,private create:CreateService) {
+export class SignupComponent {
+  constructor(private formBuilder: FormBuilder, private admin: AdminService, private messageService: MessageService,private helper:HelperService,private create:CreateService,private dialogService: DialogService) {
     this.formulario = this.formBuilder.group({
       cedula: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
       nombres: ['', Validators.required],
       telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
       correo: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
+      checked:[false]
       //foto: ['']
     });
      this.formulario.get('cedula')?.valueChanges.subscribe((value:any) => {
@@ -33,9 +37,10 @@ export class SignupComponent implements OnInit {
       }
     });
   }
-  ngOnInit(): void {
-   
+  ver() {
+    console.log(this.formulario.get('checked'));
   }
+  checked: boolean | null = null;
   visible: boolean = false;
   consultar(id: any) {
    this.visible = true;
@@ -50,6 +55,16 @@ export class SignupComponent implements OnInit {
             }
         }, 1000);   
     });
+  }
+  llamarmodal(){
+    const modalRef=this.dialogService.open(PoliticasComponent, {
+      header: 'Politicas y Privacidad de Esmeraldas la Bella',
+      dismissableMask: true,
+          width: this.isMobil() ? '100%' : '70%',
+    });
+    App.addListener('backButton', data => {
+       modalRef.close();
+      });
   }
   consultarcorreo(correo: any) {
     this.visible = true;

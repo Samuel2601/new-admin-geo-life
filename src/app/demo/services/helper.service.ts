@@ -18,7 +18,7 @@ import { StackbarriofichaComponent } from '../components/dashboard/stackbarriofi
 export class HelperService {
   private deshabilitarMapaSubject = new Subject<void>();
   isMobil() {
-    return window.innerWidth <= 575;//Capacitor.isNativePlatform();
+    return window.innerWidth <= 575; //Capacitor.isNativePlatform(); //
   } 
 
   deshabilitarMapa$ = this.deshabilitarMapaSubject.asObservable();

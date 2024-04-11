@@ -491,7 +491,7 @@
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-incidente let-rowIndex="rowIndex">
-                <tr>
+                <tr (click)="visible = true; option = incidente">
                     <td (click)="isMobil() && openModal(modalContent)">
                         {{ rowIndex + 1 }}
                     </td>
@@ -530,7 +530,10 @@
                             >--</ng-container
                         >
                     </td>
-                    <td (click)="stopPropagation($event); displayBasic = true">
+                    <td
+                        (click)="stopPropagation($event); displayBasic = true"
+                        *ngIf="incidente.foto.length > 0"
+                    >
                         <img
                             [src]="
                                 url +
@@ -664,7 +667,7 @@
     header="Detalles de la Incidencia"
     [(visible)]="visible && option"
     [modal]="false"
-    [style]="{ width: isMobil() ? '100%' : '50vw' }"
+    [style]="{ width: isMobil() ? '100%' : '30vw' }"
 >
     <div class="modal-body">
         <p>
@@ -719,8 +722,8 @@
             </div>
             <div class="justify-content-end">
                 <p-button
-                    *ngIf="check.EditFichaSectorialComponent"
-                    label="Editar"
+                    *ngIf="check.EditIncidentesDenunciaComponent"
+                    label="Responder"
                     icon="pi pi-file-edit"
                     (click)="('')"
                 ></p-button>

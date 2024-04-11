@@ -214,6 +214,6 @@ AccordionModule,
     FloatLabelModule,
     ],
     declarations: [SignupComponent],
-    providers: [MessageService]
+    providers: [MessageService,DialogService ]
 })
 export class SignupModule { }

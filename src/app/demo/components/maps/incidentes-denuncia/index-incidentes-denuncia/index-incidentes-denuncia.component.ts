@@ -134,6 +134,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
        this.check.IndexIncidentesDenunciaComponent = this.helperservice.decryptData('IndexIncidentesDenunciaComponent') || false;
       this.check.IndexEstadoIncidenteComponent = this.helperservice.decryptData('IndexEstadoIncidenteComponent') || false;
       this.check.TotalFilterIncidente = this.helperservice.decryptData('TotalFilterIncidente') || false;
+      this.check.EditIncidentesDenunciaComponent = this.helperservice.decryptData('EditIncidentesDenunciaComponent') || false;
       if (!this.check.IndexIncidentesDenunciaComponent) {
         this.router.navigate(['/notfound']); 
       }
@@ -209,7 +210,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   visible: boolean = false;
   option: any;
   balanceFrozen: boolean = true;
-    llamarmodal(){
+  llamarmodal(){
     const modalRef=this.dialogService.open(IndexEstadoIncidenteComponent, {
       header: '',
       dismissableMask: true,

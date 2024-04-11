@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ListService } from 'src/app/demo/services/list.service';
 import { AdminService } from 'src/app/demo/services/admin.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { MessageService } from 'primeng/api';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
@@ -22,7 +21,7 @@ fichaSectorialForm: FormGroup<any>;
   actividadesProyecto:any=[];
   model: boolean=true;
   editingF: boolean = true;
-  constructor(private modalService: NgbModal, private config: DynamicDialogConfig, private fb: FormBuilder, private updateService: UpdateService,
+  constructor(private config: DynamicDialogConfig, private fb: FormBuilder, private updateService: UpdateService,
     private router: Router, private listarService: ListService, private adminservice: AdminService, private helper: HelperService, private messageService: MessageService,
     private ref: DynamicDialogRef,
     private filter:FilterService
@@ -146,9 +145,6 @@ fichaSectorialForm: FormGroup<any>;
         this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
       }
     });
-  }
-  DimissModal(){
-    this.modalService.dismissAll();
   }
 
   abrirModal() {

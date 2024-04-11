@@ -425,7 +425,7 @@
             </ng-template>
             <ng-template pTemplate="body" let-incidente let-rowIndex="rowIndex">
                 <tr (click)="visible = true; option = incidente">
-                    <td (click)="isMobil() && openModal(modalContent)">
+                    <td>
                         {{ rowIndex + 1 }}
                     </td>
                     <td>
@@ -582,7 +582,7 @@
                     *ngIf="check.EditIncidentesDenunciaComponent"
                     label="Responder"
                     icon="pi pi-file-edit"
-                    (click)="('')"
+                    (click)="editar()"
                 ></p-button>
             </div>
         </div>

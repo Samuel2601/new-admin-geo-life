@@ -13,6 +13,7 @@ import { App } from '@capacitor/app';
 import { AdminService } from 'src/app/demo/services/admin.service';
 import { filter } from 'rxjs/operators';
 import { helpers } from '@turf/turf';
+import { EditIncidentesDenunciaComponent } from '../edit-incidentes-denuncia/edit-incidentes-denuncia.component';
 @Component({
   selector: 'app-index-incidentes-denuncia',
   templateUrl: './index-incidentes-denuncia.component.html',
@@ -225,6 +226,17 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
       header: '',
       dismissableMask: true,
           width: this.isMobil() ? '100%' : '70%',
+    });
+    App.addListener('backButton', data => {
+       modalRef.close();
+      });
+  }
+  editar(){
+    const modalRef=this.dialogService.open(EditIncidentesDenunciaComponent, {
+      header: 'Editar Incidente',
+      dismissableMask: true,
+      width: this.isMobil() ? '100%' : '70%',
+      data:{id:this.option._id}
     });
     App.addListener('backButton', data => {
        modalRef.close();

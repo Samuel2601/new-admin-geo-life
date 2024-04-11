@@ -184,11 +184,10 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
           this.incidentesDenuncias = response.data;
           console.log(this.incidentesDenuncias);
             if (this.filtro && this.valor && !this.check.TotalFilterIncidente) {
-                // Si hay filtro y valor, y TotalFilterIncidente es falso, filtrar manualmente
               this.incidentesDenuncias = this.incidentesDenuncias.filter((ficha: any) => ficha[this.filtro] == this.valor);
               
           }
-          if (!this.check.TotalFilterIncidente) {            
+          if (!this.check.TotalFilterIncidente && this.encargos.length>0) {            
             this.incidentesDenuncias = this.incidentesDenuncias.filter((ficha: any) => this.encargos.find(element=>element.categoria._id ===ficha.categoria._id));
           }
           console.log(this.incidentesDenuncias,this.check.TotalFilterIncidente,this.filtro && this.valor);

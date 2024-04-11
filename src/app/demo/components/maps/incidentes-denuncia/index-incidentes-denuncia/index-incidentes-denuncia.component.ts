@@ -183,14 +183,25 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
         if (response.data) {
           this.incidentesDenuncias = response.data;
           console.log(this.incidentesDenuncias);
-            if (this.filtro && this.valor && !this.check.TotalFilterIncidente) {
-              this.incidentesDenuncias = this.incidentesDenuncias.filter((ficha: any) => ficha[this.filtro] == this.valor);
-              
+          if (this.filtro && this.valor && !this.check.TotalFilterIncidente) {
+            const [campo, propiedad] = this.filtro.split('.');
+            console.log("Separacion",campo,propiedad);
+            this.incidentesDenuncias = this.incidentesDenuncias.filter((ficha: any) => {
+                if (propiedad) {
+                    if (ficha[campo][propiedad] == this.valor) {
+                        return ficha;
+                    }
+                } else {
+                    if (ficha[campo] == this.valor) {
+                        return ficha;
+                    }
+                }
+            });
           }
           if (!this.check.TotalFilterIncidente && this.encargos.length>0) {            
             this.incidentesDenuncias = this.incidentesDenuncias.filter((ficha: any) => this.encargos.find(element=>element.categoria._id ===ficha.categoria._id));
           }
-          console.log(this.incidentesDenuncias,this.check.TotalFilterIncidente,this.filtro && this.valor);
+          console.log("Resultado",this.incidentesDenuncias,"CHECHK",this.check.TotalFilterIncidente,"FILTRO:",this.filtro,"Valor",this.valor);
             this.load_lista = false;
         }
     }, error => {

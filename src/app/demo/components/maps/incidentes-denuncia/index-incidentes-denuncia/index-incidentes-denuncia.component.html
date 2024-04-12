@@ -407,15 +407,15 @@
                             Encargado
                             <p-columnFilter
                                 type="text"
-                                field="encargado.nombre"
+                                field="encargado.nombres"
                                 display="menu"
                             ></p-columnFilter>
                             <th
-                                pSortableColumn="encargado.nombre"
+                                pSortableColumn="encargado.nombres"
                                 style="width: 20%"
                             >
                                 <p-sortIcon
-                                    field="encargado.nombre"
+                                    field="encargado.nombres"
                                 ></p-sortIcon>
                             </th>
                         </div>
@@ -468,7 +468,9 @@
                         ></p-tag>
                     </td>
                     <td>
-                        {{ incidente.createdAt | date : "medium" : "es" }}
+                        <ng-container *ngIf="incidente.createdAt">
+                            {{ incidente.createdAt | date : "medium" : "es" }}
+                        </ng-container>
                     </td>
                     <td *ngIf="!isMobil()">{{ incidente.descripcion }}</td>
                     <td (click)="stopPropagation($event)">
@@ -580,10 +582,14 @@
         </p>
         <p>
             <strong>Estado:</strong>
-            <span
-                [ngClass]="'badge text-bg-' + checkstatus[option.estado.orden]"
-                >{{ option.estado.nombre }}</span
-            >
+            <p-tag
+                [value]="option.estado.nombre"
+                [severity]="getSeverity(option.estado.nombre, option.createdAt)"
+            ></p-tag>
+        </p>
+        <p *ngIf="option.createdAt">
+            <strong>Fecha:</strong>
+            {{ option.createdAt | date : "medium" : "es" }}
         </p>
         <p>
             <strong>Ciudadano:</strong>

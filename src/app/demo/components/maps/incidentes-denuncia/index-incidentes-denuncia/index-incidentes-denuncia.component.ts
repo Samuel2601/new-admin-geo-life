@@ -329,10 +329,10 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
             return 'primary';
   
       case 'pendiente':
-        let fechaActualMenosTresDias = new Date();
-        fechaActualMenosTresDias.setDate(fechaActualMenosTresDias.getDate() - 3);
+        let fechaActualMenosTresDias = new Date(fecha);
+        fechaActualMenosTresDias.setDate(fechaActualMenosTresDias.getDate() + 3);
 
-        if (new Date(fecha).getTime() < fechaActualMenosTresDias.getTime()) {
+        if (fechaActualMenosTresDias.getTime()<=new Date().getTime()) {
           return 'danger';
         } else {
           return 'warning';

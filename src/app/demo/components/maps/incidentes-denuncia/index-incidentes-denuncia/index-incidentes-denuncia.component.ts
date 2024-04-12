@@ -202,7 +202,6 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
           if (!this.check.TotalFilterIncidente && this.encargos.length>0) {            
             this.incidentesDenuncias = this.incidentesDenuncias.filter((ficha: any) => this.encargos.find(element=>element.categoria._id ===ficha.categoria._id));
           }
-          console.log("Resultado",this.incidentesDenuncias,"CHECHK",this.check.TotalFilterIncidente,"FILTRO:",this.filtro,"Valor",this.valor);
             this.load_lista = false;
         }
     }, error => {
@@ -238,6 +237,12 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
       width: this.isMobil() ? '100%' : '70%',
       data:{id:this.option._id}
     });
+    modalRef.onClose.subscribe((data:any) => {
+            if (data) {
+              this.messageService.add({ severity: 'info', summary: 'Actualizando', detail: 'Recargando pagina' });
+              this.listarIncidentesDenuncias();
+            }
+        });
     App.addListener('backButton', data => {
        modalRef.close();
       });
@@ -311,25 +316,34 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
     table.clear();
   }
 
-  getSeverity(status: string) {
+  getSeverity(status: string,fecha?:any) {
     switch (status.toLowerCase()) {
         case 'suspendido':
             return 'danger';
   
-        case 'finalizado':
+      case 'finalizado':
+        
             return 'success';
   
         case 'en proceso':
             return 'primary';
   
-        case 'pendiente':
-            return 'warning';
-  
-            case 'planificada':
-              return 'info'; // Otra opción aquí, dependiendo de lo que desees
-    
-          default:
-            return ''; // Otra opción aquí, dependiendo de lo que desees
+      case 'pendiente':
+        let fechaActualMenosTresDias = new Date();
+        fechaActualMenosTresDias.setDate(fechaActualMenosTresDias.getDate() - 3);
+
+        if (new Date(fecha).getTime() < fechaActualMenosTresDias.getTime()) {
+          return 'danger';
+        } else {
+          return 'warning';
+        }
+
+
+        case 'planificada':
+          return 'info'; // Otra opción aquí, dependiendo de lo que desees
+
+      default:
+        return ''; // Otra opción aquí, dependiendo de lo que desees
     }
   }
 }

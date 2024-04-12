@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { GLOBAL } from 'src/app/demo/services/GLOBAL';
 import { AdminService } from 'src/app/demo/services/admin.service';
 import { FilterService } from 'src/app/demo/services/filter.service';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
+import { UpdateService } from 'src/app/demo/services/update.service';
 
 @Component({
   selector: 'app-edit-incidentes-denuncia',
@@ -22,7 +23,8 @@ export class EditIncidentesDenunciaComponent implements OnInit {
     private fb: FormBuilder,
     private listService: ListService,
     private admin:AdminService,
-  private messageService: MessageService) {   
+    private messageService: MessageService, private update: UpdateService,
+  private ref: DynamicDialogRef) {   
     this.incidencia = this.fb.group({
       direccion_geo:[{value: '', disabled: true}],
       ciudadano: [{value: '', disabled: true}, Validators.required],
@@ -121,7 +123,24 @@ export class EditIncidentesDenunciaComponent implements OnInit {
     });
   }
   enviar() {
-    
+    console.log(this.incidencia);
+    this.incidencia.get('encargado').enable();
+    this.incidencia.get('encargado').setValue(this.id_user)
+    this.update.actualizarIncidenteDenuncia(this.token,this.id,this.incidencia.value).subscribe(response => {
+      console.log(response);
+      if (response.data) {
+        this.messageService.add({ severity: 'success', summary: 'Actualizado', detail: 'Correctamente' });
+        setTimeout(() => {
+        this.ref.close(true);
+      }, 500);
+      }
+    }, error => {
+      if (error.error.message == 'InvalidToken') {
+            this.router.navigate(["/auth/login"]);
+        } else {
+            this.messageService.add({ severity: 'error', summary: ('(' + error.status + ')').toString(), detail: error.error.message || 'Sin conexión' });
+        }
+    });
   }
   
   selectcategoria(control:boolean,event?: any) {
@@ -193,11 +212,14 @@ export class EditIncidentesDenunciaComponent implements OnInit {
   isMobil() {
     return this.helper.isMobil();
   }
+  load_imagen: boolean = false;
   newstatus() {
     if (this.incidencia.get('estado').value?.orden>1) {
       this.habilitarCampo('respuesta');
+      this.load_imagen = true;
     } else {
       this.deshabilitarCampo('respuesta');
+       this.load_imagen = false;
     }
   }
   deshabilitarCampo(campo:any) {
@@ -220,31 +242,35 @@ export class EditIncidentesDenunciaComponent implements OnInit {
       resultType: CameraResultType.Base64,
       source: CameraSource.Prompt,
       promptLabelPhoto:  'Seleccionar de la galería',
-      promptLabelPicture:'Tomar foto',
+      promptLabelPicture: 'Tomar foto',
     });
     if (image && image.base64String && this.selectedFiles.length<3) {
       
-        const byteCharacters = atob(image.base64String);
-        const byteNumbers = new Array(byteCharacters.length);
+      const byteCharacters = atob(image.base64String);
+      const byteNumbers = new Array(byteCharacters.length);
+  
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+  
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Puedes ajustar el tipo según el formato de tu imagen
+      let im =new File([blob], "prueba", { type: 'image/jpeg' });
+      this.selectedFiles.push(im); 
     
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-    
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Puedes ajustar el tipo según el formato de tu imagen
-        let im =new File([blob], "prueba", { type: 'image/jpeg' });
-        this.selectedFiles.push(im); 
+      const currentValue = this.incidencia.get('evidencia').value || [];
+      this.incidencia.get('evidencia').setValue([...currentValue, im]);
 
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          this.imagenesSeleccionadas.push({ itemImageSrc: e.target.result });
-        };
-        setTimeout(() => {
-          this.mostrargale=true;
-        }, 1000);
-        reader.readAsDataURL(im);
-        this.load_carrusel=true;
+    
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagenesSeleccionadas.push({ itemImageSrc: e.target.result });
+      };
+      setTimeout(() => {
+        this.mostrargale=true;
+      }, 1000);
+      reader.readAsDataURL(im);
+      this.load_carrusel=true;
         
       this.upload=false;
       if(this.selectedFiles.length==2){
@@ -264,6 +290,9 @@ export class EditIncidentesDenunciaComponent implements OnInit {
 
     for(let file of event.files) {
       this.selectedFiles.push(file);
+      const currentValue = this.incidencia.get('evidencia').value || [];
+      this.incidencia.get('evidencia').setValue([...currentValue, file]);
+
       const objectURL = URL.createObjectURL(file);
       this.imagenesSeleccionadas.push({ itemImageSrc: objectURL });
     }

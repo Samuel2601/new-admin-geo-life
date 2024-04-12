@@ -150,7 +150,10 @@
                 </div>
                 <div
                     class="w-full lg:w-6 p-4 lg:p-7"
-                    *ngIf="incidencia.get('ciudadano').value?._id != id_user"
+                    *ngIf="
+                        incidencia.get('ciudadano').value?._id != id_user &&
+                        load_imagen
+                    "
                 >
                     <label htmlFor="respuesta">Imagenes de Respuesta</label>
                     <div class="mb-3" *ngIf="!isMobil() && !upload">

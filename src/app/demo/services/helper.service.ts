@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, catchError, map, throwError } from 'rxjs';
 import { AdminService } from './admin.service';
 import { FilterService } from './filter.service';
-import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { SpinnerComponent } from 'src/app/layout/spinner.component';
 import { LayersComponent } from '../components/maps/layers/layers.component';
 import * as CryptoJS from 'crypto-js';
@@ -12,6 +11,7 @@ import { StackBarriosComponent } from '../components/dashboard/stack-barrios/sta
 import { StackFichasComponent } from '../components/dashboard/stack-fichas/stack-fichas.component';
 import { StackIncidentesComponent } from '../components/dashboard/stack-incidentes/stack-incidentes.component';
 import { StackbarriofichaComponent } from '../components/dashboard/stackbarrioficha/stackbarrioficha.component';
+import { DialogService } from 'primeng/dynamicdialog';
 @Injectable({
   providedIn: 'root'
 })
@@ -49,7 +49,7 @@ export class HelperService {
 
   }
   
-  constructor(private modalService: NgbModal,private router: Router, private adminService: AdminService,private filterService:FilterService) { }
+  constructor(private dialogService: DialogService,private router: Router, private adminService: AdminService,private filterService:FilterService) { }
 
   async checkPermiso(componente: any): Promise<boolean> {
     const token = this.token();
@@ -125,24 +125,15 @@ export class HelperService {
 
   // Declara una variable para almacenar el estado del spinner
   llamadasActivas = 0;
+  spiner:any
   llamarspinner(mensaje?: string[], tiempo?: number) {
     if(this.llamadasActivas==0){
-      const mensajesPredeterminados = ['Podrías ir por café mientras', 'Estamos cargando tu página', 'Esto puede tardar unos segundos'];
-      const modalRef = this.modalService.open(SpinnerComponent, { centered: true, backdrop: 'static' });
-      modalRef.componentInstance.show = true;
-      if (mensaje) {
-        mensaje.forEach((elemento, indice) => {
-          setTimeout(() => {
-            if (modalRef.componentInstance)modalRef.componentInstance.message = elemento;
-          }, tiempo || 8000 * (indice));
-        });
-      } else {
-        mensajesPredeterminados.forEach((elemento, indice) => {
-          setTimeout(() => {
-            if (modalRef.componentInstance)modalRef.componentInstance.message = elemento;
-          }, tiempo || 8000 * (indice));
-        });
-      }
+      
+      this.spiner = this.dialogService.open(SpinnerComponent, {
+      header: 'Cargando',
+      dismissableMask: true,
+        width: '50rem',
+      });
     }
     this.llamadasActivas++;
       
@@ -155,8 +146,9 @@ export class HelperService {
     if(this.llamadasActivas==0){
       setTimeout(() => {      
         ////console.log('Cerrando');
-        this.modalService.dismissAll();
-        }, 500);
+
+        this.spiner.destroy();
+        }, 200);
     }
   }
   private mapComponent: LayersComponent | null = null;

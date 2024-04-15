@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AdminService } from 'src/app/demo/services/admin.service';
 import { HelperService } from 'src/app/demo/services/helper.service';
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit{
   nombreUsuario: string;
   fotoUsuario: string;
 
-  constructor(private router: Router,
+  constructor(private route: ActivatedRoute, private router: Router,
         public formBuilder: FormBuilder,
         private _adminService:AdminService,
         private helper: HelperService,
@@ -37,19 +37,7 @@ export class LoginComponent implements OnInit{
         public layoutService: LayoutService,
         private cookieService: CookieService
   ) {
-      this.nombreUsuario = this.cookieService.get('nombreUsuario');
-      this.fotoUsuario = this.cookieService.get('fotoUsuario');
-    }
-
-  async ngOnInit() {
-    if (this.helper.token()) {
-      this.router.navigate(["/maps"]);
-    }
-    this.setHeight();
-    window.addEventListener('resize', () => {
-      this.setHeight();
-    });
-    this.loginForm = this.formBuilder.group({
+     this.loginForm = this.formBuilder.group({
       correo: [
         '',
         [
@@ -65,6 +53,27 @@ export class LoginComponent implements OnInit{
       ]],
       save:[false]
     });
+      this.nombreUsuario = this.cookieService.get('nombreUsuario');
+    this.fotoUsuario = this.cookieService.get('fotoUsuario');
+     // Eliminar espacios en blanco del correo electrónico
+    this.loginForm.get('correo').valueChanges.subscribe(value => {
+      this.loginForm.patchValue({ correo: value.replace(/\s/g, '') }, { emitEvent: false });
+    });
+    }
+
+  async ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.loginForm.get('correo')?.setValue(params['correo']);
+      this.loginForm.get('password')?.setValue(params['password']);
+  });
+    if (this.helper.token()) {
+      this.router.navigate(["/maps"]);
+    }
+    this.setHeight();
+    window.addEventListener('resize', () => {
+      this.setHeight();
+    });
+   
   }
   setHeight(): void {
     this.height = window.innerHeight;
@@ -92,7 +101,7 @@ export class LoginComponent implements OnInit{
         user.tipo='days';
         }
         ////console.log(user);
-      this._adminService.login_admin(user).subscribe((response:any)=>{
+      this._adminService.login(user).subscribe((response:any)=>{
         if (response.token) {
          // //console.log(response.data);
           const data = response.data;

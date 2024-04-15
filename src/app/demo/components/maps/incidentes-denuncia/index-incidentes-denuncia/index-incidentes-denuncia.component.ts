@@ -346,4 +346,13 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
         return ''; // Otra opción aquí, dependiendo de lo que desees
     }
   }
+  iddelete: any = '';
+  visibledelete = false;
+  eliminarModal(row:any) {
+    this.iddelete = row._id;
+    this.visibledelete = true;
+  }
+  eliminarIncidente() {
+    console.log(this.iddelete);
+  }
 }

@@ -38,7 +38,7 @@
                         >
                             <div
                                 class="flex flex-column gap-2 mx-auto"
-                                style="min-height: 16rem; max-width: 20rem"
+                                style="min-height: 20rem; max-width: 30rem"
                             >
                                 <div
                                     class="text-center mt-3 mb-3 text-xl font-semibold"
@@ -130,7 +130,7 @@
                         >
                             <div
                                 class="flex flex-column gap-2 mx-auto"
-                                style="min-height: 16rem; max-width: 24rem"
+                                style="min-height: 20rem; max-width: 30rem"
                             >
                                 <div
                                     class="text-center mt-3 mb-3 text-xl font-semibold"
@@ -211,6 +211,92 @@
                     </p-stepperPanel>
                 </p-stepper>
             </form>
+            <div class="mt-6 text-center text-600">
+                <div
+                    *ngIf="
+                        formulario.get('cedula').invalid &&
+                        (formulario.get('cedula').dirty ||
+                            formulario.get('cedula').touched)
+                    "
+                >
+                    <p-tag severity="danger">
+                        <div class="flex align-items-center gap-2">
+                            <i class="pi pi-times text-xs"></i>
+                            <span class="text-base">{{
+                                getErrorMessage("cedula")
+                            }}</span>
+                        </div>
+                    </p-tag>
+                </div>
+
+                <div
+                    *ngIf="
+                        formulario.get('nombres').invalid &&
+                        (formulario.get('nombres').dirty ||
+                            formulario.get('nombres').touched)
+                    "
+                >
+                    <p-tag severity="danger">
+                        <div class="flex align-items-center gap-2">
+                            <i class="pi pi-times text-xs"></i>
+                            <span class="text-base">{{
+                                getErrorMessage("nombres")
+                            }}</span>
+                        </div>
+                    </p-tag>
+                </div>
+
+                <div
+                    *ngIf="
+                        formulario.get('telefono').invalid &&
+                        (formulario.get('telefono').dirty ||
+                            formulario.get('telefono').touched)
+                    "
+                >
+                    <p-tag severity="danger">
+                        <div class="flex align-items-center gap-2">
+                            <i class="pi pi-times text-xs"></i>
+                            <span class="text-base">{{
+                                getErrorMessage("telefono")
+                            }}</span>
+                        </div>
+                    </p-tag>
+                </div>
+
+                <div
+                    *ngIf="
+                        formulario.get('correo').invalid &&
+                        (formulario.get('correo').dirty ||
+                            formulario.get('correo').touched)
+                    "
+                >
+                    <p-tag severity="danger">
+                        <div class="flex align-items-center gap-2">
+                            <i class="pi pi-times text-xs"></i>
+                            <span class="text-base">{{
+                                getErrorMessage("correo")
+                            }}</span>
+                        </div>
+                    </p-tag>
+                </div>
+
+                <div
+                    *ngIf="
+                        formulario.get('password').invalid &&
+                        (formulario.get('password').dirty ||
+                            formulario.get('password').touched)
+                    "
+                >
+                    <p-tag severity="danger">
+                        <div class="flex align-items-center gap-2">
+                            <i class="pi pi-times text-xs"></i>
+                            <span class="text-base">{{
+                                getErrorMessage("password")
+                            }}</span>
+                        </div>
+                    </p-tag>
+                </div>
+            </div>
 
             <div class="mt-6 text-center text-600">
                 Ya tienes una cuenta?

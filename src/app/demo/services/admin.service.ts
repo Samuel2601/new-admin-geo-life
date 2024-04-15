@@ -12,7 +12,7 @@ export class AdminService {
 	constructor(private _http: HttpClient) {
 		this.url = GLOBAL.url+'helper/';
 	}
-	login_admin(data: any): Observable<any> {
+	login(data: any): Observable<any> {
 		let headers = new HttpHeaders().set('Content-Type', 'application/json');
 		return this._http.post(this.url + 'login_admin', data, { headers: headers });
 	}

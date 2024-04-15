@@ -302,4 +302,13 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
        modalRef.close();
       });
   }
+  iddelete: any = '';
+  visibledelete = false;
+  eliminarModal(row:any) {
+    this.iddelete = row._id;
+    this.visibledelete = true;
+  }
+  eliminarIncidente() {
+    console.log(this.iddelete);
+  }
 }

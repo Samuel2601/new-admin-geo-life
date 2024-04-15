@@ -301,8 +301,8 @@ export class LayersComponent implements OnInit{
     speedDial.style.width = '3rem';
     speedDial.style.height = '3rem';
     speedDial.style['border-radius'] = '50%';
-    //speedDial.style.color = '#f90017';
-    //speedDial.style.background = 'var(--surface-0)';
+    speedDial.style.color = '#f90017';
+    speedDial.style.background = 'var(--surface-0)';
 
     
     speedDial.addEventListener('click', () => {

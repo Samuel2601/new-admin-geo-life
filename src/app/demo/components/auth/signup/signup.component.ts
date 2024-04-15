@@ -8,6 +8,7 @@ import { CreateService } from 'src/app/demo/services/create.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { PoliticasComponent } from '../politicas/politicas.component';
 import { App } from '@capacitor/app';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -16,16 +17,46 @@ import { App } from '@capacitor/app';
   
 })
 export class SignupComponent {
-  constructor(private formBuilder: FormBuilder, private admin: AdminService, private messageService: MessageService,private helper:HelperService,private create:CreateService,private dialogService: DialogService) {
+        // Mensajes de error personalizados
+  validationMessages = {
+    cedula: [
+      { type: 'required', message: 'La cédula es requerida.' },
+      { type: 'minlength', message: 'La cédula debe tener 10 caracteres.' },
+      { type: 'maxlength', message: 'La cédula debe tener 10 caracteres.' },
+      { type: 'pattern', message: 'La cédula debe contener solo números.' }
+    ],
+    nombres: [
+      { type: 'required', message: 'El nombre es requerido.' },
+      { type: 'pattern', message: 'El nombre debe contener solo letras.' }
+    ],
+    telefono: [
+      { type: 'required', message: 'El teléfono es requerido.' },
+      { type: 'minlength', message: 'El teléfono debe tener 10 caracteres.' },
+      { type: 'maxlength', message: 'El teléfono debe tener 10 caracteres.' },
+      { type: 'pattern', message: 'El teléfono debe contener solo números.' }
+    ],
+    correo: [
+      { type: 'required', message: 'El correo electrónico es requerido.' },
+      { type: 'email', message: 'Ingrese un correo electrónico válido.' }
+    ],
+    password: [
+      { type: 'required', message: 'La contraseña es requerida.' },
+      { type: 'minlength', message: 'La contraseña debe tener al menos 4 caracteres.' }
+    ]
+  };
+
+  constructor(private router: Router,private formBuilder: FormBuilder, private admin: AdminService, private messageService: MessageService,private helper:HelperService,private create:CreateService,private dialogService: DialogService) {
     this.formulario = this.formBuilder.group({
-      cedula: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-      nombres: ['', Validators.required],
-      telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+      cedula: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]+$')]],
+      nombres: ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
+      telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]+$')]],
       correo: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      checked:[false]
-      //foto: ['']
+      password: ['', [Validators.required, Validators.minLength(4)]],
+      checked: [false]
     });
+
+
+
      this.formulario.get('cedula')?.valueChanges.subscribe((value:any) => {
       if (this.formulario.get('cedula')?.valid) {
         this.consultar(value);
@@ -37,6 +68,24 @@ export class SignupComponent {
       }
     });
   }
+getErrorMessage(fieldName: string): string {
+  const field = this.formulario.get(fieldName);
+  if (!field || !field.errors) return '';
+
+  const errors = [];
+  for (const errorType in field.errors) {
+    if (field.errors.hasOwnProperty(errorType)) {
+      const error = this.validationMessages[fieldName].find(msg => msg.type === errorType);
+      if (error) {
+        errors.push(error.message);
+      }
+    }
+  }
+
+  return errors.join('\n');
+}
+
+  
   ver() {
     console.log(this.formulario.get('checked'));
   }
@@ -54,6 +103,13 @@ export class SignupComponent {
               this.formulario.get('nombres')?.disable()
             }
         }, 1000);   
+      }, error => {
+        this.visible = false;
+        
+        this.formulario.get('nombres')?.setValue('');
+        this.formulario.get('nombres')?.enable();
+        this.messageService.add({ severity: 'error', summary: ('(' + error.status + ')').toString(), detail: error.error.message+': '+this.formulario.get('cedula')?.value|| 'Sin conexión' });
+        this.formulario.get('cedula')?.setValue('');
     });
   }
   llamarmodal(){
@@ -87,6 +143,17 @@ export class SignupComponent {
       this.create.registrarUsuario(this.formulario.value).subscribe(response => {
         console.log(response);
         this.messageService.add({ severity: 'success', summary: 'Excelente', detail: 'Registrado Correctamente' });
+        setTimeout(() => {          
+        // Redirigir a la página de inicio de sesión con los datos de correo y contraseña
+        this.router.navigate(["/auth/login"], {
+          queryParams: {
+            correo: this.formulario.get('correo').value,
+            password: this.formulario.get('password').value
+          }
+        });
+      }, 1000);
+
+
       }, error => {
          this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
       });

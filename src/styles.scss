@@ -35,6 +35,18 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 1.5);
   }
 
+.bi-eye-slash-custom {
+    content: url('assets/icon/eye-slash.svg');
+    path:first-child {
+            fill: blue;
+            /* Cambia el color del primer path a azul */
+        }
+    /* Cambia el color del SVG */
+}
+.bi-wifi-off-custom {
+    content: url('assets/icon/wifi-off.svg');
+    color: var(--primary-color);
+}
 $gutter: 1rem; //for primeflex grid system
 @import "assets/layout/styles/layout/layout.scss";
 

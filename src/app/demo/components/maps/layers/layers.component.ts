@@ -150,7 +150,7 @@ export class LayersComponent implements OnInit{
       this.router.navigate(['/notfound']);
     }
     this.updateItem();
-    //await this.getWFSgeojson(this.urlgeoser);
+    await this.getWFSgeojson(this.urlgeoser);
     this.helperService.setMapComponent(this); 
     this.initmap();
   }
@@ -186,7 +186,7 @@ export class LayersComponent implements OnInit{
         },
       },
       {
-        icon: this.capaActiva? 'pi pi-eye':'bi bi-eye-slash',
+        icon: this.capaActiva? 'pi pi-eye':'bi bi-eye-slash-custom',
         tooltipOptions: {
           tooltipLabel:'Barrios',
           tooltipPosition:'right',
@@ -197,7 +197,7 @@ export class LayersComponent implements OnInit{
         },
       },
       {
-        icon: !this.capaActivaWIFI? 'bi bi-wifi':'bi bi-wifi-off',
+        icon: !this.capaActivaWIFI? 'bi bi-wifi':'bi bi-wifi-off-custom',
         tooltipOptions: {
           tooltipLabel:'Puntos Wifi',
           tooltipPosition:'right',

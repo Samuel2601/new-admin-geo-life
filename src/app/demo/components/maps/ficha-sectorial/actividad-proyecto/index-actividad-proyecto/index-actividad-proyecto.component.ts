@@ -4,7 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateActividadProyectoComponent } from '../create-actividad-proyecto/create-actividad-proyecto.component';
 import { ListService } from 'src/app/demo/services/list.service';
 import { HelperService } from 'src/app/demo/services/helper.service';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { App } from '@capacitor/app';
 @Component({
   selector: 'app-index-actividad-proyecto',
@@ -15,7 +15,7 @@ export class IndexActividadProyectoComponent implements OnInit {
   model:boolean=true;
   actividadPro:any=[];
 
-  constructor(private modalService: NgbModal,private router: Router,private listService:ListService,private helper:HelperService,private dialogService: DialogService){
+  constructor(private ref: DynamicDialogRef,private modalService: NgbModal,private router: Router,private listService:ListService,private helper:HelperService,private dialogService: DialogService){
 
   }
   cerrarModal() {
@@ -50,12 +50,12 @@ export class IndexActividadProyectoComponent implements OnInit {
     return this.helper.isMobil();
   }
   abrirModal(){
-    const modalRef=this.dialogService.open(CreateActividadProyectoComponent,  {
+    this.ref=this.dialogService.open(CreateActividadProyectoComponent,  {
         header: 'Nueva Actividad',
         width: this.isMobil() ? '100%' : '50%',
     });
     App.addListener('backButton', data => {
-       modalRef.close();
+       this.ref.close();
     });
   }
 }

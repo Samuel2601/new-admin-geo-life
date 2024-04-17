@@ -7,6 +7,7 @@ import { HelperService } from 'src/app/demo/services/helper.service';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { CookieService } from 'ngx-cookie-service';
 import { GLOBAL } from 'src/app/demo/services/GLOBAL';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
@@ -18,7 +19,7 @@ import { GLOBAL } from 'src/app/demo/services/GLOBAL';
             color: var(--primary-color) !important;
         }
     `],
-    providers: [MessageService]
+    providers: [MessageService,DynamicDialogRef]
 })
 export class LoginComponent implements OnInit{
   public loginForm: FormGroup|any;
@@ -63,9 +64,12 @@ export class LoginComponent implements OnInit{
 
   async ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      this.loginForm.get('correo')?.setValue(params['correo']);
-      this.loginForm.get('password')?.setValue(params['password']);
-  });
+      if (params && params['correo'] && params['password']) {
+        this.loginForm.get('correo')?.setValue(params['correo']);
+        this.loginForm.get('password')?.setValue(params['password']);
+      }
+    });
+
     if (this.helper.token()) {
       this.router.navigate(["/maps"]);
     }

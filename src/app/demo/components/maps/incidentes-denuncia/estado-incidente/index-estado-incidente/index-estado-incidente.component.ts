@@ -5,7 +5,7 @@ import { ListService } from 'src/app/demo/services/list.service';
 import { CreateEstadoIncidenteComponent } from '../create-estado-incidente/create-estado-incidente.component';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { MessageService } from 'primeng/api';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { App } from '@capacitor/app';
 
 @Component({
@@ -18,7 +18,7 @@ export class IndexEstadoIncidenteComponent implements OnInit {
   incidentesDenuncias: any[] = [];
   model: boolean=true;
   load_lista:boolean=true;
-  constructor(private fb: FormBuilder,private listarService:ListService,private router: Router,private helper:HelperService,private messageService: MessageService,private dialogService: DialogService){
+  constructor(private ref: DynamicDialogRef,private fb: FormBuilder,private listarService:ListService,private router: Router,private helper:HelperService,private messageService: MessageService,private dialogService: DialogService){
 
   }
   check: any = {};
@@ -58,12 +58,12 @@ export class IndexEstadoIncidenteComponent implements OnInit {
     return this.helper.isMobil();
   }
   abrirSegundoModal() {
-     const modalRef =this.dialogService.open(CreateEstadoIncidenteComponent, {
+     this.ref =this.dialogService.open(CreateEstadoIncidenteComponent, {
           header: '',
           width: this.isMobil() ? '100%' : '70%',
      });
     App.addListener('backButton', data => {
-       modalRef.close();
+       this.ref.close();
       });
   }
 

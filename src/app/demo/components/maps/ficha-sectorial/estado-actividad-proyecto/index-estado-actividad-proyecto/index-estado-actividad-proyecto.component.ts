@@ -4,7 +4,7 @@ import { CreateEstadoActividadProyectoComponent } from '../create-estado-activid
 import { Router } from '@angular/router';
 import { ListService } from 'src/app/demo/services/list.service';
 import { HelperService } from 'src/app/demo/services/helper.service';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { App } from '@capacitor/app';
 
 @Component({
@@ -15,7 +15,7 @@ import { App } from '@capacitor/app';
 export class IndexEstadoActividadProyectoComponent implements OnInit{
   actividadEstado:any=[];
   model:boolean=true;
-  constructor(private dialogService: DialogService,private router: Router,private listService:ListService,private helper:HelperService){
+  constructor(private ref: DynamicDialogRef,private dialogService: DialogService,private router: Router,private listService:ListService,private helper:HelperService){
    
   }
   check:any={};
@@ -48,12 +48,12 @@ export class IndexEstadoActividadProyectoComponent implements OnInit{
     return this.helper.isMobil();
   }
   abrirModal(){
-    const modalRef= this.dialogService.open(CreateEstadoActividadProyectoComponent,  {
+    this.ref= this.dialogService.open(CreateEstadoActividadProyectoComponent,  {
         header: 'Nuevo Estado de Actividad Proyecto',
         width: this.isMobil() ? '100%' : '50%',
     });
     App.addListener('backButton', data => {
-       modalRef.close();
+       this.ref.close();
       });
   }
 }

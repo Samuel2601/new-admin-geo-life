@@ -130,7 +130,7 @@ export class ListFichaComponent implements OnInit{
   openModalimagen(url: any) {
     this.imagenModal = url;
     this.imagenAMostrar = this.imagenModal[0];
-    //const modalRef = this.modalService.open(this.modalContent, { size: 'lg' });
+    //const this.ref = this.modalService.open(this.modalContent, { size: 'lg' });
   }
   imagenAMostrar: any;
     isMobil() {
@@ -163,7 +163,7 @@ export class ListFichaComponent implements OnInit{
      App.addListener('backButton', data => {
        this.displayBasic = false;
       });
-    //const modalRef = this.dialogService.open(this.modalContent, { size: 'lg' });
+    //const this.ref = this.dialogService.open(this.modalContent, { size: 'lg' });
   }
   opendialog(incidente:any) {
     this.visible = true;

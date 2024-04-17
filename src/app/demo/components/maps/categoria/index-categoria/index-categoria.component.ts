@@ -27,7 +27,7 @@ export class IndexCategoriaComponent implements OnInit{
   constcategorias=[];
   clonedProducts: { [s: string]: any } = {};
   token = this.helperservice.token();
-  constructor(private listService: ListService,private router: Router, private updateservice:UpdateService, private helperservice:HelperService,private deleteService:DeleteService,private messageService: MessageService,private dialogService: DialogService) { }
+  constructor(private ref: DynamicDialogRef,private listService: ListService,private router: Router, private updateservice:UpdateService, private helperservice:HelperService,private deleteService:DeleteService,private messageService: MessageService,private dialogService: DialogService) { }
   cols!: Column[];
   check: any = {};
   async ngOnInit() {
@@ -111,13 +111,13 @@ export class IndexCategoriaComponent implements OnInit{
         //console.log(id);
       if (cat) {
         if (this.check.EditCategoriaComponent) {
-             const modalRef = this.dialogService.open(EditCategoriaComponent, {
+             this.ref = this.dialogService.open(EditCategoriaComponent, {
             header: 'Editar Categoría',
             width: this.isMobil()? '100%':'70%',
             data: { id: id },
             });  
           App.addListener('backButton', data => {
-            modalRef.close();
+            this.ref.close();
           });
         } else {
           this.messageService.add({severity: 'error', summary: 'Lo sentimos', detail: 'No tiene permisos para esto'});
@@ -125,13 +125,13 @@ export class IndexCategoriaComponent implements OnInit{
            
       } else {
         if (this.check.EditCategoriaComponent) {
-            const modalRef = this.dialogService.open(EditSubcategoriaComponent, {
+            this.ref = this.dialogService.open(EditSubcategoriaComponent, {
             header: 'Editar Subcategoría',
             width: this.isMobil()? '100%':'70%',
             data: { id: id },
            });  
           App.addListener('backButton', data => {
-            modalRef.close();
+            this.ref.close();
           });
         } else {
           this.messageService.add({severity: 'error', summary: 'Lo sentimos', detail: 'No tiene permisos para esto'});
@@ -161,7 +161,7 @@ export class IndexCategoriaComponent implements OnInit{
     }, 200);
        
        
-        //const modalRef = this.dialogService.open(this.Confirmar, { centered: true,size: 'lg'  }); 
+        //const this.ref = this.dialogService.open(this.Confirmar, { centered: true,size: 'lg'  }); 
     }
     respaldo!:any;
     eliminarCategoria() {

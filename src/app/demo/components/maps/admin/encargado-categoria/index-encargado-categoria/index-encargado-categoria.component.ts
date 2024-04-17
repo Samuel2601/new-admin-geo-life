@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
 import { CreateEncargadoCategoriaComponent } from '../create-encargado-categoria/create-encargado-categoria.component';
@@ -14,7 +14,7 @@ export class IndexEncargadoCategoriaComponent {
   encargadosCategoria:any=[];
   clonedProducts: { [s: string]: any } = {};
 
-  constructor(private listService: ListService,private router: Router,private helper:HelperService,private dialogService: DialogService) { }
+  constructor(private ref: DynamicDialogRef,private listService: ListService,private router: Router,private helper:HelperService,private dialogService: DialogService) { }
 
   ngOnInit(): void {
     this.listarCategorias();
@@ -39,12 +39,12 @@ token = this.helper.token();
     return this.helper.isMobil();
   }
   newencargado() {
-     const modalRef=this.dialogService.open(CreateEncargadoCategoriaComponent, {
+     this.ref=this.dialogService.open(CreateEncargadoCategoriaComponent, {
           header: 'Nueva Encargado de Categoria',
           width: this.isMobil() ? '100%' : '40%',
     });
     App.addListener('backButton', data => {
-       modalRef.close();
+       this.ref.close();
       });
   }
   getNombreUsuario(idUsuario: string): string {

@@ -27,7 +27,7 @@ export class IndexUsuarioComponent implements OnInit{
       { label: 'Cédula', value: 'cedula' },
       { label: 'Rol', value: 'rol_user' }
   ]
-  constructor(private router: Router,private listService:ListService,private helperservice:HelperService,private dialogService: DialogService){
+  constructor(private ref: DynamicDialogRef,private router: Router,private listService:ListService,private helperservice:HelperService,private dialogService: DialogService){
   
   }
   ngOnInit() {  
@@ -121,13 +121,13 @@ export class IndexUsuarioComponent implements OnInit{
     return this.helperservice.isMobil();
   }
   editrow(id:any){
-    const modalRef = this.dialogService.open(EditUsuarioComponent, {
+    this.ref = this.dialogService.open(EditUsuarioComponent, {
       header: 'Editar Usuario',
       width: this.isMobil()? '100%':'70%',
       data: { id: id },
     });
      App.addListener('backButton', data => {
-       modalRef.close();
+       this.ref.close();
       });
   }
   openModal(content: any) {

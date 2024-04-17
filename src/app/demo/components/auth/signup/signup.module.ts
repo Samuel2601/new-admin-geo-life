@@ -34,7 +34,7 @@ import { DividerModule } from 'primeng/divider';
 import { DockModule } from 'primeng/dock';
 import { DragDropModule } from 'primeng/dragdrop';
 import { DropdownModule } from 'primeng/dropdown';
-import { DialogService, DynamicDialogConfig, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { EditorModule } from 'primeng/editor';
 import { FieldsetModule } from 'primeng/fieldset';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -215,6 +215,6 @@ AccordionModule,
     FloatLabelModule,
     ],
     declarations: [SignupComponent],
-    providers: [MessageService,DialogService ]
+    providers: [MessageService,DialogService,DynamicDialogRef ]
 })
 export class SignupModule { }

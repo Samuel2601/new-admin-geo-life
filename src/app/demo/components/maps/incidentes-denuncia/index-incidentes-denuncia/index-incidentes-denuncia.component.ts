@@ -8,7 +8,7 @@ import { HelperService } from 'src/app/demo/services/helper.service';
 import { Capacitor } from '@capacitor/core';
 import { Table } from 'primeng/table';
 import { MessageService } from 'primeng/api';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { App } from '@capacitor/app';
 import { AdminService } from 'src/app/demo/services/admin.service';
 import { filter } from 'rxjs/operators';
@@ -24,6 +24,7 @@ import { DeleteService } from 'src/app/demo/services/delete.service';
 export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   public url = GLOBAL.url;
   constructor(
+    private ref: DynamicDialogRef,
     private router: Router, private listService: ListService,
     private modalService: NgbModal, private helperservice: HelperService,
     private messageService: MessageService, private dialogService: DialogService,
@@ -226,30 +227,30 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   option: any;
   balanceFrozen: boolean = true;
   llamarmodal(){
-    const modalRef=this.dialogService.open(IndexEstadoIncidenteComponent, {
+    this.ref=this.dialogService.open(IndexEstadoIncidenteComponent, {
       header: '',
       dismissableMask: true,
           width: this.isMobil() ? '100%' : '70%',
     });
     App.addListener('backButton', data => {
-       modalRef.close();
+       this.ref.close();
       });
   }
   editar(){
-    const modalRef=this.dialogService.open(EditIncidentesDenunciaComponent, {
+    this.ref=this.dialogService.open(EditIncidentesDenunciaComponent, {
       header: 'Editar Incidente',
       dismissableMask: true,
       width: this.isMobil() ? '100%' : '70%',
       data:{id:this.option._id}
     });
-    modalRef.onClose.subscribe((data:any) => {
+    this.ref.onClose.subscribe((data:any) => {
             if (data) {
               this.messageService.add({ severity: 'info', summary: 'Actualizando', detail: 'Recargando pagina' });
               this.listarIncidentesDenuncias();
             }
         });
     App.addListener('backButton', data => {
-       modalRef.close();
+       this.ref.close();
       });
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -277,7 +278,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   openModalimagen(url: any) {
     this.imagenModal = url;
     this.imagenAMostrar = this.imagenModal[0];
-    //const modalRef = this.modalService.open(this.modalContent, { size: 'lg' });
+    //const this.ref = this.modalService.open(this.modalContent, { size: 'lg' });
   }
   imagenAMostrar:any;
 
@@ -363,7 +364,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
     if (this.iddelete) {
        this.deleteser.eliminarIncidenteDenuncia(this.token,this.iddelete).subscribe(response => {
         if (response) {
-          this.messageService.add({ severity: 'info', summary: 'Actualizando', detail: response.message });
+          this.messageService.add({ severity: 'success', summary: 'Eliminado', detail: response.message });
           setTimeout(() => {
             this.listarIncidentesDenuncias();
             this.visible = false;

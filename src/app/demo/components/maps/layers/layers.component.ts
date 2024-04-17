@@ -931,8 +931,8 @@ export class LayersComponent implements OnInit{
    this.controlFullScreem();
     const data = this.opcionb; // JSON que quieres enviar
     this.modalService.dismissAll();
-    //const modalRef = this.modalService.open(CreateFichaSectorialComponent, { centered: true });
-    //modalRef.componentInstance.data = data; 
+    //const this.ref = this.modalService.open(CreateFichaSectorialComponent, { centered: true });
+    //this.ref.componentInstance.data = data; 
 
     this.ref =  this.dialogService.open(CreateFichaSectorialComponent, {
           header: '',
@@ -950,9 +950,9 @@ export class LayersComponent implements OnInit{
        this.controlFullScreem();
       const data = this.opcionb; // JSON que quieres enviar
       /*this.modalService.dismissAll();    
-      const modalRef = this.modalService.open(CreateIncidentesDenunciaComponent, { centered: true });
-      modalRef.componentInstance.data = data; 
-      modalRef.componentInstance.direccion = { latitud: this.latitud, longitud: this.longitud };  
+      const this.ref = this.modalService.open(CreateIncidentesDenunciaComponent, { centered: true });
+      this.ref.componentInstance.data = data; 
+      this.ref.componentInstance.direccion = { latitud: this.latitud, longitud: this.longitud };  
       */
      this.ref =  this.dialogService.open(CreateIncidentesDenunciaComponent, {
           header: '',

@@ -54,7 +54,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   }
   load_lista=true;
   fichasectorial:any=[];
-  constructor(private router: Router,private listService:ListService,private helperservice:HelperService,private messageService: MessageService,private dialogService: DialogService,private admin:AdminService){
+  constructor(private ref: DynamicDialogRef,private router: Router,private listService:ListService,private helperservice:HelperService,private messageService: MessageService,private dialogService: DialogService,private admin:AdminService){
   
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -152,22 +152,22 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   }
 
   llamarmodal2() {
-      const modalRef = this.dialogService.open(IndexActividadProyectoComponent, {
+      this.ref = this.dialogService.open(IndexActividadProyectoComponent, {
           header: '',
           width: this.isMobil() ? '100%' : '70%',
       });
     App.addListener('backButton', data => {
-       modalRef.close();
+       this.ref.close();
       });
   }
 
   llamarmodal() {
-      const modalRef = this.dialogService.open(IndexEstadoActividadProyectoComponent, {
+      this.ref = this.dialogService.open(IndexEstadoActividadProyectoComponent, {
           header: '',
           width: this.isMobil() ? '100%' : '70%',
       });
     App.addListener('backButton', data => {
-       modalRef.close();
+       this.ref.close();
       });
   }
 
@@ -246,7 +246,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
     this.imagenModal = url;
      //console.log('imagenModal',this.imagenModal);
     this.imagenAMostrar = this.imagenModal[0];
-    //const modalRef = this.dialogService.open(this.modalContent, { size: 'lg' });
+    //const this.ref = this.dialogService.open(this.modalContent, { size: 'lg' });
   }
   @Output() imagenModalChange: EventEmitter<any> = new EventEmitter<any>();
   updateImagenModal(value: any) {
@@ -257,7 +257,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   openimagen(url: any) {
     this.imagenModal = url;
     this.imagenAMostrar = this.imagenModal[0];
-    //const modalRef = this.dialogService.open(this.modalContent, { size: 'lg' });
+    //const this.ref = this.dialogService.open(this.modalContent, { size: 'lg' });
   }
   imagenAMostrar:any;
   mostrarImagen(index: number) {
@@ -293,13 +293,13 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
       }
   ];
   editingrow(id:any) {
-    const modalRef = this.dialogService.open(EditFichaSectorialComponent, {
+    this.ref = this.dialogService.open(EditFichaSectorialComponent, {
           header: 'Editar Ficha Sectorial',
       width: this.isMobil() ? '100%' : '70%',
           data:{id:id}
       });
     App.addListener('backButton', data => {
-       modalRef.close();
+       this.ref.close();
       });
   }
   iddelete: any = '';

@@ -5,7 +5,7 @@ import { MessageService } from 'primeng/api';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { CreateService } from 'src/app/demo/services/create.service';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
 import { PoliticasComponent } from '../politicas/politicas.component';
 import { App } from '@capacitor/app';
 import { Router } from '@angular/router';
@@ -45,7 +45,9 @@ export class SignupComponent {
     ]
   };
 
-  constructor(private router: Router,private formBuilder: FormBuilder, private admin: AdminService, private messageService: MessageService,private helper:HelperService,private create:CreateService,private dialogService: DialogService) {
+  constructor(private router: Router, private formBuilder: FormBuilder, private admin: AdminService,
+    private messageService: MessageService, private helper: HelperService, private create: CreateService,
+    private dialogService: DialogService, private ref: DynamicDialogRef,) {
     this.formulario = this.formBuilder.group({
       cedula: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]+$')]],
       nombres: ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
@@ -113,13 +115,13 @@ getErrorMessage(fieldName: string): string {
     });
   }
   llamarmodal(){
-    const modalRef=this.dialogService.open(PoliticasComponent, {
+    this.ref=this.dialogService.open(PoliticasComponent, {
       header: 'Politicas y Privacidad de Esmeraldas la Bella',
       dismissableMask: true,
           width: this.isMobil() ? '100%' : '70%',
     });
     App.addListener('backButton', data => {
-       modalRef.close();
+       this.ref.close();
       });
   }
   consultarcorreo(correo: any) {

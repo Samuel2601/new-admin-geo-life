@@ -150,9 +150,10 @@ export class LayersComponent implements OnInit{
       this.router.navigate(['/notfound']);
     }
     this.updateItem();
-    await this.getWFSgeojson(this.urlgeoser);
+    
     this.helperService.setMapComponent(this); 
     this.initmap();
+    await this.getWFSgeojson(this.urlgeoser);
   }
   //CARGA DE TEMPLATE
   updateItem(){

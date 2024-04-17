@@ -14,7 +14,7 @@ export class AdminService {
 	}
 	login(data: any): Observable<any> {
 		let headers = new HttpHeaders().set('Content-Type', 'application/json');
-		return this._http.post(this.url + 'login', data, { headers: headers });
+		return this._http.post(this.url + 'login_admin', data, { headers: headers });
 	}
 	forgotpassword(data: any): Observable<any> {
 		let headers = new HttpHeaders().set('Content-Type', 'application/json');

@@ -14,6 +14,7 @@ import { AdminService } from 'src/app/demo/services/admin.service';
 import { filter } from 'rxjs/operators';
 import { helpers } from '@turf/turf';
 import { EditIncidentesDenunciaComponent } from '../edit-incidentes-denuncia/edit-incidentes-denuncia.component';
+import { DeleteService } from 'src/app/demo/services/delete.service';
 @Component({
   selector: 'app-index-incidentes-denuncia',
   templateUrl: './index-incidentes-denuncia.component.html',
@@ -22,7 +23,11 @@ import { EditIncidentesDenunciaComponent } from '../edit-incidentes-denuncia/edi
 })
 export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   public url = GLOBAL.url;
-  constructor(private router: Router,private listService: ListService,private modalService: NgbModal,private helperservice:HelperService,private messageService: MessageService,private dialogService: DialogService,private admin:AdminService) { }
+  constructor(
+    private router: Router, private listService: ListService,
+    private modalService: NgbModal, private helperservice: HelperService,
+    private messageService: MessageService, private dialogService: DialogService,
+    private admin: AdminService, private deleteser:DeleteService) { }
   
   load_lista=true;
 
@@ -348,11 +353,28 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   }
   iddelete: any = '';
   visibledelete = false;
+
   eliminarModal(row:any) {
     this.iddelete = row._id;
     this.visibledelete = true;
   }
+
   eliminarIncidente() {
-    console.log(this.iddelete);
+    if (this.iddelete) {
+       this.deleteser.eliminarIncidenteDenuncia(this.token,this.iddelete).subscribe(response => {
+        if (response) {
+          this.messageService.add({ severity: 'info', summary: 'Actualizando', detail: response.message });
+          setTimeout(() => {
+            this.listarIncidentesDenuncias();
+            this.visible = false;
+            this.option = null;
+            this.iddelete = null;
+          }, 1500);
+        }
+      }, error => {
+        this.messageService.add({ severity: 'error', summary: ('(' + error.status + ')').toString(), detail: error.error.message || 'Sin conexión' });
+      });
+    }   
   }
+
 }

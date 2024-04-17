@@ -58,8 +58,11 @@ export class LoginComponent implements OnInit{
     this.fotoUsuario = this.cookieService.get('fotoUsuario');
      // Eliminar espacios en blanco del correo electrónico
     this.loginForm.get('correo').valueChanges.subscribe(value => {
-      this.loginForm.patchValue({ correo: value.replace(/\s/g, '') }, { emitEvent: false });
+      const correoSinEspacios = value.replace(/\s/g, '');
+      const correoMinusculas = correoSinEspacios.toLowerCase();
+      this.loginForm.patchValue({ correo: correoMinusculas }, { emitEvent: false });
     });
+
     }
 
   async ngOnInit() {

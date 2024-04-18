@@ -399,4 +399,15 @@ selectedFiles: File[] = [];
   desactivarHover() {
     this.hover = false;
   }
+  getTextareaCols(): number {
+    // Obtener el tamaño del contenedor
+    const containerWidth = document.getElementById('descripcion').clientWidth;
+
+    // Calcular el número aproximado de columnas basado en el ancho del contenedor y el tamaño promedio de un carácter
+    const averageCharWidth = 8; // Puedes ajustar este valor según el tipo de fuente y tamaño
+    const cols = Math.floor(containerWidth / averageCharWidth);
+
+    return cols;
+}
+
 }

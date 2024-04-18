@@ -71,6 +71,15 @@
                 </p-autoComplete>
                 <label for="float-label">Buscar Barrio</label>
             </span>
+            <div style="display: none">
+                <p-button
+                    id="fotoButton"
+                    icon="pi bi-camera2-custom"
+                    [raised]="true"
+                    [outlined]="true"
+                    label="Añadir nueva Foto"
+                ></p-button>
+            </div>
             <!--
 
             <p-button
@@ -137,3 +146,43 @@
     style="z-index: inherit"
 >
 </app-index-incidentes-denuncia>
+<div style="display: none">
+    <p-card
+        id="content"
+        *ngIf="feature_img"
+        [header]="feature_img.properties.nombre"
+        subheader="Información de barrio:"
+    >
+        <ng-template pTemplate="header">
+            <img
+                [src]="url_imag"
+                alt="Descripción de la imagen"
+                class="imagen-popup"
+                style="width: 100%; height: 150px; object-fit: cover"
+            />
+        </ng-template>
+
+        <ng-template
+            pTemplate="footer"
+            *ngIf="this.check.CreateDireccionGeoComponent"
+        >
+            <p-button
+                id="fotoButton"
+                icon="pi bi-camera2-custom"
+                [raised]="true"
+                [outlined]="true"
+                label="Añadir nueva Foto"
+                (click)="this.modalcreatedireccion(feature_img)"
+            ></p-button>
+        </ng-template>
+    </p-card>
+</div>
+
+<!--
+ <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed
+        consequuntur error repudiandae numquam deserunt quisquam repellat libero
+        asperiores earum nam nobis, culpa ratione quam perferendis esse,
+        cupiditate neque quas!
+    </p>
+    -->

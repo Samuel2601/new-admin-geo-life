@@ -18,6 +18,7 @@
             <div class="mb-3">
                 <h4 for="categoria" class="form-label">Categoría</h4>
                 <p-dropdown
+                    placeholder="Selecciona una Categoría"
                     appendTo="body"
                     id="categoria"
                     [options]="categorias"
@@ -31,6 +32,7 @@
             <div class="mb-3" *ngIf="subcategorias.length > 0">
                 <h4 for="subcategoria" class="form-label">Subcategoría</h4>
                 <p-dropdown
+                    placeholder="Selecciona una SubCategoría"
                     appendTo="body"
                     id="subcategoria"
                     name="subcategoria"
@@ -44,12 +46,12 @@
             <div class="mb-3">
                 <h4 for="descripcion" class="form-label">Descripción</h4>
                 <textarea
-                    rows="5"
-                    cols="30"
                     pInputTextarea
                     id="descripcion"
                     name="descripcion"
                     class="form-control"
+                    cols="50"
+                    rows="10"
                     [(ngModel)]="nuevoIncidenteDenuncia.descripcion"
                     required
                 ></textarea>
@@ -103,15 +105,17 @@
             </div>
             <div class="mb-3" *ngIf="isMobil()">
                 <h4 for="formFileMultiple" class="form-label">Añade fotos</h4>
+
                 <p-button
                     *ngIf="imagenesSeleccionadas.length < 3 || upload"
-                    class="btn btn-primary"
-                    type="button"
-                    severity="help"
+                    id="fotoButton"
+                    icon="pi bi-camera2-custom"
+                    [raised]="true"
+                    [outlined]="true"
+                    label="Añadir nueva Foto"
                     (click)="tomarFotoYEnviar($event)"
-                >
-                    <i class="bi bi-camera-fill"></i>
-                </p-button>
+                ></p-button>
+
                 <p-button
                     *ngIf="imagenesSeleccionadas.length > 0"
                     label=""

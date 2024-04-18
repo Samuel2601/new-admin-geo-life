@@ -491,7 +491,7 @@ export class LayersComponent implements OnInit{
     const marker = new google.maps.Marker({
       position,
       map,
-      label:tipo,
+      title:tipo,
     });
     // Cerrar el popup actualmente abierto
     if (this.openInfoWindow) {
@@ -551,7 +551,7 @@ export class LayersComponent implements OnInit{
 // Deletes all markers in the array by removing references to them.
   deleteMarkers(tipo:any): void {
     this.hideMarkers();
-    this.markers = this.markers.filter(marker => marker.getLabel() !== tipo);
+    this.markers = this.markers.filter(marker => marker.getTitle() !== tipo);
   }
 
   
@@ -703,8 +703,10 @@ export class LayersComponent implements OnInit{
     }
   }
   popupsMostrados: { [key: string]: boolean } = {};
-
+  feature_img: any;
+  url_imag: string = '';
   levantarpopup(polygon: any, feature: any) {
+
     //this.canpopup = true;
     const featureId = feature.id;
     if(this.capaActiva){
@@ -721,63 +723,36 @@ export class LayersComponent implements OnInit{
             this.openInfoWindow.close();
         }
         const contentElement = document.createElement('div');
-        const button = document.createElement('button');
+        
         
        
-
-        // Crear el contenido del InfoWindow
-        
-        contentElement.innerHTML = feature.properties.parr ? `
-            <img src="${this.url}helper/obtener_portada_barrio/${feature.id}" alt="Descripción de la imagen" class="imagen-popup" style="
-                width: 100%;
-                height: 150px;
-                object-fit: cover;
-            ">
-            <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px">
-                <b style="text-align: center;">${feature.properties.nombre}</b>
-                <ul style="list-style-type: none; padding-left: 0;">
-                    <li><strong>Parroquia:</strong> ${feature.properties.parr}</li>                          
-                </ul>
-            </div>
-        ` : `
-            <img src="${this.url}helper/obtener_portada_barrio/${feature.id}" alt="Descripción de la imagen" class="imagen-popup" style="
-                width: 100%;
-                height: 150px;
-                object-fit: cover;
-            ">
-            <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px">
-                <b style="text-align: center;">${feature.properties.nombre}</b>
-            </div>
-        `;
-        if(this.check.CreateDireccionGeoComponent){
-          // Crear el elemento de botón
-         
-          button.className = 'p-button p-button-icon-only';
-          button.innerHTML = '<span class="pi pi-camera"></span>';
-          button.addEventListener('click', () => {
-              this.modalcreatedireccion(feature);
-          });
-          // Agregar el botón al contenido
-        contentElement.appendChild(button);
-        }
-        
-
-        // Crear el InfoWindow con el contenido personalizado
-        const infoWindow = new google.maps.InfoWindow({
-            content: contentElement
-        });
-
-        // Posicionar y abrir el InfoWindow
-        infoWindow.setPosition(event.latLng);
-        infoWindow.open(this.mapCustom);
-
-        // Guardar el InfoWindow para poder referenciarlo más tarde si es necesario
-        this.openInfoWindow = infoWindow;
         this.popupsMostrados[featureId] = true;
+        // Crear el contenido del InfoWindow
+        this.feature_img = feature;
+        console.log(this.feature_img);
+        this.url_imag = `${ this.url }helper/obtener_portada_barrio/${ feature.id }`;
+      
+        setTimeout(() => {       
+          // Abrir un nuevo popup con el nombre del barrio
+          const infoWindow = new google.maps.InfoWindow({
+            ariaLabel:'info',
+            content:  document.getElementById("content")     
+          });
+          infoWindow.setPosition(event.latLng);
+          infoWindow.open(this.mapCustom);
+          // Escuchar el evento closeclick
+          google.maps.event.addListener(infoWindow, 'closeclick', () => {
+              // Aquí puedes realizar la acción que desees cuando se cierre la InfoWindow
+            console.log('La ventana de información se ha cerrado');
+            this.feature_img = null;
+          });
+        }, 200);
+       
+       
 
           //this.canpopup=false;
       } else {
-        //this.popupsMostrados={}
+       
         if (this.capaActiva) {
           this.popupsMostrados={}
           this.opcionb = feature;
@@ -789,7 +764,7 @@ export class LayersComponent implements OnInit{
             this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono',feature.properties.nombre,feature);
           }
         }else{
-          
+           this.popupsMostrados={}
           this.latitud = event.latLng.lat();
           this.longitud = event.latLng.lng();
           this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono',feature.properties.nombre,feature);

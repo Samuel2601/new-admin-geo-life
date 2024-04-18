@@ -12,6 +12,7 @@ import { StackFichasComponent } from '../components/dashboard/stack-fichas/stack
 import { StackIncidentesComponent } from '../components/dashboard/stack-incidentes/stack-incidentes.component';
 import { StackbarriofichaComponent } from '../components/dashboard/stackbarrioficha/stackbarrioficha.component';
 import { DialogService } from 'primeng/dynamicdialog';
+import { ListService } from './list.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -49,7 +50,7 @@ export class HelperService {
 
   }
   
-  constructor(private dialogService: DialogService,private router: Router, private adminService: AdminService,private filterService:FilterService) { }
+  constructor(private dialogService: DialogService,private router: Router, private adminService: AdminService,private filterService:FilterService,private listarService:ListService) { }
 
   async checkPermiso(componente: any): Promise<boolean> {
     const token = this.token();

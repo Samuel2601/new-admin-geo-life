@@ -187,10 +187,14 @@ updateItem() {
               icon: 'pi pi-chart-bar',
               label: 'Estadística',
               styleClass: 'itemcustom',
-              visible: this.opcionb?true:false && this.check.DashboardComponent,
+              //visible: this.opcionb?true:false && this.check.DashboardComponent,
               command: () => {
-                this.controlFullScreem();
-                this.sidebarVisible = true;
+                if (this.opcionb?true:false   && this.check.CreateFichaSectorialComponent) {
+                  this.controlFullScreem();
+                  this.sidebarVisible = true;
+                }else{
+                  this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un lugar'});
+                }
               },
             },
              {
@@ -210,7 +214,7 @@ updateItem() {
               },
             },
             {
-              visible: this.opcionb ? true : false,
+              //visible: this.opcionb ? true : false,
               separator: true,
             },
             {
@@ -218,30 +222,38 @@ updateItem() {
               label: 'Fichas Técnicas',
               styleClass: 'itemcustom',
               expanded: true,
-              visible: this.opcionb ? true : false,
+              //visible: this.opcionb ? true : false,
               items: [
                 {
                   icon: 'pi pi-book',
                   label: 'Fichas Técnicas',
                   styleClass: 'itemcustom',
-                  visible: this.opcionb?true:false  && this.check.IndexFichaSectorialComponent,
+                  //visible: this.opcionb?true:false  && this.check.IndexFichaSectorialComponent,
                   command: () => {
-                    this.fichaTecnica();
+                    if (this.opcionb?true:false   && this.check.CreateFichaSectorialComponent) {
+                      this.fichaTecnica();
+                    }else{
+                      this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un lugar'});
+                    }
                   },
                 },
                 {
                   icon: 'pi pi-pencil',
                   label: 'Nuevas Ficha Técnica',
                   styleClass: 'itemcustom',
-                  visible: this.opcionb?true:false   && this.check.CreateFichaSectorialComponent,
+                  //visible: this.opcionb?true:false   && this.check.CreateFichaSectorialComponent,
                   command: () => {
-                    this.nuevoFicha();
+                    if (this.opcionb?true:false   && this.check.CreateFichaSectorialComponent) {
+                      this.nuevoFicha();
+                    }else{
+                      this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un lugar'});
+                    }
                   },
                 },
               ],
             },
             {
-              visible: this.opcionb ? true : false,
+              //visible: this.opcionb ? true : false,
               separator: true,
             },
             {
@@ -249,24 +261,32 @@ updateItem() {
               label: 'Incidentes',
               styleClass: 'itemcustom',
               expanded: true,
-              visible: this.opcionb ? true : false,
+              //visible: this.opcionb ? true : false,
               items: [
                 {
                   icon: 'pi pi-inbox',
                   label: 'Listado',
                   styleClass: 'itemcustom',
-                  visible: this.opcionb?true:false && this.check.IndexIncidentesDenunciaComponent,
+                  //visible: this.opcionb?true:false && this.check.IndexIncidentesDenunciaComponent,
                   command: () => {
-                    this.incidente();
+                    if (this.opcionb?true:false && this.check.IndexIncidentesDenunciaComponent) {
+                      this.incidente();
+                    }else{
+                      this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un lugar'});
+                    }
                   },
                 },
                 {
                   icon: 'pi pi-telegram',
                   label: 'Nuevo Incidente',
                   styleClass: 'itemcustom',
-                  visible: this.opcionb?true:false  && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
+                  //visible: this.opcionb?true:false  && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
                   command: () => {
-                    this.nuevoIncidente();
+                    if (this.opcionb?true:false && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ) {
+                      this.nuevoIncidente();
+                    }else{
+                      this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un lugar'});
+                    }
                   },
                 },
               ],
@@ -278,9 +298,13 @@ updateItem() {
           icon: 'pi pi-directions',
           label: 'ESVIAL',
           styleClass: 'itemcustom',
-          visible: this.opcionb?true:false  && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
+          //visible: this.opcionb?true:false  && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
           command: () => {
-            this.nuevoIncidente('ESVIAL');
+            if (this.opcionb?true:false && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ) {
+              this.nuevoIncidente('ESVIAL');
+            }else{
+              this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un lugar'});
+            }  
           },
         },
         {
@@ -288,9 +312,13 @@ updateItem() {
           icon: 'pi bi-droplet-fill',
           label: 'EPMAPSE',
           styleClass: 'itemcustom',
-          visible: this.opcionb?true:false  && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
+          //visible: this.opcionb?true:false  && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
           command: () => {
-            this.nuevoIncidente('EPMAPSE');
+            if (this.opcionb?true:false && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ) {
+              this.nuevoIncidente('EPMAPSE');
+            }else{
+              this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un lugar'});
+            }  
           },
         },
         {
@@ -298,9 +326,13 @@ updateItem() {
           icon: 'pi bi-truck',
           label: 'Recolecctor',
           styleClass: 'itemcustom',
-          visible: this.opcionb?true:false && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
+          //visible: this.opcionb?true:false && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
           command: () => {
-            this.nuevoIncidente('Recolecctor');
+            if (this.opcionb?true:false && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ) {
+              this.nuevoIncidente('Recolecctor');
+            }else{
+              this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un lugar'});
+            }            
           },
         }
       ],

@@ -41,7 +41,7 @@ export class CreateCategoriaComponent implements OnInit{
         if(response.data){
           this.messageService.add({severity: 'success', summary: 'Listo', detail: 'Ingresado correctamente'});
           setTimeout(() => {
-            this.router.navigate(["/categorias"]);
+            this.router.navigate(["/maps/categoria"]);
           }, 2000);
         }
         // Aquí puedes manejar la respuesta del servidor, como mostrar un mensaje de éxito o redirigir a otra página

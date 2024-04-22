@@ -97,13 +97,16 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
             //console.error('Error al realizar la solicitud:', error);
         });
   }
-  
+  tipocat: any;
   async ngOnInit() {
     if (this.config && this.config.data && this.config.data.data) {
       this.data = this.config.data.data;
     }
      if (this.config && this.config.data && this.config.data.direccion) {
       this.direccion = this.config.data.direccion;
+    }
+    if (this.config && this.config.data && this.config.data.tipo) {
+      this.tipocat = this.config.data.tipo;
     }
     this.load_form = false;
     if (this.data) {
@@ -180,8 +183,9 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     this.listService.listarCategorias(this.token).subscribe(
       response => {
         this.categorias = response.data;
-        //console.log(response.data);
-        this.mostrar=true;
+        console.log(response.data);
+        this.mostrar = true;
+        
       },
       error => {
         //console.log(error);

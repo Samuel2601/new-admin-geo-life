@@ -8,25 +8,29 @@
     </div>
     <div class="card-body">
         <p-toast></p-toast>
-        <div class="table-responsive-sm" *ngIf="categorias">
+        <form
+            [formGroup]="subcategoriaForm"
+            (ngSubmit)="registrarSubcategoria()"
+            *ngIf="categorias"
+        >
             <div class="p-fluid p-formgrid grid">
                 <div class="field col-12 md:col-6">
                     <label for="categoria" class="form-label">Categoría</label>
                     <p-dropdown
                         appendTo="body"
                         [options]="categorias"
-                        [(ngModel)]="subcategoriaForm.categoria"
+                        formControlName="categoria"
                         optionLabel="name"
                         [showClear]="true"
-                        placeholder="Selecciona una"
+                        placeholder="Selecciona una categoria"
                     >
                         <ng-template pTemplate="selectedItem">
-                            <div
-                                class="flex align-items-center gap-2"
-                                *ngIf="subcategoriaForm.categoria"
-                            >
+                            <div class="flex align-items-center gap-2">
                                 <div>
-                                    {{ subcategoriaForm.categoria.nombre }}
+                                    {{
+                                        subcategoriaForm.get("categoria")?.value
+                                            ?.nombre
+                                    }}
                                 </div>
                             </div>
                         </ng-template>
@@ -44,7 +48,7 @@
                         pInputText
                         class="form-control"
                         id="nombre"
-                        [(ngModel)]="subcategoriaForm.nombre"
+                        formControlName="nombre"
                         required
                     />
                 </div>
@@ -56,7 +60,7 @@
                         pInputTextarea
                         class="form-control"
                         id="descripcion"
-                        [(ngModel)]="subcategoriaForm.descripcion"
+                        formControlName="descripcion"
                         required
                     ></textarea>
                 </div>
@@ -65,11 +69,10 @@
                     pButton
                     label="Guardar"
                     class="btn btn-primary"
-                    (click)="registrarSubcategoria()"
                 >
                     <i class="bi bi-save"></i>
                 </button>
             </div>
-        </div>
+        </form>
     </div>
 </div>

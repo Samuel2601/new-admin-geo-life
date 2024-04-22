@@ -58,6 +58,10 @@
 .bi-camera2-custom {
     content: url('https://static.xx.fbcdn.net/rsrc.php/v3/y7/r/Ivw7nhRtXyo.png?_nc_eui2=AeEpQ6ZGWYfOY-AnRGOyYb1IPL4YoeGsw5I8vhih4azDkhdYMB49riSiP6JgK5gyW7rBdxuh6kJpGlTn8KHVuE3Y');
 }
+.itemcustom {
+   // margin-bottom: 13px;        
+   // box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
+}
 $gutter: 1rem; //for primeflex grid system
 @import "assets/layout/styles/layout/layout.scss";
 

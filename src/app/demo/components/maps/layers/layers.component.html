@@ -26,25 +26,37 @@
         <p-toast></p-toast>
         <div [style.display]="'none'">
             <div #formulariomap class="card flex justify-content-center">
-                <span class="p-float-label">
-                    <p-autoComplete
-                        [suggestions]="filter"
-                        (completeMethod)="filterOptions($event)"
-                        field="properties.nombre"
-                        inputId="float-label"
-                        [(ngModel)]="opcionb"
-                        (ngModelChange)="poligonoview(true, opcionb)"
-                    >
-                        <ng-template let-option pTemplate="item">
-                            <div class="flex align-items-center gap-2">
-                                <div>
-                                    {{ option.properties.nombre }}
-                                </div>
-                            </div>
-                        </ng-template>
-                    </p-autoComplete>
-                    <label for="float-label">Buscar Barrio </label>
-                </span>
+                <p-menubar [model]="items">
+                    <ng-template pTemplate="start">
+                        <img
+                            src="assets/icon/logo.png"
+                            height="40"
+                            class="mr-2"
+                        />
+                    </ng-template>
+                    <ng-template pTemplate="end">
+                        <span class="p-float-label">
+                            <p-autoComplete
+                                [suggestions]="filter"
+                                (completeMethod)="filterOptions($event)"
+                                field="properties.nombre"
+                                inputId="float-label"
+                                [(ngModel)]="opcionb"
+                                class="w-full"
+                                (ngModelChange)="poligonoview(true, opcionb)"
+                            >
+                                <ng-template let-option pTemplate="item">
+                                    <div class="flex align-items-center gap-2">
+                                        <div>
+                                            {{ option.properties.nombre }}
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </p-autoComplete>
+                            <label for="float-label">Buscar Barrio </label>
+                        </span>
+                    </ng-template>
+                </p-menubar>
             </div>
         </div>
 
@@ -113,19 +125,9 @@
                 </button>
             </div>
         </div>
-
-        <div [style.display]="'none'">
-            <p-speedDial
-                #speedDial
-                [model]="items"
-                direction="down"
-                className="fullscreen-button"
-                [buttonStyle]="{ 'border-radius': '50%' }"
-            >
-            </p-speedDial>
-        </div>
     </div>
 </div>
+
 <app-index-ficha-sectorial
     class="container"
     *ngIf="mostrarficha"
@@ -146,6 +148,7 @@
     style="z-index: inherit"
 >
 </app-index-incidentes-denuncia>
+
 <div style="display: none">
     <p-card
         id="content"
@@ -186,3 +189,20 @@
         cupiditate neque quas!
     </p>
     -->
+
+<div [style.display]="'none'">
+    <p-speedDial
+        [model]="items"
+        direction="down"
+        className="fullscreen-button"
+        [buttonStyle]="{ 'border-radius': '50%' }"
+    >
+    </p-speedDial>
+</div>
+
+<p-panelMenu
+    id="speedDial"
+    [model]="items"
+    [style]="{ margin: '10px' }"
+    [multiple]="true"
+></p-panelMenu>

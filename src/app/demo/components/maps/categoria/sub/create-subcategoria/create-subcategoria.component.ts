@@ -50,7 +50,7 @@ export class CreateSubcategoriaComponent implements OnInit{
         if(response.data){
           this.messageService.add({severity: 'success', summary: 'Ingreso', detail: 'Correctamente'});
           setTimeout(() => {
-            this.router.navigate(["/categorias"]);
+            this.router.navigate(["/maps/categoria"]);
           }, 2000);
         }
         // Aquí puedes manejar la respuesta del servidor, como mostrar un mensaje de éxito o redirigir a otra página
@@ -58,6 +58,7 @@ export class CreateSubcategoriaComponent implements OnInit{
      this.messageService.add({severity: 'error', summary:  ('('+error.status+')').toString(), detail: error.error.message||'Sin conexión'});
     });
     } else {
+      console.log(this.subcategoriaForm);
       // Aquí puedes mostrar un mensaje de error o realizar alguna otra acción si el formulario no es válido
     }
   }

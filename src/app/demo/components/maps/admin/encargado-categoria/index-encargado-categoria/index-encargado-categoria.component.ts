@@ -27,7 +27,7 @@ token = this.helper.token();
     this.listService.listarEncargadosCategorias(this.token).subscribe(
       response => {
         this.encargadosCategoria = response.data;
-        console.log(response.data);
+        //console.log(response.data);
       },
       error => {
         //console.log(error);

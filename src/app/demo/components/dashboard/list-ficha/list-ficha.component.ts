@@ -54,7 +54,7 @@ export class ListFichaComponent implements OnInit{
     if (this.config && this.config.data && this.config.data.valor) {
       this.actividad = this.config.data.actividad;
     }
-    console.log(this.valor,this.filtro,this.actividad);
+    //console.log(this.valor,this.filtro,this.actividad);
     try {
        this.check.IndexIncidentesDenunciaComponent = this.helper.decryptData('IndexIncidentesDenunciaComponent') || false;
       this.check.IndexEstadoIncidenteComponent = this.helper.decryptData('IndexEstadoIncidenteComponent') || false;
@@ -78,7 +78,7 @@ export class ListFichaComponent implements OnInit{
 
     if(this.filtro&&this.valor){
       this.listService.listarFichaSectorial(this.token,this.filtro,this.valor).subscribe(response=>{
-        console.log(response);
+        //console.log(response);
         if(response.data){
           this.incidentesDenuncias = response.data;
           this.incidentesDenuncias = this.incidentesDenuncias.filter((element:any)=>element.actividad.nombre == this.actividad);

@@ -204,8 +204,8 @@ export class IndexCategoriaComponent implements OnInit{
   onRowEditSave(categoria: any) {
     // Guardar los cambios de la categoría
     //console.log('Guardar cambios de la categoría:', categoria);
-    this.updateservice.actualizarCategoria(this.token,categoria._id,categoria).subscribe(response=>{//console.log(response)},error=>{
-      //console.log(error);
+    this.updateservice.actualizarCategoria(this.token,categoria._id,categoria).subscribe(response=>{console.log(response)},error=>{
+      console.log(error);
     });
 
   }

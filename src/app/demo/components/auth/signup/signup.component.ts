@@ -89,14 +89,14 @@ getErrorMessage(fieldName: string): string {
 
   
   ver() {
-    console.log(this.formulario.get('checked'));
+    //console.log(this.formulario.get('checked'));
   }
   checked: boolean | null = null;
   visible: boolean = false;
   consultar(id: any) {
    this.visible = true;
       this.admin.getCiudadano(id).subscribe(response => {
-        console.log(response);
+        //console.log(response);
            setTimeout(() => {          
              this.visible = false;
               if (response.nombres) {          
@@ -127,7 +127,7 @@ getErrorMessage(fieldName: string): string {
   consultarcorreo(correo: any) {
     this.visible = true;
     this.admin.verificarCorreo(correo).subscribe(response => {
-        console.log(response);
+        //console.log(response);
         if (response) {
           this.messageService.add({ severity: 'error', summary: 'Invalido', detail: 'Correo electronico ya existente' });
           this.formulario.get('correo')?.setErrors({ 'invalido': true });
@@ -143,7 +143,7 @@ getErrorMessage(fieldName: string): string {
     if (this.formulario.valid) {
       this.formulario.get('nombres')?.enable();
       this.create.registrarUsuario(this.formulario.value).subscribe(response => {
-        console.log(response);
+        //console.log(response);
         this.messageService.add({ severity: 'success', summary: 'Excelente', detail: 'Registrado Correctamente' });
         setTimeout(() => {          
         // Redirigir a la página de inicio de sesión con los datos de correo y contraseña
@@ -163,8 +163,8 @@ getErrorMessage(fieldName: string): string {
          this.visible = false;
         }, 1000);
     } else {
-      console.log(this.formulario.valid);
-      console.log(this.formulario);
+      //console.log(this.formulario.valid);
+      //console.log(this.formulario);
       this.messageService.add({ severity: 'error', summary: 'Invalido', detail: 'Rellene todos los campos' });
     }
   }
@@ -176,7 +176,7 @@ getErrorMessage(fieldName: string): string {
   imagenesSeleccionadas: any;
   load_imagen: boolean = true;
   onFilesSelected(event: any): void {
-      console.log(event);
+      //console.log(event);
       if (event.files.length > 0) {
           const file = event.files[0];
           const objectURL = URL.createObjectURL(file);
@@ -217,7 +217,7 @@ getErrorMessage(fieldName: string): string {
 
     } else {
        this.messageService.add({severity: 'warning', summary: 'MAX img', detail: 'Solo puede enviar 3 imangenes'});
-      //console.error('Error al obtener la cadena base64 de la imagen.');
+      ////console.error('Error al obtener la cadena base64 de la imagen.');
     }
   }
   formulario: any={};

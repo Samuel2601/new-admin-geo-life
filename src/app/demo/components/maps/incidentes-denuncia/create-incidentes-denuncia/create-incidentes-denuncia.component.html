@@ -14,7 +14,11 @@
         </div>
     </div>
     <div class="card">
-        <ng-container *ngIf="load_form">
+        <form
+            [formGroup]="nuevoIncidenteDenuncia"
+            (ngSubmit)="crearIncidenteDenuncia()"
+            *ngIf="load_form"
+        >
             <div class="mb-3">
                 <h4 for="categoria" class="form-label">Categoría</h4>
                 <p-dropdown
@@ -22,13 +26,28 @@
                     appendTo="body"
                     id="categoria"
                     [options]="categorias"
-                    [(ngModel)]="nuevoIncidenteDenuncia.categoria"
+                    formControlName="categoria"
                     optionLabel="nombre"
                     [required]="true"
-                    (onChange)="selectcategoria($event)"
-                ></p-dropdown>
+                    (onChange)="selectcategoria()"
+                >
+                    <ng-template pTemplate="selectedItem">
+                        <div class="flex align-items-center gap-2">
+                            <div>
+                                {{
+                                    nuevoIncidenteDenuncia.get("categoria")
+                                        ?.value?.nombre
+                                }}
+                            </div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-item pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ item.nombre }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
             </div>
-
             <div class="mb-3" *ngIf="subcategorias.length > 0">
                 <h4 for="subcategoria" class="form-label">Subcategoría</h4>
                 <p-dropdown
@@ -37,7 +56,7 @@
                     id="subcategoria"
                     name="subcategoria"
                     [options]="subcategorias"
-                    [(ngModel)]="nuevoIncidenteDenuncia.subcategoria"
+                    formControlName="subcategoria"
                     optionLabel="nombre"
                     [required]="true"
                 ></p-dropdown>
@@ -52,7 +71,7 @@
                     class="form-control"
                     cols="50"
                     rows="10"
-                    [(ngModel)]="nuevoIncidenteDenuncia.descripcion"
+                    formControlName="descripcion"
                     required
                 ></textarea>
             </div>
@@ -128,7 +147,6 @@
                     icon="pi pi-trash"
                 ></p-button>
             </div>
-
             <div class="mb-3" *ngIf="mostrargale">
                 <p-galleria
                     [value]="imagenesSeleccionadas"
@@ -157,7 +175,6 @@
                     </ng-template>
                 </p-galleria>
             </div>
-
             <div class="mb-3">
                 <p-button
                     label="Crear Incidente o Denuncia"
@@ -165,7 +182,7 @@
                 >
                 </p-button>
             </div>
-        </ng-container>
+        </form>
         <ng-container *ngIf="!load_form">
             <div class="text-center">
                 <div class="spinner-border text-success" role="status">

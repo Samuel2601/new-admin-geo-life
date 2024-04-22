@@ -22,7 +22,7 @@ export class AppTopBarComponent implements OnInit {
     
     constructor(public layoutService: LayoutService, private helper: HelperService,private router: Router,) { }
     ngOnInit(): void {
-        console.log(this.foto);
+        //console.log(this.foto);
     }
     token = this.helper.token()||undefined;
     logout(): void {

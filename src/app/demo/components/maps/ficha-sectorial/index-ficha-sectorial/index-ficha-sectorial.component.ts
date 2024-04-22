@@ -76,7 +76,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   check:any={};
   async ngOnInit(): Promise<void> {
     
-    console.log(this.id);
+    //console.log(this.id);
     if(!this.modal)this.helperservice.llamarspinner();
     try {
       this.check.IndexFichaSectorialComponent = this.helperservice.decryptData('IndexFichaSectorialComponent') || false;
@@ -88,7 +88,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
       this.check.IndexActividadProyectoComponent = this.helperservice.decryptData('IndexActividadProyectoComponent') || false;
       this.check.TotalFilter = this.helperservice.decryptData('TotalFilter') || false;
       
-      console.log(this.check);
+      //console.log(this.check);
     } catch (error) {
       //console.error('Error al verificar permisos:', error);
       this.router.navigate(['/notfound']);

@@ -170,9 +170,6 @@ export class LayersComponent implements OnInit{
         },
       },*/
   updateItem() {
-    console.log('opcionb:', this.opcionb, 'check:', this.check.CreateIncidentesDenunciaComponent, 'latitud:', this.latitud, 'longitud:', this.longitud,
-      (this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false))
-    console.log("Latitud:",this.latitud?true:false);
     this.loadspeed = false;
   this.items = [
     {
@@ -841,7 +838,7 @@ export class LayersComponent implements OnInit{
         this.popupsMostrados[featureId] = true;
         // Crear el contenido del InfoWindow
         this.feature_img = feature;
-        console.log(this.feature_img);
+        //console.log(this.feature_img);
         this.url_imag = `${ this.url }helper/obtener_portada_barrio/${ feature.id }`;
       
         setTimeout(() => {       
@@ -1065,7 +1062,7 @@ export class LayersComponent implements OnInit{
   }
   modaldireccion:boolean=false;
   modalcreatedireccion(feature:any){
-    console.log('crear foto');
+    //console.log('crear foto');
     this.sidebarVisible ? this.sidebarVisible = false : '';
     this.mostrarficha ? this.mostrarficha = false : '';
     this.mostrarincidente ? this.mostrarincidente = false : '';

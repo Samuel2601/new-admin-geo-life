@@ -88,13 +88,13 @@ export class EditIncidentesDenunciaComponent implements OnInit {
       
     }
     setTimeout(() => {
-      console.log(this.incidencia,this.categorias,this.subcategorias,this.estados)
+      //console.log(this.incidencia,this.categorias,this.subcategorias,this.estados)
     }, 2000);
   }
   obtenerincidente() {
      this.filter.obtenerIncidenteDenuncia(this.token,this.id).subscribe(response => {
        if (response.data) {
-         console.log(response.data);
+         //console.log(response.data);
         const ficha = response.data;
         for (const key in ficha) {
           if (Object.prototype.hasOwnProperty.call(ficha, key)) {
@@ -117,17 +117,17 @@ export class EditIncidentesDenunciaComponent implements OnInit {
          if (ficha.foto) {           
            this.imagenModal = ficha.foto;
          }
-        console.log(this.incidencia);
+        //console.log(this.incidencia);
         this.load_form = true;
      }      
     });
   }
   enviar() {
-    console.log(this.incidencia);
+    //console.log(this.incidencia);
     this.incidencia.get('encargado').enable();
     this.incidencia.get('encargado').setValue(this.id_user)
     this.update.actualizarIncidenteDenuncia(this.token,this.id,this.incidencia.value).subscribe(response => {
-      console.log(response);
+      //console.log(response);
       if (response.data) {
         this.messageService.add({ severity: 'success', summary: 'Actualizado', detail: 'Correctamente' });
         setTimeout(() => {
@@ -147,7 +147,7 @@ export class EditIncidentesDenunciaComponent implements OnInit {
     if (!event) {
       event = this.incidencia.get('categoria').value?._id;
     }
-    console.log("nueva subcategoria");
+    //console.log("nueva subcategoria");
     if(!this.token){
       //this.modalService.dismissAll();
       throw this.router.navigate(["/auth/login"]);
@@ -156,14 +156,14 @@ export class EditIncidentesDenunciaComponent implements OnInit {
       const id = event;
       this.listService.listarSubcategorias(this.token,'categoria',id).subscribe(
         response => {
-          //console.log(response)
+          ////console.log(response)
           this.subcategorias = response.data;
           if (control) {            
             this.incidencia.get('subcategoria').setValue('');
           }
         },
         error => {
-          //console.log(error);
+          ////console.log(error);
           if(error.error.message=='InvalidToken'){
             this.router.navigate(["/auth/login"]);
           }else{
@@ -184,7 +184,7 @@ export class EditIncidentesDenunciaComponent implements OnInit {
         this.categorias = response.data;
       },
       error => {
-        //console.log(error);
+        ////console.log(error);
         if(error.error.message=='InvalidToken'){
           this.router.navigate(["/auth/login"]);
         }else{
@@ -199,7 +199,7 @@ export class EditIncidentesDenunciaComponent implements OnInit {
       throw this.router.navigate(["/auth/login"]);
     }
     this.listService.listarEstadosIncidentes(this.token).subscribe(response=>{
-      //console.log(response);
+      ////console.log(response);
       this.estados=response.data;
     },error=>{
       if(error.error.message=='InvalidToken'){
@@ -279,12 +279,12 @@ export class EditIncidentesDenunciaComponent implements OnInit {
     } else {
        this.messageService.add({severity: 'warning', summary: 'MAX img', detail: 'Solo puede enviar 3 imangenes'});
       this.load_carrusel=true;
-      //console.error('Error al obtener la cadena base64 de la imagen.');
+      ////console.error('Error al obtener la cadena base64 de la imagen.');
     }
   }
    onFilesSelected(event: any): void {
     this.mostrargale=false;
-    //console.log(event);
+    ////console.log(event);
     this.load_carrusel = false;
     const files: FileList = event.files;
 
@@ -299,7 +299,7 @@ export class EditIncidentesDenunciaComponent implements OnInit {
 
     this.messageService.add({severity: 'info', summary: 'File Uploaded', detail: this.selectedFiles.length+'Imagenes subidas'});
 
-    //console.log(this.selectedFiles,this.imagenesSeleccionadas );
+    ////console.log(this.selectedFiles,this.imagenesSeleccionadas );
     setTimeout(() => {
       this.upload=false;
     this.mostrargale=true;

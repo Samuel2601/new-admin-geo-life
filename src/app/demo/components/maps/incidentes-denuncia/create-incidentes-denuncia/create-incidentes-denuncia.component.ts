@@ -183,12 +183,12 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     this.listService.listarCategorias(this.token).subscribe(
       response => {
         this.categorias = response.data;
-        console.log(this.categorias, this.tipocat);
+        //console.log(this.categorias, this.tipocat);
         if (this.tipocat) {
           const categoriaEncontrada = this.categorias.find(categoria => categoria.nombre === this.tipocat);
           if (categoriaEncontrada) {
             this.nuevoIncidenteDenuncia.get('categoria')?.setValue(categoriaEncontrada);
-            console.log(this.nuevoIncidenteDenuncia.value);
+            //console.log(this.nuevoIncidenteDenuncia.value);
             this.selectcategoria();
           }
         }

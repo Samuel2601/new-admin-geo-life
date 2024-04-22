@@ -83,7 +83,7 @@ export class LayoutService {
             this._config.scale !== this.configConst.scale
         ) {
             this.cookieService.set(this.COOKIE_NAME, JSON.stringify(this._config));
-            console.log('Guardando', JSON.parse(this.cookieService.get(this.COOKIE_NAME)));
+            //console.log('Guardando', JSON.parse(this.cookieService.get(this.COOKIE_NAME)));
         }
     }
 

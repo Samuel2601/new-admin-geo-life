@@ -24,7 +24,7 @@ export class AppConfigComponent implements OnInit{
         if (savedConfig) {
             const local = JSON.parse(savedConfig);
             const server = this.layoutService.config();
-            console.log(local,server);
+            //console.log(local,server);
             this.changeTheme(local.theme, local.colorScheme);
             this.scale = local.scale;
             this.ripple = local.ripple;

@@ -530,8 +530,8 @@ cargarRecolectores() {
           position: latlng,
           map: this.mapCustom,
           icon: {
-            url: feature.attributes.motion?"./assets/recolectorfinal.png":"./assets/recolectorapagado.png",
-            scaledSize: new google.maps.Size(30, 41),
+            url: feature.attributes.motion?"./assets/camionON.png":"./assets/camionOFF.png",
+            scaledSize: new google.maps.Size(40, 41),
             anchor: new google.maps.Point(13, 41),
           }
         });

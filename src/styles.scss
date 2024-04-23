@@ -62,6 +62,14 @@
    // margin-bottom: 13px;        
    // box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
 }
+.bi-camionoff {
+    content: url('assets/camionOFF.png');
+    width: 30px;
+}
+.bi-camionon {
+    content: url('assets/camionON.png');
+    width: 30px;
+}
 $gutter: 1rem; //for primeflex grid system
 @import "assets/layout/styles/layout/layout.scss";
 

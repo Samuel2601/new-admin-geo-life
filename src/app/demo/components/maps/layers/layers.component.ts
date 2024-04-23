@@ -104,7 +104,7 @@ export class LayersComponent implements OnInit{
   arr_polygon:any[]=[];
   canpopup: boolean = false;
   load_fullscreen: boolean = false;
-  items: any[]=[];
+  items: MenuItem[]=[];
   visible: boolean = false;
   temp_poligon:any;
   //CONSTRUCTOR
@@ -331,14 +331,46 @@ export class LayersComponent implements OnInit{
             icon: 'pi bi-truck',
             label: 'Recolecctor',
             styleClass: 'itemcustom',
-            command: () => {
-              if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false)) {
-                this.nuevoIncidente('Higiene',' Servicio de recolección de desechos');
-              }else{
-                this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un punto'});
-              }            
-            },
-          }
+            expanded: !this.load_truck,
+            items:[
+                {
+                icon: this.load_truck?"pi bi-camionoff":"pi bi-camionon",
+                label: 'Ver Recolectores',
+                styleClass: 'itemcustom',
+                command: () => {
+                  if (this.load_truck) {
+                    this.load_truck = false;
+                    this.cargarRecolectores();
+                    // Iniciar el intervalo y almacenar el identificador devuelto en una variable
+                    this.intervalId = setInterval(() => {
+                      this.cargarRecolectores();
+                    }, 2000);
+                  } else {
+                    // Detener el intervalo si está activo
+                    clearInterval(this.intervalId);
+                    this.load_truck = true;
+                    this.clearMarkers();
+                  }
+                  setTimeout(() => {
+                    this.updateItem();
+                  }, 200);
+                  
+                }
+              },
+              {
+                icon: 'pi bi-truck',
+                label: 'Reportar',
+                styleClass: 'itemcustom',
+                command: () => {
+                  if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false)) {
+                    this.nuevoIncidente('Higiene',' Servicio de recolección de desechos');
+                  }else{
+                    this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un punto'});
+                  }            
+                }
+              }
+            ]
+          }          
         ],
       },
     ];
@@ -347,6 +379,8 @@ export class LayersComponent implements OnInit{
     this.addtemplateFR();
     this.addtemplateBG();
   }
+  load_truck: boolean = true;
+  intervalId: any;
   pushmenu: boolean = false;
   addtemplateMn() {
     setTimeout(() => {
@@ -491,39 +525,33 @@ export class LayersComponent implements OnInit{
     }
   }
   //INICIALIZADOR DEL MAPA
-    initmap() {
-      this.loader.load().then(() => {
-      const haightAshbury = { lat: 0.977035, lng: -79.655415 };
-        this.mapCustom = new google.maps.Map(document.getElementById("map") as HTMLElement, {
-          zoom: 15,
-          center: haightAshbury,
-          mapTypeId: "terrain",
-          fullscreenControl: false,
-          mapTypeControlOptions: {
-            style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-            position: google.maps.ControlPosition.LEFT_BOTTOM,
-          }
-        });
-        this.initFullscreenControl();
-        this.mapCustom.addListener('click', (event:any) => {
-          this.onClickHandlerMap(event);
-        });
-      });   
-       this.cargarRecolectores();
-    setInterval(() => {
-      //this.clearMarkers();
-     this.cargarRecolectores();
-   }, 2000);
+  initmap() {
+    this.loader.load().then(() => {
+    const haightAshbury = { lat: 0.977035, lng: -79.655415 };
+      this.mapCustom = new google.maps.Map(document.getElementById("map") as HTMLElement, {
+        zoom: 15,
+        center: haightAshbury,
+        mapTypeId: "terrain",
+        fullscreenControl: false,
+        mapTypeControlOptions: {
+          style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+          position: google.maps.ControlPosition.LEFT_BOTTOM,
+        }
+      });
+      this.initFullscreenControl();
+      this.mapCustom.addListener('click', (event:any) => {
+        this.onClickHandlerMap(event);
+      });
+    });       
   }
   truk: any = [];
   //ver recolector / Reportar
-cargarRecolectores() {
+  cargarRecolectores() {
   // Crear una copia de los marcadores actuales
   const oldMarkers = this.truk.slice();
 
   this.admin.obtenerGPS().subscribe(respone => {
     if (respone) {
-      console.log(respone);
       respone.forEach((feature: any) => {
         const latlng = new google.maps.LatLng(feature.latitude, feature.longitude);
         const marker = new google.maps.Marker({
@@ -531,7 +559,7 @@ cargarRecolectores() {
           map: this.mapCustom,
           icon: {
             url: feature.attributes.motion?"./assets/camionON.png":"./assets/camionOFF.png",
-            scaledSize: new google.maps.Size(40, 41),
+            scaledSize: new google.maps.Size(40,40),
             anchor: new google.maps.Point(13, 41),
           }
         });

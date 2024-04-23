@@ -149,6 +149,37 @@ export class LayersComponent implements OnInit{
       console.error('Error al verificar permisos:', error);
       this.router.navigate(['/notfound']);
     }
+    
+    this.updateItem();
+    
+    this.helperService.setMapComponent(this); 
+    this.initmap();
+    await this.getWFSgeojson(this.urlgeoser);
+  }
+  Listitems(label:string,campo:any,icono1:string,icono2:string) {
+    
+    const index = this.items.findIndex(item => item.label === label);
+    if (index !== -1) {
+      // Actualizar el icono del elemento 'Barrios'
+      this.items[index].icon = campo ? icono1 : icono2;
+    }
+  }
+  //CARGA DE TEMPLATE
+  /*  {
+        icon: 'bi bi-crosshair',
+        tooltipOptions: {
+          tooltipLabel:'Ubicación',
+          tooltipPosition:'right',
+         //hideDelay:1000,
+        },
+        //visible:this.isMobil(),
+        command: () => {          
+          this.getLocation();
+      
+        },
+      },*/
+  
+  updateItem() { 
     this.items = [
       {
         icon: 'pi bi-buildings-fill',
@@ -166,7 +197,6 @@ export class LayersComponent implements OnInit{
                 icon: 'pi pi-chart-bar',
                 label: 'Estadística',
                 styleClass: 'itemcustom',
-                //visible: this.opcionb?true:false && this.check.DashboardComponent,
                 command: () => {
                   if ((this.opcionb?true:false )  && this.check.CreateFichaSectorialComponent) {
                     this.controlFullScreem();
@@ -181,7 +211,7 @@ export class LayersComponent implements OnInit{
                 label: 'Barrios',
                 styleClass: 'itemcustom',
                 command: () => {
-                  this.arr_polygon.length == 0 ? this.reloadmap() : this.mostrarpoligono();
+                  this.arr_polygon.length == 0 ? this.reloadmap() : this.mostrarpoligono();  
                 },
               },
               {
@@ -193,7 +223,6 @@ export class LayersComponent implements OnInit{
                 },
               },
               {
-                //visible: this.opcionb ? true : false,
                 separator: true,
               },
               {
@@ -201,13 +230,11 @@ export class LayersComponent implements OnInit{
                 label: 'Fichas Técnicas',
                 styleClass: 'itemcustom',
                 expanded: true,
-                //visible: this.opcionb ? true : false,
                 items: [
                   {
                     icon: 'pi pi-book',
                     label: 'Fichas Técnicas',
                     styleClass: 'itemcustom',
-                    //visible: this.opcionb?true:false  && this.check.IndexFichaSectorialComponent,
                     command: () => {
                       if ((this.opcionb?true:false)   && this.check.CreateFichaSectorialComponent) {
                         this.fichaTecnica();
@@ -220,7 +247,6 @@ export class LayersComponent implements OnInit{
                     icon: 'pi pi-pencil',
                     label: 'Nuevas Ficha Técnica',
                     styleClass: 'itemcustom',
-                    //visible: this.opcionb?true:false   && this.check.CreateFichaSectorialComponent,
                     command: () => {
                       if ((this.opcionb?true:false)   && this.check.CreateFichaSectorialComponent) {
                         this.nuevoFicha();
@@ -232,7 +258,6 @@ export class LayersComponent implements OnInit{
                 ],
               },
               {
-                //visible: this.opcionb ? true : false,
                 separator: true,
               },
               {
@@ -240,13 +265,11 @@ export class LayersComponent implements OnInit{
                 label: 'Incidentes',
                 styleClass: 'itemcustom',
                 expanded: true,
-                //visible: this.opcionb ? true : false,
                 items: [
                   {
                     icon: 'pi pi-inbox',
                     label: 'Listado',
                     styleClass: 'itemcustom',
-                    //visible: this.opcionb?true:false && this.check.IndexIncidentesDenunciaComponent,
                     command: () => {
                       if ((this.opcionb?true:false) && this.check.IndexIncidentesDenunciaComponent) {
                         this.incidente();
@@ -259,7 +282,6 @@ export class LayersComponent implements OnInit{
                     icon: 'pi pi-telegram',
                     label: 'Nuevo Incidente',
                     styleClass: 'itemcustom',
-                    //visible: this.opcionb?true:false  && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
                     command: () => {
                       if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false) ) {
                         this.nuevoIncidente();
@@ -277,7 +299,6 @@ export class LayersComponent implements OnInit{
             icon: 'pi pi-directions',
             label: 'ESVIAL',
             styleClass: 'itemcustom',
-            //visible: this.opcionb?true:false  && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
             command: () => {
               if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false) ) {
                 this.nuevoIncidente('ESVIAL');
@@ -291,7 +312,6 @@ export class LayersComponent implements OnInit{
             icon: 'pi bi-droplet-fill',
             label: 'EPMAPSE',
             styleClass: 'itemcustom',
-            //visible: this.opcionb?true:false  && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
             command: () => {
               if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false) ) {
                 this.nuevoIncidente('Agua Potable y Alcantarillado');
@@ -305,7 +325,6 @@ export class LayersComponent implements OnInit{
             icon: 'pi bi-truck',
             label: 'Recolecctor',
             styleClass: 'itemcustom',
-            //visible: this.opcionb?true:false && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
             command: () => {
               if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false)) {
                 this.nuevoIncidente('Higiene', 'Servicio de recolección de desechos');
@@ -317,28 +336,6 @@ export class LayersComponent implements OnInit{
         ],
       },
     ];
-    this.updateItem();
-    
-    this.helperService.setMapComponent(this); 
-    this.initmap();
-    await this.getWFSgeojson(this.urlgeoser);
-  }
-  //CARGA DE TEMPLATE
-  /*  {
-        icon: 'bi bi-crosshair',
-        tooltipOptions: {
-          tooltipLabel:'Ubicación',
-          tooltipPosition:'right',
-         //hideDelay:1000,
-        },
-        //visible:this.isMobil(),
-        command: () => {          
-          this.getLocation();
-      
-        },
-      },*/
-  
-  updateItem() {    
     //this.addtemplateSP();
     this.addtemplateMn();
     this.addtemplateFR();
@@ -582,7 +579,6 @@ export class LayersComponent implements OnInit{
   popupStates: boolean[] = [];
   // Adds a marker to the map and push to the array.
   addMarker(position: google.maps.LatLng | google.maps.LatLngLiteral, tipo: 'Wifi' | 'Poligono' | 'Ubicación', message?: string, feature?: any) {
-    console.log(position);
     if (feature) this.opcionb = feature;
     this.updateItem();
     this.deleteMarkers('');

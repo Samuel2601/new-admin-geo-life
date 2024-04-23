@@ -394,7 +394,7 @@ selectedFiles: File[] = [];
     }
     console.log(this.nuevoIncidenteDenuncia.value);
     this.nuevoIncidenteDenuncia.get('ciudadano')?.setValue(this.adminservice.identity(this.token));
-    
+    this.nuevoIncidenteDenuncia.enable();
     this.createService.registrarIncidenteDenuncia(this.token, this.nuevoIncidenteDenuncia.value,this.selectedFiles).subscribe(response => {
       // Manejar la respuesta del servidor
       //console.log(response);

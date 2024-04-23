@@ -28,6 +28,7 @@ import { CreateIncidentesDenunciaComponent } from '../incidentes-denuncia/create
 import { DashboardComponent } from '../../dashboard/dashboard.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CreateDireccionGeoComponent } from '../direccion-geo/create-direccion-geo/create-direccion-geo.component';
+import { AdminService } from 'src/app/demo/services/admin.service';
 
 interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
   id?: string;
@@ -114,7 +115,10 @@ export class LayersComponent implements OnInit{
   backgroundColor=getComputedStyle(document.documentElement).getPropertyValue('--surface-0');
 
   subscription!: Subscription;
-  constructor(private modalService: NgbModal,private elementRef: ElementRef,private helperService:HelperService,private router: Router,private layoutService: LayoutService,private messageService: MessageService,private dialogService: DialogService,private ref: DynamicDialogRef){
+  constructor(private modalService: NgbModal, private elementRef: ElementRef,
+    private helperService: HelperService, private router: Router, private layoutService: LayoutService, private messageService: MessageService,
+    private dialogService: DialogService, private ref: DynamicDialogRef,
+    private admin:AdminService) {
     this.subscription = this.layoutService.configUpdate$
         .pipe(debounceTime(25))
         .subscribe((config) => {
@@ -155,6 +159,8 @@ export class LayersComponent implements OnInit{
     this.helperService.setMapComponent(this); 
     this.initmap();
     await this.getWFSgeojson(this.urlgeoser);
+
+    
   }
   Listitems(label:string,campo:any,icono1:string,icono2:string) {
     
@@ -485,25 +491,80 @@ export class LayersComponent implements OnInit{
     }
   }
   //INICIALIZADOR DEL MAPA
-  initmap() {
-    this.loader.load().then(() => {
-     const haightAshbury = { lat: 0.977035, lng: -79.655415 };
-      this.mapCustom = new google.maps.Map(document.getElementById("map") as HTMLElement, {
-        zoom: 15,
-        center: haightAshbury,
-        mapTypeId: "terrain",
-        fullscreenControl: false,
-        mapTypeControlOptions: {
-          style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-          position: google.maps.ControlPosition.LEFT_BOTTOM,
-        }
+    initmap() {
+      this.loader.load().then(() => {
+      const haightAshbury = { lat: 0.977035, lng: -79.655415 };
+        this.mapCustom = new google.maps.Map(document.getElementById("map") as HTMLElement, {
+          zoom: 15,
+          center: haightAshbury,
+          mapTypeId: "terrain",
+          fullscreenControl: false,
+          mapTypeControlOptions: {
+            style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+            position: google.maps.ControlPosition.LEFT_BOTTOM,
+          }
+        });
+        this.initFullscreenControl();
+        this.mapCustom.addListener('click', (event:any) => {
+          this.onClickHandlerMap(event);
+        });
+      });   
+       this.cargarRecolectores();
+    setInterval(() => {
+      this.clearMarkers();
+     this.cargarRecolectores();
+   }, 5000);
+  }
+  truk: any = [];
+cargarRecolectores() {
+  // Crear una copia de los marcadores actuales
+  const oldMarkers = this.truk.slice();
+
+  this.admin.obtenerGPS().subscribe(respone => {
+    if (respone) {
+      respone.forEach((feature: any) => {
+        const latlng = new google.maps.LatLng(feature.latitude, feature.longitude);
+        const marker = new google.maps.Marker({
+          position: latlng,
+          map: this.mapCustom,
+          icon: {
+            url: "./assets/recolectorfinal.png",
+            scaledSize: new google.maps.Size(25, 41),
+            anchor: new google.maps.Point(13, 41),
+          }
+        });
+
+        const infoWindow = new google.maps.InfoWindow({
+          content: `
+            <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px">
+                <b style="text-align: center">${feature.deviceId}</b>
+            </div>`
+        });
+
+        marker.addListener('click', () => {
+          this.mapCustom.setCenter(latlng);
+          infoWindow.open(this.mapCustom, marker);
+        });
+
+        this.truk.push(marker);
       });
-      this.initFullscreenControl();
-      this.mapCustom.addListener('click', (event:any) => {
-        this.onClickHandlerMap(event);
+
+      // Animación para eliminar los marcadores antiguos
+      oldMarkers.forEach((marker: google.maps.Marker) => {
+        marker.setAnimation(google.maps.Animation.DROP);
+        setTimeout(() => {
+          marker.setMap(null);
+        }, 1000); // 1000 milisegundos (1 segundo) de retraso antes de quitar el marcador
       });
+    }
+  }, error => {
+    console.log(error);
+  });
+}
+  clearMarkers(){
+    this.truk.forEach(element => {
+      element.setMap(null);
     });
-   
   }
     initFullscreenControl(): void {
       const elementToSendFullscreen = this.mapCustom.getDiv().firstChild as HTMLElement;

@@ -511,25 +511,27 @@ export class LayersComponent implements OnInit{
       });   
        this.cargarRecolectores();
     setInterval(() => {
-      this.clearMarkers();
+      //this.clearMarkers();
      this.cargarRecolectores();
-   }, 5000);
+   }, 2000);
   }
   truk: any = [];
+  //ver recolector / Reportar
 cargarRecolectores() {
   // Crear una copia de los marcadores actuales
   const oldMarkers = this.truk.slice();
 
   this.admin.obtenerGPS().subscribe(respone => {
     if (respone) {
+      console.log(respone);
       respone.forEach((feature: any) => {
         const latlng = new google.maps.LatLng(feature.latitude, feature.longitude);
         const marker = new google.maps.Marker({
           position: latlng,
           map: this.mapCustom,
           icon: {
-            url: "./assets/recolectorfinal.png",
-            scaledSize: new google.maps.Size(25, 41),
+            url: feature.attributes.motion?"./assets/recolectorfinal.png":"./assets/recolectorapagado.png",
+            scaledSize: new google.maps.Size(30, 41),
             anchor: new google.maps.Point(13, 41),
           }
         });
@@ -550,12 +552,24 @@ cargarRecolectores() {
       });
 
       // Animación para eliminar los marcadores antiguos
-      oldMarkers.forEach((marker: google.maps.Marker) => {
-        marker.setAnimation(google.maps.Animation.DROP);
+     /* oldMarkers.forEach((marker: google.maps.Marker) => {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout(() => {
           marker.setMap(null);
         }, 1000); // 1000 milisegundos (1 segundo) de retraso antes de quitar el marcador
-      });
+      });*/
+      let opacity = 1;
+      const fadeOutInterval = setInterval(() => {
+        opacity -= 0.1;
+        oldMarkers.forEach(marker => {      
+          marker.setOpacity(opacity);
+          if (opacity <= 0) {
+             marker.setMap(null);
+            clearInterval(fadeOutInterval);           
+          }
+        });
+        }, 100);
+      
     }
   }, error => {
     console.log(error);

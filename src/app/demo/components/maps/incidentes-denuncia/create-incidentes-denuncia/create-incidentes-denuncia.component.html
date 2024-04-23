@@ -6,7 +6,9 @@
         >
             <h2 class="modal-title">
                 Nuevo Incidente o Denuncia :
-                <span>{{ nuevoIncidenteDenuncia.direccion_geo.nombre }}</span
+                <span>{{
+                    nuevoIncidenteDenuncia.get("direccion_geo")?.value.nombre
+                }}</span
                 >/<span *ngIf="geolocation">{{
                     geolocation.address.road
                 }}</span>

@@ -20,7 +20,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 })
 export class CreateIncidentesDenunciaComponent implements OnInit{
 
-  nuevoIncidenteDenuncia:any={};
+  nuevoIncidenteDenuncia:FormGroup;
   categorias: any[] =[];
   subcategorias: any[] =[];
   model: boolean=true;
@@ -37,7 +37,9 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     this.nuevoIncidenteDenuncia = this.fb.group({
       categoria: ['', Validators.required],
       subcategoria: ['', Validators.required],
-      descripcion: ['', Validators.required]
+      descripcion: ['', Validators.required],
+      direccion_geo: [{},Validators.required],
+      ciudadano:['',Validators.required]
     });
   }
   data:any
@@ -98,6 +100,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
         });
   }
   tipocat: any;
+  tiposucat: any;
   async ngOnInit() {
     if (this.config && this.config.data && this.config.data.data) {
       this.data = this.config.data.data;
@@ -108,9 +111,12 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     if (this.config && this.config.data && this.config.data.tipo) {
       this.tipocat = this.config.data.tipo;
     }
+    if (this.config && this.config.data && this.config.data.subtipo) {
+      this.tiposucat = this.config.data.subtipo;
+    }
     this.load_form = false;
     if (this.data) {
-      this.nuevoIncidenteDenuncia.direccion_geo = { nombre: this.data.properties.nombre, latitud: this.direccion.latitud, longitud: this.direccion.longitud };
+      this.nuevoIncidenteDenuncia.get('direccion_geo').setValue({ nombre: this.data.properties.nombre, latitud: this.direccion.latitud, longitud: this.direccion.longitud });
     } else {
       this.router.navigate(['/maps']); // Corregido: navigate espera un array como argumento
     }
@@ -163,6 +169,13 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
         response => {
           //console.log(response)
           this.subcategorias = response.data;
+          if (this.tiposucat) {
+          const subcategoriaEncontrada = this.subcategorias.find(subcategoria => subcategoria.nombre === this.tiposucat);
+          if (subcategoriaEncontrada) {
+            this.nuevoIncidenteDenuncia.get('subcategoria')?.setValue(subcategoriaEncontrada);
+            this.nuevoIncidenteDenuncia.get('subcategoria')?.disable();
+          }
+        }
         },
         error => {
           //console.log(error);
@@ -188,6 +201,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
           const categoriaEncontrada = this.categorias.find(categoria => categoria.nombre === this.tipocat);
           if (categoriaEncontrada) {
             this.nuevoIncidenteDenuncia.get('categoria')?.setValue(categoriaEncontrada);
+            this.nuevoIncidenteDenuncia.get('categoria')?.disable();
             //console.log(this.nuevoIncidenteDenuncia.value);
             this.selectcategoria();
           }
@@ -377,10 +391,10 @@ selectedFiles: File[] = [];
     if(!this.token){
       throw this.router.navigate(["/auth/login"]);
     }
-    //console.log(this.nuevoIncidenteDenuncia);
-    this.nuevoIncidenteDenuncia.ciudadano=this.adminservice.identity(this.token);
+    console.log(this.nuevoIncidenteDenuncia.value);
+    this.nuevoIncidenteDenuncia.get('ciudadano')?.setValue(this.adminservice.identity(this.token));
     
-    this.createService.registrarIncidenteDenuncia(this.token, this.nuevoIncidenteDenuncia,this.selectedFiles).subscribe(response => {
+    this.createService.registrarIncidenteDenuncia(this.token, this.nuevoIncidenteDenuncia.value,this.selectedFiles).subscribe(response => {
       // Manejar la respuesta del servidor
       //console.log(response);
       if(response.data){
@@ -421,5 +435,5 @@ selectedFiles: File[] = [];
 
     return cols;
 }
-
+ 
 }

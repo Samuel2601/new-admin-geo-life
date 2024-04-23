@@ -149,6 +149,174 @@ export class LayersComponent implements OnInit{
       console.error('Error al verificar permisos:', error);
       this.router.navigate(['/notfound']);
     }
+    this.items = [
+      {
+        icon: 'pi bi-buildings-fill',
+        label: 'Menu Principal',
+        styleClass: 'itemcustom',
+        expanded: true,
+        items: [
+          {
+            icon: 'pi bi-bank',
+            label: 'Alcaldía Ciudadana',
+            styleClass: 'itemcustom',
+            //expanded: true,
+            items: [
+              {
+                icon: 'pi pi-chart-bar',
+                label: 'Estadística',
+                styleClass: 'itemcustom',
+                //visible: this.opcionb?true:false && this.check.DashboardComponent,
+                command: () => {
+                  if ((this.opcionb?true:false )  && this.check.CreateFichaSectorialComponent) {
+                    this.controlFullScreem();
+                    this.sidebarVisible = true;
+                  }else{
+                    this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un lugar'});
+                  }
+                },
+              },
+              {
+                icon: this.capaActiva ? 'pi pi-eye' : 'bi bi-eye-slash-custom',
+                label: 'Barrios',
+                styleClass: 'itemcustom',
+                command: () => {
+                  this.arr_polygon.length == 0 ? this.reloadmap() : this.mostrarpoligono();
+                },
+              },
+              {
+                icon: !this.capaActivaWIFI ? 'bi bi-wifi' : 'bi bi-wifi-off-custom',
+                label: 'Puntos Wifi',
+                styleClass: 'itemcustom',
+                command: () => {
+                  this.reloadWifi();
+                },
+              },
+              {
+                //visible: this.opcionb ? true : false,
+                separator: true,
+              },
+              {
+                icon: 'pi pi-book',
+                label: 'Fichas Técnicas',
+                styleClass: 'itemcustom',
+                expanded: true,
+                //visible: this.opcionb ? true : false,
+                items: [
+                  {
+                    icon: 'pi pi-book',
+                    label: 'Fichas Técnicas',
+                    styleClass: 'itemcustom',
+                    //visible: this.opcionb?true:false  && this.check.IndexFichaSectorialComponent,
+                    command: () => {
+                      if ((this.opcionb?true:false)   && this.check.CreateFichaSectorialComponent) {
+                        this.fichaTecnica();
+                      }else{
+                        this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un lugar'});
+                      }
+                    },
+                  },
+                  {
+                    icon: 'pi pi-pencil',
+                    label: 'Nuevas Ficha Técnica',
+                    styleClass: 'itemcustom',
+                    //visible: this.opcionb?true:false   && this.check.CreateFichaSectorialComponent,
+                    command: () => {
+                      if ((this.opcionb?true:false)   && this.check.CreateFichaSectorialComponent) {
+                        this.nuevoFicha();
+                      }else{
+                        this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un lugar'});
+                      }
+                    },
+                  },
+                ],
+              },
+              {
+                //visible: this.opcionb ? true : false,
+                separator: true,
+              },
+              {
+                icon: 'pi pi-inbox',
+                label: 'Incidentes',
+                styleClass: 'itemcustom',
+                expanded: true,
+                //visible: this.opcionb ? true : false,
+                items: [
+                  {
+                    icon: 'pi pi-inbox',
+                    label: 'Listado',
+                    styleClass: 'itemcustom',
+                    //visible: this.opcionb?true:false && this.check.IndexIncidentesDenunciaComponent,
+                    command: () => {
+                      if ((this.opcionb?true:false) && this.check.IndexIncidentesDenunciaComponent) {
+                        this.incidente();
+                      }else{
+                        this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un lugar'});
+                      }
+                    },
+                  },
+                  {
+                    icon: 'pi pi-telegram',
+                    label: 'Nuevo Incidente',
+                    styleClass: 'itemcustom',
+                    //visible: this.opcionb?true:false  && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
+                    command: () => {
+                      if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false) ) {
+                        this.nuevoIncidente();
+                      }else{
+                        this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un punto'});
+                      }
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            
+            icon: 'pi pi-directions',
+            label: 'ESVIAL',
+            styleClass: 'itemcustom',
+            //visible: this.opcionb?true:false  && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
+            command: () => {
+              if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false) ) {
+                this.nuevoIncidente('ESVIAL');
+              }else{
+                this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un punto'});
+              }  
+            },
+          },
+          {
+            
+            icon: 'pi bi-droplet-fill',
+            label: 'EPMAPSE',
+            styleClass: 'itemcustom',
+            //visible: this.opcionb?true:false  && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
+            command: () => {
+              if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false) ) {
+                this.nuevoIncidente('Agua Potable y Alcantarillado');
+              }else{
+                this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un punto'});
+              }  
+            },
+          },
+          {
+            
+            icon: 'pi bi-truck',
+            label: 'Recolecctor',
+            styleClass: 'itemcustom',
+            //visible: this.opcionb?true:false && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
+            command: () => {
+              if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false)) {
+                this.nuevoIncidente('Higiene', 'Servicio de recolección de desechos');
+              }else{
+                this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un punto'});
+              }            
+            },
+          }
+        ],
+      },
+    ];
     this.updateItem();
     
     this.helperService.setMapComponent(this); 
@@ -169,202 +337,29 @@ export class LayersComponent implements OnInit{
       
         },
       },*/
-  updateItem() {
-    this.loadspeed = false;
-  this.items = [
-    {
-      icon: 'pi bi-buildings-fill',
-      label: 'Menu Principal',
-      styleClass: 'itemcustom',
-      expanded: true,
-      items: [
-        {
-          icon: 'pi bi-bank',
-          label: 'Alcaldía Ciudadana',
-          styleClass: 'itemcustom',
-          //expanded: true,
-          items: [
-            {
-              icon: 'pi pi-chart-bar',
-              label: 'Estadística',
-              styleClass: 'itemcustom',
-              //visible: this.opcionb?true:false && this.check.DashboardComponent,
-              command: () => {
-                if ((this.opcionb?true:false )  && this.check.CreateFichaSectorialComponent) {
-                  this.controlFullScreem();
-                  this.sidebarVisible = true;
-                }else{
-                  this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un lugar'});
-                }
-              },
-            },
-             {
-              icon: this.capaActiva ? 'pi pi-eye' : 'bi bi-eye-slash-custom',
-              label: 'Barrios',
-              styleClass: 'itemcustom',
-              command: () => {
-                this.arr_polygon.length == 0 ? this.reloadmap() : this.mostrarpoligono();
-              },
-            },
-            {
-              icon: !this.capaActivaWIFI ? 'bi bi-wifi' : 'bi bi-wifi-off-custom',
-              label: 'Puntos Wifi',
-              styleClass: 'itemcustom',
-              command: () => {
-                this.reloadWifi();
-              },
-            },
-            {
-              //visible: this.opcionb ? true : false,
-              separator: true,
-            },
-            {
-              icon: 'pi pi-book',
-              label: 'Fichas Técnicas',
-              styleClass: 'itemcustom',
-              expanded: true,
-              //visible: this.opcionb ? true : false,
-              items: [
-                {
-                  icon: 'pi pi-book',
-                  label: 'Fichas Técnicas',
-                  styleClass: 'itemcustom',
-                  //visible: this.opcionb?true:false  && this.check.IndexFichaSectorialComponent,
-                  command: () => {
-                    if ((this.opcionb?true:false)   && this.check.CreateFichaSectorialComponent) {
-                      this.fichaTecnica();
-                    }else{
-                      this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un lugar'});
-                    }
-                  },
-                },
-                {
-                  icon: 'pi pi-pencil',
-                  label: 'Nuevas Ficha Técnica',
-                  styleClass: 'itemcustom',
-                  //visible: this.opcionb?true:false   && this.check.CreateFichaSectorialComponent,
-                  command: () => {
-                    if ((this.opcionb?true:false)   && this.check.CreateFichaSectorialComponent) {
-                      this.nuevoFicha();
-                    }else{
-                      this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un lugar'});
-                    }
-                  },
-                },
-              ],
-            },
-            {
-              //visible: this.opcionb ? true : false,
-              separator: true,
-            },
-            {
-              icon: 'pi pi-inbox',
-              label: 'Incidentes',
-              styleClass: 'itemcustom',
-              expanded: true,
-              //visible: this.opcionb ? true : false,
-              items: [
-                {
-                  icon: 'pi pi-inbox',
-                  label: 'Listado',
-                  styleClass: 'itemcustom',
-                  //visible: this.opcionb?true:false && this.check.IndexIncidentesDenunciaComponent,
-                  command: () => {
-                    if ((this.opcionb?true:false) && this.check.IndexIncidentesDenunciaComponent) {
-                      this.incidente();
-                    }else{
-                      this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un lugar'});
-                    }
-                  },
-                },
-                {
-                  icon: 'pi pi-telegram',
-                  label: 'Nuevo Incidente',
-                  styleClass: 'itemcustom',
-                  //visible: this.opcionb?true:false  && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
-                  command: () => {
-                    if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false) ) {
-                      this.nuevoIncidente();
-                    }else{
-                      this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un punto'});
-                    }
-                  },
-                },
-              ],
-            },
-          ],
-        },
-        {
-          
-          icon: 'pi pi-directions',
-          label: 'ESVIAL',
-          styleClass: 'itemcustom',
-          //visible: this.opcionb?true:false  && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
-          command: () => {
-            if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false) ) {
-              this.nuevoIncidente('ESVIAL');
-            }else{
-              this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un punto'});
-            }  
-          },
-        },
-        {
-          
-          icon: 'pi bi-droplet-fill',
-          label: 'EPMAPSE',
-          styleClass: 'itemcustom',
-          //visible: this.opcionb?true:false  && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
-          command: () => {
-            if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false) ) {
-              this.nuevoIncidente('Agua Potable y Alcantarillado');
-            }else{
-              this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un punto'});
-            }  
-          },
-        },
-        {
-          
-          icon: 'pi bi-truck',
-          label: 'Recolecctor',
-          styleClass: 'itemcustom',
-          //visible: this.opcionb?true:false && this.check.CreateIncidentesDenunciaComponent && this.latitud?true:false  && this.longitud?true:false ,
-          command: () => {
-            if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false)) {
-              this.nuevoIncidente('Higiene');
-            }else{
-              this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un punto'});
-            }            
-          },
-        }
-      ],
-    },
-  ];
-  //this.addtemplateSP();
-  this.addtemplateMn();
-  this.addtemplateFR();
-  this.addtemplateBG();
-}
-
+  
+  updateItem() {    
+    //this.addtemplateSP();
+    this.addtemplateMn();
+    this.addtemplateFR();
+    this.addtemplateBG();
+  }
+  pushmenu: boolean = false;
   addtemplateMn() {
-      setTimeout(() => {
-        this.loadspeed = true;      
-        const speedDial = document.getElementById('speedDial');
+    setTimeout(() => {
+      const panelmenu = document.getElementById('panelmenu');
+
+      // Verificar si el speedDial ya está en el mapa antes de agregarlo
+      if (!this.pushmenu&&this.mapCustom.controls) {
+        this.pushmenu = true;
+        const customControlDiv = document.createElement('div');
+        customControlDiv.appendChild(panelmenu);
+
+        // Añadir el speedDial al control solo si no está agregado
+        this.mapCustom.controls[google.maps.ControlPosition.LEFT_TOP].push(customControlDiv);
+      }
+    }, 200);
     
-        // Verificar si el speedDial ya está en el mapa antes de agregarlo
-        if (!this.isMenuAdded()) {
-          const customControlDiv = document.createElement('div');
-          customControlDiv.appendChild(speedDial);
-    
-          // Añadir el speedDial al control solo si no está agregado
-          this.mapCustom.controls[google.maps.ControlPosition.LEFT_TOP].push(customControlDiv);
-        }
-    
-        if (this.speedDials) {
-          this.speedDials.forEach((speedDial, index) => {
-            speedDial.show();
-          });
-        }
-      }, 1000);
   }
   isMenuAdded(): boolean {
       const speedDial = document.getElementById('speedDial');
@@ -372,27 +367,25 @@ export class LayersComponent implements OnInit{
       return speedDialParent && speedDialParent.tagName === 'DIV' && speedDialParent.parentNode === this.mapCustom.getDiv();
   }
 
-
-    addtemplateSP() {
-      setTimeout(() => {
-        this.loadspeed = true;      
-        const speedDial = document.getElementsByTagName('p-speedDial')[0];
-    
-        // Verificar si el speedDial ya está en el mapa antes de agregarlo
-        if (!this.isSpeedDialAdded()) {
-          const customControlDiv = document.createElement('div');
-          customControlDiv.appendChild(speedDial);
-    
-          // Añadir el speedDial al control solo si no está agregado
-          this.mapCustom.controls[google.maps.ControlPosition.LEFT_TOP].push(customControlDiv);
-        }
-    
-        if (this.speedDials) {
-          this.speedDials.forEach((speedDial, index) => {
-            speedDial.show();
-          });
-        }
-      }, 1000);
+  addtemplateSP() {
+    setTimeout(() => {    
+      const speedDial = document.getElementsByTagName('p-speedDial')[0];
+  
+      // Verificar si el speedDial ya está en el mapa antes de agregarlo
+      if (!this.isSpeedDialAdded()) {
+        const customControlDiv = document.createElement('div');
+        customControlDiv.appendChild(speedDial);
+  
+        // Añadir el speedDial al control solo si no está agregado
+        this.mapCustom.controls[google.maps.ControlPosition.LEFT_TOP].push(customControlDiv);
+      }
+  
+      if (this.speedDials) {
+        this.speedDials.forEach((speedDial, index) => {
+          speedDial.show();
+        });
+      }
+    }, 1000);
   }
   isSpeedDialAdded(): boolean {
       const speedDial = document.getElementsByTagName('p-speedDial')[0];
@@ -401,8 +394,7 @@ export class LayersComponent implements OnInit{
   }
   
   addtemplateBG() {
-  setTimeout(() => {
-    this.loadspeed = true;      
+  setTimeout(() => {      
     const speedDial = document.createElement('button');
     speedDial.className = 'p-button p-button-icon-only';
     speedDial.innerHTML = '<span class="bi bi-crosshair" style="font-size: 24px;"></span>';
@@ -439,38 +431,37 @@ export class LayersComponent implements OnInit{
       }
     }
     return false; // El formulario no está agregado al mapa
-    }
+  }
 
-    addtemplateFR() {
-      setTimeout(() => { 
-        const formularioMap = this.formularioMapRef.nativeElement;
-          if (this.load_fullscreen) {
-          if (!this.isFormularioMapAdded()) {
-                const customControlDiv = document.createElement('div');
-                customControlDiv.appendChild(formularioMap);
-                this.mapCustom.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(customControlDiv);
-            }
-          } else {
-            // Quitar el div del mapa si está agregado
-            if (this.isFormularioMapAdded()) {
-                const formularioMapDiv = formularioMap.parentElement;
-                formularioMapDiv.removeChild(formularioMap);
-            }
+  addtemplateFR() {
+    setTimeout(() => { 
+      const formularioMap = this.formularioMapRef.nativeElement;
+        if (this.load_fullscreen) {
+        if (!this.isFormularioMapAdded()) {
+              const customControlDiv = document.createElement('div');
+              customControlDiv.appendChild(formularioMap);
+              this.mapCustom.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(customControlDiv);
           }
-      }, 1000);
+        } else {
+          // Quitar el div del mapa si está agregado
+          if (this.isFormularioMapAdded()) {
+              const formularioMapDiv = formularioMap.parentElement;
+              formularioMapDiv.removeChild(formularioMap);
+          }
+        }
+    }, 1000);
+  }
+  isFormularioMapAdded(): boolean {
+  // Verificar si el formulario ya está en el mapa
+  const mapControls = this.mapCustom.controls[google.maps.ControlPosition.BOTTOM_CENTER].getArray();
+  for (let i = 0; i < mapControls.length; i++) {
+    const control = mapControls[i] as HTMLElement;
+    if (control.contains(this.formularioMapRef.nativeElement)) {
+      return true; // El formulario ya está agregado al mapa
     }
-    isFormularioMapAdded(): boolean {
-    // Verificar si el formulario ya está en el mapa
-    const mapControls = this.mapCustom.controls[google.maps.ControlPosition.BOTTOM_CENTER].getArray();
-    for (let i = 0; i < mapControls.length; i++) {
-      const control = mapControls[i] as HTMLElement;
-      if (control.contains(this.formularioMapRef.nativeElement)) {
-        return true; // El formulario ya está agregado al mapa
-      }
-    }
-    return false; // El formulario no está agregado al mapa
-    }
-    
+  }
+  return false; // El formulario no está agregado al mapa
+  }
 
   //CONEXION DE FEATURE
   async getWFSgeojson(url:any) {
@@ -489,15 +480,15 @@ export class LayersComponent implements OnInit{
     }
   }
 
-    guardarfeature(data:any){
-      if(data.features){
-        var aux=[];
-        aux.push(data.features);
-        this.lista_feature=aux[0];
-        ////console.log(this.lista_feature);
-        this.filter = this.lista_feature;
-      }
+  guardarfeature(data:any){
+    if(data.features){
+      var aux=[];
+      aux.push(data.features);
+      this.lista_feature=aux[0];
+      ////console.log(this.lista_feature);
+      this.filter = this.lista_feature;
     }
+  }
   //INICIALIZADOR DEL MAPA
   initmap() {
     this.loader.load().then(() => {
@@ -591,6 +582,7 @@ export class LayersComponent implements OnInit{
   popupStates: boolean[] = [];
   // Adds a marker to the map and push to the array.
   addMarker(position: google.maps.LatLng | google.maps.LatLngLiteral, tipo: 'Wifi' | 'Poligono' | 'Ubicación', message?: string, feature?: any) {
+    console.log(position);
     if (feature) this.opcionb = feature;
     this.updateItem();
     this.deleteMarkers('');
@@ -712,8 +704,8 @@ export class LayersComponent implements OnInit{
     if (typeof featurecall !== 'string') {
       const feature = featurecall;
       if (ver) {
-        this.latitud = null;
-        this.longitud = null;
+       // this.latitud = null;
+        //this.longitud = null;
       if(this.capaActiva){
         this.arr_polygon.forEach((polygon: google.maps.Polygon) => {
           polygon.setMap(null);
@@ -815,32 +807,21 @@ export class LayersComponent implements OnInit{
   feature_img: any;
   url_imag: string = '';
   levantarpopup(polygon: any, feature: any) {
-
-    //this.canpopup = true;
     const featureId = feature.id;
     if(this.capaActiva){
-
       this.opcionb=false;
     }
-    //
-
     polygon.addListener('click', (event:any) => {
-      //console.log("632",!this.popupsMostrados[featureId], this.capaActiva,this.opcionb);
       if(!this.popupsMostrados[featureId]){
           // Cerrar el popup actualmente abierto
           if (this.openInfoWindow) {
             this.openInfoWindow.close();
-        }
-        const contentElement = document.createElement('div');
-        
-        
-       
+            this.feature_img = null;
+          }
         this.popupsMostrados[featureId] = true;
         // Crear el contenido del InfoWindow
         this.feature_img = feature;
-        //console.log(this.feature_img);
-        this.url_imag = `${ this.url }helper/obtener_portada_barrio/${ feature.id }`;
-      
+        this.url_imag = `${ this.url }helper/obtener_portada_barrio/${ feature.id }`;      
         setTimeout(() => {       
           // Abrir un nuevo popup con el nombre del barrio
           const infoWindow = new google.maps.InfoWindow({
@@ -849,21 +830,17 @@ export class LayersComponent implements OnInit{
           });
           infoWindow.setPosition(event.latLng);
           infoWindow.open(this.mapCustom);
+          this.openInfoWindow = infoWindow;
           // Escuchar el evento closeclick
           google.maps.event.addListener(infoWindow, 'closeclick', () => {
               // Aquí puedes realizar la acción que desees cuando se cierre la InfoWindow
             console.log('La ventana de información se ha cerrado');
             this.feature_img = null;
-          });
-        }, 200);
-       
-       
-
-          //this.canpopup=false;
-      } else {
-       
+          });         
+        }, 200);       
+      } else {       
         if (this.capaActiva) {
-          this.popupsMostrados={}
+          this.popupsMostrados[featureId] = false;
           this.opcionb = feature;
           if (this.check.DashboardComponent&&this.isMobil()) {
             this.sidebarVisible = true;
@@ -873,7 +850,6 @@ export class LayersComponent implements OnInit{
             this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono',feature.properties.nombre,feature);
           }
         }else{
-           this.popupsMostrados={}
           this.latitud = event.latLng.lat();
           this.longitud = event.latLng.lng();
           this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono',feature.properties.nombre,feature);
@@ -887,7 +863,6 @@ export class LayersComponent implements OnInit{
     let aux=window.innerWidth-120;
     return (aux+'px').toString();
   }
-  loadspeed=false;
   isMobil() {
     return this.helperService.isMobil();
   }
@@ -906,13 +881,15 @@ export class LayersComponent implements OnInit{
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {          
-          ////console.log(position,position.coords.longitude, position.coords.latitude);
+          console.log(position,position.coords.longitude, position.coords.latitude);
           this.latitud = position.coords.latitude;
           this.longitud = position.coords.longitude;
+          console.log(this.latitud, this.longitud);
+          this.addMarker({lat: this.latitud, lng: this.longitud},'Ubicación','Tu ubicación Actual');
           this.updateItem();
           this.poligonoposition();
           //await this.obtenerDireccion(this.latitud,this.longitud);   
-          this.addMarker({lat: this.latitud, lng: this.longitud},'Ubicación','Tu ubicación Actual');
+          
           //this.marcarlugar(this.latitud,this.longitud,'Ubicación actual');      
           //await this.buscarfeature(this.latitud,this.longitud);
         },
@@ -1027,7 +1004,7 @@ export class LayersComponent implements OnInit{
        this.ref.close();
       });
   }
-  nuevoIncidente(tipo?:string) {
+  nuevoIncidente(tipo?:string,subtipo?:string) {
     if (!this.token) {
       this.router.navigate(["/auth/login"]);
     } else {
@@ -1041,7 +1018,7 @@ export class LayersComponent implements OnInit{
      this.ref =  this.dialogService.open(CreateIncidentesDenunciaComponent, {
           header: '',
           width: this.isMobil() ? '100%' : '30%',
-          data: { data: data , direccion:{ latitud: this.latitud, longitud: this.longitud},tipo:tipo},
+          data: { data: data , direccion:{ latitud: this.latitud, longitud: this.longitud},tipo:tipo,subtipo:subtipo},
       });
    App.addListener('backButton', data => {
      this.ref.destroy();

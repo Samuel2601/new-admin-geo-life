@@ -143,12 +143,12 @@
 <div style="display: none">
     <p-card
         id="content"
-        *ngIf="feature_img"
-        [header]="feature_img.properties.nombre"
+        *ngIf="features[id_feature]"
+        [header]="features[id_feature].properties.nombre"
         [subheader]="
-            feature_img.properties.parr ||
-            feature_img.properties.obser ||
-            feature_img.properties.tipo
+            features[id_feature].properties.parr ||
+            features[id_feature].properties.obser ||
+            features[id_feature].properties.tipo
                 ? 'Información de barrio:'
                 : ''
         "
@@ -161,9 +161,9 @@
                 style="width: 100%; height: 150px; object-fit: cover"
             />
         </ng-template>
-        <ng-container *ngIf="feature_img.properties">
-            <div *ngIf="feature_img.properties.parr">
-                Parroquia: {{ feature_img.properties.parr }}
+        <ng-container *ngIf="features[id_feature].properties">
+            <div *ngIf="features[id_feature].properties.parr">
+                Parroquia: {{ features[id_feature].properties.parr }}
             </div>
         </ng-container>
         <ng-template
@@ -176,7 +176,7 @@
                 [raised]="true"
                 [outlined]="true"
                 label="Añadir nueva Foto"
-                (click)="this.modalcreatedireccion(feature_img)"
+                (click)="this.modalcreatedireccion(features[id_feature])"
             ></p-button>
         </ng-template>
     </p-card>

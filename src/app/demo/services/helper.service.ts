@@ -115,7 +115,6 @@ export class HelperService {
     const encrypte=sessionStorage.getItem(encryptedData)||localStorage.getItem(encryptedData);
     if(encrypte){
       const decryptedData = CryptoJS.AES.decrypt(encrypte, this.key).toString(CryptoJS.enc.Utf8);      
-      console.log(decryptedData);
       return decryptedData?true:false;
     }else{
       return false;

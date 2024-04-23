@@ -803,60 +803,62 @@ export class LayersComponent implements OnInit{
       
     }
   }
-  popupsMostrados: { [key: string]: boolean } = {};
   feature_img: any;
   url_imag: string = '';
+  infoWindowActual: google.maps.InfoWindow;
+  public features: { [id: string]: any } = {};
+  id_feature: any;
   levantarpopup(polygon: any, feature: any) {
-    const featureId = feature.id;
-    if(this.capaActiva){
-      this.opcionb=false;
+    if (this.infoWindowActual&&!this.capaActiva) {
+      this.infoWindowActual.close();
+      this.infoWindowActual = null;
+      this.url_imag = null;      
     }
-    polygon.addListener('click', (event:any) => {
-      if(!this.popupsMostrados[featureId]){
-          // Cerrar el popup actualmente abierto
-          if (this.openInfoWindow) {
-            this.openInfoWindow.close();
-            this.feature_img = null;
-          }
-        this.popupsMostrados[featureId] = true;
-        // Crear el contenido del InfoWindow
-        this.feature_img = feature;
-        this.url_imag = `${ this.url }helper/obtener_portada_barrio/${ feature.id }`;      
-        setTimeout(() => {       
-          // Abrir un nuevo popup con el nombre del barrio
-          const infoWindow = new google.maps.InfoWindow({
-            ariaLabel:'info',
-            content:  document.getElementById("content")     
-          });
-          infoWindow.setPosition(event.latLng);
-          infoWindow.open(this.mapCustom);
-          this.openInfoWindow = infoWindow;
-          // Escuchar el evento closeclick
-          google.maps.event.addListener(infoWindow, 'closeclick', () => {
-              // Aquí puedes realizar la acción que desees cuando se cierre la InfoWindow
-            console.log('La ventana de información se ha cerrado');
-            this.feature_img = null;
-          });         
-        }, 200);       
-      } else {       
-        if (this.capaActiva) {
-          this.popupsMostrados[featureId] = false;
-          this.opcionb = feature;
-          if (this.check.DashboardComponent&&this.isMobil()) {
-            this.sidebarVisible = true;
-          }else{
-            this.latitud = event.latLng.lat();
-            this.longitud = event.latLng.lng();
-            this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono',feature.properties.nombre,feature);
-          }
-        }else{
+    this.features[polygon.id] = null;
+    polygon.addListener('click', (event: any) => {
+      if (this.features[polygon.id]==feature&&!this.capaActiva) {
           this.latitud = event.latLng.lat();
           this.longitud = event.latLng.lng();
           this.addMarker({lat: this.latitud, lng: this.longitud},'Poligono',feature.properties.nombre,feature);
+      } else {
+        if (this.infoWindowActual) {
+          this.infoWindowActual.close();
+          this.features[polygon.id] = null;
+          this.infoWindowActual = null;
+        }
+
+        if (!this.infoWindowActual) {         
+          this.features[polygon.id] = feature;
+          this.id_feature = polygon.id;
+          this.url_imag = `${this.url}helper/obtener_portada_barrio/${this.features[this.id_feature].id}`;
+
+          setTimeout(() => {
+              let contentElement = document.getElementById("content");
+              let clonedContent = contentElement.cloneNode(true) as Element;
+                this.infoWindowActual = new google.maps.InfoWindow({
+                    ariaLabel: 'info',
+                    content: clonedContent
+                });
+
+                google.maps.event.addListener(this.infoWindowActual, 'closeclick', () => {
+                    console.log('La ventana de información se ha cerrado');
+                    //this.features[polygon.id] = null;
+                    this.infoWindowActual = null;
+                });
+              this.infoWindowActual.setPosition(event.latLng);
+              this.infoWindowActual.open(this.mapCustom);
+          }, 200);
+          
+        } else {
+
+          this.infoWindowActual.setPosition(event.latLng);
+          this.infoWindowActual.open(this.mapCustom);
+
         }
       }
-      
+       
     });
+    console.log(this.features);
   }
 
   responsiveimage():string{

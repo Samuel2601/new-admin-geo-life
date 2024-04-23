@@ -188,13 +188,13 @@ export class LayersComponent implements OnInit{
   updateItem() { 
     this.items = [
       {
-        icon: 'pi bi-buildings-fill',
+        icon: 'pi bi-homecustom',
         label: 'Menu Principal',
         styleClass: 'itemcustom',
         expanded: true,
         items: [
           {
-            icon: 'pi bi-bank',
+            icon: 'pi bi-bankcustom',
             label: 'Alcaldía Ciudadana',
             styleClass: 'itemcustom',
             //expanded: true,
@@ -302,7 +302,7 @@ export class LayersComponent implements OnInit{
           },
           {
             
-            icon: 'pi pi-directions',
+            icon: 'pi pi-directionscustom',
             label: 'ESVIAL',
             styleClass: 'itemcustom',
             command: () => {
@@ -315,7 +315,7 @@ export class LayersComponent implements OnInit{
           },
           {
             
-            icon: 'pi bi-droplet-fill',
+            icon: 'pi bi-dropletcustom',
             label: 'EPMAPSE',
             styleClass: 'itemcustom',
             command: () => {
@@ -328,8 +328,8 @@ export class LayersComponent implements OnInit{
           },
           {
             
-            icon: 'pi bi-truck',
-            label: 'Recolecctor',
+            icon: 'pi bi-camionprimne',
+            label: 'Recolector',
             styleClass: 'itemcustom',
             expanded: !this.load_truck,
             items:[
@@ -358,8 +358,8 @@ export class LayersComponent implements OnInit{
                 }
               },
               {
-                icon: 'pi bi-truck',
-                label: 'Reportar',
+                icon: 'pi bi-trashcustom',
+                label: 'Denuncia/Incidente',
                 styleClass: 'itemcustom',
                 command: () => {
                   if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false)) {
@@ -558,7 +558,7 @@ export class LayersComponent implements OnInit{
           position: latlng,
           map: this.mapCustom,
           icon: {
-            url: feature.attributes.motion?"./assets/camionON.png":"./assets/camionOFF.png",
+            url: feature.attributes.motion?"./assets/menu/camionON.png":"./assets/menu/camionOFF.png",
             scaledSize: new google.maps.Size(40,40),
             anchor: new google.maps.Point(13, 41),
           }

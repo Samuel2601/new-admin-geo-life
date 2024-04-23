@@ -1053,7 +1053,8 @@ export class LayersComponent implements OnInit{
     this.ref =  this.dialogService.open(CreateDireccionGeoComponent, {
           header: 'Nueva imagen Direcion',
           width: this.isMobil() ? '100%' : '50%',
-          data: { feature: feature},
+          data: { feature: feature },
+          dismissableMask:true,
       });
     App.addListener('backButton', data => {
     this.ref.destroy();

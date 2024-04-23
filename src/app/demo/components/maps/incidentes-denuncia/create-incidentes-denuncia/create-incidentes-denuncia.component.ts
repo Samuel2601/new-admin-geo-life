@@ -167,10 +167,11 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
       const id = this.nuevoIncidenteDenuncia.get('categoria')?.value._id;
       this.listService.listarSubcategorias(this.token,'categoria',id).subscribe(
         response => {
-          //console.log(response)
+          console.log(response)
           this.subcategorias = response.data;
+          console.log(this.tiposucat);
           if (this.tiposucat) {
-          const subcategoriaEncontrada = this.subcategorias.find(subcategoria => subcategoria.nombre === this.tiposucat);
+          const subcategoriaEncontrada = this.subcategorias.find(subcategoria => subcategoria.nombre == this.tiposucat);
           if (subcategoriaEncontrada) {
             this.nuevoIncidenteDenuncia.get('subcategoria')?.setValue(subcategoriaEncontrada);
             this.nuevoIncidenteDenuncia.get('subcategoria')?.disable();

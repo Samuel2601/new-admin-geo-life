@@ -301,7 +301,7 @@ export class LayersComponent implements OnInit{
             styleClass: 'itemcustom',
             command: () => {
               if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false) ) {
-                this.nuevoIncidente('ESVIAL');
+                this.nuevoIncidente('ESVIAL','Transporte terrestre y seguridad vial');
               }else{
                 this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un punto'});
               }  
@@ -327,7 +327,7 @@ export class LayersComponent implements OnInit{
             styleClass: 'itemcustom',
             command: () => {
               if ((this.opcionb ? true : false) && this.check.CreateIncidentesDenunciaComponent && (this.latitud ? true : false) && (this.longitud ? true : false)) {
-                this.nuevoIncidente('Higiene', 'Servicio de recolección de desechos');
+                this.nuevoIncidente('Higiene',' Servicio de recolección de desechos');
               }else{
                 this.messageService.add({severity: 'error', summary:'ERROR', detail: 'Primero selecciona un punto'});
               }            

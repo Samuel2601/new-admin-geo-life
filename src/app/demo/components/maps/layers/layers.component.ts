@@ -835,6 +835,12 @@ export class LayersComponent implements OnInit{
           setTimeout(() => {
               let contentElement = document.getElementById("content");
               let clonedContent = contentElement.cloneNode(true) as Element;
+              // Volver a añadir el evento click al botón clonado
+              let clonedButton = clonedContent.querySelector('#fotoButton') as HTMLElement;
+              clonedButton.addEventListener('click', () => {
+                // Aquí va tu código para el evento click
+                this.modalcreatedireccion(this.features[this.id_feature]);
+              });
                 this.infoWindowActual = new google.maps.InfoWindow({
                     ariaLabel: 'info',
                     content: clonedContent
@@ -858,7 +864,6 @@ export class LayersComponent implements OnInit{
       }
        
     });
-    console.log(this.features);
   }
 
   responsiveimage():string{
@@ -1041,7 +1046,7 @@ export class LayersComponent implements OnInit{
   }
   modaldireccion:boolean=false;
   modalcreatedireccion(feature:any){
-    //console.log('crear foto');
+    console.log('crear foto');
     this.sidebarVisible ? this.sidebarVisible = false : '';
     this.mostrarficha ? this.mostrarficha = false : '';
     this.mostrarincidente ? this.mostrarincidente = false : '';

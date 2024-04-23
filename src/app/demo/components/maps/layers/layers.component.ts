@@ -471,8 +471,7 @@ export class LayersComponent implements OnInit{
       }
       return data;
     } catch (error) {
-      //console.log('error:',error);
-      ////console.log('Error fetching WFS geojson:', error);
+      console.error('error:',error);
       return null;
     }
   }
@@ -482,7 +481,6 @@ export class LayersComponent implements OnInit{
       var aux=[];
       aux.push(data.features);
       this.lista_feature=aux[0];
-      ////console.log(this.lista_feature);
       this.filter = this.lista_feature;
     }
   }
@@ -711,7 +709,6 @@ export class LayersComponent implements OnInit{
       //this.myControl.setValue(feature.properties.nombre);
       this.opcionb = feature;
       this.updateItem();
-      //console.log(this.opcionb);
     }
       const geometry = feature.geometry;
       const properties = feature.properties;
@@ -777,9 +774,6 @@ export class LayersComponent implements OnInit{
           const poligono = turf.polygon(feature.geometry.coordinates[0]);
           
           if (turf.booleanContains(poligono, puntoUsuario)) {
-            
-            //console.log('El usuario está dentro del polígono:', feature);
-            //console.log(feature);
             this.opcionb = feature;
             /*if (this.check.DashboardComponent&&this.isMobil()) {
               this.sidebarVisible = true;
@@ -873,10 +867,8 @@ export class LayersComponent implements OnInit{
   async getLocation() {
     if(this.isMobil()){
       const permission = await Geolocation['requestPermissions']();
-      ////console.log(permission);
       if (permission !== 'granted') {
         const coordinates = await Geolocation['getCurrentPosition']();
-        ////console.log(coordinates);
       }
     }else{
       this.messageService.add({ severity: 'info', summary: 'Info', detail: 'Tu ubicación puede ser no exacta' });
@@ -884,24 +876,20 @@ export class LayersComponent implements OnInit{
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {          
-          console.log(position,position.coords.longitude, position.coords.latitude);
           this.latitud = position.coords.latitude;
           this.longitud = position.coords.longitude;
-          console.log(this.latitud, this.longitud);
           this.addMarker({lat: this.latitud, lng: this.longitud},'Ubicación','Tu ubicación Actual');
           this.updateItem();
           this.poligonoposition();
-          //await this.obtenerDireccion(this.latitud,this.longitud);   
-          
-          //this.marcarlugar(this.latitud,this.longitud,'Ubicación actual');      
-          //await this.buscarfeature(this.latitud,this.longitud);
         },
         (error) => {
-          ////console.error('Error getting location: ' + error.message);
+          console.error('Error getting location: ' + error.message);
+          this.messageService.add({severity: 'error', summary: '404', detail: error.message||'Sin conexión'});
         }
       );
     } else {
-      ////console.error('Geolocation is not supported by this browser.');
+      console.error('Geolocation is not supported by this browser.');
+      this.messageService.add({severity: 'error', summary:  "ERROR", detail: 'Geolocation is not supported by this browser.'});
     }
   }
   filterOptions(event?: any) {
@@ -956,7 +944,6 @@ export class LayersComponent implements OnInit{
             this.arr_wifi.forEach(marker => marker.setMap(this.mapCustom));
         }        
         this.capaActivaWIFI = false;
-        //console.log(this.arr_wifi);
         //this.capaActivaWIFIpop = true;
     } else {
         this.arr_wifi.forEach(marker => marker.setMap(null));

@@ -371,11 +371,11 @@
                                     display="menu"
                                 ></p-columnFilter>
                                 <th
-                                    pSortableColumn="encargado.nombre"
+                                    pSortableColumn="encargado.nombres"
                                     style="width: 20%"
                                 >
                                     <p-sortIcon
-                                        field="encargado.nombre"
+                                        field="encargado.nombres"
                                     ></p-sortIcon>
                                 </th>
                             </div>
@@ -649,13 +649,21 @@
             </div>
             <div class="justify-content-end">
                 <p-button
-                    *ngIf="check.EditFichaSectorialComponent"
+                    *ngIf="
+                        check.EditFichaSectorialComponent &&
+                        (id == option.encargado._id ||
+                            rol.nombre == 'Administrador')
+                    "
                     label="Editar"
                     icon="pi pi-file-edit"
                     (click)="editingrow(option._id)"
                 ></p-button>
 
                 <p-button
+                    *ngIf="
+                        id == option.encargado._id ||
+                        rol.nombre == 'Administrador'
+                    "
                     label="Borrar"
                     icon="pi pi-images"
                     (click)="eliminarModal(option)"

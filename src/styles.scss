@@ -76,23 +76,23 @@
 }
 .bi-camionprimne {
     content: url('assets/menu/camionON.png');
-    width: 30px;
+    height: 30px;
 }
 .bi-homecustom {
     content: url('assets/menu/casa.png');
-    width: 30px;
+    height: 30px;
 }
 .pi-directionscustom {
-    content: url('assets/menu/mapa-vial.png');
-    width: 30px;
+    content: url('assets/menu/semaforo.png');
+    height: 30px;
 }
 .bi-dropletcustom {
-    content: url('assets/menu/agua.png');
-    width: 30px;
+    content: url('assets/menu/epmapsenew.png');
+    height: 30px;
 }
 .bi-bankcustom {
     content: url('assets/menu/banco.png');
-    width: 30px;
+    height: 30px;
 }
 $gutter: 1rem; //for primeflex grid system
 @import "assets/layout/styles/layout/layout.scss";

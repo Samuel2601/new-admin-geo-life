@@ -12,6 +12,8 @@ import { DialogService,DynamicDialogRef } from 'primeng/dynamicdialog';
 import { App } from '@capacitor/app';
 import { AdminService } from 'src/app/demo/services/admin.service';
 import { EditFichaSectorialComponent } from '../edit-ficha-sectorial/edit-ficha-sectorial.component';
+import { DeleteService } from 'src/app/demo/services/delete.service';
+import { UpdateService } from 'src/app/demo/services/update.service';
 @Component({
   selector: 'app-index-ficha-sectorial',
   templateUrl: './index-ficha-sectorial.component.html',
@@ -54,7 +56,12 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   }
   load_lista=true;
   fichasectorial:any=[];
-  constructor(private ref: DynamicDialogRef,private router: Router,private listService:ListService,private helperservice:HelperService,private messageService: MessageService,private dialogService: DialogService,private admin:AdminService){
+  constructor(
+    private ref: DynamicDialogRef, private router: Router, private listService: ListService,
+    private helperservice: HelperService, private messageService: MessageService, private dialogService: DialogService,
+    private admin: AdminService,
+    private deleteService: DeleteService,
+    private updateService:UpdateService) {
   
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -73,10 +80,15 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   set vermodal(val: boolean){  
     this.helperservice.cerrarficha();
   }
-  check:any={};
+  check: any = {};
+   visible: boolean = false;
+  option: any;
+  token = this.helperservice.token();
+  id = this.admin.identity(this.token);
+  rol = this.admin.roluser(this.token);
   async ngOnInit(): Promise<void> {
     
-    //console.log(this.id);
+    console.log(this.rol);
     if(!this.modal)this.helperservice.llamarspinner();
     try {
       this.check.IndexFichaSectorialComponent = this.helperservice.decryptData('IndexFichaSectorialComponent') || false;
@@ -102,10 +114,7 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
     return this.helperservice.isMobil();
   }
 
-  visible: boolean = false;
-  option: any;
-  token = this.helperservice.token();
-  id = this.admin.identity(this.token);
+ 
   listarficha() {
     if (!this.modal) {
         this.helperservice.llamarspinner();
@@ -135,6 +144,9 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
                 // Si hay filtro y valor, y TotalFilter es falso, filtrar manualmente
                 this.fichasectorial = this.fichasectorial.filter((ficha:any) => ficha[this.filtro] == this.valor);
             }
+          if (this.rol.nombre != 'Administrador') {
+              this.fichasectorial = this.fichasectorial.filter((ficha:any) => ficha.view);
+          }
             this.load_lista = false;
         }
     }, error => {
@@ -305,10 +317,36 @@ export class IndexFichaSectorialComponent implements OnInit,OnChanges {
   iddelete: any = '';
   visibledelete = false;
   eliminarModal(row:any) {
-    this.iddelete = row._id;
+    this.iddelete = row;
     this.visibledelete = true;
   }
   eliminarIncidente() {
-    console.log(this.iddelete);
+    if (this.rol.nombre == 'Administrador') {
+      this.deleteService.eliminarActividadProyecto(this.token,this.iddelete._id).subscribe(response => {
+          this.messageService.add({ severity: 'success', summary: 'Eliminado', detail: response.message });
+          setTimeout(() => {        
+            this.ref.close();
+            this.listarficha();
+            this.visible = false;
+            this.option = undefined;
+          }, 1000);
+      }, error => {
+        this.messageService.add({ severity: 'error', summary: ('(' + error.status + ')').toString(), detail: error.error.message || 'Sin conexión' });
+      });      
+    } else {
+      this.iddelete.view = false;
+      this.updateService.actualizarActividadProyecto(this.token, this.iddelete._id, this.iddelete).subscribe(response => {
+        this.messageService.add({ severity: 'success', summary: 'Eliminado', detail: response.message });
+        setTimeout(() => {        
+            this.ref.close();
+            this.listarficha();
+            this.visible = false;
+            this.option = undefined;
+          }, 1000);
+      }, error => {
+        console.log(error);
+        this.messageService.add({ severity: 'error', summary: ('(' + error.status + ')').toString(), detail: error.error.message || 'Sin conexión' });
+      });
+    }
   }
 }

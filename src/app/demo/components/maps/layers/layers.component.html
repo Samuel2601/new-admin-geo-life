@@ -199,11 +199,10 @@
         [buttonStyle]="{ 'border-radius': '50%' }"
     >
     </p-speedDial>
+    <p-panelMenu
+        id="panelmenu"
+        [model]="items"
+        [style]="{ width: '200px', margin: '10px' }"
+        [multiple]="true"
+    ></p-panelMenu>
 </div>
-
-<p-panelMenu
-    id="panelmenu"
-    [model]="items"
-    [style]="{ width: '200px', margin: '10px' }"
-    [multiple]="true"
-></p-panelMenu>

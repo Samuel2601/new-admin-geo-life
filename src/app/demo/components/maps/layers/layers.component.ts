@@ -94,7 +94,8 @@ export class LayersComponent implements OnInit{
   mostrarincidente=false;
   capaActiva: boolean = false;
   capaActivaWIFI: boolean = true;
-  urlgeoserwifi="https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Apuntos-wifi&outputFormat=application%2Fjson";
+  urlgeoserwifi = "https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Apuntos-wifi&outputFormat=application%2Fjson";
+  urlgeoserruta="https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3ARUTA2-CARRO2&outputFormat=application%2Fjson";
   urlgeoser="https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson";  
   urlgeolocal="http://192.168.120.35/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson";
   token=this.helperService.token()||undefined;
@@ -332,31 +333,53 @@ export class LayersComponent implements OnInit{
             label: 'Recolector',
             styleClass: 'itemcustom',
             expanded: !this.load_truck,
-            items:[
-                {
-                icon: this.load_truck?"pi bi-camionoff":"pi bi-camionon",
-                label: 'Ver Recolectores',
+            items: [
+            {
+                icon: 'pi bi-camionprime',
+                label: 'Recolectores',
                 styleClass: 'itemcustom',
-                command: () => {
-                  if (this.load_truck) {
-                    this.load_truck = false;
-                    this.cargarRecolectores();
-                    // Iniciar el intervalo y almacenar el identificador devuelto en una variable
-                    this.intervalId = setInterval(() => {
-                      this.cargarRecolectores();
-                    }, 2000);
-                  } else {
-                    // Detener el intervalo si está activo
-                    clearInterval(this.intervalId);
-                    this.load_truck = true;
-                    this.clearMarkers();
-                  }
-                  setTimeout(() => {
-                    this.updateItem();
-                  }, 200);
-                  
-                }
-              },
+                items:[
+                  {
+                    icon: this.load_truck?"pi bi-camionoff":"pi bi-camionon",
+                    label: 'Ver Recolectores',
+                    styleClass: 'itemcustom',
+                    command: () => {
+                      if (this.load_truck) {
+                        this.load_truck = false;
+                        this.cargarRecolectores();
+                        // Iniciar el intervalo y almacenar el identificador devuelto en una variable
+                        this.intervalId = setInterval(() => {
+                          this.cargarRecolectores();
+                        }, 2000);
+                      } else {
+                        // Detener el intervalo si está activo
+                        clearInterval(this.intervalId);
+                        this.load_truck = true;
+                        this.clearMarkers();
+                      }
+                      setTimeout(() => {
+                        this.updateItem();
+                      }, 200);
+                      
+                    }
+                  },
+                  {
+                    icon: "pi bi-path",
+                    label: 'Rutas',
+                    styleClass: 'itemcustom',
+                    command: async() => {
+                      const aux = await this.getWFSgeojson(this.urlgeoserruta);
+                      if (aux.features) {                        
+                        this.rutas=aux.features
+                        console.log(this.rutas);
+                        this.visiblepath = true;
+                      } else {
+                        
+                      }
+                    }
+                  },
+                ]
+              },                
               {
                 icon: 'pi bi-trashcustom',
                 label: 'Denuncia/Incidente',
@@ -1146,4 +1169,34 @@ export class LayersComponent implements OnInit{
     this.ref.destroy();
       });
   } 
+  visiblepath: boolean = false;
+  rutas: any = [];
+  pathselect: any;
+  pathson: any[]=[];
+  rutasdialog() {
+    if (this.pathson.length>0) {
+      this.pathson.forEach((element:any) => {
+        element.setMap(null);
+      });
+    }
+    this.pathson = [];
+    console.log(this.pathselect);
+    this.pathselect.forEach((element:any) => {
+      const path = [];
+      for (const coord of element.geometry.coordinates) {
+        path.push({ lat: coord[1], lng: coord[0] });
+      }
+      const route = new google.maps.Polyline({
+        path: path,
+        geodesic: true,
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 2
+      });
+      
+      route.setMap(this.mapCustom);
+      this.pathson.push(route);
+    });
+    
+  }
 }

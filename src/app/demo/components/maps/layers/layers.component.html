@@ -206,3 +206,40 @@
         [multiple]="true"
     ></p-panelMenu>
 </div>
+
+<p-dialog
+    header="Selecciona una ruta para mostrar"
+    [(visible)]="visiblepath"
+    [style]="{ width: isMobil() ? '100%' : '50vw' }"
+    [modal]="true"
+>
+    <div class="flex py-2 justify-content-center">
+        <p-multiSelect
+            [options]="rutas"
+            [(ngModel)]="pathselect"
+            optionLabel="name"
+            appendTo="body"
+        >
+            <ng-template let-value pTemplate="selectedItems">
+                <div
+                    class="inline-flex align-items-center gap-2 px-1"
+                    *ngFor="let option of value"
+                >
+                    <div>{{ option.properties.nombre }},</div>
+                </div>
+                <div *ngIf="!value || value.length === 0">Select Countries</div>
+            </ng-template>
+            <ng-template let-country pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ country.properties.nombre }}</div>
+                </div>
+            </ng-template>
+        </p-multiSelect>
+
+        <p-button
+            icon="pi pi-save"
+            label="Mostrar"
+            (click)="visiblepath = false; rutasdialog()"
+        ></p-button>
+    </div>
+</p-dialog>

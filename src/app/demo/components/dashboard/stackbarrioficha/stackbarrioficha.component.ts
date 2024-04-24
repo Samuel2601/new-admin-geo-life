@@ -21,9 +21,6 @@ export class StackbarriofichaComponent {
   basicData:any={};
   basicOptions: any;
   async ngOnInit() {
- 
-
-
     await this.getWFSgeojson(this.urlgeoser);
     this.rankin();
   }
@@ -285,5 +282,6 @@ getSeverity(status: string) {
         default:
           return ''; // Otra opción aquí, dependiendo de lo que desees
   }
-}
+  }
+ 
 }

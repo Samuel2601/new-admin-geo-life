@@ -114,10 +114,10 @@ export class LayersComponent implements OnInit {
     urlgeoserwifi =
         'https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Apuntos-wifi&outputFormat=application%2Fjson';
     urlgeoserruta =
-    'https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3ARUTA2-CARRO2&outputFormat=application%2Fjson';
+        'https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3ARUTA2-CARRO2&outputFormat=application%2Fjson';
     urlgeoserruta2 =
-      'https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3ACAPAS-RUTAS&outputFormat=application%2Fjson';
-  //ACAPAS-RUTAS
+        'https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3ACAPAS-RUTAS&outputFormat=application%2Fjson';
+    //ACAPAS-RUTAS
     urlgeoser =
         'https://geoapi.esmeraldas.gob.ec/geoserver/catastro/wms?service=WFS&version=1.1.0&request=GetFeature&srsname=EPSG%3A4326&typeName=catastro%3Ageo_barrios&outputFormat=application%2Fjson';
     urlgeolocal =
@@ -219,6 +219,7 @@ export class LayersComponent implements OnInit {
         this.helperService.setMapComponent(this);
         this.initmap();
         await this.getWFSgeojson(this.urlgeoser);
+        this.getLocation();
     }
     Listitems(label: string, campo: any, icono1: string, icono2: string) {
         const index = this.items.findIndex((item) => item.label === label);
@@ -442,6 +443,11 @@ export class LayersComponent implements OnInit {
                                     'Agua Potable y Alcantarillado'
                                 );
                             } else {
+                                
+                                 this.nuevoIncidente(
+                                    'Agua Potable y Alcantarillado'
+                                );
+                                
                                 this.messageService.add({
                                     severity: 'error',
                                     summary: 'ERROR',
@@ -454,54 +460,53 @@ export class LayersComponent implements OnInit {
                         icon: 'pi bi-camionprimne',
                         label: 'Recolector',
                         styleClass: 'itemcustom',
-                        expanded: !this.load_truck,
                         items: [
-                           {
-                                        icon: this.load_truck
-                                            ? 'pi bi-camionoff'
-                                            : 'pi bi-camionon',
-                                        label: 'Ver Recolectores',
-                                        styleClass: 'itemcustom',
-                                        command: () => {
-                                            if (this.load_truck) {
-                                                this.load_truck = false;
-                                                this.cargarRecolectores();
-                                                // Iniciar el intervalo y almacenar el identificador devuelto en una variable
-                                                this.intervalId = setInterval(
-                                                    () => {
-                                                        this.cargarRecolectores();
-                                                    },
-                                                    2000
-                                                );
-                                            } else {
-                                                // Detener el intervalo si está activo
-                                                clearInterval(this.intervalId);
-                                                this.load_truck = true;
-                                                this.clearMarkers();
-                                            }
-                                            setTimeout(() => {
-                                                this.updateItem();
-                                            }, 200);
-                                        },
-                                    },
-                                    {
-                                        icon: 'pi bi-path',
-                                        label: 'Rutas',
-                                        styleClass: 'itemcustom',
-                                        command: async () => {
-                                            const aux =
-                                                await this.getWFSgeojson(
-                                                    this.urlgeoserruta2
-                                                );
-                                            if (aux&&aux.features) {
-                                                this.rutas = aux.features;
-                                                this.visiblepath = true;
-                                            } else {
-                                                this.visiblepath = true;
-                                                this.messageService.add({severity: 'error', summary: 'Ocurrio Algo', detail: 'Sin conexión'});
-                                            }
-                                        },
-                                    },
+                            {
+                                icon: this.load_truck
+                                    ? 'pi bi-camionoff'
+                                    : 'pi bi-camionon',
+                                label: 'Ver Recolectores',
+                                styleClass: 'itemcustom',
+                                command: () => {
+                                    if (this.load_truck) {
+                                        this.load_truck = false;
+                                        this.cargarRecolectores();
+                                        // Iniciar el intervalo y almacenar el identificador devuelto en una variable
+                                        this.intervalId = setInterval(() => {
+                                            this.cargarRecolectores();
+                                        }, 2000);
+                                    } else {
+                                        // Detener el intervalo si está activo
+                                        clearInterval(this.intervalId);
+                                        this.load_truck = true;
+                                        this.clearMarkers();
+                                    }
+                                    setTimeout(() => {
+                                        this.updateItem();
+                                    }, 200);
+                                },
+                            },
+                            {
+                                icon: 'pi bi-path',
+                                label: 'Rutas',
+                                styleClass: 'itemcustom',
+                                command: async () => {
+                                    const aux = await this.getWFSgeojson(
+                                        this.urlgeoserruta2
+                                    );
+                                    if (aux && aux.features) {
+                                        this.rutas = aux.features;
+                                        this.visiblepath = true;
+                                    } else {
+                                        this.visiblepath = true;
+                                        this.messageService.add({
+                                            severity: 'error',
+                                            summary: 'Ocurrio Algo',
+                                            detail: 'Sin conexión',
+                                        });
+                                    }
+                                },
+                            },
                             {
                                 icon: 'pi bi-trashcustom',
                                 label: 'Denuncia/Incidente',
@@ -724,6 +729,7 @@ export class LayersComponent implements OnInit {
             this.mapCustom.addListener('click', (event: any) => {
                 this.onClickHandlerMap(event);
             });
+           
         });
     }
     truk: any = [];
@@ -1175,7 +1181,7 @@ export class LayersComponent implements OnInit {
                                 );
                             });
                         }
-                        
+
                         this.infoWindowActual = new google.maps.InfoWindow({
                             ariaLabel: 'info',
                             content: clonedContent,
@@ -1383,7 +1389,7 @@ export class LayersComponent implements OnInit {
                 CreateIncidentesDenunciaComponent,
                 {
                     header: '',
-                    width: this.isMobil() ? '100%' : '30%',
+                    width: this.isMobil() ? '100%' : '50%',
                     data: {
                         data: data,
                         direccion: {
@@ -1427,30 +1433,52 @@ export class LayersComponent implements OnInit {
             this.ref.destroy();
         });
     }
-  visiblepath: boolean = false;
-  rutas: any = [];
-  pathselect: any;
-  pathson: any[] = [];
-  
-  rutasdialog() {
-      const colors = ['#2196f3', '#f57c00','#3f51b5','#009688','#f57c00','#9c27b0','#ff4032','#4caf50']; 
+    visiblepath: boolean = false;
+    rutas: any = [];
+    pathselect: any[]=[];
+    pathson: any[] = [];
+    selectpath: any;
+    pathpush(item:any) {
+        if (item) {
+            if (!this.pathselect.includes(item)) {
+                this.pathselect.push(item);
+            } else {
+                const index = this.pathselect.indexOf(item);
+                if (index !== -1) {
+                    this.pathselect.splice(index, 1);
+                }
+            }    
+            this.rutasdialog();
+        }       
+    }
+
+    rutasdialog() {
+        const colors = [
+            '#2196f3',
+            '#f57c00',
+            '#3f51b5',
+            '#009688',
+            '#f57c00',
+            '#9c27b0',
+            '#ff4032',
+            '#4caf50',
+        ];
         if (this.pathson.length > 0) {
             this.pathson.forEach((element: any) => {
                 element.setMap(null);
             });
         }
         this.pathson = [];
-        //console.log(this.pathselect);
-        this.pathselect.forEach((element: any,index: number) => {
-          const path = [];
+        this.pathselect.forEach((element: any, index: number) => {
+            const path = [];
             if (element.geometry.coordinates) {
-              element.geometry.coordinates.forEach((paths:any) => {
-                for (const coord of paths) {
-                  path.push({ lat: coord[1], lng: coord[0] });
-                }
-              });  
+                element.geometry.coordinates.forEach((paths: any) => {
+                    for (const coord of paths) {
+                        path.push({ lat: coord[1], lng: coord[0] });
+                    }
+                });
             }
-            
+
             const route = new google.maps.Polyline({
                 path: path,
                 geodesic: true,
@@ -1459,7 +1487,7 @@ export class LayersComponent implements OnInit {
                 strokeWeight: 10, // Ajusta este valor para hacer la línea más ancha
             });
 
-            route.addListener('click', (event:any) => {
+            route.addListener('click', (event: any) => {
                 const infoWindow = new google.maps.InfoWindow({
                     content: element.properties.nombre,
                 });

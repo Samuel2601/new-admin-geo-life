@@ -456,12 +456,7 @@ export class LayersComponent implements OnInit {
                         styleClass: 'itemcustom',
                         expanded: !this.load_truck,
                         items: [
-                            {
-                                icon: 'pi bi-camionprime',
-                                label: 'Recolectores',
-                                styleClass: 'itemcustom',
-                                items: [
-                                    {
+                           {
                                         icon: this.load_truck
                                             ? 'pi bi-camionoff'
                                             : 'pi bi-camionon',
@@ -507,8 +502,6 @@ export class LayersComponent implements OnInit {
                                             }
                                         },
                                     },
-                                ],
-                            },
                             {
                                 icon: 'pi bi-trashcustom',
                                 label: 'Denuncia/Incidente',

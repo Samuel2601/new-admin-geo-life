@@ -55,31 +55,35 @@
                     [suggestions]="filter"
                     (completeMethod)="filterOptions($event)"
                     [field]="
-                        capaActivaWIFI
+                        capaActivaWIFI || opcionb?.properties?.nombre
                             ? 'properties.nombre'
                             : 'properties.punto'
                     "
                     inputId="float-label"
                     [(ngModel)]="opcionb"
-                    (ngModelChange)="poligonoview(true, opcionb)"
+                    (ngModelChange)="
+                        opcionb?.properties?.nombre
+                            ? poligonoview(true, opcionb)
+                            : viewwifi(opcionb)
+                    "
                     [inputStyle]="{
                         width: isMobil() ? responsiveimage() : '400px'
                     }"
                 >
                     <ng-template let-option pTemplate="item">
                         <div class="flex align-items-center gap-2">
-                            <div *ngIf="option.properties.nombre">
-                                {{ option.properties.nombre }} (Barrio)
+                            <div *ngIf="option?.properties?.nombre">
+                                {{ option?.properties?.nombre }} (Barrio)
                             </div>
-                            <div *ngIf="option.properties.punto">
-                                {{ option.properties.punto }} (WIFI)
+                            <div *ngIf="option?.properties?.punto">
+                                {{ option?.properties?.punto }} (WIFI)
                             </div>
                         </div>
                     </ng-template>
                 </p-autoComplete>
                 <label for="float-label"
                     >Buscar
-                    {{ capaActivaWIFI ? " Barrio" : " WIFI" }}
+                    {{ capaActivaWIFI ? " Barrio" : " Barrio y WIFI" }}
                 </label>
             </span>
             <!--

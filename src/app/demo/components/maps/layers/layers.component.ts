@@ -713,6 +713,7 @@ export class LayersComponent implements OnInit {
             aux.push(data.features);
             this.lista_feature.push(...aux[0]) ;
             this.filter = this.lista_feature;
+            console.log(this.lista_feature);
         }
     }
     //INICIALIZADOR DEL MAPA
@@ -1091,7 +1092,7 @@ export class LayersComponent implements OnInit {
             }
         }
     }
-    poligonoposition() {
+    poligonoposition(nomostrar?:boolean) {
         let buscarbol = false;
         const puntoUsuario = turf.point([this.longitud, this.latitud]);
         for (const feature of this.lista_feature) {
@@ -1122,17 +1123,20 @@ export class LayersComponent implements OnInit {
                 detail: 'Tu ubicación no se encuentra dentro de uno de los barrios',
             });
         }
-        if (
+        if (!nomostrar) {
+            if (
             (!this.mostrarficha &&
                 this.check.CreateIncidentesDenunciaComponent) ||
             !this.token
-        ) {
-            this.addMarker(
-                { lat: this.latitud, lng: this.longitud },
-                buscarbol ? 'Poligono' : 'Ubicación',
-                buscarbol ? this.opcionb.properties.nombre : undefined
-            );
+            ) {
+                this.addMarker(
+                    { lat: this.latitud, lng: this.longitud },
+                    buscarbol ? 'Poligono' : 'Ubicación',
+                    buscarbol ? this.opcionb.properties.nombre : undefined
+                );
+            }
         }
+        
     }
     feature_img: any;
     url_imag: string = '';
@@ -1269,6 +1273,7 @@ export class LayersComponent implements OnInit {
         }
     }
     filterOptions(event?: any) {
+        //this.opcionb = undefined;
         this.filter = this.lista_feature.filter((option: any) => {
             if (
                 (option.properties.nombre &&
@@ -1282,6 +1287,7 @@ export class LayersComponent implements OnInit {
                 return option;
             }
         });
+        console.log(this.filter);
         this.showOptions = true;
     }
     hideOptions() {
@@ -1306,6 +1312,7 @@ export class LayersComponent implements OnInit {
                             feature.geometry.coordinates[0]
                         );
                         const marker = new google.maps.Marker({
+                            title:feature.id,
                             position: latlng,
                             map: this.mapCustom,
                             icon: {
@@ -1494,7 +1501,7 @@ export class LayersComponent implements OnInit {
                 geodesic: true,
                 strokeColor: colors[index % colors.length],
                 strokeOpacity: 1.0,
-                strokeWeight: 10, // Ajusta este valor para hacer la línea más ancha
+                strokeWeight: 8, // Ajusta este valor para hacer la línea más ancha
             });
 
             route.addListener('click', (event: any) => {
@@ -1509,5 +1516,32 @@ export class LayersComponent implements OnInit {
             route.setMap(this.mapCustom);
             this.pathson.push(route);
         });
+    }
+    viewwifi(feature:any) {
+        if (typeof feature !== 'string') {            
+            const marker = this.arr_wifi.find(element => {
+                if (element.title == feature.id) {
+                return element
+            } });
+            if (marker) {
+                const latlng = new google.maps.LatLng(
+                feature.geometry.coordinates[1],
+                feature.geometry.coordinates[0]
+                );
+                this.latitud = feature.geometry.coordinates[1];
+                this.longitud = feature.geometry.coordinates[0];
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `
+                <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px">
+                    <b style="text-align: center">${feature.properties.punto}</b>
+                </div>`,
+                });
+                this.mapCustom.setCenter(latlng);
+                //this.mapCustom.setZoom(18);
+                
+                infoWindow.open(this.mapCustom, marker); 
+                this.poligonoposition();
+            }
+        }
     }
 }

@@ -499,11 +499,12 @@ export class LayersComponent implements OnInit {
                                                 await this.getWFSgeojson(
                                                     this.urlgeoserruta2
                                                 );
-                                            if (aux.features) {
+                                            if (aux&&aux.features) {
                                                 this.rutas = aux.features;
-                                                console.log(this.rutas);
                                                 this.visiblepath = true;
                                             } else {
+                                                this.visiblepath = true;
+                                                this.messageService.add({severity: 'error', summary: 'Ocurrio Algo', detail: 'Sin conexión'});
                                             }
                                         },
                                     },
@@ -1459,7 +1460,16 @@ export class LayersComponent implements OnInit {
                 geodesic: true,
                 strokeColor: colors[index % colors.length],
                 strokeOpacity: 1.0,
-                strokeWeight: 5, // Ajusta este valor para hacer la línea más ancha
+                strokeWeight: 10, // Ajusta este valor para hacer la línea más ancha
+            });
+
+            route.addListener('click', (event:any) => {
+                const infoWindow = new google.maps.InfoWindow({
+                    content: element.properties.nombre,
+                });
+
+                infoWindow.setPosition(event.latLng);
+                infoWindow.open(this.mapCustom);
             });
 
             route.setMap(this.mapCustom);

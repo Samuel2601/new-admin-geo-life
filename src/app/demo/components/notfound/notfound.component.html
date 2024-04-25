@@ -41,10 +41,31 @@
                     </span>
                     <span class="ml-4 flex flex-column">
                         <span class="text-900 lg:text-xl font-medium mb-0 block"
-                            >Preguntas Frecuentes</span
+                            >¿Por qué no puedo acceder?</span
                         >
                         <span class="text-600 lg:text-xl"
-                            >Ultricies mi quis hendrerit dolor.</span
+                            >Generalmente es por que no cuentas con el permiso
+                            para acceder</span
+                        >
+                    </span>
+                </a>
+                <a
+                    [routerLink]="['/']"
+                    class="w-full flex align-items-center mb-5 py-5 border-300 border-bottom-1"
+                >
+                    <span
+                        class="flex justify-content-center align-items-center bg-indigo-400 border-round"
+                        style="height: 3.5rem; width: 3.5rem"
+                    >
+                        <i class="pi pi-fw pi-unlock text-50 text-2xl"></i>
+                    </span>
+                    <span class="ml-4 flex flex-column">
+                        <span class="text-900 lg:text-xl font-medium mb-0"
+                            >Administración de permisos</span
+                        >
+                        <span class="text-600 lg:text-xl"
+                            >Si eres Administrador, verifica los permisos sobre
+                            esta sección</span
                         >
                     </span>
                 </a>
@@ -65,29 +86,21 @@
                             >Centro de Soluciones</span
                         >
                         <span class="text-600 lg:text-xl"
-                            >Phasellus faucibus scelerisque eleifend.</span
-                        >
+                            ><a href="mailto:aplicaciones@esmeraldas.gob.ec">
+                                Contactanos:
+                                {{ "aplicaciones@esmeraldas.gob.ec" }}
+                            </a>
+                        </span>
                     </span>
                 </a>
-                <a
+                <p-button
+                    icon="pi pi-arrow-left"
+                    label="Salir"
+                    [text]="true"
+                    [raised]="true"
                     [routerLink]="['/']"
-                    class="w-full flex align-items-center mb-5 py-5 border-300 border-bottom-1"
                 >
-                    <span
-                        class="flex justify-content-center align-items-center bg-indigo-400 border-round"
-                        style="height: 3.5rem; width: 3.5rem"
-                    >
-                        <i class="pi pi-fw pi-unlock text-50 text-2xl"></i>
-                    </span>
-                    <span class="ml-4 flex flex-column">
-                        <span class="text-900 lg:text-xl font-medium mb-0"
-                            >Administración de permisos</span
-                        >
-                        <span class="text-600 lg:text-xl"
-                            >Accumsan in nisl nisi scelerisque</span
-                        >
-                    </span>
-                </a>
+                </p-button>
             </div>
         </div>
     </div>

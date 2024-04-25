@@ -103,6 +103,14 @@
     height: 30px;
 }
 $gutter: 1rem; //for primeflex grid system
+
+@media only screen and (max-width: 600px) {
+    #descripcion {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
 @import "assets/layout/styles/layout/layout.scss";
 
 /* PrimeNG */

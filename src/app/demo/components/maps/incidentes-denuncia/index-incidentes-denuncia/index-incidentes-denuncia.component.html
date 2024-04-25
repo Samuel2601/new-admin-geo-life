@@ -663,7 +663,7 @@
     *ngIf="iddelete"
     header="Header"
     [(visible)]="visibledelete"
-    [style]="{ width: '50vw' }"
+    [style]="{ width: isMobil() ? '100%' : '30vw' }"
 >
     <ng-template pTemplate="header">
         <div

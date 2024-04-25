@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.example.app',
-  appName: 'sakai-ng',
+  appId: 'ec.gob.esmeraldas.geoapi',
+  appName: 'Esmeraldas la Bella',
   webDir: 'dist/sakai-ng',
   server: {
     androidScheme: 'https'

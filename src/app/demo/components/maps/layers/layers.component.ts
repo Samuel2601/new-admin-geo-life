@@ -245,7 +245,6 @@ export class LayersComponent implements OnInit {
     updateItem() {
         this.items = [
             {
-                icon: 'pi bi-homecustom',
                 label: 'Menu Principal',
                 styleClass: 'itemcustom',
                 expanded: true,
@@ -1170,7 +1169,7 @@ export class LayersComponent implements OnInit {
                         let clonedContent = contentElement.cloneNode(
                             true
                         ) as Element;
-                        
+
                         if (this.check.CreateDireccionGeoComponent) {
                             // Volver a añadir el evento click al botón clonado
                             let clonedButton = clonedContent.querySelector(

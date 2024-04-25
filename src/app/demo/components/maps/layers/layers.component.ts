@@ -181,6 +181,7 @@ export class LayersComponent implements OnInit {
         }
     }
     async ngOnInit() {
+        this.helperService.llamarspinner();
         App.addListener('backButton', (data) => {
             this.sidebarVisible ? (this.sidebarVisible = false) : '';
             this.mostrarficha ? (this.mostrarficha = false) : '';
@@ -220,6 +221,7 @@ export class LayersComponent implements OnInit {
         this.initmap();
         await this.getWFSgeojson(this.urlgeoser);
         this.getLocation();
+        this.helperService.cerrarspinner();
     }
     Listitems(label: string, campo: any, icono1: string, icono2: string) {
         const index = this.items.findIndex((item) => item.label === label);

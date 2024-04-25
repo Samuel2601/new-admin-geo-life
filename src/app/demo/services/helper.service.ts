@@ -131,7 +131,7 @@ export class HelperService {
       
       this.spiner = this.dialogService.open(SpinnerComponent, {
       header: 'Cargando',
-      dismissableMask: true,
+      dismissableMask: false,
         width: '50rem',
       });
     }

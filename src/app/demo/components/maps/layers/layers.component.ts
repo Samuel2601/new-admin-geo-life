@@ -1170,16 +1170,20 @@ export class LayersComponent implements OnInit {
                         let clonedContent = contentElement.cloneNode(
                             true
                         ) as Element;
-                        // Volver a añadir el evento click al botón clonado
-                        let clonedButton = clonedContent.querySelector(
-                            '#fotoButton'
-                        ) as HTMLElement;
-                        clonedButton.addEventListener('click', () => {
-                            // Aquí va tu código para el evento click
-                            this.modalcreatedireccion(
-                                this.features[this.id_feature]
-                            );
-                        });
+                        
+                        if (this.check.CreateDireccionGeoComponent) {
+                            // Volver a añadir el evento click al botón clonado
+                            let clonedButton = clonedContent.querySelector(
+                                '#fotoButton'
+                            ) as HTMLElement;
+                            clonedButton.addEventListener('click', () => {
+                                // Aquí va tu código para el evento click
+                                this.modalcreatedireccion(
+                                    this.features[this.id_feature]
+                                );
+                            });
+                        }
+                        
                         this.infoWindowActual = new google.maps.InfoWindow({
                             ariaLabel: 'info',
                             content: clonedContent,

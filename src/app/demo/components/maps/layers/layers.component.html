@@ -166,11 +166,9 @@
                 Parroquia: {{ features[id_feature].properties.parr }}
             </div>
         </ng-container>
-        <ng-template
-            pTemplate="footer"
-            *ngIf="this.check.CreateDireccionGeoComponent"
-        >
+        <ng-template pTemplate="footer">
             <p-button
+                *ngIf="check.CreateDireccionGeoComponent"
                 id="fotoButton"
                 icon="pi bi-camera2-custom"
                 [raised]="true"

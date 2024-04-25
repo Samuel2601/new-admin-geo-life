@@ -221,7 +221,9 @@ export class LayersComponent implements OnInit {
         this.initmap();
         await this.getWFSgeojson(this.urlgeoser);
         this.getLocation();
-        this.helperService.cerrarspinner();
+        setTimeout(() => {
+            this.helperService.cerrarspinner();            
+        }, 1500);
     }
     Listitems(label: string, campo: any, icono1: string, icono2: string) {
         const index = this.items.findIndex((item) => item.label === label);
@@ -688,11 +690,14 @@ export class LayersComponent implements OnInit {
 
     //CONEXION DE FEATURE
     async getWFSgeojson(url: any) {
+        console.log(url);
         try {
             const response = await fetch(url);
             const data = await response.json();
+            console.log(data);
+             this.guardarfeature(data);
             if (this.lista_feature.length == 0) {
-                this.guardarfeature(data);
+               
                 //this.reloadmap(data);
             }
             return data;
@@ -706,7 +711,7 @@ export class LayersComponent implements OnInit {
         if (data.features) {
             var aux = [];
             aux.push(data.features);
-            this.lista_feature = aux[0];
+            this.lista_feature.push(...aux[0]) ;
             this.filter = this.lista_feature;
         }
     }
@@ -1266,10 +1271,13 @@ export class LayersComponent implements OnInit {
     filterOptions(event?: any) {
         this.filter = this.lista_feature.filter((option: any) => {
             if (
-                option.properties.nombre &&
+                (option.properties.nombre &&
                 option.properties.nombre
                     .toLowerCase()
-                    .includes(event.query.toLowerCase())
+                    .includes(event.query.toLowerCase()))||(!this.capaActivaWIFI&&option.properties.punto &&
+                option.properties.punto
+                    .toLowerCase()
+                    .includes(event.query.toLowerCase()) )
             ) {
                 return option;
             }

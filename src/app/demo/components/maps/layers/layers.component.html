@@ -54,7 +54,11 @@
                 <p-autoComplete
                     [suggestions]="filter"
                     (completeMethod)="filterOptions($event)"
-                    field="properties.nombre"
+                    [field]="
+                        capaActivaWIFI
+                            ? 'properties.nombre'
+                            : 'properties.punto'
+                    "
                     inputId="float-label"
                     [(ngModel)]="opcionb"
                     (ngModelChange)="poligonoview(true, opcionb)"
@@ -64,23 +68,20 @@
                 >
                     <ng-template let-option pTemplate="item">
                         <div class="flex align-items-center gap-2">
-                            <div>
-                                {{ option.properties.nombre }}
+                            <div *ngIf="option.properties.nombre">
+                                {{ option.properties.nombre }} (Barrio)
+                            </div>
+                            <div *ngIf="option.properties.punto">
+                                {{ option.properties.punto }} (WIFI)
                             </div>
                         </div>
                     </ng-template>
                 </p-autoComplete>
-                <label for="float-label">Buscar Barrio</label>
+                <label for="float-label"
+                    >Buscar
+                    {{ capaActivaWIFI ? " Barrio" : " WIFI" }}
+                </label>
             </span>
-            <div style="display: none">
-                <p-button
-                    id="fotoButton"
-                    icon="pi bi-camera2-custom"
-                    [raised]="true"
-                    [outlined]="true"
-                    label="Añadir nueva Foto"
-                ></p-button>
-            </div>
             <!--
 
             <p-button
@@ -95,7 +96,6 @@
         </div>
 
         <div class="card" id="map" style="min-height: 50rem"></div>
-
         <div [style.display]="'none'">
             <div class="controls fullscreen-control">
                 <button title="Toggle Fullscreen" class="fullscreen-button">

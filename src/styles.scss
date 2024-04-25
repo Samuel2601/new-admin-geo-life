@@ -111,6 +111,24 @@ $gutter: 1rem; //for primeflex grid system
         box-sizing: border-box;
     }
 }
+.img-custom{
+    content: url('assets/icon/imagen.jpg');
+}
+.spinner-container {
+    position: relative;
+    display: inline-block;
+    /* Asegura que el contenedor se ajuste al tamaño del spinner */
+}
+
+.overlay-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    /* Asegura que la imagen esté por encima del spinner */
+    /* Ajusta el tamaño y otros estilos según sea necesario */
+}
 @import "assets/layout/styles/layout/layout.scss";
 
 /* PrimeNG */

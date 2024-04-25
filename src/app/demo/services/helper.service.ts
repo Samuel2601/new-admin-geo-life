@@ -127,12 +127,13 @@ export class HelperService {
   llamadasActivas = 0;
   spiner:any
   llamarspinner(mensaje?: string[], tiempo?: number) {
-    if(this.llamadasActivas==0){
-      
+    if(this.llamadasActivas==0){      
       this.spiner = this.dialogService.open(SpinnerComponent, {
-      header: 'Cargando',
-      dismissableMask: false,
-        width: '50rem',
+        header: 'Cargando',
+        //modal:false,
+        dismissableMask: false,
+        width: 'auto',
+        closable: false,
       });
     }
     this.llamadasActivas++;

@@ -222,7 +222,7 @@ export class LayersComponent implements OnInit {
         await this.getWFSgeojson(this.urlgeoser);
         this.getLocation();
         setTimeout(() => {
-            this.helperService.cerrarspinner();            
+            this.helperService.cerrarspinner();
         }, 1500);
     }
     Listitems(label: string, campo: any, icono1: string, icono2: string) {
@@ -447,11 +447,10 @@ export class LayersComponent implements OnInit {
                                     'Agua Potable y Alcantarillado'
                                 );
                             } else {
-                                
-                                 this.nuevoIncidente(
+                                this.nuevoIncidente(
                                     'Agua Potable y Alcantarillado'
                                 );
-                                
+
                                 this.messageService.add({
                                     severity: 'error',
                                     summary: 'ERROR',
@@ -495,19 +494,22 @@ export class LayersComponent implements OnInit {
                                 label: 'Rutas',
                                 styleClass: 'itemcustom',
                                 command: async () => {
-                                    const aux = await this.getWFSgeojson(
-                                        this.urlgeoserruta2
-                                    );
-                                    if (aux && aux.features) {
-                                        this.rutas = aux.features;
-                                        this.visiblepath = true;
+                                    if (this.rutas.length == 0) {
+                                        const aux = await this.getWFSgeojson(
+                                            this.urlgeoserruta2
+                                        );
+                                        if (aux && aux.features) {
+                                            this.rutas = aux.features;
+                                            this.visiblepath = true;
+                                        } else {                                            
+                                            this.messageService.add({
+                                                severity: 'error',
+                                                summary: 'Ocurrio Algo',
+                                                detail: 'Sin conexión',
+                                            });
+                                        }
                                     } else {
                                         this.visiblepath = true;
-                                        this.messageService.add({
-                                            severity: 'error',
-                                            summary: 'Ocurrio Algo',
-                                            detail: 'Sin conexión',
-                                        });
                                     }
                                 },
                             },
@@ -693,9 +695,8 @@ export class LayersComponent implements OnInit {
         try {
             const response = await fetch(url);
             const data = await response.json();
-             this.guardarfeature(data);
+            this.guardarfeature(data);
             if (this.lista_feature.length == 0) {
-               
                 //this.reloadmap(data);
             }
             return data;
@@ -709,7 +710,7 @@ export class LayersComponent implements OnInit {
         if (data.features) {
             var aux = [];
             aux.push(data.features);
-            this.lista_feature.push(...aux[0]) ;
+            this.lista_feature.push(...aux[0]);
             this.filter = this.lista_feature;
         }
     }
@@ -734,7 +735,6 @@ export class LayersComponent implements OnInit {
             this.mapCustom.addListener('click', (event: any) => {
                 this.onClickHandlerMap(event);
             });
-           
         });
     }
     truk: any = [];
@@ -1089,7 +1089,7 @@ export class LayersComponent implements OnInit {
             }
         }
     }
-    poligonoposition(nomostrar?:boolean) {
+    poligonoposition(nomostrar?: boolean) {
         let buscarbol = false;
         const puntoUsuario = turf.point([this.longitud, this.latitud]);
         for (const feature of this.lista_feature) {
@@ -1122,9 +1122,9 @@ export class LayersComponent implements OnInit {
         }
         if (!nomostrar) {
             if (
-            (!this.mostrarficha &&
-                this.check.CreateIncidentesDenunciaComponent) ||
-            !this.token
+                (!this.mostrarficha &&
+                    this.check.CreateIncidentesDenunciaComponent) ||
+                !this.token
             ) {
                 this.addMarker(
                     { lat: this.latitud, lng: this.longitud },
@@ -1133,7 +1133,6 @@ export class LayersComponent implements OnInit {
                 );
             }
         }
-        
     }
     feature_img: any;
     url_imag: string = '';
@@ -1274,12 +1273,14 @@ export class LayersComponent implements OnInit {
         this.filter = this.lista_feature.filter((option: any) => {
             if (
                 (option.properties.nombre &&
-                option.properties.nombre
-                    .toLowerCase()
-                    .includes(event.query.toLowerCase()))||(!this.capaActivaWIFI&&option.properties.punto &&
-                option.properties.punto
-                    .toLowerCase()
-                    .includes(event.query.toLowerCase()) )
+                    option.properties.nombre
+                        .toLowerCase()
+                        .includes(event.query.toLowerCase())) ||
+                (!this.capaActivaWIFI &&
+                    option.properties.punto &&
+                    option.properties.punto
+                        .toLowerCase()
+                        .includes(event.query.toLowerCase()))
             ) {
                 return option;
             }
@@ -1308,7 +1309,7 @@ export class LayersComponent implements OnInit {
                             feature.geometry.coordinates[0]
                         );
                         const marker = new google.maps.Marker({
-                            title:feature.id,
+                            title: feature.id,
                             position: latlng,
                             map: this.mapCustom,
                             icon: {
@@ -1446,11 +1447,11 @@ export class LayersComponent implements OnInit {
         });
     }
     visiblepath: boolean = false;
-    rutas: any = [];
-    pathselect: any[]=[];
+    rutas: any[] = [];
+    pathselect: any[] = [];
     pathson: any[] = [];
     selectpath: any;
-    pathpush(item:any) {
+    pathpush(item: any) {
         if (item) {
             if (!this.pathselect.includes(item)) {
                 this.pathselect.push(item);
@@ -1459,9 +1460,9 @@ export class LayersComponent implements OnInit {
                 if (index !== -1) {
                     this.pathselect.splice(index, 1);
                 }
-            }    
+            }
             this.rutasdialog();
-        }       
+        }
     }
 
     rutasdialog() {
@@ -1512,16 +1513,17 @@ export class LayersComponent implements OnInit {
             this.pathson.push(route);
         });
     }
-    viewwifi(feature:any) {
-        if (typeof feature !== 'string') {            
-            const marker = this.arr_wifi.find(element => {
+    viewwifi(feature: any) {
+        if (typeof feature !== 'string') {
+            const marker = this.arr_wifi.find((element) => {
                 if (element.title == feature.id) {
-                return element
-            } });
+                    return element;
+                }
+            });
             if (marker) {
                 const latlng = new google.maps.LatLng(
-                feature.geometry.coordinates[1],
-                feature.geometry.coordinates[0]
+                    feature.geometry.coordinates[1],
+                    feature.geometry.coordinates[0]
                 );
                 this.latitud = feature.geometry.coordinates[1];
                 this.longitud = feature.geometry.coordinates[0];
@@ -1533,8 +1535,8 @@ export class LayersComponent implements OnInit {
                 });
                 this.mapCustom.setCenter(latlng);
                 //this.mapCustom.setZoom(18);
-                
-                infoWindow.open(this.mapCustom, marker); 
+
+                infoWindow.open(this.mapCustom, marker);
                 this.poligonoposition();
             }
         }

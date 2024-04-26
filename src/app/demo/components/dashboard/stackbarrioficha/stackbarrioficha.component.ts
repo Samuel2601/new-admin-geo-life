@@ -65,7 +65,7 @@ export class StackbarriofichaComponent {
     // Actualizar basicData con los datos ordenados
     this.basicData.datasets = [dataset];
     this.basicData.labels = direccionesOrdenadas;
-    
+    console.log(this.basicData);
     // Actualizar la vista
     this.canvas();
     ////console.log(this.encontrarMaximo());
@@ -128,7 +128,8 @@ export class StackbarriofichaComponent {
     this.canvas();
     this.loading=false;
 }
-options:any
+  optionspie: any
+  optionsbar:any
 canvas(){
   ////console.log(this.constFicha);
     const documentStyle = getComputedStyle(document.documentElement);
@@ -165,7 +166,7 @@ canvas(){
           }
       }
   };
-  this.options = {
+  this.optionsbar = {
     maintainAspectRatio: false,
     aspectRatio: 0.8,
     plugins: {
@@ -201,7 +202,17 @@ canvas(){
             }
         }
     }
-};
+  };
+  this.optionspie = {
+            plugins: {
+                legend: {
+                    labels: {
+                        usePointStyle: true,
+                        color: textColor
+                    }
+                }
+            }
+        };
 }
 
 

@@ -24,7 +24,7 @@
 </table>
 <p-scrollPanel styleClass="custombar1">
     <div class="card" [style.width]="isMobil() ? '80%' : ''">
-        <p-chart type="bar" [data]="basicData" [options]="options"></p-chart>
+        <p-chart type="line" [data]="basicData" [options]="options"></p-chart>
     </div>
 </p-scrollPanel>
 <p-scrollPanel styleClass="custombar2" *ngIf="!modal">

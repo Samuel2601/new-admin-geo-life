@@ -134,7 +134,8 @@ export class StackBarriosComponent implements OnInit {
     
   }
 
-options:any
+optionspie: any
+  optionsbar:any
 canvas(){
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
@@ -170,7 +171,7 @@ canvas(){
           }
       }
   };
-  this.options = {
+ this.optionsbar = {
     maintainAspectRatio: false,
     aspectRatio: 0.8,
     plugins: {
@@ -206,7 +207,17 @@ canvas(){
             }
         }
     }
-};
+  };
+  this.optionspie = {
+            plugins: {
+                legend: {
+                    labels: {
+                        usePointStyle: true,
+                        color: textColor
+                    }
+                }
+            }
+        };
 }
 
 

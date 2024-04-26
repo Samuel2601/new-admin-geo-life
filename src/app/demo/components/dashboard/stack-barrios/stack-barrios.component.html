@@ -29,7 +29,7 @@
         <p-chart
             [type]="!modal ? 'bar' : 'pie'"
             [data]="basicData"
-            [options]="options"
+            [options]="!modal ? optionsbar : optionspie"
         ></p-chart>
     </div>
 </p-scrollPanel>

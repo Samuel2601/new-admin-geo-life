@@ -690,11 +690,9 @@ export class LayersComponent implements OnInit {
 
     //CONEXION DE FEATURE
     async getWFSgeojson(url: any) {
-        console.log(url);
         try {
             const response = await fetch(url);
             const data = await response.json();
-            console.log(data);
              this.guardarfeature(data);
             if (this.lista_feature.length == 0) {
                
@@ -713,7 +711,6 @@ export class LayersComponent implements OnInit {
             aux.push(data.features);
             this.lista_feature.push(...aux[0]) ;
             this.filter = this.lista_feature;
-            console.log(this.lista_feature);
         }
     }
     //INICIALIZADOR DEL MAPA
@@ -1287,7 +1284,6 @@ export class LayersComponent implements OnInit {
                 return option;
             }
         });
-        console.log(this.filter);
         this.showOptions = true;
     }
     hideOptions() {
@@ -1436,7 +1432,6 @@ export class LayersComponent implements OnInit {
     }
     modaldireccion: boolean = false;
     modalcreatedireccion(feature: any) {
-        console.log('crear foto');
         this.sidebarVisible ? (this.sidebarVisible = false) : '';
         this.mostrarficha ? (this.mostrarficha = false) : '';
         this.mostrarincidente ? (this.mostrarincidente = false) : '';

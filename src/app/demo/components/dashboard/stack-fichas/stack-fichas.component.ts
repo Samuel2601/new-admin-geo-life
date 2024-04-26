@@ -94,7 +94,7 @@ sumaValores: number[] = [];
     }else{
         this.basicData.labels = actividadsUnicas;
     }
-        ////console.log(this.basicData);
+       // console.log(this.basicData);
       // Actualizar la vista
       this.canvas();
       

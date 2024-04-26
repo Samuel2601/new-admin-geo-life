@@ -187,7 +187,11 @@ export class LayersComponent implements OnInit {
             this.mostrarficha ? (this.mostrarficha = false) : '';
             this.mostrarincidente ? (this.mostrarincidente = false) : '';
         });
-        if (!this.token) this.router.navigate(['/auth/login']);
+        if (!this.token) {
+            this.router.navigate(['/auth/login']);
+            this.helperService.cerrarspinner();
+            throw new Error('Token no encontrado');
+        }
         try {
             this.check.IndexFichaSectorialComponent =
                 this.helperService.decryptData(

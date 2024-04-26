@@ -57,7 +57,7 @@ export class StackbarriofichaComponent {
   
     // Crear el dataset para basicData
     const dataset = {
-      data: Object.values(incidentesPorDireccion),
+      data: Object.values(incidentesPorDireccion).sort((a: number, b: number) => b - a),
       label: 'Ficha Sectorial',
       borderWidth: 1
     };

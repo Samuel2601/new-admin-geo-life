@@ -52,15 +52,15 @@ export class StackBarriosComponent implements OnInit {
       acc[nombreDireccion] = acc[nombreDireccion] ? acc[nombreDireccion] + 1 : 1;
       return acc;
     }, {});
-  
+    console.log("incidentesPorDireccion",incidentesPorDireccion);
     // Ordenar las direcciones por cantidad de incidentes (de mayor a menor)
     const direccionesOrdenadas = Object.entries(incidentesPorDireccion)
       .sort((a: any, b: any) => b[1] - a[1])
       .map(([nombre]) => nombre);
-  
+    console.log("direccionesOrdenadas",direccionesOrdenadas);
     // Crear el dataset para basicData
     const dataset = {
-      data: Object.values(incidentesPorDireccion),
+      data: Object.values(incidentesPorDireccion).sort((a: number, b: number) => b - a),
       label: 'Incidentes o Denuncias',
       borderWidth: 1
     };
@@ -68,9 +68,9 @@ export class StackBarriosComponent implements OnInit {
     // Actualizar basicData con los datos ordenados
     this.basicData.datasets = [dataset];
     this.basicData.labels = direccionesOrdenadas;
+    console.log(this.basicData);
     // Actualizar la vista
-    this.canvas();
-  
+    this.canvas();  
     this.loading = false;
     this.helper.setStbarrioComponent(this);
     

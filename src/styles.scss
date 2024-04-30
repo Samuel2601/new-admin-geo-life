@@ -102,6 +102,10 @@
     content: url('assets/menu/banco.png');
     height: 30px;
 }
+.bi-bomberos {
+    content: url('assets/menu/cuerpo\ de\ bomberos.png');
+    height: 30px;
+}
 $gutter: 1rem; //for primeflex grid system
 
 @media only screen and (max-width: 600px) {

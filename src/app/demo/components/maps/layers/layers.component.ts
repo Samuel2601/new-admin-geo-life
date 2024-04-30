@@ -449,12 +449,33 @@ export class LayersComponent implements OnInit {
                             ) {
                                 this.nuevoIncidente(
                                     'Agua Potable y Alcantarillado'
+                                    
                                 );
                             } else {
+                                this.messageService.add({
+                                    severity: 'error',
+                                    summary: 'ERROR',
+                                    detail: 'Primero selecciona un punto',
+                                });
+                            }
+                        },
+                    },
+                    {
+                        icon: 'pi bi-bomberos',
+                        label: 'BOMBEROS',
+                        styleClass: 'itemcustom',
+                        command: () => {
+                            if (
+                                (this.opcionb ? true : false) &&
+                                this.check.CreateIncidentesDenunciaComponent &&
+                                (this.latitud ? true : false) &&
+                                (this.longitud ? true : false)
+                            ) {
                                 this.nuevoIncidente(
-                                    'Agua Potable y Alcantarillado'
+                                    'Cuerpo de Bomberos',
+                                    "Incendios / Desastres varios"
                                 );
-
+                            } else {
                                 this.messageService.add({
                                     severity: 'error',
                                     summary: 'ERROR',

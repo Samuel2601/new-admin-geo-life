@@ -87,12 +87,12 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
   }
   async obtenerDireccion(latitud:any, longitud:any) {
     const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitud}&lon=${longitud}&format=json`;
-    console.log("URL",url);
+    //console.log("URL",url);
     fetch(url)
         .then(response => response.json())
         .then(data => {
              this.geolocation = data;
-            console.log('Dirección:', this.geolocation);
+            //console.log('Dirección:', this.geolocation);
             return data;
         })
         .catch(error => {
@@ -167,9 +167,9 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
       const id = this.nuevoIncidenteDenuncia.get('categoria')?.value._id;
       this.listService.listarSubcategorias(this.token,'categoria',id).subscribe(
         response => {
-          console.log(response)
+          //console.log(response)
           this.subcategorias = response.data;
-          console.log(this.tiposucat);
+          //console.log(this.tiposucat);
           if (this.tiposucat) {
           const subcategoriaEncontrada = this.subcategorias.find(subcategoria => subcategoria.nombre == this.tiposucat);
           if (subcategoriaEncontrada) {
@@ -392,7 +392,7 @@ selectedFiles: File[] = [];
     if(!this.token){
       throw this.router.navigate(["/auth/login"]);
     }
-    console.log(this.nuevoIncidenteDenuncia.value);
+    //console.log(this.nuevoIncidenteDenuncia.value);
     this.nuevoIncidenteDenuncia.get('ciudadano')?.setValue(this.adminservice.identity(this.token));
     this.nuevoIncidenteDenuncia.enable();
     this.createService.registrarIncidenteDenuncia(this.token, this.nuevoIncidenteDenuncia.value,this.selectedFiles).subscribe(response => {

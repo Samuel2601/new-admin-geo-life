@@ -271,7 +271,7 @@ export class LayersComponent implements OnInit {
                                 command: () => {
                                     if (
                                         (this.opcionb ? true : false) &&
-                                        this.check.CreateFichaSectorialComponent
+                                        this.check.DashboardComponent
                                     ) {
                                         this.controlFullScreem();
                                         this.sidebarVisible = true;
@@ -323,7 +323,7 @@ export class LayersComponent implements OnInit {
                                             if (
                                                 (this.opcionb ? true : false) &&
                                                 this.check
-                                                    .CreateFichaSectorialComponent
+                                                    .IndexFichaSectorialComponent
                                             ) {
                                                 this.fichaTecnica();
                                             } else {
@@ -1193,6 +1193,17 @@ export class LayersComponent implements OnInit {
                             });
                         }
 
+                        if (this.check.IndexFichaSectorialComponent) {
+                            // Volver a añadir el evento click al botón clonado
+                            let clonedButton = clonedContent.querySelector(
+                                '#fichaButton'
+                            ) as HTMLElement;
+                            clonedButton.addEventListener('click', () => {
+                                this.opcionb = feature;
+                                this.fichaTecnica();
+                            });
+                        }
+
                         this.infoWindowActual = new google.maps.InfoWindow({
                             ariaLabel: 'info',
                             content: clonedContent,
@@ -1351,6 +1362,7 @@ export class LayersComponent implements OnInit {
         this.updateItem();
     }
     fichaTecnica() {
+        console.log("actividad");
         this.controlFullScreem();
         this.mostrarficha = false;
         this.mostrarincidente = false;
@@ -1501,7 +1513,7 @@ export class LayersComponent implements OnInit {
                 geodesic: true,
                 strokeColor: colors[index % colors.length],
                 strokeOpacity: 1.0,
-                strokeWeight: 8, // Ajusta este valor para hacer la línea más ancha
+                strokeWeight: 6, // Ajusta este valor para hacer la línea más ancha
             });
 
             route.addListener('click', (event: any) => {

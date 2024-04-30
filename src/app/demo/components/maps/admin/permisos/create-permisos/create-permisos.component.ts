@@ -14,6 +14,7 @@ import { ListService } from 'src/app/demo/services/list.service';
 export class CreatePermisosComponent implements OnInit{
   componente:any;
   componentes: string[] = [
+    'FichaLimitada',
     'EditFichaAll',
     'TotalFilterIncidente',
     'TotalFilter',

@@ -7,6 +7,7 @@
 -->
 <p-toast></p-toast>
 <p-dialog
+    *ngIf="!check.FichaLimitada"
     header="Header"
     [modal]="false"
     [(visible)]="vermodal"
@@ -130,7 +131,7 @@
                         </th>
                     </div>
                 </th>
-                <th style="min-width: 10rem">
+                <th style="min-width: 10rem" *ngIf="!check.FichaLimitada">
                     <div class="flex align-items-center">
                         Encargado
                         <p-columnFilter
@@ -163,7 +164,7 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-incidente>
-            <tr (click)="visible = true; option = incidente">
+            <tr (click)="showdialog(incidente)">
                 <td *ngIf="!modal">
                     {{ incidente.direccion_geo }}
                 </td>
@@ -188,7 +189,7 @@
                 <td>
                     {{ incidente.fecha_evento | date : "medium" : "es" }}
                 </td>
-                <td>
+                <td *ngIf="!check.FichaLimitada">
                     {{ incidente.encargado.nombres }}
                 </td>
                 <td>
@@ -197,6 +198,89 @@
                         [severity]="getSeverity(incidente.estado.nombre)"
                     >
                     </p-tag>
+                </td>
+                <!-- Agrega el modal al final del componente -->
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5">No se encontraron incidentes.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-dialog>
+<p-dialog
+    *ngIf="check.FichaLimitada"
+    header="Header"
+    [modal]="false"
+    [(visible)]="vermodal"
+    [position]="'bottom'"
+    [style]="{ width: '50vw', 'z-index': 10000 }"
+    [maximizable]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+>
+    <ng-template pTemplate="header">
+        <div
+            class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2"
+        >
+            <div class="col-12">
+                <div class="p-fluid p-formgrid grid">
+                    <h3>Listado de Ficha Técnica</h3>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <p-table
+        styleClass="p-datatable-striped"
+        #dt1
+        [value]="fichasectorial"
+        dataKey="_id"
+        [rows]="10"
+        [showCurrentPageReport]="true"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [loading]="load_lista"
+        [paginator]="true"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="min-width: 8rem">
+                    <div class="flex align-items-center">Actividad</div>
+                </th>
+                <th style="min-width: 15rem">
+                    <div class="flex align-items-center">Desripción</div>
+                </th>
+                <th style="min-width: 8rem">
+                    <div class="flex align-items-center">Fecha del evento</div>
+                </th>
+                <!-- Agrega las columnas restantes según tu necesidad -->
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-incidente>
+            <tr>
+                <td
+                    (click)="
+                        incidente.foto &&
+                            incidente.foto.length > 0 &&
+                            stopPropagation($event)
+                    "
+                >
+                    <span
+                        *ngIf="incidente.foto && incidente.foto.length > 0"
+                        class="pi pi-image"
+                        style="vertical-align: middle"
+                        (click)="
+                            displayBasic = true; openModalimagen(incidente.foto)
+                        "
+                    ></span>
+                    {{ incidente.actividad.nombre }}
+                </td>
+                <td>
+                    {{ incidente.descripcion }}
+                </td>
+
+                <td>
+                    {{ incidente.fecha_evento | date : "medium" : "es" }}
                 </td>
                 <!-- Agrega el modal al final del componente -->
             </tr>

@@ -168,6 +168,14 @@
                 Parroquia: {{ features[id_feature].properties.parr }}
             </div>
         </ng-container>
+        <ng-container *ngIf="check.IndexFichaSectorialComponent">
+            <p-button
+                [style]="{ 'margin-top': '10px' }"
+                id="fichaButton"
+                label="Actividades"
+                (click)="fichaTecnica()"
+            ></p-button>
+        </ng-container>
         <ng-template pTemplate="footer">
             <p-button
                 *ngIf="check.CreateDireccionGeoComponent"

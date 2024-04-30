@@ -65,7 +65,7 @@ export class StackbarriofichaComponent {
     // Actualizar basicData con los datos ordenados
     this.basicData.datasets = [dataset];
     this.basicData.labels = direccionesOrdenadas;
-    console.log(this.basicData);
+    //console.log(this.basicData);
     // Actualizar la vista
     this.canvas();
     ////console.log(this.encontrarMaximo());

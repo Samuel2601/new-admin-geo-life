@@ -46,7 +46,7 @@ export class UpdateService {
    
     // Llama a la función compressor para comprimir cada imagen
     return new Observable((observer) => {
-      console.log(data);
+      //console.log(data);
       const formData = new FormData();
       data.categoria?formData.append('categoria', data.categoria._id):'';
       data.subcategoria?formData.append('subcategoria', data.subcategoria._id):'';

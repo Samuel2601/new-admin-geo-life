@@ -9,9 +9,14 @@
                 <span>{{
                     nuevoIncidenteDenuncia.get("direccion_geo")?.value.nombre
                 }}</span
-                >/<span *ngIf="geolocation">{{
-                    geolocation.address.road
-                }}</span>
+                ><span
+                    *ngIf="
+                        geolocation &&
+                        geolocation.address &&
+                        geolocation.address.road
+                    "
+                    >/{{ geolocation.address.road }}</span
+                >
             </h2>
         </div>
     </div>
@@ -139,7 +144,7 @@
 
                 <p-button
                     *ngIf="imagenesSeleccionadas.length > 0"
-                    label=""
+                    label="Borrar Fotos"
                     severity="warning"
                     (onClick)="
                         upload = true;
@@ -166,8 +171,7 @@
                         <p-image
                             [src]="item.itemImageSrc"
                             alt="Image"
-                            [width]="!isMobil() ? '470' : responsiveimage()"
-                            height="320"
+                            [width]="!isMobil() ? '470px' : '100%'"
                         ></p-image>
                     </ng-template>
                     <ng-template pTemplate="indicator" let-index>

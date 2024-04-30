@@ -87,16 +87,16 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
   }
   async obtenerDireccion(latitud:any, longitud:any) {
     const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitud}&lon=${longitud}&format=json`;
-
+    console.log("URL",url);
     fetch(url)
         .then(response => response.json())
         .then(data => {
              this.geolocation = data;
-            //console.log('Dirección:', data,data.display_name);
+            console.log('Dirección:', this.geolocation);
             return data;
         })
         .catch(error => {
-            //console.error('Error al realizar la solicitud:', error);
+            console.error('Error al realizar la solicitud:', error);
         });
   }
   tipocat: any;
@@ -133,7 +133,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
       //console.log(this.data);
       //console.log(this.direccion);
       await Promise.all([
-        this.obtenerDireccion(this.direccion.latitud, this.direccion.longitud),
+        await this.obtenerDireccion(this.direccion.latitud, this.direccion.longitud),
         this.listarCategorias()
       ]);
     } finally {
@@ -272,7 +272,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit{
     }
   ];
  responsiveimage():string{
-  return (window.innerWidth-50).toString();
+  return (window.innerWidth-70).toString();
  }
 
 mostrargale=false;

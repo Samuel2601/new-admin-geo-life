@@ -926,7 +926,7 @@ export class LayersComponent implements OnInit {
             //this.mapCustom.setZoom(18);
             infoWindow.open(this.mapCustom, marker);
         });
-
+        
         /*marker.addListener('click', () => {
       const index = this.markers.indexOf(marker);
       if (this.popupStates[index]) {
@@ -1161,6 +1161,7 @@ export class LayersComponent implements OnInit {
                     feature
                 );
             } else {
+                this.openInfoWindow.open(null);
                 if (this.infoWindowActual) {
                     this.infoWindowActual.close();
                     this.features[polygon.id] = null;
@@ -1173,7 +1174,7 @@ export class LayersComponent implements OnInit {
                     this.url_imag = `${this.url}helper/obtener_portada_barrio/${
                         this.features[this.id_feature].id
                     }`;
-
+                    
                     setTimeout(() => {
                         let contentElement = document.getElementById('content');
                         let clonedContent = contentElement.cloneNode(

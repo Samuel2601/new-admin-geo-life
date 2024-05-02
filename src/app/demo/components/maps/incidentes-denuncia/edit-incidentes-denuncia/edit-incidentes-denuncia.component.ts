@@ -281,9 +281,9 @@ export class EditIncidentesDenunciaComponent implements OnInit {
     mostrargale: any;
     file: any;
     selectedFiles: any = [];
-    load_carrusel: any;
+    load_carrusel: boolean=false;
     async tomarFotoYEnviar(event: any) {
-        this.load_carrusel = false;
+        //this.load_carrusel = false;
         this.upload = true;
         this.mostrargale = false;
         const image = await Camera.getPhoto({
@@ -338,7 +338,7 @@ export class EditIncidentesDenunciaComponent implements OnInit {
     onFilesSelected(event: any): void {
         this.mostrargale = false;
         ////console.log(event);
-        this.load_carrusel = false;
+        //this.load_carrusel = false;
         const files: FileList = event.files;
 
         for (let file of event.files) {

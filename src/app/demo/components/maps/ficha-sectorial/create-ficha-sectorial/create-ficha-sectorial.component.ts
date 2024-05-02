@@ -195,7 +195,7 @@ export class CreateFichaSectorialComponent implements OnInit {
         },
     ];
     onFilesSelected(event: any): void {
-        this.load_carrusel = false;
+        //this.load_carrusel = false;
         const files: FileList = event.files;
         this.upload = true;
         for (let file of event.files) {
@@ -252,7 +252,7 @@ export class CreateFichaSectorialComponent implements OnInit {
     }
 
     eliminarImagen(index: number) {
-        this.load_carrusel = false;
+       // this.load_carrusel = false;
         this.upload = true;
         this.imagenesSeleccionadas.splice(index, 1);
         // Eliminar la imagen del arreglo selectedFiles
@@ -319,7 +319,7 @@ export class CreateFichaSectorialComponent implements OnInit {
     }
 
     async tomarFotoYEnviar(event: any) {
-        this.load_carrusel = false;
+        //this.load_carrusel = false;
         this.upload = true;
         const image = await Camera.getPhoto({
             quality: 90,

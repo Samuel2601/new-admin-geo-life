@@ -272,7 +272,6 @@ export class CreateIncidentesDenunciaComponent implements OnInit {
 
     onFileSelected(event: any): void {
         this.upload = true;
-        this.mostrargale = false;
         const file: File = event.target.files[0];
         if (file) {
             if (!file.type.startsWith('image/')) {
@@ -318,7 +317,6 @@ export class CreateIncidentesDenunciaComponent implements OnInit {
 
     mostrargale = false;
     onFilesSelected(event: any): void {
-        this.mostrargale = false;
         //console.log(event);
         this.load_carrusel = false;
         const files: FileList = event.files;
@@ -376,7 +374,6 @@ export class CreateIncidentesDenunciaComponent implements OnInit {
     async tomarFotoYEnviar(event: any) {
         this.load_carrusel = false;
         this.upload = true;
-        this.mostrargale = false;
         const image = await Camera.getPhoto({
             quality: 90,
             allowEditing: false,

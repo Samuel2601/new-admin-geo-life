@@ -223,6 +223,7 @@
                 </div>
                 <div class="flex pt-4 justify-content-end">
                     <p-button
+                        class="m-3"
                         label="Estados"
                         icon="pi pi-bell"
                         *ngIf="check.IndexEstadoIncidenteComponent"
@@ -257,6 +258,7 @@
             <ng-template pTemplate="caption">
                 <div class="flex">
                     <button
+                        class="m-3"
                         pButton
                         label=""
                         class="p-button-outlined"
@@ -383,6 +385,8 @@
                             </th>
                         </div>
                     </th>
+                    <!--
+                        
                     <th style="min-width: 10rem" *ngIf="!isMobil()">
                         <div class="flex align-items-center">
                             Descripción
@@ -399,6 +403,7 @@
                             </th>
                         </div>
                     </th>
+                    -->
                     <th style="min-width: 10rem">
                         <div class="flex align-items-center">Foto</div>
                     </th>
@@ -472,7 +477,10 @@
                             {{ incidente.createdAt | date : "medium" : "es" }}
                         </ng-container>
                     </td>
-                    <td *ngIf="!isMobil()">{{ incidente.descripcion }}</td>
+
+                    <!--
+<td *ngIf="!isMobil()">{{ incidente.descripcion }}</td>
+                    -->
                     <td (click)="stopPropagation($event)">
                         <img
                             *ngIf="incidente.foto.length > 0"
@@ -565,7 +573,7 @@
     header="Detalles de la Incidencia"
     [(visible)]="visible && option"
     [modal]="false"
-    [style]="{ width: isMobil() ? '100%' : '30vw' }"
+    [style]="{ width: isMobil() ? '100%' : '40vw' }"
 >
     <div class="modal-body">
         <p>
@@ -623,6 +631,7 @@
         <div class="flex justify-content-between">
             <div class="justify-content-between">
                 <p-button
+                    class="m-3"
                     *ngIf="option.foto && option.foto.length > 0"
                     label="Fotos"
                     icon="pi pi-images"
@@ -631,6 +640,7 @@
             </div>
             <div class="justify-content-center">
                 <p-button
+                    class="m-3"
                     *ngIf="option.evidencia && option.evidencia.length > 0"
                     label="Evidencias"
                     icon="pi pi-images"
@@ -641,6 +651,7 @@
             </div>
             <div class="justify-content-end" *ngIf="option.estado.orden < 2">
                 <p-button
+                    class="m-3"
                     *ngIf="check.EditIncidentesDenunciaComponent"
                     [label]="
                         id != option.ciudadano._id ? 'Responder' : 'Editar'
@@ -649,6 +660,7 @@
                     (click)="editar()"
                 ></p-button>
                 <p-button
+                    class="m-3"
                     *ngIf="option.estado.orden == 1"
                     label="Borrar"
                     icon="pi pi-images"

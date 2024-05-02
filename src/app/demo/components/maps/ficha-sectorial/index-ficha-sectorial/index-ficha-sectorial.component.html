@@ -26,6 +26,7 @@
                 </div>
                 <div class="flex pt-4 justify-content-end">
                     <button
+                        class="m-3"
                         *ngIf="check.IndexActividadProyectoComponent"
                         pButton
                         label="Actividades"
@@ -33,6 +34,7 @@
                         (click)="llamarmodal2()"
                     ></button>
                     <button
+                        class="m-3"
                         *ngIf="check.IndexEstadoActividadProyectoComponent"
                         pButton
                         label="Estados"
@@ -306,6 +308,7 @@
                     </div>
                     <div class="flex pt-4 justify-content-end">
                         <button
+                            class="m-3"
                             *ngIf="check.IndexActividadProyectoComponent"
                             pButton
                             label="Actividades"
@@ -313,6 +316,7 @@
                             (click)="llamarmodal2()"
                         ></button>
                         <button
+                            class="m-3"
                             *ngIf="check.IndexEstadoActividadProyectoComponent"
                             pButton
                             label="Estados"
@@ -812,6 +816,7 @@
         <div class="flex justify-content-between">
             <div class="justify-content-between">
                 <p-button
+                    class="m-3"
                     *ngIf="option.foto && option.foto.length > 0"
                     label="Fotos"
                     icon="pi pi-images"
@@ -820,6 +825,7 @@
             </div>
             <div class="justify-content-end">
                 <p-button
+                    class="m-3"
                     *ngIf="
                         check.EditFichaSectorialComponent &&
                         (id == option.encargado._id ||
@@ -831,6 +837,7 @@
                 ></p-button>
 
                 <p-button
+                    class="m-3"
                     *ngIf="
                         id == option.encargado._id ||
                         rol.nombre == 'Administrador'

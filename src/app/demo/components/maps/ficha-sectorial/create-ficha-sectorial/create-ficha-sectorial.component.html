@@ -111,49 +111,8 @@
                     </div>
                     -->
                 </div>
-
-                <div class="mb-3" *ngIf="!isMobil() && !upload">
-                    <p-button
-                        *ngIf="imagenesSeleccionadas.length > 0"
-                        label="Borrar Fotos"
-                        severity="warning"
-                        (onClick)="
-                            upload = true;
-                            imagenesSeleccionadas = [];
-                            selectedFiles = []
-                        "
-                        icon="pi pi-trash"
-                    ></p-button>
-                </div>
-                <div class="mb-3" *ngIf="isMobil()">
-                    <p-button
-                        *ngIf="imagenesSeleccionadas.length < 6 || upload"
-                        id="fotoButton"
-                        icon="pi bi-camera2-custom"
-                        [raised]="true"
-                        [outlined]="true"
-                        label="Añadir nueva Foto"
-                        (click)="tomarFotoYEnviar($event)"
-                    ></p-button>
-                    <p-button
-                        *ngIf="imagenesSeleccionadas.length > 0"
-                        label="Borrar Fotos"
-                        severity="warning"
-                        (onClick)="
-                            upload = true;
-                            imagenesSeleccionadas = [];
-                            selectedFiles = []
-                        "
-                        icon="pi pi-trash"
-                    ></p-button>
-                </div>
-                <div class="mb-3">
-                    <p-toast></p-toast>
+                <div class="mb-3" *ngIf="!isMobil() && upload">
                     <p-fileUpload
-                        *ngIf="
-                            (imagenesSeleccionadas.length < 6 || upload) &&
-                            !isMobil()
-                        "
                         chooseLabel="Seleccionar"
                         uploadLabel="Cargar"
                         cancelLabel="Cancelar"
@@ -163,7 +122,7 @@
                         [multiple]="true"
                         accept="image/*"
                         [maxFileSize]="5000000"
-                        [fileLimit]="5"
+                        [fileLimit]="5 - selectedFiles.length"
                         invalidFileLimitMessageSummary="Se superó el número máximo de archivos"
                     >
                         <ng-template pTemplate="content">
@@ -181,36 +140,65 @@
                         </ng-template>
                     </p-fileUpload>
                 </div>
+                <div class="mb-3" *ngIf="isMobil() && upload">
+                    <h4 for="formFileMultiple" class="form-label">
+                        Añade fotos:
+                        <p-button
+                            id="fotoButton"
+                            icon="pi bi-camera2-custom"
+                            [raised]="true"
+                            [outlined]="true"
+                            label="Añadir nueva Foto"
+                            (click)="tomarFotoYEnviar($event)"
+                        ></p-button>
+                    </h4>
+                </div>
                 <div class="mb-3" *ngIf="load_carrusel">
+                    <p-button
+                        class="m-3"
+                        *ngIf="imagenesSeleccionadas.length > 0"
+                        icon="pi bi-box-arrow-up-right"
+                        [raised]="true"
+                        [outlined]="true"
+                        label="Ver Fotos"
+                        (click)="imageClick(0)"
+                    ></p-button>
+
+                    <p-button
+                        class="m-3"
+                        *ngIf="imagenesSeleccionadas.length > 0"
+                        label="Borrar Fotos"
+                        severity="warning"
+                        (onClick)="
+                            upload = true;
+                            imagenesSeleccionadas = [];
+                            selectedFiles = []
+                        "
+                        icon="pi pi-trash"
+                    ></p-button>
+
                     <p-galleria
                         [value]="imagenesSeleccionadas"
-                        [showIndicators]="true"
-                        [showThumbnails]="false"
-                        [showIndicatorsOnItem]="true"
-                        indicatorsPosition="left"
+                        [(visible)]="displayCustom"
+                        [(activeIndex)]="activeIndex"
                         [responsiveOptions]="responsiveOptions"
-                        [containerStyle]="{
-                            'max-width': '100%',
-                            'margin-top': '2em'
-                        }"
+                        [containerStyle]="{ 'max-width': '850px' }"
+                        [numVisible]="7"
+                        [circular]="true"
+                        [fullScreen]="true"
+                        [showItemNavigators]="true"
+                        [showThumbnails]="false"
                     >
                         <ng-template pTemplate="item" let-item>
-                            <p-image
+                            <img
                                 [src]="item.itemImageSrc"
-                                alt="Image"
-                                [width]="!isMobil() ? '470' : responsiveimage()"
-                                height="320"
-                            ></p-image>
-                        </ng-template>
-                        <ng-template pTemplate="indicator" let-index>
-                            <span style="color: #e9ecef; cursor: pointer">{{
-                                index + 1
-                            }}</span>
+                                style="width: 100%; display: block"
+                            />
                         </ng-template>
                     </p-galleria>
                 </div>
                 <p-button
-                    label="Registrar"
+                    label="Crear Ficha"
                     icon="bi bi-save"
                     (click)="registrarFichaSectorial()"
                 ></p-button>

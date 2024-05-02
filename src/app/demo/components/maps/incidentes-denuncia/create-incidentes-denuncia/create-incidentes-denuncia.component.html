@@ -99,7 +99,7 @@
             <div
                 class="mb-3"
                 *ngIf="
-                    (imagenesSeleccionadas.length < 3 || upload) && !isMobil()
+                    (imagenesSeleccionadas.length < 6 || upload) && !isMobil()
                 "
             >
                 <p-fileUpload
@@ -112,7 +112,7 @@
                     [multiple]="true"
                     accept="image/*"
                     [maxFileSize]="5000000"
-                    [fileLimit]="3"
+                    [fileLimit]="5"
                     invalidFileLimitMessageSummary="Se superó el número máximo de archivos"
                 >
                     <ng-template pTemplate="content">
@@ -133,7 +133,7 @@
                 <h4 for="formFileMultiple" class="form-label">Añade fotos</h4>
 
                 <p-button
-                    *ngIf="imagenesSeleccionadas.length < 3 || upload"
+                    *ngIf="imagenesSeleccionadas.length < 6 || upload"
                     id="fotoButton"
                     icon="pi bi-camera2-custom"
                     [raised]="true"

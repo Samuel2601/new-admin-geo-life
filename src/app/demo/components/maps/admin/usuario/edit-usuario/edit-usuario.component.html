@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <ng-container *ngIf="modal">
     <div class="col-12" *ngIf="datauser">
         <h5 *ngIf="editing">Puedes cambiar tu información personal.</h5>
@@ -7,6 +8,7 @@
         <div class="p-fluid p-formgrid grid">
             <div class="field col-4">
                 <img
+                    *ngIf="!load_form"
                     src="{{
                         nombreArchivo
                             ? nombreArchivo
@@ -19,6 +21,11 @@
                     height="100"
                     style="border-radius: 50%; object-fit: cover"
                 />
+                <p-skeleton
+                    *ngIf="load_form"
+                    shape="circle"
+                    size="5rem"
+                ></p-skeleton>
 
                 <p-fileUpload
                     mode="basic"
@@ -43,7 +50,7 @@
                             type="text"
                             [(ngModel)]="datauser.nombres"
                             placeholder="Ingresa tus nombres"
-                            [disabled]="false"
+                            [disabled]="editing"
                         />
                     </div>
                     <div class="field col-12 md:col-6">
@@ -75,7 +82,7 @@
                             type="text"
                             [(ngModel)]="datauser.cedula"
                             placeholder="Ingresa tu Cédula"
-                            [disabled]="false"
+                            [disabled]="editing"
                         />
                     </div>
                     <div class="field col-12 md:col-6">
@@ -92,7 +99,7 @@
                     <div class="field col-12 md:col-3">
                         <label htmlFor="state">Rol </label>
                         <p-dropdown
-                            [disabled]="!editing"
+                            [disabled]="editing"
                             [options]="listrol"
                             [(ngModel)]="datauser.rol_user"
                             [placeholder]="
@@ -122,7 +129,7 @@
                             </ng-template>
                         </p-dropdown>
                     </div>
-                    <div class="field col-12 md:col-3" *ngIf="editing">
+                    <div class="field col-12 md:col-3" *ngIf="!editing">
                         <label htmlFor="zip">Estado</label>
                         <p-inputSwitch
                             [ngModel]="datauser.estado === 'On'"
@@ -140,6 +147,7 @@
                 class="btn btn-primary"
                 (click)="updateUser()"
                 label="Guardar"
+                [disabled]="load_form"
             >
             </p-button>
         </div>
@@ -155,23 +163,11 @@
         </div>
         <div class="card-body">
             <div class="card-body" aria-hidden="true">
-                <h5 class="card-title placeholder-glow">
-                    <span class="placeholder col-6"></span>
-                </h5>
-                <p class="card-text placeholder-glow">
-                    <span class="placeholder col-7"></span>
-                    <span class="placeholder col-4"></span>
-                    <span class="placeholder col-4"></span>
-                    <span class="placeholder col-6"></span>
-                    <span class="placeholder col-8"></span>
-                </p>
-                <p class="card-text placeholder-glow">
-                    <span class="placeholder col-7"></span>
-                    <span class="placeholder col-4"></span>
-                    <span class="placeholder col-4"></span>
-                    <span class="placeholder col-6"></span>
-                    <span class="placeholder col-8"></span>
-                </p>
+                <p-skeleton styleClass="mb-2"></p-skeleton>
+                <p-skeleton width="10rem" styleClass="mb-2"></p-skeleton>
+                <p-skeleton width="5rem" styleClass="mb-2"></p-skeleton>
+                <p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+                <p-skeleton width="10rem" height="4rem"></p-skeleton>
             </div>
         </div>
     </div>
@@ -187,6 +183,7 @@
             <div class="p-fluid p-formgrid grid">
                 <div class="field col-4">
                     <img
+                        *ngIf="!load_form"
                         src="{{
                             nombreArchivo
                                 ? nombreArchivo
@@ -199,6 +196,11 @@
                         height="100"
                         style="border-radius: 50%; object-fit: cover"
                     />
+                    <p-skeleton
+                        *ngIf="load_form"
+                        shape="circle"
+                        size="5rem"
+                    ></p-skeleton>
 
                     <p-fileUpload
                         mode="basic"
@@ -336,23 +338,11 @@
         </div>
         <div class="card-body">
             <div class="card-body" aria-hidden="true">
-                <h5 class="card-title placeholder-glow">
-                    <span class="placeholder col-6"></span>
-                </h5>
-                <p class="card-text placeholder-glow">
-                    <span class="placeholder col-7"></span>
-                    <span class="placeholder col-4"></span>
-                    <span class="placeholder col-4"></span>
-                    <span class="placeholder col-6"></span>
-                    <span class="placeholder col-8"></span>
-                </p>
-                <p class="card-text placeholder-glow">
-                    <span class="placeholder col-7"></span>
-                    <span class="placeholder col-4"></span>
-                    <span class="placeholder col-4"></span>
-                    <span class="placeholder col-6"></span>
-                    <span class="placeholder col-8"></span>
-                </p>
+                <p-skeleton styleClass="mb-2"></p-skeleton>
+                <p-skeleton width="10rem" styleClass="mb-2"></p-skeleton>
+                <p-skeleton width="5rem" styleClass="mb-2"></p-skeleton>
+                <p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+                <p-skeleton width="10rem" height="4rem"></p-skeleton>
             </div>
         </div>
     </div>

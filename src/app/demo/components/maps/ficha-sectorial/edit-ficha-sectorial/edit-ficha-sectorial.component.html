@@ -45,6 +45,8 @@
                                 >Fecha del Evento:</label
                             >
                             <p-calendar
+                                [touchUI]="isMobil()"
+                                [readonlyInput]="isMobil()"
                                 id="fecha_evento"
                                 name="fecha_evento"
                                 formControlName="fecha_evento"

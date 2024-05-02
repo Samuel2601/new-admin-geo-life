@@ -270,7 +270,7 @@ export class CreateFichaSectorialComponent implements OnInit {
       promptLabelPhoto:  'Seleccionar de la galería',
       promptLabelPicture:'Tomar foto',
     });
-    if (image && image.base64String && this.selectedFiles.length<3) {
+    if (image && image.base64String && this.selectedFiles.length<6) {
       
         const byteCharacters = atob(image.base64String);
         const byteNumbers = new Array(byteCharacters.length);
@@ -297,7 +297,7 @@ export class CreateFichaSectorialComponent implements OnInit {
      this.messageService.add({severity: 'info', summary: 'MAX img', detail: 'Solo puede enviar 1 imangenes más'});
       }
     } else {
-    this.messageService.add({severity: 'warning', summary: 'MAX img', detail: 'Solo puede enviar 3 imangenes'});
+    this.messageService.add({severity: 'warning', summary: 'MAX img', detail: 'Solo puede enviar 5 imangenes'});
       //console.error('Error al obtener la cadena base64 de la imagen.');
     }
   }

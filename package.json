@@ -38,6 +38,7 @@
     "@fullcalendar/timegrid": "^6.1.11",
     "@googlemaps/js-api-loader": "^1.16.6",
     "@ng-bootstrap/ng-bootstrap": "^16.0.0",
+    "@ngx-translate/core": "^15.0.0",
     "@turf/turf": "^6.5.0",
     "browser-image-compression": "^2.0.2",
     "chart.js": "^4.4.2",

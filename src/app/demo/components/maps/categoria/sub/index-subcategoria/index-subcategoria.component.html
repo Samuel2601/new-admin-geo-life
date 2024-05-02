@@ -15,6 +15,7 @@
                 dataKey="_id"
                 editMode="row"
                 *ngIf="subcategorias.length > 0 && !load_lista"
+                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
             >
                 <ng-template pTemplate="header">
                     <tr>

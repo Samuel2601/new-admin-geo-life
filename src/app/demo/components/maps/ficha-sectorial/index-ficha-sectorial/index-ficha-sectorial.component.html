@@ -231,6 +231,7 @@
         </div>
     </ng-template>
     <p-table
+        *ngIf="check.FichaLimitada"
         styleClass="p-datatable-striped"
         #dt1
         [value]="fichasectorial"
@@ -327,6 +328,7 @@
             <p-toast></p-toast>
 
             <p-table
+                *ngIf="!check.FichaLimitada"
                 styleClass="p-datatable-striped"
                 #dt1
                 [value]="fichasectorial"
@@ -564,6 +566,91 @@
                                 "
                             />
                         </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="5">No se encontraron incidentes.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <p-table
+                *ngIf="check.FichaLimitada"
+                styleClass="p-datatable-striped"
+                #dt1
+                [value]="fichasectorial"
+                dataKey="_id"
+                [rows]="10"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                [loading]="load_lista"
+                [paginator]="true"
+                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+            >
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">#</th>
+                        <th style="min-width: 8rem">
+                            <div class="flex align-items-center">Dirección</div>
+                        </th>
+                        <th style="min-width: 8rem">
+                            <div class="flex align-items-center">Actividad</div>
+                        </th>
+                        <th style="min-width: 15rem">
+                            <div class="flex align-items-center">
+                                Desripción
+                            </div>
+                        </th>
+                        <th style="min-width: 8rem">
+                            <div class="flex align-items-center">
+                                Fecha del evento
+                            </div>
+                        </th>
+                        <th style="min-width: 8rem">
+                            <div class="flex align-items-center">Fotos</div>
+                        </th>
+                        <!-- Agrega las columnas restantes según tu necesidad -->
+                    </tr>
+                </ng-template>
+                <ng-template
+                    pTemplate="body"
+                    let-incidente
+                    let-rowIndex="rowIndex"
+                >
+                    <tr>
+                        <td>{{ rowIndex + 1 }}</td>
+                        <td>
+                            {{ incidente.direccion_geo }}
+                        </td>
+                        <td>
+                            {{ incidente.actividad.nombre }}
+                        </td>
+                        <td>
+                            {{ incidente.descripcion }}
+                        </td>
+
+                        <td>
+                            {{
+                                incidente.fecha_evento | date : "medium" : "es"
+                            }}
+                        </td>
+                        <td>
+                            <p-button
+                                *ngIf="
+                                    incidente.foto && incidente.foto.length > 0
+                                "
+                                id="fotoButton"
+                                icon="pi bi-camera2-custom"
+                                [raised]="true"
+                                [outlined]="true"
+                                label="Ver"
+                                (click)="
+                                    displayBasic = true;
+                                    openModalimagen(incidente.foto)
+                                "
+                            ></p-button>
+                        </td>
+                        <!-- Agrega el modal al final del componente -->
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage">

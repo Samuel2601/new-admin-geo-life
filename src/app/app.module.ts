@@ -6,10 +6,11 @@ import { AppLayoutModule } from './layout/app.layout.module';
 import { NotfoundComponent } from './demo/components/notfound/notfound.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ButtonModule } from 'primeng/button';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
     declarations: [AppComponent, NotfoundComponent],
-    imports: [AppRoutingModule, AppLayoutModule,ButtonModule],
+    imports: [AppRoutingModule, AppLayoutModule,ButtonModule,TranslateModule.forRoot()],
     providers: [
         { provide: LocationStrategy, useClass: PathLocationStrategy },
         DialogService

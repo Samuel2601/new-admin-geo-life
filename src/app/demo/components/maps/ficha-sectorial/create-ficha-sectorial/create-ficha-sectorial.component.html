@@ -29,6 +29,7 @@
                                 Actividad de Proyecto
                             </h4>
                             <p-dropdown
+                                placeholder="Selecciona una Actividad"
                                 id="actividad"
                                 name="actividad"
                                 formControlName="actividad"
@@ -43,6 +44,8 @@
                                 Fecha del Evento:
                             </h4>
                             <p-calendar
+                                [touchUI]="isMobil()"
+                                [readonlyInput]="isMobil()"
                                 id="fecha_evento"
                                 name="fecha_evento"
                                 formControlName="fecha_evento"
@@ -61,6 +64,7 @@
                                 Estado de Actividad de Proyecto
                             </h4>
                             <p-dropdown
+                                placeholder="Selecciona un estado"
                                 id="estado"
                                 name="estado"
                                 formControlName="estado"
@@ -122,20 +126,18 @@
                     ></p-button>
                 </div>
                 <div class="mb-3" *ngIf="isMobil()">
-                    <h4 for="formFileMultiple" class="form-label">
-                        Añade fotos
-                    </h4>
                     <p-button
-                        *ngIf="imagenesSeleccionadas.length < 3 || upload"
-                        class="btn btn-primary"
-                        type="button"
+                        *ngIf="imagenesSeleccionadas.length < 6 || upload"
+                        id="fotoButton"
+                        icon="pi bi-camera2-custom"
+                        [raised]="true"
+                        [outlined]="true"
+                        label="Añadir nueva Foto"
                         (click)="tomarFotoYEnviar($event)"
-                    >
-                        <i class="bi bi-camera-fill"></i>
-                    </p-button>
+                    ></p-button>
                     <p-button
                         *ngIf="imagenesSeleccionadas.length > 0"
-                        label=""
+                        label="Borrar Fotos"
                         severity="warning"
                         (onClick)="
                             upload = true;
@@ -149,7 +151,7 @@
                     <p-toast></p-toast>
                     <p-fileUpload
                         *ngIf="
-                            (imagenesSeleccionadas.length < 3 || upload) &&
+                            (imagenesSeleccionadas.length < 6 || upload) &&
                             !isMobil()
                         "
                         chooseLabel="Seleccionar"
@@ -161,7 +163,7 @@
                         [multiple]="true"
                         accept="image/*"
                         [maxFileSize]="5000000"
-                        [fileLimit]="3"
+                        [fileLimit]="5"
                         invalidFileLimitMessageSummary="Se superó el número máximo de archivos"
                     >
                         <ng-template pTemplate="content">

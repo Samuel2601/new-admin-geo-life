@@ -26,7 +26,10 @@ export class UpdateService {
     formData.append('password', data.password);
     formData.append('rol_user', data.rol_user._id?data.rol_user._id:data.rol_user);
     formData.append('telefono', data.telefono);
-    formData.append('foto', file);
+    if (file) {
+      formData.append('foto', file);
+    }
+    
 
     return this.http.put(this.url + 'actualizar_usuario/' + id, formData, { headers: headers });
   }

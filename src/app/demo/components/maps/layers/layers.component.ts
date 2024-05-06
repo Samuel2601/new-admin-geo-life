@@ -311,13 +311,13 @@ export class LayersComponent implements OnInit {
                             },
                             {
                                 icon: 'pi pi-book',
-                                label: 'Fichas Técnicas',
+                                label: 'Fichas Sectorials',
                                 styleClass: 'itemcustom',
                                 expanded: true,
                                 items: [
                                     {
                                         icon: 'pi pi-book',
-                                        label: 'Fichas Técnicas',
+                                        label: 'Fichas Sectorials',
                                         styleClass: 'itemcustom',
                                         command: () => {
                                             if (
@@ -337,7 +337,7 @@ export class LayersComponent implements OnInit {
                                     },
                                     {
                                         icon: 'pi pi-pencil',
-                                        label: 'Nuevas Ficha Técnica',
+                                        label: 'Nuevas Ficha Sectorial',
                                         styleClass: 'itemcustom',
                                         command: () => {
                                             if (

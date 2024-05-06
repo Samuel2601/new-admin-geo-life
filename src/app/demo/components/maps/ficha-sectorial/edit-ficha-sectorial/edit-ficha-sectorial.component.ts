@@ -259,7 +259,7 @@ fichaSectorialForm: FormGroup<any>;
         this.updateService.actualizarActividadProyecto(this.token, this.id,this.fichaSectorialForm.value).subscribe(response => {
           console.log(response);
           if(response.data){
-            this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Ficha Técnica Actualizado'});
+            this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Ficha Sectorial Actualizado'});
             this.ref.close();
             location.reload();
           }

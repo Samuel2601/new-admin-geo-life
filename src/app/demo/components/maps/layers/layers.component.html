@@ -30,16 +30,32 @@
                     <p-autoComplete
                         [suggestions]="filter"
                         (completeMethod)="filterOptions($event)"
-                        field="properties.nombre"
+                        [field]="
+                            capaActivaWIFI || opcionb?.properties?.nombre
+                                ? 'properties.nombre'
+                                : 'properties.punto'
+                        "
                         inputId="float-label"
                         [(ngModel)]="opcionb"
-                        class="w-full"
-                        (ngModelChange)="poligonoview(true, opcionb)"
+                        (ngModelChange)="
+                            opcionb?.properties?.nombre
+                                ? poligonoview(true, opcionb)
+                                : viewwifi(opcionb)
+                        "
+                        [inputStyle]="{
+                            width: isMobil() ? responsiveimage() : '400px'
+                        }"
                     >
                         <ng-template let-option pTemplate="item">
                             <div class="flex align-items-center gap-2">
-                                <div>
-                                    {{ option.properties.nombre }}
+                                <div *ngIf="option?.properties?.nombre">
+                                    {{ option?.properties?.nombre }}
+                                    <ng-container *ngIf="capaActivaWIFI"
+                                        >(Barrio)</ng-container
+                                    >
+                                </div>
+                                <div *ngIf="option?.properties?.punto">
+                                    {{ option?.properties?.punto }} (WIFI)
                                 </div>
                             </div>
                         </ng-template>
@@ -63,7 +79,7 @@
                     [(ngModel)]="opcionb"
                     (ngModelChange)="
                         opcionb?.properties?.nombre
-                            ? poligonoview(true, opcionb)
+                            ? poligonoview(true, opcionb, true)
                             : viewwifi(opcionb)
                     "
                     [inputStyle]="{
@@ -73,7 +89,10 @@
                     <ng-template let-option pTemplate="item">
                         <div class="flex align-items-center gap-2">
                             <div *ngIf="option?.properties?.nombre">
-                                {{ option?.properties?.nombre }} (Barrio)
+                                {{ option?.properties?.nombre }}
+                                <ng-container *ngIf="capaActivaWIFI"
+                                    >(Barrio)</ng-container
+                                >
                             </div>
                             <div *ngIf="option?.properties?.punto">
                                 {{ option?.properties?.punto }} (WIFI)
@@ -135,8 +154,10 @@
     class="container"
     *ngIf="mostrarincidente"
     id="indexficha"
-    [filtro]="'direccion_geo.nombre'"
-    [valor]="opcionb.properties.nombre"
+    [filtro]="mostrarfiltro ? 'direccion_geo.nombre' : undefined"
+    [valor]="mostrarfiltro ? opcionb.properties.nombre : undefined"
+    [categoria]="categoria"
+    [subcategoria]="subcategoria"
     [modal]="true"
     style="z-index: inherit"
 >

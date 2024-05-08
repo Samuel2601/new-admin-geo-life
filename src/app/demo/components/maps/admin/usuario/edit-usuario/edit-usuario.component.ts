@@ -60,7 +60,7 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit {
             this.editing = true;
         } else {
             this.editing = this.id == this.adminservice.identity(this.token);
-            console.log(this.editing,this.id, this.adminservice.identity(this.token));
+            //console.log(this.editing,this.id, this.adminservice.identity(this.token));
         }
         
         this.listarRol();

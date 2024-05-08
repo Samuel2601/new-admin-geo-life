@@ -59,6 +59,7 @@ export class CreateSubcategoriaComponent implements OnInit{
     });
     } else {
       console.log(this.subcategoriaForm);
+      this.messageService.add({severity: 'error', summary: 'Error' , detail: 'Algunos campos están Fallando'});
       // Aquí puedes mostrar un mensaje de error o realizar alguna otra acción si el formulario no es válido
     }
   }

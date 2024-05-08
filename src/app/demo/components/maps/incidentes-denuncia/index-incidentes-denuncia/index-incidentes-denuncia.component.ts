@@ -33,8 +33,11 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   load_lista=true;
 
   @Input() filtro: string | undefined;
-  @Input() valor: number | undefined;
+  @Input() valor: string | undefined;
   @Input() modal: any = false;
+
+  @Input() categoria: string | undefined;
+  @Input() subcategoria: string | undefined;
 
   deshabilitarMapaDesdeIndexFichaSectorial(event: MouseEvent) {
     this.stopPropagation(event);
@@ -134,8 +137,9 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   token = this.helperservice.token();
   id = this.admin.identity(this.token);
   rol = this.admin.roluser(this.token);
+ 
   async ngOnInit(): Promise<void> {
-    console.log(this.rol);
+    //console.log(this.rol);
     if(!this.modal)this.helperservice.llamarspinner();
     try {
        this.check.IndexIncidentesDenunciaComponent = this.helperservice.decryptData('IndexIncidentesDenunciaComponent') || false;
@@ -157,14 +161,17 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
   encargos: any[] = [];
   async buscarencargos() {
     this.listService.listarEncargadosCategorias(this.token,'encargado',this.id).subscribe(response => {
-      console.log(response);
+      //console.log(response);
       if (response.data) {
         this.encargos = response.data;
       }
     });
   }
-
+  itemh: any[] = [];
+  loadpath: boolean = false;
   listarIncidentesDenuncias(): void {
+    this.itemh = [];
+    this.loadpath = false;
      if (!this.modal) {
         this.helperservice.llamarspinner();
     }
@@ -178,7 +185,8 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
 
     if (this.filtro && this.valor) {
         filtroServicio = this.filtro;
-        valorServicio = this.valor;
+      valorServicio = this.valor;
+      this.itemh.push({ label: this.valor });
     }
 
     if (!this.check.TotalFilterIncidente) {
@@ -189,10 +197,10 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
     this.listService.listarIncidentesDenuncias(this.token, filtroServicio, valorServicio).subscribe(response => {
         if (response.data) {
           this.incidentesDenuncias = response.data;
-          console.log(this.incidentesDenuncias);
+          //console.log(this.incidentesDenuncias);
           if (this.filtro && this.valor && !this.check.TotalFilterIncidente) {
             const [campo, propiedad] = this.filtro.split('.');
-            console.log("Separacion",campo,propiedad);
+            //console.log("Separacion",campo,propiedad);
             this.incidentesDenuncias = this.incidentesDenuncias.filter((ficha: any) => {
                 if (propiedad) {
                     if (ficha[campo][propiedad] == this.valor) {
@@ -208,7 +216,18 @@ export class IndexIncidentesDenunciaComponent implements OnInit,OnChanges{
           if (!this.check.TotalFilterIncidente && this.encargos.length>0) {            
             this.incidentesDenuncias = this.incidentesDenuncias.filter((ficha: any) => this.encargos.find(element=>element.categoria._id ===ficha.categoria._id));
           }
-            this.load_lista = false;
+          //console.log(this.incidentesDenuncias,this.categoria, this.subcategoria);
+          if (this.categoria) {  
+            this.itemh.push({ label: this.categoria });
+            this.incidentesDenuncias = this.incidentesDenuncias.filter((ficha: any) => ficha.categoria.nombre === this.categoria);
+          }
+          if (this.subcategoria) {    
+            this.itemh.push({ label: this.subcategoria });
+            this.incidentesDenuncias = this.incidentesDenuncias.filter((ficha: any) => ficha.subcategoria.nombre === this.subcategoria);
+          }
+
+          this.load_lista = false;
+          this.loadpath = true;
         }
     }, error => {
         this.load_lista = false;

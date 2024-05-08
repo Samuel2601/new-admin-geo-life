@@ -250,7 +250,9 @@ export class LayersComponent implements OnInit {
       
         },
       },*/
-
+    categoria: string;
+    subcategoria: string;
+    mostrarfiltro: boolean = true;
     updateItem() {
         this.items = [
             {
@@ -264,10 +266,11 @@ export class LayersComponent implements OnInit {
                         styleClass: 'itemcustom',
                         //expanded: true,
                         items: [
-                            {
+                            /*{
                                 icon: 'pi pi-chart-bar',
                                 label: 'Estadística',
                                 styleClass: 'itemcustom',
+                                visible:this.check.DashboardComponent,
                                 command: () => {
                                     if (
                                         (this.opcionb ? true : false) &&
@@ -281,6 +284,44 @@ export class LayersComponent implements OnInit {
                                             summary: 'ERROR',
                                             detail: 'Primero selecciona un lugar',
                                         });
+                                    }
+                                },
+                            },*/
+                            {
+                                icon: 'pi bi-ticcioce',
+                                label: 'TIC-CIOCE',
+                                styleClass: 'itemcustom',
+                                visible: this.check.DashboardComponent,
+                                command: () => {
+                                    if (
+                                        (this.opcionb ? true : false) &&
+                                        this.check
+                                            .CreateIncidentesDenunciaComponent &&
+                                        (this.latitud ? true : false) &&
+                                        (this.longitud ? true : false)
+                                    ) {
+                                        this.nuevoIncidente('CIOCE');
+                                    } else {
+                                        if (
+                                            (this.opcionb ? true : false) &&
+                                            this.check
+                                                .IndexIncidentesDenunciaComponent &&
+                                            this.check.DashboardComponent
+                                        ) {
+                                            this.mostrarincidente = false;
+                                            setTimeout(() => {
+                                                this.mostrarfiltro = false;
+                                                this.categoria = 'CIOCE';
+                                                this.subcategoria = undefined;
+                                                this.incidente();
+                                            }, 500);
+                                        } else {
+                                            this.messageService.add({
+                                                severity: 'error',
+                                                summary: 'ERROR',
+                                                detail: 'Primero selecciona un punto',
+                                            });
+                                        }
                                     }
                                 },
                             },
@@ -374,9 +415,17 @@ export class LayersComponent implements OnInit {
                                             if (
                                                 (this.opcionb ? true : false) &&
                                                 this.check
-                                                    .IndexIncidentesDenunciaComponent
+                                                    .IndexIncidentesDenunciaComponent &&
+                                                this.check.DashboardComponent
                                             ) {
-                                                this.incidente();
+                                                this.mostrarincidente = false;
+                                                setTimeout(() => {
+                                                    this.mostrarfiltro = true;
+                                                    this.categoria = undefined;
+                                                    this.subcategoria =
+                                                        undefined;
+                                                    this.incidente();
+                                                }, 500);
                                             } else {
                                                 this.messageService.add({
                                                     severity: 'error',
@@ -428,11 +477,27 @@ export class LayersComponent implements OnInit {
                                     'Transporte terrestre y seguridad vial'
                                 );
                             } else {
-                                this.messageService.add({
-                                    severity: 'error',
-                                    summary: 'ERROR',
-                                    detail: 'Primero selecciona un punto',
-                                });
+                                if (
+                                    (this.opcionb ? true : false) &&
+                                    this.check
+                                        .IndexIncidentesDenunciaComponent &&
+                                    this.check.DashboardComponent
+                                ) {
+                                    this.mostrarincidente = false;
+                                    setTimeout(() => {
+                                        this.mostrarfiltro = false;
+                                        this.categoria = 'ESVIAL';
+                                        this.subcategoria =
+                                            'Transporte terrestre y seguridad vial';
+                                        this.incidente();
+                                    }, 500);
+                                } else {
+                                    this.messageService.add({
+                                        severity: 'error',
+                                        summary: 'ERROR',
+                                        detail: 'Primero selecciona un punto',
+                                    });
+                                }
                             }
                         },
                     },
@@ -449,14 +514,29 @@ export class LayersComponent implements OnInit {
                             ) {
                                 this.nuevoIncidente(
                                     'Agua Potable y Alcantarillado'
-                                    
                                 );
                             } else {
-                                this.messageService.add({
-                                    severity: 'error',
-                                    summary: 'ERROR',
-                                    detail: 'Primero selecciona un punto',
-                                });
+                                if (
+                                    (this.opcionb ? true : false) &&
+                                    this.check
+                                        .IndexIncidentesDenunciaComponent &&
+                                    this.check.DashboardComponent
+                                ) {
+                                    this.mostrarincidente = false;
+                                    setTimeout(() => {
+                                        this.mostrarfiltro = false;
+                                        this.categoria =
+                                            'Agua Potable y Alcantarillado';
+                                        this.subcategoria = undefined;
+                                        this.incidente();
+                                    }, 500);
+                                } else {
+                                    this.messageService.add({
+                                        severity: 'error',
+                                        summary: 'ERROR',
+                                        detail: 'Primero selecciona un punto',
+                                    });
+                                }
                             }
                         },
                     },
@@ -473,14 +553,30 @@ export class LayersComponent implements OnInit {
                             ) {
                                 this.nuevoIncidente(
                                     'Cuerpo de Bomberos',
-                                    "Incendios / Desastres varios"
+                                    'Incendios / Desastres varios'
                                 );
                             } else {
-                                this.messageService.add({
-                                    severity: 'error',
-                                    summary: 'ERROR',
-                                    detail: 'Primero selecciona un punto',
-                                });
+                                if (
+                                    (this.opcionb ? true : false) &&
+                                    this.check
+                                        .IndexIncidentesDenunciaComponent &&
+                                    this.check.DashboardComponent
+                                ) {
+                                    this.mostrarincidente = false;
+                                    setTimeout(() => {
+                                        this.mostrarfiltro = false;
+                                        this.categoria = 'Cuerpo de Bomberos';
+                                        this.subcategoria =
+                                            'Incendios / Desastres varios';
+                                        this.incidente();
+                                    }, 500);
+                                } else {
+                                    this.messageService.add({
+                                        severity: 'error',
+                                        summary: 'ERROR',
+                                        detail: 'Primero selecciona un punto',
+                                    });
+                                }
                             }
                         },
                     },
@@ -526,7 +622,7 @@ export class LayersComponent implements OnInit {
                                         if (aux && aux.features) {
                                             this.rutas = aux.features;
                                             this.visiblepath = true;
-                                        } else {                                            
+                                        } else {
                                             this.messageService.add({
                                                 severity: 'error',
                                                 summary: 'Ocurrio Algo',
@@ -555,11 +651,27 @@ export class LayersComponent implements OnInit {
                                             ' Servicio de recolección de desechos'
                                         );
                                     } else {
-                                        this.messageService.add({
-                                            severity: 'error',
-                                            summary: 'ERROR',
-                                            detail: 'Primero selecciona un punto',
-                                        });
+                                        if (
+                                            (this.opcionb ? true : false) &&
+                                            this.check
+                                                .IndexIncidentesDenunciaComponent &&
+                                            this.check.DashboardComponent
+                                        ) {
+                                            this.mostrarincidente = false;
+                                            setTimeout(() => {
+                                                this.mostrarfiltro = false;
+                                                this.categoria = 'Higiene';
+                                                this.subcategoria =
+                                                    ' Servicio de recolección de desechos';
+                                                this.incidente();
+                                            }, 500);
+                                        } else {
+                                            this.messageService.add({
+                                                severity: 'error',
+                                                summary: 'ERROR',
+                                                detail: 'Primero selecciona un punto',
+                                            });
+                                        }
                                     }
                                 },
                             },
@@ -824,7 +936,7 @@ export class LayersComponent implements OnInit {
                 }
             },
             (error) => {
-                console.log(error);
+                console.error(error);
             }
         );
     }
@@ -947,7 +1059,7 @@ export class LayersComponent implements OnInit {
             //this.mapCustom.setZoom(18);
             infoWindow.open(this.mapCustom, marker);
         });
-        
+
         /*marker.addListener('click', () => {
       const index = this.markers.indexOf(marker);
       if (this.popupStates[index]) {
@@ -1033,12 +1145,19 @@ export class LayersComponent implements OnInit {
         this.updateItem();
     }
 
-    poligonoview(ver: boolean, featurecall: any) {
+    poligonoview(ver: boolean, featurecall: any, search?: boolean) {
+        if (search) {
+            this.latitud = undefined;
+            this.longitud = undefined;
+            this.deleteMarkers('');
+        }
+
         if (typeof featurecall !== 'string') {
             const feature = featurecall;
             if (ver) {
                 // this.latitud = null;
                 //this.longitud = null;
+
                 if (this.capaActiva) {
                     this.arr_polygon.forEach((polygon: google.maps.Polygon) => {
                         polygon.setMap(null);
@@ -1195,7 +1314,7 @@ export class LayersComponent implements OnInit {
                     this.url_imag = `${this.url}helper/obtener_portada_barrio/${
                         this.features[this.id_feature].id
                     }`;
-                    
+
                     setTimeout(() => {
                         let contentElement = document.getElementById('content');
                         let clonedContent = contentElement.cloneNode(
@@ -1384,7 +1503,7 @@ export class LayersComponent implements OnInit {
         this.updateItem();
     }
     fichaTecnica() {
-        console.log("actividad");
+        //console.log('actividad');
         this.controlFullScreem();
         this.mostrarficha = false;
         this.mostrarincidente = false;

@@ -3,7 +3,8 @@
     position: sticky;
     top: 0;
     z-index: 1;
-    background-color: #fff; /* Color de fondo del encabezado */
+    background-color: #fff;
+    /* Color de fondo del encabezado */
 }
 
 /* Estilos para las celdas de la tabla */
@@ -18,11 +19,16 @@
         position: relative;
     }
 }
-@media (max-width: 767.98px) { 
-    
+
+@media (max-width: 767.98px) {
+
     .main-panel .main-content {
-      bottom: 70px !important;
-      margin-top: 0px;
-      padding: 10px 0px;
+        bottom: 70px !important;
+        margin-top: 0px;
+        padding: 10px 0px;
     }
-  }
+}
+
+.custom-modal {
+    z-index: 1200 !important;
+}

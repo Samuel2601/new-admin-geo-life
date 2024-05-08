@@ -55,7 +55,7 @@ fichaSectorialForm: FormGroup<any>;
       this.id = this.config.data.id;
       this.obtenerficha();
     }
-    console.log(this.id);
+    //console.log(this.id);
 
     const ident=this.adminservice.identity(this.token);
     if (ident) {
@@ -98,7 +98,7 @@ fichaSectorialForm: FormGroup<any>;
             }
           }
         }
-        console.log(this.fichaSectorialForm);
+        //console.log(this.fichaSectorialForm);
      }      
     });
   }
@@ -257,7 +257,7 @@ fichaSectorialForm: FormGroup<any>;
     if (this.fichaSectorialForm?.valid) {
       if (this.token && this.fichaSectorialForm.value) {
         this.updateService.actualizarActividadProyecto(this.token, this.id,this.fichaSectorialForm.value).subscribe(response => {
-          console.log(response);
+          //console.log(response);
           if(response.data){
             this.messageService.add({severity: 'success', summary: 'Éxito', detail: 'Ficha Sectorial Actualizado'});
             this.ref.close();

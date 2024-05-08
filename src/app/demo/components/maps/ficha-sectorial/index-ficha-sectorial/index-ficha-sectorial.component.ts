@@ -102,7 +102,7 @@ export class IndexFichaSectorialComponent implements OnInit, OnChanges {
     id = this.admin.identity(this.token);
     rol = this.admin.roluser(this.token);
     async ngOnInit(): Promise<void> {
-        console.log(this.rol);
+        //console.log(this.rol);
         if (!this.modal) this.helperservice.llamarspinner();
         try {
             this.check.IndexFichaSectorialComponent =
@@ -128,7 +128,7 @@ export class IndexFichaSectorialComponent implements OnInit, OnChanges {
             this.check.FichaLimitada =
                 this.helperservice.decryptData('FichaLimitada') || false;
 
-            console.log(this.check);
+            //console.log(this.check);
         } catch (error) {
             //console.error('Error al verificar permisos:', error);
             this.router.navigate(['/notfound']);
@@ -413,7 +413,7 @@ export class IndexFichaSectorialComponent implements OnInit, OnChanges {
                         }, 1000);
                     },
                     (error) => {
-                        console.log(error);
+                        console.error(error);
                         this.messageService.add({
                             severity: 'error',
                             summary: ('(' + error.status + ')').toString(),

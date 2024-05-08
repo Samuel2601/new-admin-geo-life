@@ -13,15 +13,26 @@
                 <p-avatar
                     [label]="sumaValores[i].toString()"
                     styleClass="mr-2"
-                    [style]="
-                        filtro
-                            ? {
-                                  'background-color': getBackgroundColor(i),
-                                  color: 'var(--primary-color-text)'
-                              }
-                            : null
-                    "
+                    [style]="{
+                        'background-color': getBackgroundColor(1),
+                        color: 'var(--primary-color-text)'
+                    }"
                 ></p-avatar>
+
+                [
+                <ng-container
+                    *ngFor="let cont of basicData.datasets; let j = index"
+                >
+                    <p-avatar
+                        [label]="cont.data[i].toString()"
+                        styleClass="mr-2"
+                        [style]="{
+                            'background-color': cont.borderColor,
+                            color: 'var(--primary-color-text)'
+                        }"
+                    ></p-avatar>
+                </ng-container>
+                ]
             </td>
         </tr>
     </tbody>

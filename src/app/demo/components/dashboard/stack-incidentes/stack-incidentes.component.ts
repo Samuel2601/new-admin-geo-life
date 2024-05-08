@@ -52,13 +52,13 @@ export class StackIncidentesComponent implements OnInit {
             return;
         }
     }
-//    //console.log(this.constIncidente);
+console.log(this.constIncidente);
     // Obtener valores únicos de categoria.nombre
     const categoriasUnicas = [...new Set(this.constIncidente.map((incidente: any) => incidente.categoria.nombre))];
-    const barriosUnicos = [...new Set(this.constIncidente.map((incidente: any) => incidente.direccion_geo.nombre))];
+    const barriosUnicos = [...new Set(this.constIncidente.map((incidente: any) => incidente.estado.nombre))];
 
       const datasets = barriosUnicos.map((elementbarr: any) => {
-        const incidentesPorDireccion = this.constIncidente.filter((incidente: any) => incidente.direccion_geo.nombre === elementbarr);
+        const incidentesPorDireccion = this.constIncidente.filter((incidente: any) => incidente.estado.nombre === elementbarr);
         const data = categoriasUnicas.map((elementcat: any) => {
             return incidentesPorDireccion.reduce((acc: any, incidente: any) => {
                 const nombreCategoria = elementcat;
@@ -89,7 +89,7 @@ export class StackIncidentesComponent implements OnInit {
         this.basicData.labels = categoriasUnicas;
     }
       
-    ////console.log(this.basicData);
+    console.log(this.basicData);
       // Actualizar la vista
       this.canvas();
       this.sumaValores = this.calcularSumaValores();
@@ -153,10 +153,10 @@ export class StackIncidentesComponent implements OnInit {
     ////console.log(this.constIncidente);
     // Obtener valores únicos de categoria.nombre
     const categoriasUnicas = [...new Set(this.constIncidente.map((incidente: any) => incidente.categoria.nombre))];
-    const barriosUnicos = [...new Set(this.constIncidente.map((incidente: any) => incidente.direccion_geo.nombre))];
+    const barriosUnicos = [...new Set(this.constIncidente.map((incidente: any) => incidente.estado.nombre))];
 
       const datasets = barriosUnicos.map((elementbarr: any) => {
-        const incidentesPorDireccion = this.constIncidente.filter((incidente: any) => incidente.direccion_geo.nombre === elementbarr);
+        const incidentesPorDireccion = this.constIncidente.filter((incidente: any) => incidente.estado.nombre === elementbarr);
         const data = categoriasUnicas.map((elementcat: any) => {
             return incidentesPorDireccion.reduce((acc: any, incidente: any) => {
                 const nombreCategoria = elementcat;
@@ -206,7 +206,7 @@ export class StackIncidentesComponent implements OnInit {
 
       this.loading = false;
     }
-getBackgroundColor(index: number): string {
+    getBackgroundColor(index: number): string {
     switch (index) {
         case 0:
             return getComputedStyle(document.documentElement).getPropertyValue('--blue-500');

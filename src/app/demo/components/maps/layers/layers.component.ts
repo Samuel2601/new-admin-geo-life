@@ -266,7 +266,7 @@ export class LayersComponent implements OnInit {
                         styleClass: 'itemcustom',
                         //expanded: true,
                         items: [
-                            /*{
+                            {
                                 icon: 'pi pi-chart-bar',
                                 label: 'Estadística',
                                 styleClass: 'itemcustom',
@@ -286,7 +286,7 @@ export class LayersComponent implements OnInit {
                                         });
                                     }
                                 },
-                            },*/
+                            },
                             {
                                 icon: 'pi bi-ticcioce',
                                 label: 'TIC-CIOCE',
@@ -380,6 +380,7 @@ export class LayersComponent implements OnInit {
                                         icon: 'pi pi-pencil',
                                         label: 'Nuevas Ficha Sectorial',
                                         styleClass: 'itemcustom',
+                                        visible:this.check.CreateFichaSectorialComponent,
                                         command: () => {
                                             if (
                                                 (this.opcionb ? true : false) &&
@@ -406,6 +407,7 @@ export class LayersComponent implements OnInit {
                                 label: 'Incidentes',
                                 styleClass: 'itemcustom',
                                 expanded: true,
+                                visible:this.check.CreateIncidentesDenunciaComponent,
                                 items: [
                                     {
                                         icon: 'pi pi-inbox',
@@ -439,6 +441,7 @@ export class LayersComponent implements OnInit {
                                         icon: 'pi pi-telegram',
                                         label: 'Nuevo Incidente',
                                         styleClass: 'itemcustom',
+                                        
                                         command: () => {
                                             if (
                                                 (this.opcionb ? true : false) &&

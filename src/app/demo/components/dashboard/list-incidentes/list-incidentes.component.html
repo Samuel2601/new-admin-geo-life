@@ -1,1 +1,123 @@
-<p>list-incidentes works!</p>
+<div class="card">
+    <p-toast></p-toast>
+    <h5>Filtro de Busqueda</h5>
+    <form (ngSubmit)="filtro()" [formGroup]="filterForm">
+        <div class="grid p-fluid mt-3">
+            <div class="field col-12 md:col-3">
+                <span class="p-float-label">
+                    <p-calendar
+                        inputId="calendar"
+                        formControlName="fecha_inicio"
+                    ></p-calendar>
+                    <label for="calendar">Fecha de inicio</label>
+                </span>
+            </div>
+            <div class="field col-12 md:col-3">
+                <span class="p-float-label">
+                    <p-calendar
+                        inputId="calendar"
+                        formControlName="fecha_fin"
+                    ></p-calendar>
+                    <label for="calendar">Fecha de fin</label>
+                </span>
+            </div>
+
+            <div class="field col-12 md:col-3" *ngIf="categorias">
+                <span class="p-float-label">
+                    <p-multiSelect
+                        [options]="categorias"
+                        placeholder="Seleccione las Categorias"
+                        optionLabel="nombre"
+                        formControlName="categoria"
+                    >
+                        <ng-template let-value pTemplate="selectedItems">
+                            <div
+                                class="inline-flex align-items-center gap-2 px-1"
+                                *ngFor="let option of value"
+                            >
+                                <div>{{ option.nombre }}</div>
+                            </div>
+                            <div *ngIf="!value || value.length === 0">
+                                Seleccione las Categorias
+                            </div>
+                        </ng-template>
+                        <ng-template let-categoria pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ categoria.nombre }}</div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-categoria pTemplate="footer">
+                            <div class="py-2 px-3">
+                                <b>{{
+                                    filterForm.get("categoria").value
+                                        ? filterForm.get("categoria").value
+                                              .length
+                                        : 0
+                                }}</b>
+                                item{{
+                                    filterForm.get("categoria").value &&
+                                    filterForm.get("categoria").value.length !==
+                                        1
+                                        ? "s"
+                                        : ""
+                                }}
+                                seleccionado{{
+                                    filterForm.get("categoria").value &&
+                                    filterForm.get("categoria").value.length !==
+                                        1
+                                        ? "s"
+                                        : ""
+                                }}.
+                            </div>
+                        </ng-template>
+                    </p-multiSelect>
+                    <label for="multiselectcat">Categoria</label>
+                </span>
+            </div>
+
+            <div class="field col-12 md:col-3">
+                <span class="p-float-label">
+                    <p-multiSelect
+                        inputId="multiselectsub"
+                        [options]="subcategorias"
+                        optionLabel="name"
+                        [filter]="false"
+                        formControlName="subcategoria"
+                    ></p-multiSelect>
+                    <label for="multiselectsub">Sub-Categoria</label>
+                </span>
+            </div>
+            <div class="field col-12 md:col-3">
+                <span class="p-float-label">
+                    <p-multiSelect
+                        inputId="multiselectstatus"
+                        [options]="estados"
+                        optionLabel="name"
+                        [filter]="false"
+                        formControlName="estado"
+                    ></p-multiSelect>
+                    <label for="multiselectstatus">Estado</label>
+                </span>
+            </div>
+            <div class="field col-12 md:col-3">
+                <span class="p-float-label">
+                    <p-multiSelect
+                        inputId="multiselectdireccion"
+                        [options]="direcciones"
+                        optionLabel="name"
+                        [filter]="false"
+                        formControlName="direccion"
+                    ></p-multiSelect>
+                    <label for="multiselectdireccion">Dirección</label>
+                </span>
+            </div>
+        </div>
+        <div class="align-items-end">
+            <button
+                pButton
+                label="Enviar"
+                [disabled]="!filterForm.valid"
+            ></button>
+        </div>
+    </form>
+</div>

@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from './dashboard.component';
@@ -27,6 +29,10 @@ import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { GalleriaModule } from 'primeng/galleria';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { CalendarModule } from 'primeng/calendar';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { MessageService } from 'primeng/api';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -47,7 +53,10 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
         AvatarModule,
         DialogModule,
         ToastModule,
-        GalleriaModule
+        GalleriaModule,
+        CalendarModule,
+        MultiSelectModule,
+        ReactiveFormsModule
     ],
     declarations: [DashboardComponent,
         StackBarriosComponent,
@@ -61,6 +70,6 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
         StackFichasComponent,
         StackIncidentesComponent
     ],
-    providers: [DialogService,DynamicDialogRef],
+    providers: [DialogService,DynamicDialogRef,MessageService],
 })
 export class DashboardModule { }

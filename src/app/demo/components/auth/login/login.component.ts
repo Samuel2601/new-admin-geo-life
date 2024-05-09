@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit{
         Validators.minLength(8),
         Validators.maxLength(30)
       ]],
-      save:[false]
+      save:[true]
     });
       this.nombreUsuario = this.cookieService.get('nombreUsuario');
     this.fotoUsuario = this.cookieService.get('fotoUsuario');
@@ -104,7 +104,7 @@ export class LoginComponent implements OnInit{
         tipo:'hours'
       };
       if(this.loginForm.get("save")?.value){
-        user.time=7;
+        user.time=60;
         user.tipo='days';
         }
         ////console.log(user);

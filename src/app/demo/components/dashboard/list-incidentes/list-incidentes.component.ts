@@ -4,6 +4,7 @@ import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
+
 @Component({
     selector: 'app-list-incidentes',
     templateUrl: './list-incidentes.component.html',
@@ -16,6 +17,7 @@ export class ListIncidentesComponent implements OnInit {
     public subcategorias: any[] = [];
     public estados: any[] = [];
     public direcciones: any[] = [];
+    load_table: boolean = false;
     constructor(
         public formBuilder: FormBuilder,
         private listar: ListService,
@@ -33,6 +35,7 @@ export class ListIncidentesComponent implements OnInit {
     }
 
     filtro() {
+        this.load_table = false;
         const fechaInicio = this.filterForm.get('fecha_inicio').value;
         const fechaFin = this.filterForm.get('fecha_fin').value;
         const categoria = this.filterForm.get('categoria').value;
@@ -88,31 +91,34 @@ export class ListIncidentesComponent implements OnInit {
             );
         });
         this.incidente = elementosFiltrados;
-        console.log('Cantidad de elementos filtrados:', elementosFiltrados);
         // Mostrar totales y porcentajes en la tabla
         // Obtener totales y porcentajes
-        const totales = this.obtenerTotales(this.incidente);
-        const porcentajes = this.obtenerPorcentajes(
-            totales,
+        this.totales = this.obtenerTotales(this.incidente);
+        this.totales = this.obtenerPorcentajes(
+            this.totales,
             this.incidente.length
         );
         for (const key in this.dataForm) {
             if (Object.prototype.hasOwnProperty.call(this.dataForm, key)) {
                 const element = this.dataForm[key];
-                this.dataForm[key] = this.crearDatosGrafico(totales[key]);
+                this.dataForm[key] = this.crearDatosGrafico(this.totales[key]);
             }
         }
-
-        console.log('Totales:', totales);
-        console.log('Porcentajes:', porcentajes);
-        console.log('Porcentajes:', this.dataForm);
+        this.load_table = true;
     }
+
+    totales: any;
+    porcentajes: any;
+
     dataForm: any = {
         categorias: undefined,
         subcategorias: undefined,
         estados: undefined,
         direcciones: undefined,
     };
+    trackByFn(index, item) {
+        return item.id; // Cambia 'id' por la propiedad única de tu objeto
+    }
     obtenerTotales(incidentes: any[]) {
         const totales = {
             categorias: {},
@@ -124,27 +130,39 @@ export class ListIncidentesComponent implements OnInit {
         incidentes.forEach((elemento) => {
             // Categorías
             if (!totales.categorias[elemento.categoria.nombre]) {
-                totales.categorias[elemento.categoria.nombre] = 0;
+                totales.categorias[elemento.categoria.nombre] = {
+                    registros: 0,
+                    porcentaje: 0,
+                };
             }
-            totales.categorias[elemento.categoria.nombre]++;
+            totales.categorias[elemento.categoria.nombre].registros++;
 
             // Subcategorías
             if (!totales.subcategorias[elemento.subcategoria.nombre]) {
-                totales.subcategorias[elemento.subcategoria.nombre] = 0;
+                totales.subcategorias[elemento.subcategoria.nombre] = {
+                    registros: 0,
+                    porcentaje: 0,
+                };
             }
-            totales.subcategorias[elemento.subcategoria.nombre]++;
+            totales.subcategorias[elemento.subcategoria.nombre].registros++;
 
             // Estados
             if (!totales.estados[elemento.estado.nombre]) {
-                totales.estados[elemento.estado.nombre] = 0;
+                totales.estados[elemento.estado.nombre] = {
+                    registros: 0,
+                    porcentaje: 0,
+                };
             }
-            totales.estados[elemento.estado.nombre]++;
+            totales.estados[elemento.estado.nombre].registros++;
 
             // Direcciones
             if (!totales.direcciones[elemento.direccion_geo.nombre]) {
-                totales.direcciones[elemento.direccion_geo.nombre] = 0;
+                totales.direcciones[elemento.direccion_geo.nombre] = {
+                    registros: 0,
+                    porcentaje: 0,
+                };
             }
-            totales.direcciones[elemento.direccion_geo.nombre]++;
+            totales.direcciones[elemento.direccion_geo.nombre].registros++;
         });
 
         return totales;
@@ -159,27 +177,42 @@ export class ListIncidentesComponent implements OnInit {
         };
 
         for (const key in totales.categorias) {
-            porcentajes.categorias[key] =
-                (totales.categorias[key] / totalIncidentes) * 100;
+            porcentajes.categorias[key] = {
+                registros: totales.categorias[key].registros,
+                porcentaje:
+                    (totales.categorias[key].registros / totalIncidentes) * 100,
+            };
         }
 
         for (const key in totales.subcategorias) {
-            porcentajes.subcategorias[key] =
-                (totales.subcategorias[key] / totalIncidentes) * 100;
+            porcentajes.subcategorias[key] = {
+                registros: totales.subcategorias[key].registros,
+                porcentaje:
+                    (totales.subcategorias[key].registros / totalIncidentes) *
+                    100,
+            };
         }
 
         for (const key in totales.estados) {
-            porcentajes.estados[key] =
-                (totales.estados[key] / totalIncidentes) * 100;
+            porcentajes.estados[key] = {
+                registros: totales.estados[key].registros,
+                porcentaje:
+                    (totales.estados[key].registros / totalIncidentes) * 100,
+            };
         }
 
         for (const key in totales.direcciones) {
-            porcentajes.direcciones[key] =
-                (totales.direcciones[key] / totalIncidentes) * 100;
+            porcentajes.direcciones[key] = {
+                registros: totales.direcciones[key].registros,
+                porcentaje:
+                    (totales.direcciones[key].registros / totalIncidentes) *
+                    100,
+            };
         }
 
         return porcentajes;
     }
+
     async ngOnInit() {
         await this.rankin();
         await this.listCategoria();
@@ -194,7 +227,6 @@ export class ListIncidentesComponent implements OnInit {
             .subscribe((response) => {
                 if (response.data) {
                     this.estados = response.data;
-                    console.log(this.estados);
                 }
             });
     }
@@ -208,18 +240,15 @@ export class ListIncidentesComponent implements OnInit {
     async updateSubcategorias() {
         const categoriaSeleccionada = this.filterForm.get('categoria').value;
         this.subcategorias = [];
-        console.log('Categorias', categoriaSeleccionada);
         try {
             for (const element of categoriaSeleccionada) {
                 const response = await this.listar
                     .listarSubcategorias(this.token, 'categoria', element._id)
                     .toPromise();
-                console.log(response);
                 if (response.data) {
                     this.subcategorias.push(...response.data);
                 }
             }
-            console.log(this.subcategorias);
         } catch (error) {
             console.error('Error al obtener subcategorias:', error);
         }
@@ -245,7 +274,6 @@ export class ListIncidentesComponent implements OnInit {
         } else {
             this.incidente = this.constIncidente;
         }
-        console.log(this.constIncidente);
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');
         this.options = {
@@ -258,12 +286,6 @@ export class ListIncidentesComponent implements OnInit {
                     },
                     onHover: this.handleHover,
                     onLeave: this.handleLeave,
-                },
-                datalabels: {
-                    formatter: (value: any, ctx: any) => {
-                        return value +'%';
-                    },
-                    color: textColor,
                 },
             },
         };
@@ -284,8 +306,53 @@ export class ListIncidentesComponent implements OnInit {
         });
     }
     clear(table: Table) {
+        console.log(table);
         table.clear();
     }
+
+    exportToCSV(table: Table) {
+        //table.exportCSV();
+        console.log(table.columns);
+        const selectedColumns = table.columns.filter(
+            (col) => col.exportable !== false && col.field
+        );
+        const header = selectedColumns
+            .map((col) => col.header ?? col.field)
+            .join(',');
+        const csv = table.value.map((row) =>
+            selectedColumns
+                .map((col) => this.resolveFieldData(row, col))
+                .join(',')
+        );
+        csv.unshift(header);
+        const blob = new Blob([csv.join('\n')], {
+            type: 'text/csv;charset=utf-8;',
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'data.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+    private resolveFieldData(data: any, field: any): any {
+        if (data && field) {
+          if (typeof field === 'string') {
+            return data[field];
+          } else if (field instanceof Function) {
+            return field(data);
+          } else {
+            const path = field.split('.');
+            let obj = data;
+            for (let i = 0, len = path.length; i < len; ++i) {
+              obj = obj[path[i]];
+            }
+            return obj;
+          }
+        } else {
+          return null;
+        }
+      }
     getSeverity(status: string) {
         switch (status.toLowerCase()) {
             case 'suspendido':
@@ -308,8 +375,11 @@ export class ListIncidentesComponent implements OnInit {
         }
     }
     ultimoColor: string;
+    colorIndex: number = 0;
+    tonoIndex: number = 0;
     generarColor(): string {
         const colores = [
+            'primary',
             'blue',
             'green',
             'yellow',
@@ -319,18 +389,27 @@ export class ListIncidentesComponent implements OnInit {
             'bluegray',
             'purple',
             'red',
-            'primary',
         ];
-        const tonos = ['500'];
+        const tonos = ['500', '300', '700'];
 
-        let colorElegido: string;
-        let tonoElegido: string;
-        let color: string;
-        do {
-            colorElegido = colores[Math.floor(Math.random() * colores.length)];
-            tonoElegido = tonos[Math.floor(Math.random() * tonos.length)];
-            color = `--${colorElegido}-${tonoElegido}`;
-        } while (color === this.ultimoColor);
+        if (!this.colorIndex) {
+            this.colorIndex = 0;
+            this.tonoIndex = 0;
+        }
+
+        const colorElegido = colores[this.colorIndex];
+        const tonoElegido = tonos[this.tonoIndex];
+
+        this.colorIndex++;
+        if (this.colorIndex >= colores.length) {
+            this.colorIndex = 0;
+            this.tonoIndex++;
+            if (this.tonoIndex >= tonos.length) {
+                this.tonoIndex = 0;
+            }
+        }
+
+        const color = `--${colorElegido}-${tonoElegido}`;
 
         this.ultimoColor = color;
         return color;
@@ -346,17 +425,16 @@ export class ListIncidentesComponent implements OnInit {
 
         for (const [key, value] of Object.entries(datos)) {
             labels.push(key);
-            dataset.data.push(value);
+            const [porcentaje, registros] = Object.entries(value)[0];
+            dataset.data.push(registros);
 
             // Genera un color aleatorio para cada entrada
             const color = this.generarColor();
-            console.log(color);
             dataset.backgroundColor.push(documentStyle.getPropertyValue(color));
             dataset.hoverBackgroundColor.push(
                 documentStyle.getPropertyValue(color)
             );
         }
-
         return { datasets: [dataset], labels };
     }
     convertirObjetoEnArreglo(objeto: any): any[] {
@@ -366,15 +444,37 @@ export class ListIncidentesComponent implements OnInit {
         }));
     }
     handleHover(evt, item, legend) {
-        legend.chart.data.datasets[0].backgroundColor.forEach((color, index, colors) => {
-          colors[index] = index === item.index || color.length === 9 ? color : color + '4D';
-        });
+        legend.chart.data.datasets[0].backgroundColor.forEach(
+            (color, index, colors) => {
+                colors[index] =
+                    index === item.index || color.length === 9
+                        ? color
+                        : color + '4D';
+            }
+        );
         legend.chart.update();
-      }
-      handleLeave(evt, item, legend) {
-        legend.chart.data.datasets[0].backgroundColor.forEach((color, index, colors) => {
-          colors[index] = color.length === 9 ? color.slice(0, -2) : color;
-        });
+    }
+    handleLeave(evt, item, legend) {
+        legend.chart.data.datasets[0].backgroundColor.forEach(
+            (color, index, colors) => {
+                colors[index] = color.length === 9 ? color.slice(0, -2) : color;
+            }
+        );
         legend.chart.update();
-      }
+    }
+    getEntries(obj: any): any[] {
+        return Object.entries(obj || {});
+    }
+
+    getTotales(totales: any) {
+        let totalRegistros = 0;
+        let totalPorcentaje = 0;
+
+        for (const categoria of this.getEntries(totales)) {
+            totalRegistros += categoria[1].registros;
+            totalPorcentaje += categoria[1].porcentaje;
+        }
+
+        return { totalRegistros, totalPorcentaje };
+    }
 }

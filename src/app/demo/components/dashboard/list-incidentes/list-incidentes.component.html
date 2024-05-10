@@ -312,8 +312,12 @@
                         placeholder="Search keyword"
                     />
                 </span>
-                <button type="button" pButton label="Exportar a CSV" (click)="exportToCSV(dt1)"></button>
-
+                <button
+                    type="button"
+                    pButton
+                    label="Exportar a CSV"
+                    (click)="exportToCSV(dt1)"
+                ></button>
             </div>
         </ng-template>
         <ng-template pTemplate="header">
@@ -434,24 +438,24 @@
         </ng-template>
     </p-table>
 </div>
-<div class="grid" *ngIf="load_table">
+
+<ng-container class="" *ngIf="load_table">
     <ng-container
         *ngFor="
             let item of convertirObjetoEnArreglo(dataForm);
             trackBy: trackByFn
         "
     >
-        <div class="col-12 xl:col-6">
-            <div class="card mb-0">
+    <p-button label="PDF" (click)="exportToPDF(item.clave)"></p-button>
+        <div class="card grid" [id]="item.clave">
+            <div class="col-12 xl:col-6">
                 <p-chart
                     type="doughnut"
                     [data]="item.valor"
                     [options]="options"
                 ></p-chart>
             </div>
-        </div>
-        <div class="col-12 xl:col-6">
-            <div class="card mb-0">
+            <div class="col-12 xl:col-6">
                 <p-table [value]="getEntries(totales[item.clave])">
                     <ng-template pTemplate="header">
                         <tr>
@@ -490,4 +494,4 @@
             </div>
         </div>
     </ng-container>
-</div>
+</ng-container>

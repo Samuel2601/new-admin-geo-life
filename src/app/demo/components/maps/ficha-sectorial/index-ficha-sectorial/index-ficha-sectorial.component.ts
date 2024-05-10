@@ -392,6 +392,8 @@ export class IndexFichaSectorialComponent implements OnInit, OnChanges {
                 );
         } else {
             this.iddelete.view = false;
+            this.iddelete.view_id = this.id;
+            this.iddelete.view_date=new Date();
             this.updateService
                 .actualizarActividadProyecto(
                     this.token,

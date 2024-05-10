@@ -4,6 +4,9 @@ import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
+import * as jspdf from 'jspdf';
+import * as html2pdf from 'html2pdf.js';
+import html2canvas from 'html2canvas';
 
 @Component({
     selector: 'app-list-incidentes',
@@ -311,48 +314,54 @@ export class ListIncidentesComponent implements OnInit {
     }
 
     exportToCSV(table: Table) {
-        //table.exportCSV();
-        console.log(table.columns);
-        const selectedColumns = table.columns.filter(
-            (col) => col.exportable !== false && col.field
-        );
+        let selectedColumns =[];
+        for (const key in table.filters) {
+            if (Object.prototype.hasOwnProperty.call(table.filters, key)) {
+                //const element = table.filters[key];
+                selectedColumns.push({field:key,header:key.split('.')[0]});
+            }
+        }
         const header = selectedColumns
             .map((col) => col.header ?? col.field)
-            .join(',');
+            .join(';');
+            
         const csv = table.value.map((row) =>
             selectedColumns
-                .map((col) => this.resolveFieldData(row, col))
-                .join(',')
+                .map((col) => this.resolveFieldData(row, col.field))
+                .map((value) => {
+                    if (typeof value === 'string') {
+                        return '"' + value.replace(/"/g, '""') + '"';
+                    }
+                    return value;
+                })
+                .join(';')
         );
         csv.unshift(header);
-        const blob = new Blob([csv.join('\n')], {
+        const csvContent = '\uFEFF' + csv.join('\n'); // UTF-8 BOM
+        const blob = new Blob([csvContent], {
             type: 'text/csv;charset=utf-8;',
         });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'data.csv';
+        a.download = 'IncidentesFiltrado.csv';
         a.click();
         URL.revokeObjectURL(url);
     }
     private resolveFieldData(data: any, field: any): any {
+        console.log(data,field);
         if (data && field) {
-          if (typeof field === 'string') {
-            return data[field];
-          } else if (field instanceof Function) {
-            return field(data);
-          } else {
             const path = field.split('.');
             let obj = data;
             for (let i = 0, len = path.length; i < len; ++i) {
               obj = obj[path[i]];
             }
             return obj;
-          }
         } else {
           return null;
         }
       }
+      
     getSeverity(status: string) {
         switch (status.toLowerCase()) {
             case 'suspendido':
@@ -476,5 +485,36 @@ export class ListIncidentesComponent implements OnInit {
         }
 
         return { totalRegistros, totalPorcentaje };
+    }
+    exportToPDF(id:string) {
+        console.log(id);
+        const pdf = new jspdf.jsPDF();
+        const options = {
+            background: 'white',
+            scale: 3 // Ajusta el valor de escala según tus necesidades
+        };
+    
+        const element = document.getElementById(id);
+    
+        html2canvas(element, options).then((canvas) => {
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = 210; // Ancho de la página en mm (A4 en este caso)
+            const pageHeight = (imgWidth * canvas.height) / canvas.width;
+            let heightLeft = pageHeight;
+    
+            let position = 0;
+    
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, pageHeight);
+            heightLeft -= pageHeight;
+    
+            while (heightLeft >= 0) {
+                position = heightLeft - pageHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, pageHeight);
+                heightLeft -= pageHeight;
+            }
+    
+            pdf.save('export.pdf');
+        });
     }
 }

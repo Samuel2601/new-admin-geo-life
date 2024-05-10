@@ -23,6 +23,7 @@ import { filter } from 'rxjs/operators';
 import { helpers } from '@turf/turf';
 import { EditIncidentesDenunciaComponent } from '../edit-incidentes-denuncia/edit-incidentes-denuncia.component';
 import { DeleteService } from 'src/app/demo/services/delete.service';
+import { UpdateService } from 'src/app/demo/services/update.service';
 @Component({
     selector: 'app-index-incidentes-denuncia',
     templateUrl: './index-incidentes-denuncia.component.html',
@@ -40,7 +41,8 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
         private messageService: MessageService,
         private dialogService: DialogService,
         private admin: AdminService,
-        private deleteser: DeleteService
+        private deleteser: DeleteService,
+        private updateService: UpdateService
     ) {}
 
     load_lista = true;
@@ -464,14 +466,16 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
     visibledelete = false;
 
     eliminarModal(row: any) {
-        this.iddelete = row._id;
+        this.iddelete = row;
+        console.log(this.iddelete,this.id);
         this.visibledelete = true;
     }
 
     eliminarIncidente() {
         if (this.iddelete) {
-            this.deleteser
-                .eliminarIncidenteDenuncia(this.token, this.iddelete)
+            if(this.id==this.iddelete.ciudadano._id){
+                this.deleteser
+                .eliminarIncidenteDenuncia(this.token, this.iddelete._id)
                 .subscribe(
                     (response) => {
                         if (response) {
@@ -481,6 +485,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                                 detail: response.message,
                             });
                             setTimeout(() => {
+                                this.ref.close();
                                 this.listarIncidentesDenuncias();
                                 this.visible = false;
                                 this.option = null;
@@ -496,6 +501,41 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                         });
                     }
                 );
+            }else{
+                this.iddelete.view = false;
+                this.iddelete.view_id = this.id;
+                this.iddelete.view_date=new Date();
+                this.updateService
+                    .actualizarActividadProyecto(
+                        this.token,
+                        this.iddelete._id,
+                        this.iddelete
+                    )
+                    .subscribe(
+                        (response) => {
+                            this.messageService.add({
+                                severity: 'success',
+                                summary: 'Eliminado',
+                                detail: response.message,
+                            });
+                            setTimeout(() => {
+                                this.ref.close();
+                                this.listarIncidentesDenuncias();
+                                this.visible = false;
+                                this.option = undefined;
+                            }, 1000);
+                        },
+                        (error) => {
+                            console.error(error);
+                            this.messageService.add({
+                                severity: 'error',
+                                summary: ('(' + error.status + ')').toString(),
+                                detail: error.error.message || 'Sin conexión',
+                            });
+                        }
+                    );
+            }
+            
         }
     }
 }

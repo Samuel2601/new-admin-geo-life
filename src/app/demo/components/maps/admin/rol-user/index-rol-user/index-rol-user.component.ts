@@ -1,58 +1,60 @@
 import { Component } from '@angular/core';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
-
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Router } from '@angular/router';
+import { CreateRolUserComponent } from '../create-rol-user/create-rol-user.component';
+import { App } from '@capacitor/app';
 @Component({
-  selector: 'app-index-rol-user',
-  templateUrl: './index-rol-user.component.html',
-  styleUrl: './index-rol-user.component.scss'
+    selector: 'app-index-rol-user',
+    templateUrl: './index-rol-user.component.html',
+    styleUrl: './index-rol-user.component.scss',
 })
 export class IndexRolUserComponent {
-  roles=[];
-  clonedProducts: { [s: string]: any } = {};
+    roles = [];
+    clonedProducts: { [s: string]: any } = {};
 
-  constructor(private listService: ListService,private helper:HelperService) { }
+    constructor(
+        private listService: ListService,
+        private helper: HelperService,
+        private router: Router,
+        private ref: DynamicDialogRef,
+        private dialogService: DialogService
+    ) {}
 
-  ngOnInit(): void {
-    this.listarCategorias();
-  }
-
-  listarCategorias(): void {
-    const token = this.helper.token();
-    this.listService.listarRolesUsuarios(token).subscribe(
-      response => {
-        this.roles = response.data;
-        ////console.log(response.data);
-      },
-      error => {
-        //console.log(error);
-      }
-    );
-  }
-  editCategoriaId: any | null = null;
-  onRowEditInit(categoria: any) {
-    this.clonedProducts[categoria._id as string] = { ...categoria };
-    // Iniciar la edición de la categoría
-    ////console.log('Iniciar edición de la categoría:', categoria);
-  }
-
-  onRowEditSave(categoria: any) {
-    // Guardar los cambios de la categoría
-    ////console.log('Guardar cambios de la categoría:', categoria);
-
-  }
-
-  onRowEditCancel(categoria: any, rowIndex: number) {
-    // Cancelar la edición de la categoría
-    ////console.log('Cancelar edición de la categoría:', categoria);
-
-  }
-
-  verSubcategorias(categoria: any) {
-    // Lógica para ver las subcategorías
-}
-
-  confirmarEliminacion(categoria: any) {
-    ////console.log('Eliminar la categoría:', categoria);
-  }
+    ngOnInit(): void {
+        this.listarCategorias();
+    }
+    token = this.helper.token();
+    listarCategorias(): void {
+        this.listService.listarRolesUsuarios(this.token).subscribe(
+            (response) => {
+                this.roles = response.data;
+                console.log(response.data);
+            },
+            (error) => {
+                //console.log(error);
+            }
+        );
+    }
+    isMobil() {
+        return this.helper.isMobil();
+    }
+    newRol() {
+        if (!this.token) {
+            this.router.navigate(['/auth/login']);
+        } else {
+            this.ref = this.dialogService.open(CreateRolUserComponent, {
+                header: 'Nuevo Rol',
+                width: this.isMobil() ? '100%' : '30%',
+                modal:false,
+            });
+            App.addListener('backButton', (data) => {
+                this.ref.destroy();
+            });
+            this.ref.onClose.subscribe((response: any) => {
+              this.listarCategorias();
+          });
+        }
+    }
 }

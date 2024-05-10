@@ -5,11 +5,7 @@
                 <h2>Listado de Roles de Usuario</h2>
             </div>
             <div class="col-6">
-                <a
-                    routerLink="/create-rol-user"
-                    class="btn btn-primary float-end"
-                    >Nuevo Rol de Usuario</a
-                >
+                <p-button icon="pi pi-user-plus" label="Crear nuevo Rol" (onClick)="newRol()"></p-button>
             </div>
         </div>
     </div>
@@ -70,52 +66,6 @@
                                     {{ rol.orden }}
                                 </ng-template>
                             </p-cellEditor>
-                        </td>
-                        <td>
-                            <div
-                                class="btn-group"
-                                role="group"
-                                aria-label="Acciones"
-                            >
-                                <!--
-                                <button *ngIf="!editing" pButton pRipple type="button" icon="bi bi-eye" class="p-button-rounded mr-2 p-button-text btn btn-info" (click)="verSubcategorias(rol)"></button>
-                                 -->
-                                <div
-                                    class="flex align-items-center justify-content-center gap-2"
-                                >
-                                    <button
-                                        *ngIf="!editing"
-                                        pButton
-                                        pRipple
-                                        type="button"
-                                        pInitEditableRow
-                                        icon="bi bi-pencil"
-                                        (click)="onRowEditInit(rol)"
-                                        class="p-button-rounded p-button-text mr-2 btn btn-primary"
-                                    ></button>
-                                    <button
-                                        *ngIf="editing"
-                                        pButton
-                                        pRipple
-                                        type="button"
-                                        pSaveEditableRow
-                                        icon="bi bi-floppy"
-                                        (click)="onRowEditSave(rol)"
-                                        class="p-button-rounded p-button-text p-button-success mr-2 btn btn-success"
-                                    ></button>
-                                    <button
-                                        *ngIf="editing"
-                                        pButton
-                                        pRipple
-                                        type="button"
-                                        pCancelEditableRow
-                                        icon="bi bi-trash"
-                                        (click)="onRowEditCancel(rol, ri)"
-                                        class="p-button-rounded p-button-text p-button-danger btn btn-danger"
-                                    ></button>
-                                </div>
-                                <!--  <button *ngIf="!editing" pButton pRipple type="button" icon="bi bi-trash" class="p-button-rounded p-button-text btn btn-danger" (click)="confirmarEliminacion(rol)"></button>-->
-                            </div>
                         </td>
                     </tr>
                 </ng-template>

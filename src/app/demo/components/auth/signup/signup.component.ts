@@ -50,7 +50,7 @@ export class SignupComponent {
     private dialogService: DialogService, private ref: DynamicDialogRef,) {
     this.formulario = this.formBuilder.group({
       cedula: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]+$')]],
-      nombres: ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
+      nombres: ['', [Validators.required, Validators.pattern('^[a-zA-Z] +$')]],
       telefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]+$')]],
       correo: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(4)]],

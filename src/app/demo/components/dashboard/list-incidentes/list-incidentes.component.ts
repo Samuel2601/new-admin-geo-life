@@ -4,9 +4,6 @@ import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import * as jspdf from 'jspdf';
-import * as html2pdf from 'html2pdf.js';
-import html2canvas from 'html2canvas';
 import { ChartModule, UIChart } from 'primeng/chart';
 
 
@@ -290,7 +287,6 @@ export class ListIncidentesComponent implements OnInit {
                     .toPromise();
                 if (response.data) {
                     this.constIncidente = response.data;
-                    console.log(this.constIncidente);
                 }
             } catch (error) {
                 console.error('Error al obtener incidentes:', error);
@@ -331,12 +327,10 @@ export class ListIncidentesComponent implements OnInit {
         });
     }
     clear(table: Table) {
-        console.log(table);
         table.clear();
     }
 
     exportToCSV(table: Table, titulo?: string) {
-        console.log(table);
         let selectedColumns = [];
         let header: any;
         let csv: any[] = [];

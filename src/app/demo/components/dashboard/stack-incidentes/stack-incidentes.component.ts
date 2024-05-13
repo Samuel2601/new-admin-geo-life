@@ -92,7 +92,6 @@ export class StackIncidentesComponent implements OnInit {
                 return;
             }
         }
-        console.log(this.constIncidente);
         // Obtener valores únicos de categoria.nombre
         const categoriasUnicas = [
             ...new Set(
@@ -147,8 +146,6 @@ export class StackIncidentesComponent implements OnInit {
         } else {
             this.basicData.labels = categoriasUnicas;
         }
-
-        console.log(this.basicData);
         // Actualizar la vista
         this.canvas();
         this.sumaValores = this.calcularSumaValores();

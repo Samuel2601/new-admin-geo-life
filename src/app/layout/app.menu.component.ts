@@ -53,6 +53,7 @@ export class AppMenuComponent implements OnInit {
                 label: 'Ficha',
                 items: [
                     { label: 'Ficha', icon: 'pi pi-fw pi-file-edit', routerLink: ['/maps/ficha-sectorial'] },
+                    { label: 'Reporte', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/dashboard/ficha'] },
                 ]
             },
             {

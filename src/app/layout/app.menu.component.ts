@@ -46,7 +46,7 @@ export class AppMenuComponent implements OnInit {
                 label: 'Incidente',
                 items: [
                     { label: 'Incidente', icon: 'pi pi-fw pi-exclamation-triangle', routerLink: ['/maps/incidente'] },
-                    { label: 'Reporte', icon: 'pi pi-fw pi-exclamation-triangle', routerLink: ['/dashboard/incidente'] },
+                    { label: 'Reporte', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/dashboard/incidente'] },
                 ]
             },
             {

@@ -9,6 +9,7 @@ import * as html2pdf from 'html2pdf.js';
 import html2canvas from 'html2canvas';
 import { ChartModule, UIChart } from 'primeng/chart';
 
+
 @Component({
     selector: 'app-list-incidentes',
     templateUrl: './list-incidentes.component.html',
@@ -35,8 +36,15 @@ export class ListIncidentesComponent implements OnInit {
             subcategoria: [[], [Validators.minLength(1)]],
             estado: [[], [Validators.minLength(1)]],
             direccion: [[], [Validators.minLength(1)]],
+            view:[null]
         });
     }
+    viewmentOptions: any[] = [
+        { name: 'Todos', value: null },
+        { name: 'Visibles', value: true },
+        { name: 'Ocultos', value: false }
+    ];
+
 
     filtro() {
         this.helper.llamarspinner();
@@ -47,6 +55,7 @@ export class ListIncidentesComponent implements OnInit {
         const subcategoria = this.filterForm.get('subcategoria').value;
         const estado = this.filterForm.get('estado').value;
         const direccion = this.filterForm.get('direccion').value;
+        const view = this.filterForm.get('view').value;
 
         const elementosFiltrados = this.constIncidente.filter((elemento) => {
             // Filtrar por fecha de inicio y fin
@@ -87,12 +96,14 @@ export class ListIncidentesComponent implements OnInit {
                 direccion.some(
                     (d: any) => d.nombre == elemento.direccion_geo.nombre
                 );
+            const viewValida= 
+            view==null|| elemento.view==view
 
             return (
                 categoriaValida &&
                 subcategoriaValida &&
                 estadoValido &&
-                direccionValida
+                direccionValida&&viewValida
             );
         });
         this.incidente = elementosFiltrados;
@@ -112,7 +123,7 @@ export class ListIncidentesComponent implements OnInit {
         this.load_table = true;
         setTimeout(() => {
             this.helper.cerrarspinner();
-        }, 1550);
+        }, 500);
     }
 
     totales: any;
@@ -250,6 +261,7 @@ export class ListIncidentesComponent implements OnInit {
         });
     }
     async updateSubcategorias() {
+        this.filterForm.get('subcategoria').setValue([]);
         const categoriaSeleccionada = this.filterForm.get('categoria').value;
         this.subcategorias = [];
         try {
@@ -278,6 +290,7 @@ export class ListIncidentesComponent implements OnInit {
                     .toPromise();
                 if (response.data) {
                     this.constIncidente = response.data;
+                    console.log(this.constIncidente);
                 }
             } catch (error) {
                 console.error('Error al obtener incidentes:', error);

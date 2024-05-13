@@ -32,7 +32,8 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MessageService } from 'primeng/api';
-
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { MessagesModule } from 'primeng/messages';
 @NgModule({
     imports: [
         CommonModule,
@@ -56,7 +57,9 @@ import { MessageService } from 'primeng/api';
         GalleriaModule,
         CalendarModule,
         MultiSelectModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        SelectButtonModule,
+        MessagesModule
     ],
     declarations: [DashboardComponent,
         StackBarriosComponent,

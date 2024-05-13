@@ -257,11 +257,19 @@
                     </label>
                 </span>
             </div>
+            <div class="field col-12 md:col-3">
+                <p-selectButton 
+                    [options]="viewmentOptions" 
+                    optionLabel="name" 
+                    optionValue="value"
+                    formControlName="view"
+                     />
+            </div>
         </div>
         <div>
             <p-button
                 class="p-input-icon-left ml-auto"
-                label="Enviar"
+                label="Buscar"
                 type="ngSubmit"
                 [disabled]="!filterForm.valid"
             ></p-button>
@@ -441,7 +449,7 @@
     </p-table>
 </div>
 
-<ng-container class="" *ngIf="load_table">
+<ng-container *ngIf="load_table&&incidente.length > 0">
     <ng-container
         *ngFor="
             let item of convertirObjetoEnArreglo(dataForm);
@@ -466,6 +474,9 @@
                 <p-table #dt1 [value]="getEntries(totales[item.clave])">
                     <ng-template pTemplate="caption">
                         <div class="flex">
+                            <h4>
+                                Lista de {{ item.clave | uppercase }}
+                            </h4>
                             <p-button
                                 class="p-input-icon-left ml-auto"
                                 label="CSV"
@@ -487,8 +498,8 @@
                     <ng-template pTemplate="header">
                         <tr>
                             <th>{{ item.clave | uppercase }}</th>
-                            <th>Cantidad</th>
-                            <th>Porcentaje</th>
+                            <th>CANTIDAD</th>
+                            <th>PORCENTAJE</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-categoria>
@@ -522,3 +533,10 @@
         </div>
     </ng-container>
 </ng-container>
+<div class="card" *ngIf="load_table&&incidente.length ==0">
+    
+    <p-messages 
+        [value]="[{ severity: 'warn', detail: 'No tienes registros con este filtro' }]" 
+        [enableService]="false" 
+        [closable]="false" />
+</div>

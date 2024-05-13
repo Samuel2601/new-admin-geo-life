@@ -163,8 +163,8 @@ getErrorMessage(fieldName: string): string {
          this.visible = false;
         }, 1000);
     } else {
-      //console.log(this.formulario.valid);
-      //console.log(this.formulario);
+      console.log(this.formulario.valid);
+      console.log(this.formulario);
       this.messageService.add({ severity: 'error', summary: 'Invalido', detail: 'Rellene todos los campos' });
     }
   }

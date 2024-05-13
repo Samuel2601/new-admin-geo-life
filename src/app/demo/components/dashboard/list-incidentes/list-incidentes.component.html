@@ -258,12 +258,13 @@
                 </span>
             </div>
         </div>
-        <div class="align-items-end">
-            <button
-                pButton
+        <div>
+            <p-button
+                class="p-input-icon-left ml-auto"
                 label="Enviar"
+                type="ngSubmit"
                 [disabled]="!filterForm.valid"
-            ></button>
+            ></p-button>
         </div>
     </form>
 </div>
@@ -309,13 +310,14 @@
                                 'contains'
                             )
                         "
-                        placeholder="Search keyword"
+                        placeholder="Palabras Claves"
                     />
                 </span>
                 <button
+                    class="ml-2"
                     type="button"
                     pButton
-                    label="Exportar a CSV"
+                    label="CSV"
                     (click)="exportToCSV(dt1)"
                 ></button>
             </div>
@@ -446,17 +448,42 @@
             trackBy: trackByFn
         "
     >
-    <p-button label="PDF" (click)="exportToPDF(item.clave)"></p-button>
+        <!--
+            <p-button label="PDF" (click)="exportToPDF(item.clave)"></p-button>
+        -->
+
         <div class="card grid" [id]="item.clave">
             <div class="col-12 xl:col-6">
                 <p-chart
                     type="doughnut"
                     [data]="item.valor"
                     [options]="options"
+                    #chart
                 ></p-chart>
+                <canvas #exportCanvas style="display: none"></canvas>
             </div>
             <div class="col-12 xl:col-6">
-                <p-table [value]="getEntries(totales[item.clave])">
+                <p-table #dt1 [value]="getEntries(totales[item.clave])">
+                    <ng-template pTemplate="caption">
+                        <div class="flex">
+                            <p-button
+                                class="p-input-icon-left ml-auto"
+                                label="CSV"
+                                (click)="exportToCSV(dt1, item.clave)"
+                                [raised]="true"
+                                [outlined]="true"
+                            ></p-button>
+                            <p-button
+                                class="p-input-icon-left ml-2"
+                                label="Img."
+                                (click)="
+                                    exportChart(chart, exportCanvas, item.clave)
+                                "
+                                [raised]="true"
+                                [outlined]="true"
+                            ></p-button>
+                        </div>
+                    </ng-template>
                     <ng-template pTemplate="header">
                         <tr>
                             <th>{{ item.clave | uppercase }}</th>

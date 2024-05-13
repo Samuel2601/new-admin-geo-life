@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
@@ -7,6 +7,7 @@ import { Table } from 'primeng/table';
 import * as jspdf from 'jspdf';
 import * as html2pdf from 'html2pdf.js';
 import html2canvas from 'html2canvas';
+import { ChartModule, UIChart } from 'primeng/chart';
 
 @Component({
     selector: 'app-list-incidentes',
@@ -38,6 +39,7 @@ export class ListIncidentesComponent implements OnInit {
     }
 
     filtro() {
+        this.helper.llamarspinner();
         this.load_table = false;
         const fechaInicio = this.filterForm.get('fecha_inicio').value;
         const fechaFin = this.filterForm.get('fecha_fin').value;
@@ -108,6 +110,9 @@ export class ListIncidentesComponent implements OnInit {
             }
         }
         this.load_table = true;
+        setTimeout(() => {
+            this.helper.cerrarspinner();
+        }, 1550);
     }
 
     totales: any;
@@ -217,12 +222,16 @@ export class ListIncidentesComponent implements OnInit {
     }
 
     async ngOnInit() {
+        this.helper.llamarspinner();
         await this.rankin();
         await this.listCategoria();
         await this.listarEstado();
         this.filterForm.get('categoria').valueChanges.subscribe(() => {
             this.updateSubcategorias();
         });
+        setTimeout(() => {
+            this.helper.cerrarspinner();
+        }, 1550);
     }
     async listarEstado() {
         this.listar
@@ -313,29 +322,60 @@ export class ListIncidentesComponent implements OnInit {
         table.clear();
     }
 
-    exportToCSV(table: Table) {
-        let selectedColumns =[];
-        for (const key in table.filters) {
-            if (Object.prototype.hasOwnProperty.call(table.filters, key)) {
-                //const element = table.filters[key];
-                selectedColumns.push({field:key,header:key.split('.')[0]});
+    exportToCSV(table: Table, titulo?: string) {
+        console.log(table);
+        let selectedColumns = [];
+        let header: any;
+        let csv: any[] = [];
+        if (!titulo) {
+            for (const key in table.filters) {
+                if (Object.prototype.hasOwnProperty.call(table.filters, key)) {
+                    //const element = table.filters[key];
+                    selectedColumns.push({
+                        field: key,
+                        header: key.split('.')[0],
+                    });
+                }
             }
-        }
-        const header = selectedColumns
-            .map((col) => col.header ?? col.field)
-            .join(';');
+            header = selectedColumns
+                .map((col) => col.header ?? col.field)
+                .join(';');
+            csv = table.value.map((row) =>
+                selectedColumns
+                    .map((col) => this.resolveFieldData(row, col.field))
+                    .map((value) => {
+                        if (typeof value === 'string') {
+                            return '"' + value.replace(/"/g, '""') + '"';
+                        }
+                        return value;
+                    })
+                    .join(';')
+            );
+        } else {
+            selectedColumns = [
+                { field: titulo, header: titulo },
+                { field: 'Cantidad', header: 'Cantidad' },
+                { field: 'Porcentaje', header: 'Porcentaje' },
+            ];
+            header = selectedColumns
+                .map((col) => col.header ?? col.field)
+                .join(';');
+            // Construir las filas del CSV
+            csv = table.value.map((row) => {
+                const titulo = row[0];
+                const registros = row[1].registros;
+                const porcentaje = row[1].porcentaje.toFixed(2).replace('.', ',');
             
-        const csv = table.value.map((row) =>
-            selectedColumns
-                .map((col) => this.resolveFieldData(row, col.field))
-                .map((value) => {
-                    if (typeof value === 'string') {
-                        return '"' + value.replace(/"/g, '""') + '"';
-                    }
-                    return value;
-                })
-                .join(';')
-        );
+                return [titulo, registros, porcentaje]
+                    .map((value) => {
+                        if (typeof value === 'string') {
+                            return '"' + value.replace(/"/g, '""') + '"';
+                        }
+                        return value;
+                    })
+                    .join(';');
+            });
+        }
         csv.unshift(header);
         const csvContent = '\uFEFF' + csv.join('\n'); // UTF-8 BOM
         const blob = new Blob([csvContent], {
@@ -344,24 +384,24 @@ export class ListIncidentesComponent implements OnInit {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'IncidentesFiltrado.csv';
+        let ext='.csv';
+        a.download = titulo?titulo+ext:'IncidentesFiltrado'+ext;
         a.click();
         URL.revokeObjectURL(url);
     }
     private resolveFieldData(data: any, field: any): any {
-        console.log(data,field);
         if (data && field) {
             const path = field.split('.');
             let obj = data;
             for (let i = 0, len = path.length; i < len; ++i) {
-              obj = obj[path[i]];
+                obj = obj[path[i]];
             }
             return obj;
         } else {
-          return null;
+            return null;
         }
-      }
-      
+    }
+
     getSeverity(status: string) {
         switch (status.toLowerCase()) {
             case 'suspendido':
@@ -486,35 +526,29 @@ export class ListIncidentesComponent implements OnInit {
 
         return { totalRegistros, totalPorcentaje };
     }
-    exportToPDF(id:string) {
-        console.log(id);
-        const pdf = new jspdf.jsPDF();
-        const options = {
-            background: 'white',
-            scale: 3 // Ajusta el valor de escala según tus necesidades
+
+    exportChart(
+        chart: UIChart,
+        exportCanvas: HTMLCanvasElement,
+        titulo: string
+    ) {
+        const base64Image = chart.getBase64Image();
+        const img = new Image();
+        img.onload = () => {
+            exportCanvas.width = img.width;
+            exportCanvas.height = img.height;
+            const exportContext = exportCanvas.getContext('2d');
+            exportContext.drawImage(img, 0, 0);
+
+            exportCanvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = titulo + '.png';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
         };
-    
-        const element = document.getElementById(id);
-    
-        html2canvas(element, options).then((canvas) => {
-            const imgData = canvas.toDataURL('image/png');
-            const imgWidth = 210; // Ancho de la página en mm (A4 en este caso)
-            const pageHeight = (imgWidth * canvas.height) / canvas.width;
-            let heightLeft = pageHeight;
-    
-            let position = 0;
-    
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, pageHeight);
-            heightLeft -= pageHeight;
-    
-            while (heightLeft >= 0) {
-                position = heightLeft - pageHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, pageHeight);
-                heightLeft -= pageHeight;
-            }
-    
-            pdf.save('export.pdf');
-        });
+        img.src = base64Image;
     }
 }

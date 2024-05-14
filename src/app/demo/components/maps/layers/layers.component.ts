@@ -326,6 +326,44 @@ export class LayersComponent implements OnInit {
                                 },
                             },
                             {
+                                icon: 'pi bi-ticcioce',
+                                label: 'ECU-MUNICIPAL',
+                                styleClass: 'itemcustom',
+                                visible: this.check.DashboardComponent,
+                                command: () => {
+                                    if (
+                                        (this.opcionb ? true : false) &&
+                                        this.check
+                                            .CreateIncidentesDenunciaComponent &&
+                                        (this.latitud ? true : false) &&
+                                        (this.longitud ? true : false)
+                                    ) {
+                                        this.nuevoIncidente('ECU MUNICIPAL');
+                                    } else {
+                                        if (
+                                            (this.opcionb ? true : false) &&
+                                            this.check
+                                                .IndexIncidentesDenunciaComponent &&
+                                            this.check.DashboardComponent
+                                        ) {
+                                            this.mostrarincidente = false;
+                                            setTimeout(() => {
+                                                this.mostrarfiltro = false;
+                                                this.categoria = 'ECU MUNICIPAL';
+                                                this.subcategoria = undefined;
+                                                this.incidente();
+                                            }, 500);
+                                        } else {
+                                            this.messageService.add({
+                                                severity: 'error',
+                                                summary: 'ERROR',
+                                                detail: 'Primero selecciona un punto',
+                                            });
+                                        }
+                                    }
+                                },
+                            },
+                            {
                                 icon: this.capaActiva
                                     ? 'pi pi-eye'
                                     : 'bi bi-eye-slash-custom',

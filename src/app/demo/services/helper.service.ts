@@ -109,6 +109,15 @@ export class HelperService {
     const encryptedData = CryptoJS.AES.encrypt(dataString, key).toString();
     return encryptedData;
   }
+  encryptDataLogin(data: string, key: string): string {
+    const encryptedData = CryptoJS.AES.encrypt(data, key).toString();
+    return encryptedData;
+  }
+   // Función para descifrar la información
+   decryptDataLogin(encryptedData: string): string {
+    const decryptedData = CryptoJS.AES.decrypt(encryptedData, this.key).toString(CryptoJS.enc.Utf8);
+      return decryptedData;
+  }
 
   // Función para descifrar la información
   decryptData(encryptedData: string): boolean {

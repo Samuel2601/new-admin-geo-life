@@ -326,7 +326,7 @@ export class LayersComponent implements OnInit {
                                 },
                             },
                             {
-                                icon: 'pi bi-ticcioce',
+                                icon: 'pi bi-ecu',
                                 label: 'ECU-MUNICIPAL',
                                 styleClass: 'itemcustom',
                                 visible: this.check.DashboardComponent,

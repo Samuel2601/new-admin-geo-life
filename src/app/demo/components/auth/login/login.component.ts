@@ -158,7 +158,7 @@ export class LoginComponent implements OnInit {
             this._adminService.login(user).subscribe(
                 (response: any) => {
                     if (response.token) {
-                        console.log(response.data);
+                       // console.log(response.data);
                         const data = response.data;
                         if (data) {
                             this.cookieService.set(

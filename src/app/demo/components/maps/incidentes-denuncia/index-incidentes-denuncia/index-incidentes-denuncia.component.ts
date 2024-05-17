@@ -301,13 +301,13 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                                 }
                             });
                         }
-                        console.log(this.incidentesDenuncias);
+                        //console.log(this.incidentesDenuncias);
                         this.load_lista = false;
                         this.loadpath = true;
                         // Obtener el ID de la URL
                         this.route.paramMap.subscribe((params) => {
                             const id = params.get('id');
-                            console.log(id, this.incidentesDenuncias);
+                            //console.log(id, this.incidentesDenuncias);
                             if (id) {
                                 this.option = this.incidentesDenuncias.find(
                                     (element) => element._id == id

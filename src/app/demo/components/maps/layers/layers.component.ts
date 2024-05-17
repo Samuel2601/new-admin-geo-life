@@ -455,8 +455,7 @@ export class LayersComponent implements OnInit {
                                             if (
                                                 (this.opcionb ? true : false) &&
                                                 this.check
-                                                    .IndexIncidentesDenunciaComponent &&
-                                                this.check.DashboardComponent
+                                                    .IndexIncidentesDenunciaComponent
                                             ) {
                                                 this.mostrarincidente = false;
                                                 setTimeout(() => {

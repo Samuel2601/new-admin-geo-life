@@ -8,10 +8,10 @@ import {
     OnChanges,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ListService } from 'src/app/demo/services/list.service';
 import { IndexEstadoIncidenteComponent } from '../estado-incidente/index-estado-incidente/index-estado-incidente.component';
 import { GLOBAL } from 'src/app/demo/services/GLOBAL';
-import { Router } from '@angular/router';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { Capacitor } from '@capacitor/core';
 import { Table } from 'primeng/table';
@@ -35,6 +35,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
     constructor(
         private ref: DynamicDialogRef,
         private router: Router,
+        private route: ActivatedRoute,
         private listService: ListService,
         private modalService: NgbModal,
         private helperservice: HelperService,
@@ -175,10 +176,8 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
             ////console.error('Error al verificar permisos:', error);
             this.router.navigate(['/notfound']);
         }
-        
-        
-       
     }
+
     encargos: any[] = [];
     async buscarencargos() {
         this.listService
@@ -287,22 +286,43 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                                         this.subcategoria
                                 );
                         }
-                        if (this.encargos.length>0) {
-                          this.encargos.forEach(element => {
-                            if (element.categoria) {                              
-                              this.itemh.push({ label: element.categoria.nombre });
-                              this.incidentesDenuncias =
-                                  this.incidentesDenuncias.filter(
-                                      (ficha: any) =>
-                                          ficha.categoria.nombre ===
-                                      element.categoria.nombre
-                                  );
-                          }
-                          });
-                      }
-
+                        if (this.encargos.length > 0) {
+                            this.encargos.forEach((element) => {
+                                if (element.categoria) {
+                                    this.itemh.push({
+                                        label: element.categoria.nombre,
+                                    });
+                                    this.incidentesDenuncias =
+                                        this.incidentesDenuncias.filter(
+                                            (ficha: any) =>
+                                                ficha.categoria.nombre ===
+                                                element.categoria.nombre
+                                        );
+                                }
+                            });
+                        }
+                        console.log(this.incidentesDenuncias);
                         this.load_lista = false;
                         this.loadpath = true;
+                        // Obtener el ID de la URL
+                        this.route.paramMap.subscribe((params) => {
+                            const id = params.get('id');
+                            console.log(id, this.incidentesDenuncias);
+                            if (id) {
+                                this.option = this.incidentesDenuncias.find(
+                                    (element) => element._id == id
+                                );
+                                if (this.option) {
+                                    this.visible = true;
+                                } else {
+                                    this.messageService.add({
+                                        severity: 'error',
+                                        summary: 'ERROR',
+                                        detail: 'Incidente no encontrado',
+                                    });
+                                }
+                            }
+                        });
                     }
                 },
                 (error) => {
@@ -467,44 +487,44 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
 
     eliminarModal(row: any) {
         this.iddelete = row;
-        console.log(this.iddelete,this.id);
+        console.log(this.iddelete, this.id);
         this.visibledelete = true;
     }
 
     eliminarIncidente() {
         if (this.iddelete) {
-            if(this.id==this.iddelete.ciudadano._id){
+            if (this.id == this.iddelete.ciudadano._id) {
                 this.deleteser
-                .eliminarIncidenteDenuncia(this.token, this.iddelete._id)
-                .subscribe(
-                    (response) => {
-                        if (response) {
+                    .eliminarIncidenteDenuncia(this.token, this.iddelete._id)
+                    .subscribe(
+                        (response) => {
+                            if (response) {
+                                this.messageService.add({
+                                    severity: 'success',
+                                    summary: 'Eliminado',
+                                    detail: response.message,
+                                });
+                                setTimeout(() => {
+                                    this.ref.close();
+                                    this.listarIncidentesDenuncias();
+                                    this.visible = false;
+                                    this.option = null;
+                                    this.iddelete = null;
+                                }, 1500);
+                            }
+                        },
+                        (error) => {
                             this.messageService.add({
-                                severity: 'success',
-                                summary: 'Eliminado',
-                                detail: response.message,
+                                severity: 'error',
+                                summary: ('(' + error.status + ')').toString(),
+                                detail: error.error.message || 'Sin conexión',
                             });
-                            setTimeout(() => {
-                                this.ref.close();
-                                this.listarIncidentesDenuncias();
-                                this.visible = false;
-                                this.option = null;
-                                this.iddelete = null;
-                            }, 1500);
                         }
-                    },
-                    (error) => {
-                        this.messageService.add({
-                            severity: 'error',
-                            summary: ('(' + error.status + ')').toString(),
-                            detail: error.error.message || 'Sin conexión',
-                        });
-                    }
-                );
-            }else{
+                    );
+            } else {
                 this.iddelete.view = false;
                 this.iddelete.view_id = this.id;
-                this.iddelete.view_date=new Date();
+                this.iddelete.view_date = new Date();
                 this.updateService
                     .actualizarActividadProyecto(
                         this.token,
@@ -535,7 +555,6 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                         }
                     );
             }
-            
         }
     }
 }

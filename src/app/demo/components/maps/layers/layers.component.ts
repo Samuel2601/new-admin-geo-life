@@ -46,6 +46,7 @@ import { DashboardComponent } from '../../dashboard/dashboard.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CreateDireccionGeoComponent } from '../direccion-geo/create-direccion-geo/create-direccion-geo.component';
 import { AdminService } from 'src/app/demo/services/admin.service';
+import { ListService } from 'src/app/demo/services/list.service';
 
 interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
     id?: string;
@@ -159,7 +160,8 @@ export class LayersComponent implements OnInit {
         private messageService: MessageService,
         private dialogService: DialogService,
         private ref: DynamicDialogRef,
-        private admin: AdminService
+        private admin: AdminService,
+        private list:ListService
     ) {
         this.subscription = this.layoutService.configUpdate$
             .pipe(debounceTime(25))
@@ -228,6 +230,16 @@ export class LayersComponent implements OnInit {
         setTimeout(() => {
             this.helperService.cerrarspinner();
         }, 1500);
+        this.listCategoria();
+    }
+    categorias:any[]=[];
+    listCategoria(){
+        this.list.listarCategorias(this.token).subscribe(response=>{
+            if(response.data){
+                this.categorias=response.data;
+                console.log(this.categorias);
+            }
+        });
     }
     Listitems(label: string, campo: any, icono1: string, icono2: string) {
         const index = this.items.findIndex((item) => item.label === label);

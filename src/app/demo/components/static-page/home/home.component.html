@@ -40,7 +40,8 @@
         <div
             class="w-full xl:w-4 relative flex justify-content-center align-items-center"
         >
-            <img src="assets/layout/images/hero-12.png" alt="Image" />
+        <img src="assets/layout/images/hero-15.png" alt="Image" class="rounded-top">
+
             <article
                 class="absolute flex align-items-center w-24rem border-round-xl z-2 right-0 md:right-50 gap-3 px-4 py-3"
                 style="
@@ -50,7 +51,7 @@
                 "
             >
                 <img
-                    src="assets/layout/images/favicon.png"
+                    src="assets/icon/icono-ico.png"
                     alt="Image"
                     class="border-circle"
                 />
@@ -58,19 +59,20 @@
                     <p
                         class="m-0 font-semibold text-sm line-height-1.5 text-black-alpha-60"
                     >
-                        OLYMPIA
+                        ESMERALDAS LA BELLA
                     </p>
                     <p
                         class="m-0 font-medium text-sm line-height-1.5 text-black-alpha-80"
                     >
-                        Your stocks
-                        <span class="text-indigo-500">getting up</span>
+                        Novedades
+                        <span class="text-indigo-500">cerca de ti</span>
                     </p>
                 </div>
                 <img
-                    src="assets/layout/images/favicon.png"
+                    src="assets/icon/grafc1.png"
                     alt="Image"
                     class="border-circle"
+                    width="64"
                 />
             </article>
             <article
@@ -82,7 +84,7 @@
                 "
             >
                 <img
-                    src="assets/layout/images/favicon.png"
+                    src="assets/icon/icono-ico.png"
                     alt="Image"
                     class="border-circle"
                 />
@@ -90,12 +92,12 @@
                     <p
                         class="m-0 font-semibold text-sm line-height-1.5 text-black-alpha-60"
                     >
-                        OLYMPIA
+                        ESMERALDAS LA BELLA
                     </p>
                     <p
                         class="m-0 font-medium text-sm line-height-1.5 text-black-alpha-80"
                     >
-                        Anastasia sent you a message
+                        Se ha registrado tu incidente
                     </p>
                 </div>
             </article>
@@ -108,7 +110,7 @@
                 "
             >
                 <img
-                    src="assets/layout/images/favicon.png"
+                    src="assets/icon/icono-ico.png"
                     alt="Image"
                     class="border-circle"
                 />
@@ -116,7 +118,7 @@
                     <p
                         class="m-0 font-semibold text-sm line-height-1.5 text-black-alpha-60"
                     >
-                        OLYMPIA
+                        ESMERALDAS LA BELLA
                     </p>
                     <p
                         class="m-0 font-medium text-sm line-height-1.5 text-black-alpha-80"
@@ -126,11 +128,29 @@
                     </p>
                 </div>
                 <img
-                    src="assets/layout/images/favicon.png"
+                    src="assets/icon/grafsc1.png"
                     alt="Image"
                     class="border-circle"
+                    width="64"
                 />
             </article>
+        </div>
+    </div>
+</div>
+<div class="surface-section px-4 py-8 md:px-6 lg:px-8 overflow-hidden">
+    <div class="button-container">
+        <div class="cube" *ngFor="let button of buttons">
+            <div class="cube-face cube-front">
+                <img
+                    [src]="button.icon"
+                    alt="{{ button.label }}"
+                    class="custom-icon"
+                />
+                <p>{{ button.label }}</p>
+            </div>
+            <div class="cube-face cube-back">
+                <p>{{ button.info }}</p>
+            </div>
         </div>
     </div>
 </div>
@@ -288,24 +308,6 @@
                 class="w-full mt-3 block lg:hidden"
                 style="border-radius: 5%"
             />
-        </div>
-    </div>
-</div>
-
-<div class="surface-section px-4 py-8 md:px-6 lg:px-8 overflow-hidden">
-    <div class="button-container">
-        <div class="cube" *ngFor="let button of buttons">
-            <div class="cube-face cube-front">
-                <img
-                    [src]="button.icon"
-                    alt="{{ button.label }}"
-                    class="custom-icon"
-                />
-                <p>{{ button.label }}</p>
-            </div>
-            <div class="cube-face cube-back">
-                <p>{{ button.info }}</p>
-            </div>
         </div>
     </div>
 </div>

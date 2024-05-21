@@ -408,7 +408,7 @@ export class LayersComponent implements OnInit {
                                 items: [
                                     {
                                         icon: 'pi pi-book',
-                                        label: 'Fichas Sectorials',
+                                        label: 'Ver Fichas Sectoriales',
                                         styleClass: 'itemcustom',
                                         command: () => {
                                             if (
@@ -461,7 +461,7 @@ export class LayersComponent implements OnInit {
                                 items: [
                                     {
                                         icon: 'pi pi-inbox',
-                                        label: 'Listado',
+                                        label: 'Ver Incidentes',
                                         styleClass: 'itemcustom',
                                         command: () => {
                                             if (
@@ -664,7 +664,7 @@ export class LayersComponent implements OnInit {
                             },
                             {
                                 icon: 'pi bi-path',
-                                label: 'Rutas',
+                                label: 'Ver Rutas',
                                 styleClass: 'itemcustom',
                                 command: async () => {
                                     if (this.rutas.length == 0) {

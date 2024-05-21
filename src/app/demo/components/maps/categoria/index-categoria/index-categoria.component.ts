@@ -86,14 +86,15 @@ export class IndexCategoriaComponent implements OnInit {
             return;
         }
 
-        try {
+        try {           
             const categoriasResponse = await this.listService
                 .listarCategorias(this.token)
                 .toPromise();
             if (categoriasResponse.data) {
                 this.listadocategoria = categoriasResponse.data;
+
                 const categorias = await Promise.all(
-                    categoriasResponse.data.map(async (categoria: any) => {
+                    this.listadocategoria.map(async (categoria: any) => {
                         const subcategoriaResponse = await this.listService
                             .listarSubcategorias(
                                 this.token,
@@ -111,7 +112,7 @@ export class IndexCategoriaComponent implements OnInit {
                                 },
                             })
                         );
-                        //console.log('children',children);
+                        //console.log('categoria',categoria.nombre,'children',children);
                         return {
                             data: {
                                 nombre: categoria.nombre,
@@ -124,6 +125,7 @@ export class IndexCategoriaComponent implements OnInit {
                     })
                 );
                 this.categorias = categorias;
+
                 //console.log(this.categorias);
             } else {
                 throw new Error('No se pudo obtener la lista de categorías');
@@ -315,4 +317,58 @@ export class IndexCategoriaComponent implements OnInit {
                   (item) => item.nombre !== this.iddelete.nombre
               );
     }
+    exportToCSV() {
+        //console.log(this.categorias);
+        const csvData = this.convertToCSV(this.categorias, this.cols);
+        let header: any;
+        const selectedColumns = [
+            { field: 'Categoria', header: 'Categoria' },
+            { field: 'Descripcion_cat', header: 'Descripcion_cat' },
+            { field: 'Subategoria', header: 'Subategoria' },
+            { field: 'Descripcion_sub', header: 'Descripcion_sub' },
+        ];
+        header = selectedColumns
+            .map((col) => col.header ?? col.field)
+            .join(';');
+        // Construir las filas del CSV
+        let csv:any[]=[];
+         this.categorias.map(row => {
+             const resul = row.children.map((element:any) => {
+                const categoria = row.data.nombre;
+                const subategoria = element.data.nombre;
+                const descripcion_cat = row.data.descripcion;
+                const descripcion_sub = element.data.descripcion;
+                return [categoria, subategoria, descripcion_cat,descripcion_sub]
+            });
+            csv.push(...resul);
+        });
+        csv.map((value:any) => {
+            if (typeof value === 'string') {
+                return '"' + value.replace(/"/g, '""') + '"';
+            }
+            return value;
+        })
+        .join(';');
+
+        //console.log(csv);
+
+        csv.unshift(header);
+        const csvContent = '\uFEFF' + csv.join('\n'); // UTF-8 BOM
+        const blob = new Blob([csvContent], {
+            type: 'text/csv;charset=utf-8;',
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        let ext='.csv';
+        a.download = 'Categorias'+ext;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    
+      convertToCSV(data: any[], columns: any[]): string {
+        const header = columns.map(col => col.header).join(',');
+        const rows = data.map(row => columns.map(col => row[col.field]).join(','));
+        return [header, ...rows].join('\r\n');
+      }
 }

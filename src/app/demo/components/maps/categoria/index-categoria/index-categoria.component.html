@@ -1,95 +1,88 @@
 <div class="container-fluid">
     <p-treeTable
-        paginatorLocale="fa-IR"
-        [value]="categorias"
-        sortMode="multiple"
-        [columns]="cols"
-        [paginator]="true"
-        [rows]="10"
-        [scrollable]="true"
-        [tableStyle]="{ 'min-width': '30rem' }"
-        [resizableColumns]="true"
-        columnResizeMode="expand"
-    >
-        <ng-template pTemplate="caption">
-            <div class="text-xl font-bold">
-                <h2>Listado de Categorías</h2>
-            </div>
-            <p-button
-                routerLink="/maps/categoria/create-categoria"
-                *ngIf="check.CreateCategoriaComponent"
-            >
-                Nueva Categoría
-            </p-button>
-            <p-button
-                routerLink="/maps/subcategoria/create-subcategoria"
-                *ngIf="check.CreateSubcategoriaComponent"
-            >
-                Nueva Sub Categoría
-            </p-button>
-            <p-button
-                (click)="opcion ? (opcion = false) : (opcion = true)"
-                *ngIf="
-                    check.EditCategoriaComponent ||
-                    check.EditSubcategoriaComponent
-                "
-            >
-                Opciones
-            </p-button>
-        </ng-template>
-        <ng-template pTemplate="header" let-columns>
-            <tr>
-                <ng-container *ngFor="let col of columns; let last = last">
-                    <th
-                        *ngIf="!last || (opcion && last)"
-                        [ttSortableColumn]="col.field"
-                    >
-                        {{ col.header }}
-                        <p-treeTableSortIcon
-                            *ngIf="!last"
-                            [field]="col.field"
-                        ></p-treeTableSortIcon>
-                    </th>
-                </ng-container>
-            </tr>
-        </ng-template>
-        <ng-template
-            pTemplate="body"
-            let-rowNode
-            let-rowData="rowData"
-            let-columns="columns"
+    paginatorLocale="fa-IR"
+    [value]="categorias"
+    sortMode="multiple"
+    [columns]="cols"
+    [paginator]="true"
+    [rows]="10"
+    [scrollable]="true"
+    [tableStyle]="{ 'min-width': '30rem' }"
+    [resizableColumns]="true"
+    columnResizeMode="expand"
+>
+    <ng-template pTemplate="caption">
+        <div class="text-xl font-bold">
+            <h2>Listado de Categorías</h2>
+        </div>
+        <p-button
+            routerLink="/maps/categoria/create-categoria"
+            *ngIf="check.CreateCategoriaComponent"
         >
-            <tr [ttRow]="rowNode">
-                <ng-container
-                    *ngFor="let col of columns; let i = index; let last = last"
-                >
-                    <td *ngIf="!last || (opcion && last)">
-                        <p-treeTableToggler
-                            [rowNode]="rowNode"
-                            *ngIf="i === 0"
-                        ></p-treeTableToggler>
-                        {{ rowData[col.field] }}
-                        <ng-container *ngIf="opcion && last">
-                            <p-button
-                                icon="pi pi-pencil"
-                                [rounded]="true"
-                                severity="success"
-                                (click)="editRow(rowData._id, rowData.cat)"
-                            >
-                            </p-button>
-                            <p-button
-                                icon="pi pi-trash"
-                                [rounded]="true"
-                                severity="danger"
-                                [style]="{ 'margin-left': '.5em' }"
-                                (click)="remoRow(rowData, rowData.cat)"
-                            ></p-button>
-                        </ng-container>
-                    </td>
-                </ng-container>
-            </tr>
-        </ng-template>
-    </p-treeTable>
+            Nueva Categoría
+        </p-button>
+        <p-button
+            routerLink="/maps/subcategoria/create-subcategoria"
+            *ngIf="check.CreateSubcategoriaComponent"
+        >
+            Nueva Sub Categoría
+        </p-button>
+        <p-button
+            (click)="opcion ? (opcion = false) : (opcion = true)"
+            *ngIf="check.EditCategoriaComponent || check.EditSubcategoriaComponent"
+        >
+            Opciones
+        </p-button>
+        <p-button
+            label="Exportar a CSV"
+            icon="pi pi-file"
+            (click)="exportToCSV()"
+        ></p-button>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <ng-container *ngFor="let col of columns; let last = last">
+                <th *ngIf="!last || (opcion && last)" [ttSortableColumn]="col.field">
+                    {{ col.header }}
+                    <p-treeTableSortIcon *ngIf="!last" [field]="col.field"></p-treeTableSortIcon>
+                </th>
+            </ng-container>
+        </tr>
+    </ng-template>
+    <ng-template
+        pTemplate="body"
+        let-rowNode
+        let-rowData="rowData"
+        let-columns="columns"
+    >
+        <tr [ttRow]="rowNode">
+            <ng-container
+                *ngFor="let col of columns; let i = index; let last = last"
+            >
+                <td *ngIf="!last || (opcion && last)">
+                    <p-treeTableToggler [rowNode]="rowNode" *ngIf="i === 0"></p-treeTableToggler>
+                    {{ rowData[col.field] }}
+                    <ng-container *ngIf="opcion && last">
+                        <p-button
+                            icon="pi pi-pencil"
+                            [rounded]="true"
+                            severity="success"
+                            (click)="editRow(rowData._id, rowData.cat)"
+                        ></p-button>
+                        <p-button
+                            icon="pi pi-trash"
+                            [rounded]="true"
+                            severity="danger"
+                            [style]="{ 'margin-left': '.5em' }"
+                            (click)="remoRow(rowData, rowData.cat)"
+                        ></p-button>
+                    </ng-container>
+                </td>
+            </ng-container>
+        </tr>
+    </ng-template>
+</p-treeTable>
+
 </div>
 
 <p-dialog

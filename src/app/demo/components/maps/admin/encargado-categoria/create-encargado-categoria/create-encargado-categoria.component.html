@@ -32,7 +32,8 @@
                 [options]="usuarios"
                 [(ngModel)]="encargadosSeleccionados"
                 placeholder="Seleccion los encargados"
-                optionLabel="encargado"
+                optionLabel="nombres"
+                [filter]="true"
             >
                 <ng-template let-value pTemplate="selectedItems">
                     <div
@@ -42,12 +43,12 @@
                         <div>{{ option.nombres }},</div>
                     </div>
                     <div *ngIf="!value || value.length === 0">
-                        Select Countries
+                        Selecciona Encargados
                     </div>
                 </ng-template>
-                <ng-template let-country pTemplate="item">
+                <ng-template let-usuario pTemplate="item">
                     <div class="flex align-items-center gap-2">
-                        <div>{{ country.nombres }}</div>
+                        <div>{{ usuario.nombres }}</div>
                     </div>
                 </ng-template>
             </p-multiSelect>

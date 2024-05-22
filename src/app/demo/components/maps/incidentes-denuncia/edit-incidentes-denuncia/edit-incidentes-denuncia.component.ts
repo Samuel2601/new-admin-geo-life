@@ -77,14 +77,15 @@ export class EditIncidentesDenunciaComponent implements OnInit {
             numVisible: 1,
         },
     ];
-
+    edit: boolean;
     async ngOnInit() {
         this.load_form = false;
         this.check.EditIncidentesDenunciaComponent =
             this.helper.decryptData('EditIncidentesDenunciaComponent') || false;
         this.check.EditIncidenteAll =
             this.helper.decryptData('EditIncidenteAll') || false;
-
+        this.check.ContestarIncidente =
+            this.helper.decryptData('ContestarIncidente') || false;
         if (!this.check.EditIncidentesDenunciaComponent) {
             this.router.navigate(['/notfound']);
         }
@@ -94,6 +95,7 @@ export class EditIncidentesDenunciaComponent implements OnInit {
         }
         if (this.conf) {
             this.id = this.conf.data.id;
+            this.edit = this.conf.data.edit;
             this.obtenerincidente();
             this.listarCategorias();
             this.listartEstados();
@@ -118,12 +120,14 @@ export class EditIncidentesDenunciaComponent implements OnInit {
                                 if (key == 'categoria') {
                                     this.selectcategoria(false, element._id);
                                 }
+
                                 if (
                                     (ficha.ciudadano._id != this.id_user &&
                                         key == 'estado') ||
                                     (ficha.ciudadano._id == this.id_user &&
                                         key != 'estado') ||
-                                    this.check.EditIncidenteAll
+                                    (this.check.ContestarIncidente &&
+                                        this.edit)
                                 ) {
                                     this.habilitarCampo(key);
                                 }
@@ -281,7 +285,7 @@ export class EditIncidentesDenunciaComponent implements OnInit {
     mostrargale: any;
     file: any;
     selectedFiles: any = [];
-    load_carrusel: boolean=false;
+    load_carrusel: boolean = false;
     async tomarFotoYEnviar(event: any) {
         //this.load_carrusel = false;
         this.upload = true;
@@ -358,8 +362,8 @@ export class EditIncidentesDenunciaComponent implements OnInit {
             summary: 'Excelente',
             detail: this.selectedFiles.length + 'Imagenes subidas',
         });
-      this.mostrargale = true;
-      this.load_carrusel = true;
+        this.mostrargale = true;
+        this.load_carrusel = true;
         ////console.log(this.selectedFiles,this.imagenesSeleccionadas );
 
         /*

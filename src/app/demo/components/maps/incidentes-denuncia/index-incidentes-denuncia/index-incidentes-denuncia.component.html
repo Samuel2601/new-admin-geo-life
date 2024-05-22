@@ -682,19 +682,24 @@
                     "
                 ></p-button>
             </div>
-            <div class="justify-content-end" *ngIf="option.estado.orden < 2">
+            <div class="justify-content-end">
                 <p-button
                     class="m-3"
-                    *ngIf="check.EditIncidentesDenunciaComponent"
-                    [label]="
-                        id != option.ciudadano._id ? 'Responder' : 'Editar'
-                    "
+                    *ngIf="((option.estado.orden < 2&& check.EditIncidentesDenunciaComponent)||check.ContestarIncidente)&&option._id==id"
+                    [label]="'Editar'"
                     icon="pi pi-file-edit"
-                    (click)="editar()"
+                    (click)="editar(true)"
                 ></p-button>
                 <p-button
                     class="m-3"
-                    *ngIf="option.estado.orden == 1"
+                    *ngIf="(option.estado.orden < 2&&check.EditIncidentesDenunciaComponent)"
+                    [label]="'Responder'"
+                    icon="pi pi-file-edit"
+                    (click)="editar(false)"
+                ></p-button>
+                <p-button
+                    class="m-3"
+                    *ngIf="option.estado.orden == 1||check.BorrarIncidente==true"
                     label="Borrar"
                     icon="pi pi-images"
                     (click)="eliminarModal(option)"

@@ -157,16 +157,27 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                 this.helperservice.decryptData(
                     'IndexIncidentesDenunciaComponent'
                 ) || false;
+
             this.check.IndexEstadoIncidenteComponent =
                 this.helperservice.decryptData(
                     'IndexEstadoIncidenteComponent'
                 ) || false;
+
             this.check.TotalFilterIncidente =
                 this.helperservice.decryptData('TotalFilterIncidente') || false;
             this.check.EditIncidentesDenunciaComponent =
                 this.helperservice.decryptData(
                     'EditIncidentesDenunciaComponent'
                 ) || false;
+            this.check.BorrarIncidente =
+                this.helperservice.decryptData('BorrarIncidente') || false;
+
+            this.check.IndexEstadoIncidenteComponent =
+                this.helperservice.decryptData(
+                    'IndexEstadoIncidenteComponent'
+                ) || false;
+            this.check.ContestarIncidente =
+                this.helperservice.decryptData('ContestarIncidente') || false;
             if (!this.check.IndexIncidentesDenunciaComponent) {
                 this.router.navigate(['/notfound']);
             }
@@ -228,7 +239,6 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                 (response) => {
                     if (response.data) {
                         this.incidentesDenuncias = response.data;
-                        //console.log(this.incidentesDenuncias);
                         if (
                             this.filtro &&
                             this.valor &&
@@ -254,6 +264,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                                     }
                                 );
                         }
+                        console.log(this.incidentesDenuncias);
                         if (
                             !this.check.TotalFilterIncidente &&
                             this.encargos.length > 0
@@ -263,11 +274,16 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                                     this.encargos.find(
                                         (element) =>
                                             element.categoria._id ===
-                                            ficha.categoria._id
+                                                ficha.categoria._id ||
+                                            element.ciudadano._id == this.id
                                     )
                                 );
                         }
-                        //console.log(this.incidentesDenuncias,this.categoria, this.subcategoria);
+                        console.log(
+                            this.incidentesDenuncias,
+                            this.categoria,
+                            this.subcategoria
+                        );
                         if (this.categoria) {
                             this.itemh.push({ label: this.categoria });
                             this.incidentesDenuncias =
@@ -277,6 +293,11 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                                         this.categoria
                                 );
                         }
+                        console.log(
+                            this.incidentesDenuncias,
+                            this.categoria,
+                            this.subcategoria
+                        );
                         if (this.subcategoria) {
                             this.itemh.push({ label: this.subcategoria });
                             this.incidentesDenuncias =
@@ -286,6 +307,11 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                                         this.subcategoria
                                 );
                         }
+                        console.log(
+                            this.incidentesDenuncias,
+                            this.categoria,
+                            this.subcategoria
+                        );
                         if (this.encargos.length > 0) {
                             this.encargos.forEach((element) => {
                                 if (element.categoria) {
@@ -296,12 +322,28 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                                         this.incidentesDenuncias.filter(
                                             (ficha: any) =>
                                                 ficha.categoria.nombre ===
-                                                element.categoria.nombre
+                                                    element.categoria.nombre ||
+                                                ficha.ciudadano._id === this.id
                                         );
                                 }
                             });
                         }
-                        //console.log(this.incidentesDenuncias);
+                        console.log(
+                            this.incidentesDenuncias,
+                            this.categoria,
+                            this.subcategoria
+                        );
+                        if (!this.check.ViewIncidente) {
+                            this.incidentesDenuncias =
+                                this.incidentesDenuncias.filter(
+                                    (ficha: any) => ficha.view == true
+                                );
+                        }
+                        console.log(
+                            this.incidentesDenuncias,
+                            this.categoria,
+                            this.subcategoria
+                        );
                         this.load_lista = false;
                         this.loadpath = true;
                         // Obtener el ID de la URL
@@ -356,12 +398,12 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
             this.ref.close();
         });
     }
-    editar() {
+    editar(edit: boolean) {
         this.ref = this.dialogService.open(EditIncidentesDenunciaComponent, {
             header: 'Editar Incidente',
             dismissableMask: true,
             width: this.isMobil() ? '100%' : '70%',
-            data: { id: this.option._id },
+            data: { id: this.option._id, edit: edit },
         });
         this.ref.onClose.subscribe((data: any) => {
             if (data) {
@@ -493,7 +535,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
 
     eliminarIncidente() {
         if (this.iddelete) {
-            if (this.id == this.iddelete.ciudadano._id) {
+            if (this.id == this.iddelete.ciudadano._id||this.check.BorrarIncidente) {
                 this.deleteser
                     .eliminarIncidenteDenuncia(this.token, this.iddelete._id)
                     .subscribe(
@@ -525,14 +567,17 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                 this.iddelete.view = false;
                 this.iddelete.view_id = this.id;
                 this.iddelete.view_date = new Date();
+
+                delete this.iddelete.direccion_geo;
                 this.updateService
-                    .actualizarActividadProyecto(
+                    .actualizarIncidenteDenuncia(
                         this.token,
                         this.iddelete._id,
                         this.iddelete
                     )
                     .subscribe(
                         (response) => {
+                            console.log(response);
                             this.messageService.add({
                                 severity: 'success',
                                 summary: 'Eliminado',

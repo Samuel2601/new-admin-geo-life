@@ -433,7 +433,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit {
     }
     load_form: boolean = false;
     crearIncidenteDenuncia(): void {
-        this.load_form = false;
+       
         if (!this.token) {
             throw this.router.navigate(['/auth/login']);
         }
@@ -441,8 +441,11 @@ export class CreateIncidentesDenunciaComponent implements OnInit {
         this.nuevoIncidenteDenuncia
             .get('ciudadano')
             ?.setValue(this.adminservice.identity(this.token));
-        this.nuevoIncidenteDenuncia.enable();
-        this.createService
+        
+        if(this.nuevoIncidenteDenuncia.valid){
+            this.nuevoIncidenteDenuncia.enable();
+            this.load_form = false;
+            this.createService
             .registrarIncidenteDenuncia(
                 this.token,
                 this.nuevoIncidenteDenuncia.value,
@@ -476,6 +479,14 @@ export class CreateIncidentesDenunciaComponent implements OnInit {
                     }
                 }
             );
+        }else{
+            this.messageService.add({
+                severity: 'error',
+                summary: 'ERROR',
+                detail: 'Complete todo el formulario'
+            });
+        }
+       
     }
     hover = false;
     nombreArchivo: any;

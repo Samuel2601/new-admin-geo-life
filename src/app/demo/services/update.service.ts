@@ -53,14 +53,17 @@ export class UpdateService {
       const formData = new FormData();
       data.categoria?formData.append('categoria', data.categoria._id):'';
       data.subcategoria?formData.append('subcategoria', data.subcategoria._id):'';
-      data.ciudadano?formData.append('ciudadano', data.ciudadano):'';
+      data.ciudadano?formData.append('ciudadano', data.ciudadano._id?data.ciudadano._id:data.ciudadano):'';
       data.descripcion?formData.append('descripcion', data.descripcion):'';
       data.estado?formData.append('estado', data.estado._id):'';
       data.respuesta?formData.append('respuesta', data.respuesta):'';
       data.encargado?formData.append('encargado', data.encargado):'';
       
       data.direccion_geo?formData.append('direccion_geo',JSON.stringify(data.direccion_geo)):'';
-      
+      formData.append('view', data.view);
+      data.view_id?formData.append('view_id', data.view_id):'';
+      data.view_date?formData.append('view_date', data.view_date):'';
+
       const compressedFilesPromises = data.evidencia.map((foto:any) => this.compressor(foto));
       Promise.all(compressedFilesPromises)
         .then((compressedFiles) => {

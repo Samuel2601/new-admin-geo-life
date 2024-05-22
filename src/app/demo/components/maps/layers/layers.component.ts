@@ -279,7 +279,7 @@ export class LayersComponent implements OnInit {
                         //expanded: true,
                         items: [
                             {
-                                icon: 'pi pi-chart-bar',
+                                icon: 'pi bi-estadistica',
                                 label: 'Estadística',
                                 styleClass: 'itemcustom',
                                 visible:this.check.DashboardComponent,
@@ -377,8 +377,8 @@ export class LayersComponent implements OnInit {
                             },
                             {
                                 icon: this.capaActiva
-                                    ? 'pi pi-eye'
-                                    : 'bi bi-eye-slash-custom',
+                                    ? 'pi bi-barrio-on-custom'
+                                    : 'bi bi-barrio-off-custom',
                                 label: 'Barrios',
                                 styleClass: 'itemcustom',
                                 command: () => {
@@ -389,8 +389,8 @@ export class LayersComponent implements OnInit {
                             },
                             {
                                 icon: !this.capaActivaWIFI
-                                    ? 'bi bi-wifi'
-                                    : 'bi bi-wifi-off-custom',
+                                    ? 'bi bi-wifi-on'
+                                    : 'bi bi-wifi-off',
                                 label: 'Puntos Wifi',
                                 styleClass: 'itemcustom',
                                 command: () => {
@@ -401,13 +401,13 @@ export class LayersComponent implements OnInit {
                                 separator: true,
                             },
                             {
-                                icon: 'pi pi-book',
+                                icon: 'pi bi-ficha_sectorial',
                                 label: 'Fichas Sectorials',
                                 styleClass: 'itemcustom',
                                 expanded: true,
                                 items: [
                                     {
-                                        icon: 'pi pi-book',
+                                        icon: 'pi bi-ver-ficha_sectorial',
                                         label: 'Ver Fichas Sectoriales',
                                         styleClass: 'itemcustom',
                                         command: () => {
@@ -427,8 +427,8 @@ export class LayersComponent implements OnInit {
                                         },
                                     },
                                     {
-                                        icon: 'pi pi-pencil',
-                                        label: 'Nuevas Ficha Sectorial',
+                                        icon: 'pi bi-new-ficha_sectorial',
+                                        label: 'Nueva Ficha Sectorial',
                                         styleClass: 'itemcustom',
                                         visible:this.check.CreateFichaSectorialComponent,
                                         command: () => {
@@ -453,14 +453,14 @@ export class LayersComponent implements OnInit {
                                 separator: true,
                             },
                             {
-                                icon: 'pi pi-inbox',
+                                icon: 'pi bi-incidentes',
                                 label: 'Incidentes',
                                 styleClass: 'itemcustom',
                                 expanded: true,
                                 visible:this.check.CreateIncidentesDenunciaComponent,
                                 items: [
                                     {
-                                        icon: 'pi pi-inbox',
+                                        icon: 'pi bi-ver-incidentes',
                                         label: 'Ver Incidentes',
                                         styleClass: 'itemcustom',
                                         command: () => {
@@ -487,7 +487,7 @@ export class LayersComponent implements OnInit {
                                         },
                                     },
                                     {
-                                        icon: 'pi pi-telegram',
+                                        icon: 'pi bi-new-incidentes',
                                         label: 'Nuevo Incidente',
                                         styleClass: 'itemcustom',
                                         

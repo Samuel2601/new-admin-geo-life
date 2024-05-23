@@ -773,13 +773,13 @@
 </p-galleria>
 
 <p-dialog
-    *ngIf="option"
+    
     header="Detalles de la Ficha Sectorial"
-    [(visible)]="visible && option"
+    [(visible)]="visible"
     [modal]="false"
     [style]="{ width: isMobil() ? '100%' : '50vw' }"
 >
-    <div class="modal-body">
+    <div class="modal-body" *ngIf="option">
         <p>
             <strong>Actividad:</strong>
             {{ option.actividad.nombre }}

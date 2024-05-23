@@ -492,7 +492,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
         table.clear();
     }
 
-    getSeverity(status: string, fecha?: any) {
+    getSeverity(status: string, fecha?: any): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' {
         switch (status.toLowerCase()) {
             case 'suspendido':
                 return 'danger';
@@ -501,7 +501,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                 return 'success';
 
             case 'en proceso':
-                return 'primary';
+                return 'success';
 
             case 'pendiente':
                 let fechaActualMenosTresDias = new Date(fecha);
@@ -521,7 +521,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                 return 'info'; // Otra opción aquí, dependiendo de lo que desees
 
             default:
-                return ''; // Otra opción aquí, dependiendo de lo que desees
+                return 'success'; // Otra opción aquí, dependiendo de lo que desees
         }
     }
     iddelete: any = '';

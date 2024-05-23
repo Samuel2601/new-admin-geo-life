@@ -151,6 +151,10 @@ export class LayersComponent implements OnInit {
     ).getPropertyValue('--surface-0');
 
     subscription!: Subscription;
+
+    query: string;
+    predictions: google.maps.places.AutocompletePrediction[];
+
     constructor(
         private modalService: NgbModal,
         private elementRef: ElementRef,
@@ -161,7 +165,7 @@ export class LayersComponent implements OnInit {
         private dialogService: DialogService,
         private ref: DynamicDialogRef,
         private admin: AdminService,
-        private list:ListService
+        private list: ListService
     ) {
         this.subscription = this.layoutService.configUpdate$
             .pipe(debounceTime(25))
@@ -177,6 +181,30 @@ export class LayersComponent implements OnInit {
                 this.actualizarpoligono();
             });
     }
+    search(event:any): void {
+        this.helperService.searchStreets(event.query).then(predictions => {
+          this.predictions = predictions;
+        }).catch(error => {
+          console.error('Error searching streets:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: '404',
+            detail: 'Sin conincidencias',
+        });
+        });
+      }
+      imprimir(prediction:any){
+        //console.log(prediction)
+        this.helperService.getLatLngFromAddress(prediction.description).then(location => {
+            this.latitud=location.lat();
+            this.longitud=location.lng();
+            this.poligonoposition(false);
+            //console.log('Latitude:', location.lat(), 'Longitude:', location.lng());
+            //this.addMarker(location,'NUEVO SISTEMA DE BUSQUEDA');
+          }).catch(error => {
+            console.error('Error getting location:', error);
+          });
+      }
     ngOnDestroy() {
         if (this.ref) {
             this.ref.close();
@@ -232,11 +260,11 @@ export class LayersComponent implements OnInit {
         }, 1500);
         this.listCategoria();
     }
-    categorias:any[]=[];
-    listCategoria(){
-        this.list.listarCategorias(this.token).subscribe(response=>{
-            if(response.data){
-                this.categorias=response.data;
+    categorias: any[] = [];
+    listCategoria() {
+        this.list.listarCategorias(this.token).subscribe((response) => {
+            if (response.data) {
+                this.categorias = response.data;
                 console.log(this.categorias);
             }
         });
@@ -282,10 +310,9 @@ export class LayersComponent implements OnInit {
                                 icon: 'pi bi-estadistica',
                                 label: 'Estadística',
                                 styleClass: 'itemcustom',
-                                visible:this.check.DashboardComponent,
+                                visible: this.check.DashboardComponent,
                                 command: () => {
                                     if (
-                                        (this.opcionb ? true : false) &&
                                         this.check.DashboardComponent
                                     ) {
                                         this.controlFullScreem();
@@ -294,7 +321,7 @@ export class LayersComponent implements OnInit {
                                         this.messageService.add({
                                             severity: 'error',
                                             summary: 'ERROR',
-                                            detail: 'Primero selecciona un lugar',
+                                            detail: 'No tienes permiso para esto',
                                         });
                                     }
                                 },
@@ -361,7 +388,8 @@ export class LayersComponent implements OnInit {
                                             this.mostrarincidente = false;
                                             setTimeout(() => {
                                                 this.mostrarfiltro = false;
-                                                this.categoria = 'ECU MUNICIPAL';
+                                                this.categoria =
+                                                    'ECU MUNICIPAL';
                                                 this.subcategoria = undefined;
                                                 this.incidente();
                                             }, 500);
@@ -430,7 +458,9 @@ export class LayersComponent implements OnInit {
                                         icon: 'pi bi-new-ficha_sectorial',
                                         label: 'Nueva Ficha Sectorial',
                                         styleClass: 'itemcustom',
-                                        visible:this.check.CreateFichaSectorialComponent,
+                                        visible:
+                                            this.check
+                                                .CreateFichaSectorialComponent,
                                         command: () => {
                                             if (
                                                 (this.opcionb ? true : false) &&
@@ -457,7 +487,9 @@ export class LayersComponent implements OnInit {
                                 label: 'Incidentes',
                                 styleClass: 'itemcustom',
                                 expanded: true,
-                                visible:this.check.CreateIncidentesDenunciaComponent,
+                                visible:
+                                    this.check
+                                        .CreateIncidentesDenunciaComponent,
                                 items: [
                                     {
                                         icon: 'pi bi-ver-incidentes',
@@ -490,7 +522,7 @@ export class LayersComponent implements OnInit {
                                         icon: 'pi bi-new-incidentes',
                                         label: 'Nuevo Incidente',
                                         styleClass: 'itemcustom',
-                                        
+
                                         command: () => {
                                             if (
                                                 (this.opcionb ? true : false) &&
@@ -1077,7 +1109,7 @@ export class LayersComponent implements OnInit {
     // Adds a marker to the map and push to the array.
     addMarker(
         position: google.maps.LatLng | google.maps.LatLngLiteral,
-        tipo: 'Wifi' | 'Poligono' | 'Ubicación',
+        tipo: 'Wifi' | 'Poligono' | 'Ubicación' | string,
         message?: string,
         feature?: any
     ) {

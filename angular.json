@@ -32,7 +32,24 @@
                         "styles": [
                             "src/styles.scss"
                         ],
-                        "scripts": []
+                        "scripts": [],
+                        "allowedCommonJsDependencies": [
+                            "geojson-equality",
+                            "turf-jsts",
+                            "density-clustering",
+                            "skmeans",
+                            "rbush",
+                            "concaveman",
+                            "polygon-clipping",
+                            "object-assign",
+                            "deep-equal",
+                            "geojson-rbush",
+                            "earcut",
+                            "quill-delta",
+                            "howler",
+                            "leaflet",
+                            "crypto-js"
+                          ]
                     },
                     "configurations": {
                         "production": {

@@ -71,7 +71,8 @@ import { MessagesModule } from 'primeng/messages';
     ],
     exports: [
         StackFichasComponent,
-        StackIncidentesComponent
+        StackIncidentesComponent,
+        ListIncidentesComponent
     ],
     providers: [DialogService,DynamicDialogRef,MessageService],
 })

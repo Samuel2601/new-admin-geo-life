@@ -2,11 +2,10 @@
     [(visible)]="sidebarVisible"
     id="sidebar"
     (onHide)="sidebarVisible = false"
-    [position]="isMobil() ? 'center' : 'right'"
-    [fullScreen]="isMobil()"
-    [styleClass]="!isMobil() ? 'w-30rem' : ''"
+    [position]=" 'center'"
+    [fullScreen]="true"
 >
-    <h3 *ngIf="sidebarVisible && opcionb">{{ opcionb.properties.nombre }}</h3>
+<app-list-incidentes></app-list-incidentes>
 </p-sidebar>
 
 <div class="grid p-fluid">
@@ -14,7 +13,8 @@
         <p-toast></p-toast>
         <div [style.display]="'none'">
             <div #formulariomap class="card flex justify-content-center">
-                <span class="p-float-label">
+                <!--
+  <span class="p-float-label">
                     <p-autoComplete
                         [suggestions]="filter"
                         (completeMethod)="filterOptions($event)"
@@ -50,11 +50,24 @@
                     </p-autoComplete>
                     <label for="float-label">Buscar Barrio </label>
                 </span>
+                -->
+                <p-autoComplete
+                    appendTo="body"
+                    [(ngModel)]="query"
+                    [suggestions]="predictions"
+                    (completeMethod)="search($event)"
+                    field="description"
+                    placeholder="Ingresa una dirección o referencia"
+                    [forceSelection]="true"
+                    (onSelect)="imprimir(query)"
+                >
+                </p-autoComplete>
             </div>
         </div>
 
         <div *ngIf="!load_fullscreen" class="card flex">
-            <span class="p-float-label">
+            <!--
+ <span class="p-float-label">
                 <p-autoComplete
                     [suggestions]="filter"
                     (completeMethod)="filterOptions($event)"
@@ -93,8 +106,6 @@
                     {{ capaActivaWIFI ? " Barrio" : " Barrio y WIFI" }}
                 </label>
             </span>
-            <!--
-
             <p-button
                 *ngIf="!this.isMobil() && opcionb"
                 icon="pi pi-chart-bar"
@@ -104,6 +115,25 @@
             >
             </p-button>
             -->
+            <span class="p-float-label">
+                <p-autoComplete
+                    appendTo="body"
+                    [(ngModel)]="query"
+                    [suggestions]="predictions"
+                    (completeMethod)="search($event)"
+                    field="description"
+                    placeholder=""
+                    [forceSelection]="true"
+                    (onSelect)="imprimir(query)"
+                    [inputStyle]="{
+                        width: isMobil() ? responsiveimage() : '400px'
+                    }"
+                >
+                </p-autoComplete>
+                <label for="float-label"
+                    >Ingresa una dirección o referencia
+                </label>
+            </span>
         </div>
 
         <div class="card" id="map" style="min-height: 50rem"></div>
@@ -253,4 +283,3 @@
         </ng-container>
     </div>
 </p-dialog>
-

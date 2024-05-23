@@ -602,13 +602,13 @@
 </p-galleria>
 
 <p-dialog
-    *ngIf="option"
+   
     header="Detalles de la Incidencia"
-    [(visible)]="visible && option"
+    [(visible)]="visible"
     [modal]="false"
     [style]="{ width: isMobil() ? '100%' : '40vw' }"
 >
-    <div class="modal-body">
+    <div class="modal-body"  *ngIf="option">
         <p>
             <strong>Categoría:</strong>
             {{ option.categoria.nombre }}

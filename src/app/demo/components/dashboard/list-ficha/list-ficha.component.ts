@@ -413,27 +413,28 @@ export class ListFichaComponent implements OnInit{
         }
     }
 
-    getSeverity(status: string) {
+    getSeverity(status: string): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' {
         switch (status.toLowerCase()) {
             case 'suspendido':
                 return 'danger';
-
+    
             case 'finalizado':
                 return 'success';
-
+    
             case 'en proceso':
-                return 'primary';
-
+                return 'info';
+    
             case 'pendiente':
                 return 'warning';
-
+    
             case 'planificada':
-                return 'info'; // Otra opción aquí, dependiendo de lo que desees
-
+                return 'info';
+    
             default:
-                return ''; // Otra opción aquí, dependiendo de lo que desees
+                return 'secondary'; // Asegúrate de retornar un valor válido por defecto
         }
     }
+    
     ultimoColor: string;
     colorIndex: number = 0;
     tonoIndex: number = 0;

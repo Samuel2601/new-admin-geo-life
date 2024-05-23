@@ -24,7 +24,7 @@ export class StackIncidentesComponent implements OnInit {
 
     basicData: any = {};
     basicOptions: any;
-    optionsLine:any;
+    optionsLine: any;
     isMobil() {
         return this.helper.isMobil();
     }
@@ -38,8 +38,11 @@ export class StackIncidentesComponent implements OnInit {
         this.sumaValores = this.calcularSumaValores();
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');
-        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+        const textColorSecondary = documentStyle.getPropertyValue(
+            '--text-color-secondary'
+        );
+        const surfaceBorder =
+            documentStyle.getPropertyValue('--surface-border');
 
         this.optionsLine = {
             maintainAspectRatio: false,
@@ -47,30 +50,30 @@ export class StackIncidentesComponent implements OnInit {
             plugins: {
                 legend: {
                     labels: {
-                        color: textColor
-                    }
-                }
+                        color: textColor,
+                    },
+                },
             },
             scales: {
                 x: {
                     ticks: {
-                        color: textColorSecondary
+                        color: textColorSecondary,
                     },
                     grid: {
                         color: surfaceBorder,
-                        drawBorder: false
-                    }
+                        drawBorder: false,
+                    },
                 },
                 y: {
                     ticks: {
-                        color: textColorSecondary
+                        color: textColorSecondary,
                     },
                     grid: {
                         color: surfaceBorder,
-                        drawBorder: false
-                    }
-                }
-            }
+                        drawBorder: false,
+                    },
+                },
+            },
         };
     }
 
@@ -512,25 +515,27 @@ export class StackIncidentesComponent implements OnInit {
         table.clear();
     }
 
-    getSeverity(status: string) {
+    getSeverity(
+        status: string
+    ): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' {
         switch (status.toLowerCase()) {
-            case 'pendiente':
+            case 'suspendido':
                 return 'danger';
 
-            case 'qualified':
+            case 'finalizado':
                 return 'success';
 
-            case 'new':
+            case 'en proceso':
                 return 'info';
 
-            case 'negotiation':
+            case 'pendiente':
                 return 'warning';
 
-            case 'renewal':
-                return 'info'; // Otra opción aquí, dependiendo de lo que desees
+            case 'planificada':
+                return 'info';
 
             default:
-                return 'info'; // Otra opción aquí, dependiendo de lo que desees
+                return 'secondary'; // Asegúrate de retornar un valor válido por defecto
         }
     }
 }

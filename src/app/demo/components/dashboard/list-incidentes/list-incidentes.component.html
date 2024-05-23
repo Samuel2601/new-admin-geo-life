@@ -258,12 +258,12 @@
                 </span>
             </div>
             <div class="field col-12 md:col-3">
-                <p-selectButton 
-                    [options]="viewmentOptions" 
-                    optionLabel="name" 
+                <p-selectButton
+                    [options]="viewmentOptions"
+                    optionLabel="name"
                     optionValue="value"
                     formControlName="view"
-                     />
+                />
             </div>
         </div>
         <div>
@@ -449,17 +449,13 @@
     </p-table>
 </div>
 
-<ng-container *ngIf="load_table&&incidente.length > 0">
+<ng-container *ngIf="load_table && incidente.length > 0">
     <ng-container
         *ngFor="
             let item of convertirObjetoEnArreglo(dataForm);
             trackBy: trackByFn
         "
     >
-        <!--
-            <p-button label="PDF" (click)="exportToPDF(item.clave)"></p-button>
-        -->
-
         <div class="card grid" [id]="item.clave">
             <div class="col-12 xl:col-6">
                 <p-chart
@@ -474,9 +470,7 @@
                 <p-table #dt1 [value]="getEntries(totales[item.clave])">
                     <ng-template pTemplate="caption">
                         <div class="flex">
-                            <h4>
-                                Lista de {{ item.clave | uppercase }}
-                            </h4>
+                            <h4>Lista de {{ item.clave | uppercase }}</h4>
                             <p-button
                                 class="p-input-icon-left ml-auto"
                                 label="CSV"
@@ -533,10 +527,12 @@
         </div>
     </ng-container>
 </ng-container>
-<div class="card" *ngIf="load_table&&incidente.length ==0">
-    
-    <p-messages 
-        [value]="[{ severity: 'warn', detail: 'No tienes registros con este filtro' }]" 
-        [enableService]="false" 
-        [closable]="false" />
+<div class="card" *ngIf="load_table && incidente.length == 0">
+    <p-messages
+        [value]="[
+            { severity: 'warn', detail: 'No tienes registros con este filtro' }
+        ]"
+        [enableService]="false"
+        [closable]="false"
+    />
 </div>

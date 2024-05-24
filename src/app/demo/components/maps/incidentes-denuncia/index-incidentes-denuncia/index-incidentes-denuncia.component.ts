@@ -275,7 +275,8 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                                         (element) =>
                                             element.categoria._id ===
                                                 ficha.categoria._id ||
-                                            element.ciudadano._id == this.id
+                                                ficha.ciudadano._id == 
+                                            this.id
                                     )
                                 );
                         }

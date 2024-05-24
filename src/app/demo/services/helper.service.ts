@@ -24,7 +24,6 @@ import { ListService } from './list.service';
     providedIn: 'root',
 })
 export class HelperService {
-    
     private deshabilitarMapaSubject = new Subject<void>();
     isMobil() {
         return window.innerWidth <= 575; //Capacitor.isNativePlatform(); //
@@ -43,11 +42,16 @@ export class HelperService {
             if (aux <= 0) {
                 localStorage.clear();
                 sessionStorage.clear();
+                window.location.href = '/auth/login';
                 return null;
             }
         } else {
             if (this.router.url !== '/auth/login') {
                 this.router.navigate(['/auth/login']);
+                if (this.llamadasActivas > 0) {
+                    this.cerrarspinner();
+                }
+                return null;
             }
         }
         return token ? token : null;
@@ -69,31 +73,39 @@ export class HelperService {
         this.geocoderService = new google.maps.Geocoder();
     }
 
-    searchStreets(query: string): Promise<google.maps.places.AutocompletePrediction[]> {
-      return new Promise((resolve, reject) => {
-        const request = {
-          input: query,
-          componentRestrictions: { country: 'ec'}
-        };
-        this.autocompleteService.getPlacePredictions(request, (predictions, status) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK) {
-            resolve(predictions);
-          } else {
-            reject(status);
-          }
+    searchStreets(
+        query: string
+    ): Promise<google.maps.places.AutocompletePrediction[]> {
+        return new Promise((resolve, reject) => {
+            const request = {
+                input: query,
+                componentRestrictions: { country: 'ec' },
+            };
+            this.autocompleteService.getPlacePredictions(
+                request,
+                (predictions, status) => {
+                    if (status === google.maps.places.PlacesServiceStatus.OK) {
+                        resolve(predictions);
+                    } else {
+                        reject(status);
+                    }
+                }
+            );
         });
-      });
     }
     getLatLngFromAddress(address: string): Promise<google.maps.LatLng> {
-      return new Promise((resolve, reject) => {
-        this.geocoderService.geocode({ address }, (results, status) => {
-          if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
-            resolve(results[0].geometry.location);
-          } else {
-            reject(status);
-          }
+        return new Promise((resolve, reject) => {
+            this.geocoderService.geocode({ address }, (results, status) => {
+                if (
+                    status === google.maps.GeocoderStatus.OK &&
+                    results.length > 0
+                ) {
+                    resolve(results[0].geometry.location);
+                } else {
+                    reject(status);
+                }
+            });
         });
-      });
     }
 
     async checkPermiso(componente: any): Promise<boolean> {
@@ -198,17 +210,19 @@ export class HelperService {
         }
         this.llamadasActivas++;
 
-        ////console.log(this.llamadasActivas);
+        console.log(this.llamadasActivas);
     }
 
     cerrarspinner() {
         this.llamadasActivas--;
-        // //console.log(this.llamadasActivas);
-        if (this.llamadasActivas == 0) {
+        console.log(this.llamadasActivas);
+        if (this.llamadasActivas == 0 && this.spiner !== null) {
             setTimeout(() => {
-                ////console.log('Cerrando');
-
-                this.spiner.destroy();
+                try {
+                    this.spiner.destroy();
+                } catch (error) {
+                    console.log('Cerrando', error);
+                }
             }, 200);
         }
     }

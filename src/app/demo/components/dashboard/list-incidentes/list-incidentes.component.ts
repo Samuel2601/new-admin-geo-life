@@ -230,19 +230,15 @@ export class ListIncidentesComponent implements OnInit {
     }
 
     async ngOnInit() {
-        this.helper.llamarspinner();
         await this.rankin();
         await this.listCategoria();
         await this.listarEstado();
         this.filterForm.get('categoria').valueChanges.subscribe(() => {
             this.updateSubcategorias();
         });
-        setTimeout(() => {
-            this.helper.cerrarspinner();
-        }, 1550);
     }
     async listarEstado() {
-        this.listar
+        if(this.token)this.listar
             .listarEstadosIncidentes(this.token)
             .subscribe((response) => {
                 if (response.data) {
@@ -251,7 +247,7 @@ export class ListIncidentesComponent implements OnInit {
             });
     }
     async listCategoria() {
-        this.listar.listarCategorias(this.token).subscribe((response) => {
+        if(this.token)this.listar.listarCategorias(this.token).subscribe((response) => {
             if (response.data) {
                 this.categorias = response.data;
             }
@@ -280,7 +276,7 @@ export class ListIncidentesComponent implements OnInit {
     options: any;
     async rankin() {
         // Obtener todos los incidentes si aún no se han cargado
-        if (this.constIncidente.length === 0) {
+        if (this.constIncidente.length === 0&&this.token) {
             try {
                 const response: any = await this.listar
                     .listarIncidentesDenuncias(this.token, '', '', false)

@@ -104,6 +104,11 @@ export class IndexFichaSectorialComponent implements OnInit, OnChanges {
     async ngOnInit(): Promise<void> {
         //console.log(this.rol);
         if (!this.modal) this.helperservice.llamarspinner();
+        if (!this.token) {
+            this.router.navigate(['/auth/login']);
+            if (!this.modal)this.helperservice.cerrarspinner();
+            throw new Error('Token no encontrado');
+        }
         try {
             this.check.IndexFichaSectorialComponent =
                 this.helperservice.decryptData(

@@ -5,6 +5,7 @@ import { ListService } from 'src/app/demo/services/list.service';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { ChartModule, UIChart } from 'primeng/chart';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -24,7 +25,8 @@ export class ListFichaComponent implements OnInit{
         public formBuilder: FormBuilder,
         private listar: ListService,
         private helper: HelperService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private router: Router,
     ) {
         this.filterForm = this.formBuilder.group({
             fecha_inicio: [''],
@@ -230,7 +232,12 @@ export class ListFichaComponent implements OnInit{
     }
 
     async ngOnInit() {
-        this.helper.llamarspinner();
+        //this.helper.llamarspinner();
+        if (!this.token) {
+            this.router.navigate(['/auth/login']);
+            //this.helper.cerrarspinner();
+            throw new Error('Token no encontrado');
+        }
         await this.rankin();
         await this.listCategoria();
         await this.listarEstado();
@@ -242,7 +249,7 @@ export class ListFichaComponent implements OnInit{
         }, 1550);
     }
     async listarEstado() {
-        this.listar
+        if(this.token)this.listar
             .listarEstadosActividadesProyecto(this.token)
             .subscribe((response) => {
                 if (response.data) {
@@ -251,7 +258,7 @@ export class ListFichaComponent implements OnInit{
             });
     }
     async listCategoria() {
-        this.listar.listarTiposActividadesProyecto(this.token).subscribe((response) => {
+        if(this.token)this.listar.listarTiposActividadesProyecto(this.token).subscribe((response) => {
             if (response.data) {
                 this.actividades = response.data;
             }

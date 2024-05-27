@@ -45,6 +45,7 @@ export class EditIncidentesDenunciaComponent implements OnInit {
             encargado: [{ value: '', disabled: true }, Validators.required],
             respuesta: [{ value: '', disabled: true }, Validators.required],
             evidencia: [[]],
+            view:true
         });
     }
 

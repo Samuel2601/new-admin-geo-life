@@ -180,7 +180,9 @@
     style="z-index: inherit"
 >
 </app-index-incidentes-denuncia>
-
+<!--
+    opcionb?url+'helper/obtener_portada_barrio/'+opcionb.id :
+-->
 <div style="display: none">
     <p-card
         id="content"
@@ -228,6 +230,49 @@
         </ng-template>
     </p-card>
 </div>
+<ng-template #infoWindowTemplate let-feature="feature">
+    <p-card
+        [header]="feature.properties.nombre"
+        [subheader]="
+            feature.properties.parr ||
+            feature.properties.obser ||
+            feature.properties.tipo
+                ? 'Información de barrio:'
+                : ''
+        "
+    >
+        <ng-template pTemplate="header">
+            <img
+                [src]="url_imag"
+                alt="Descripción de la imagen"
+                class="imagen-popup"
+                style="width: 100%; height: 150px; object-fit: cover"
+            />
+        </ng-template>
+        <ng-container *ngIf="feature.properties">
+            <div *ngIf="feature.properties.parr">
+                Parroquia: {{ feature.properties.parr }}
+            </div>
+        </ng-container>
+        <ng-container *ngIf="check.IndexFichaSectorialComponent">
+            <p-button
+                [style]="{ 'margin-top': '10px' }"
+                label="Actividades"
+                (click)="fichaTecnica()"
+            ></p-button>
+        </ng-container>
+        <ng-template pTemplate="footer">
+            <p-button
+                *ngIf="check.CreateDireccionGeoComponent"
+                icon="pi bi-camera2-custom"
+                [raised]="true"
+                [outlined]="true"
+                label="Añadir nueva Foto"
+                (click)="modalcreatedireccion(feature)"
+            ></p-button>
+        </ng-template>
+    </p-card>
+</ng-template>
 
 <!--
  <p>

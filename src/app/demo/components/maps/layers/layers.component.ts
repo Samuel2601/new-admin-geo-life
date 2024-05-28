@@ -10,6 +10,7 @@ import {
     QueryList,
     ViewChildren,
     TemplateRef,
+    ApplicationRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import * as L from 'leaflet';
@@ -165,7 +166,8 @@ export class LayersComponent implements OnInit {
         private dialogService: DialogService,
         private ref: DynamicDialogRef,
         private admin: AdminService,
-        private list: ListService
+        private list: ListService,
+        private appRef: ApplicationRef
     ) {
         this.subscription = this.layoutService.configUpdate$
             .pipe(debounceTime(25))
@@ -181,30 +183,36 @@ export class LayersComponent implements OnInit {
                 this.actualizarpoligono();
             });
     }
-    search(event:any): void {
-        this.helperService.searchStreets(event.query).then(predictions => {
-          this.predictions = predictions;
-        }).catch(error => {
-          console.error('Error searching streets:', error);
-          this.messageService.add({
-            severity: 'error',
-            summary: '404',
-            detail: 'Sin conincidencias',
-        });
-        });
-      }
-      imprimir(prediction:any){
+    search(event: any): void {
+        this.helperService
+            .searchStreets(event.query)
+            .then((predictions) => {
+                this.predictions = predictions;
+            })
+            .catch((error) => {
+                console.error('Error searching streets:', error);
+                this.messageService.add({
+                    severity: 'error',
+                    summary: '404',
+                    detail: 'Sin conincidencias',
+                });
+            });
+    }
+    imprimir(prediction: any) {
         //console.log(prediction)
-        this.helperService.getLatLngFromAddress(prediction.description).then(location => {
-            this.latitud=location.lat();
-            this.longitud=location.lng();
-            this.poligonoposition(false);
-            //console.log('Latitude:', location.lat(), 'Longitude:', location.lng());
-            //this.addMarker(location,'NUEVO SISTEMA DE BUSQUEDA');
-          }).catch(error => {
-            console.error('Error getting location:', error);
-          });
-      }
+        this.helperService
+            .getLatLngFromAddress(prediction.description)
+            .then((location) => {
+                this.latitud = location.lat();
+                this.longitud = location.lng();
+                this.poligonoposition(false);
+                //console.log('Latitude:', location.lat(), 'Longitude:', location.lng());
+                //this.addMarker(location,'NUEVO SISTEMA DE BUSQUEDA');
+            })
+            .catch((error) => {
+                console.error('Error getting location:', error);
+            });
+    }
     ngOnDestroy() {
         if (this.ref) {
             this.ref.close();
@@ -258,7 +266,7 @@ export class LayersComponent implements OnInit {
         setTimeout(() => {
             this.helperService.cerrarspinner();
         }, 1500);
-        this.listCategoria();
+        // this.listCategoria();
     }
     categorias: any[] = [];
     listCategoria() {
@@ -312,9 +320,7 @@ export class LayersComponent implements OnInit {
                                 styleClass: 'itemcustom',
                                 visible: this.check.DashboardComponent,
                                 command: () => {
-                                    if (
-                                        this.check.DashboardComponent
-                                    ) {
+                                    if (this.check.DashboardComponent) {
                                         this.controlFullScreem();
                                         this.sidebarVisible = true;
                                     } else {
@@ -1369,92 +1375,63 @@ export class LayersComponent implements OnInit {
     id_feature: any;
     levantarpopup(polygon: any, feature: any) {
         if (this.infoWindowActual && !this.capaActiva) {
-            this.infoWindowActual.close();
-            this.infoWindowActual = null;
-            this.url_imag = null;
+          this.infoWindowActual.close();
+          this.infoWindowActual = null;
+          this.url_imag = null;
         }
         this.features[polygon.id] = null;
         polygon.addListener('click', (event: any) => {
-            if (this.features[polygon.id] == feature && !this.capaActiva) {
-                this.latitud = event.latLng.lat();
-                this.longitud = event.latLng.lng();
-                this.addMarker(
-                    { lat: this.latitud, lng: this.longitud },
-                    'Poligono',
-                    feature.properties.nombre,
-                    feature
-                );
-            } else {
-                this.openInfoWindow.open(null);
-                if (this.infoWindowActual) {
-                    this.infoWindowActual.close();
-                    this.features[polygon.id] = null;
-                    this.infoWindowActual = null;
-                }
-
-                if (!this.infoWindowActual) {
-                    this.features[polygon.id] = feature;
-                    this.id_feature = polygon.id;
-                    this.url_imag = `${this.url}helper/obtener_portada_barrio/${
-                        this.features[this.id_feature].id
-                    }`;
-
-                    setTimeout(() => {
-                        let contentElement = document.getElementById('content');
-                        let clonedContent = contentElement.cloneNode(
-                            true
-                        ) as Element;
-
-                        if (this.check.CreateDireccionGeoComponent) {
-                            // Volver a añadir el evento click al botón clonado
-                            let clonedButton = clonedContent.querySelector(
-                                '#fotoButton'
-                            ) as HTMLElement;
-                            clonedButton.addEventListener('click', () => {
-                                // Aquí va tu código para el evento click
-                                this.modalcreatedireccion(
-                                    this.features[this.id_feature]
-                                );
-                            });
-                        }
-
-                        if (this.check.IndexFichaSectorialComponent) {
-                            // Volver a añadir el evento click al botón clonado
-                            let clonedButton = clonedContent.querySelector(
-                                '#fichaButton'
-                            ) as HTMLElement;
-                            clonedButton.addEventListener('click', () => {
-                                this.opcionb = feature;
-                                this.fichaTecnica();
-                            });
-                        }
-
-                        this.infoWindowActual = new google.maps.InfoWindow({
-                            ariaLabel: 'info',
-                            content: clonedContent,
-                        });
-
-                        google.maps.event.addListener(
-                            this.infoWindowActual,
-                            'closeclick',
-                            () => {
-                                console.log(
-                                    'La ventana de información se ha cerrado'
-                                );
-                                //this.features[polygon.id] = null;
-                                this.infoWindowActual = null;
-                            }
-                        );
-                        this.infoWindowActual.setPosition(event.latLng);
-                        this.infoWindowActual.open(this.mapCustom);
-                    }, 200);
-                } else {
-                    this.infoWindowActual.setPosition(event.latLng);
-                    this.infoWindowActual.open(this.mapCustom);
-                }
+          if (this.features[polygon.id] == feature && !this.capaActiva) {
+            this.latitud = event.latLng.lat();
+            this.longitud = event.latLng.lng();
+            this.addMarker(
+              { lat: this.latitud, lng: this.longitud },
+              'Poligono',
+              feature.properties.nombre,
+              feature
+            );
+          } else {
+            this.openInfoWindow.open(null);
+            if (this.infoWindowActual) {
+              this.infoWindowActual.close();
+              this.features[polygon.id] = null;
+              this.infoWindowActual = null;
             }
+    
+            if (!this.infoWindowActual) {
+              this.features[polygon.id] = feature;
+              this.id_feature = polygon.id;
+              this.url_imag = `${this.url}helper/obtener_portada_barrio/${this.features[this.id_feature].id}`;
+    
+              const content = this.createInfoWindowContent(feature);
+    
+              this.infoWindowActual = new google.maps.InfoWindow({
+                content: content,
+                ariaLabel: 'info',
+              });
+    
+              google.maps.event.addListener(this.infoWindowActual, 'closeclick', () => {
+                console.log('La ventana de información se ha cerrado');
+                this.infoWindowActual = null;
+              });
+    
+              this.infoWindowActual.setPosition(event.latLng);
+              this.infoWindowActual.open(this.mapCustom);
+            } else {
+              this.infoWindowActual.setPosition(event.latLng);
+              this.infoWindowActual.open(this.mapCustom);
+            }
+          }
         });
-    }
+      }
+      @ViewChild('infoWindowTemplate', { static: true }) infoWindowTemplate: TemplateRef<any>;
+      createInfoWindowContent(feature: any): HTMLElement {
+        const view = this.infoWindowTemplate.createEmbeddedView({ feature });
+        const div = document.createElement('div');
+        div.appendChild(view.rootNodes[0]);
+        this.appRef.attachView(view);
+        return div;
+      }
 
     responsiveimage(): string {
         let aux = window.innerWidth - 120;

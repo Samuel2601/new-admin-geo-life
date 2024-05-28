@@ -10,7 +10,7 @@
     <div class="card-body">
         <p-toast></p-toast>
         <div class="table-responsive-sm">
-            <p-table
+            <p-table [paginatorDropdownAppendTo]="'body'"
                 [value]="subcategorias"
                 dataKey="_id"
                 editMode="row"

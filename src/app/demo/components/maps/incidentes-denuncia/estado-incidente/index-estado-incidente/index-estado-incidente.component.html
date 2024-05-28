@@ -16,7 +16,7 @@
         class="table-responsive-sm"
         *ngIf="incidentesDenuncias.length > 0 && !load_lista"
     >
-        <p-table
+        <p-table [paginatorDropdownAppendTo]="'body'"
             styleClass="p-datatable-striped"
             class="table table-sm align-middle table-striped table-hover"
             [value]="incidentesDenuncias"

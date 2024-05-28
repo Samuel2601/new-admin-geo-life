@@ -13,7 +13,7 @@
     <div class="modal-body">
         <p-toast></p-toast>
         <div class="table-responsive-sm">
-            <p-table
+            <p-table [paginatorDropdownAppendTo]="'body'"
                 *ngIf="actividadEstado"
                 [value]="actividadEstado"
                 [paginator]="true"

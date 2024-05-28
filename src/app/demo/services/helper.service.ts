@@ -210,18 +210,16 @@ export class HelperService {
         }
         this.llamadasActivas++;
 
-        console.log(this.llamadasActivas);
     }
 
     cerrarspinner() {
         this.llamadasActivas--;
-        console.log(this.llamadasActivas);
         if (this.llamadasActivas == 0 && this.spiner !== null) {
             setTimeout(() => {
                 try {
                     this.spiner.destroy();
                 } catch (error) {
-                    console.log('Cerrando', error);
+                    //console.log('Cerrando', error);
                 }
             }, 200);
         }

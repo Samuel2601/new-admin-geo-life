@@ -40,7 +40,7 @@
             </div>
         </div>
     </div>
-    <p-table
+    <p-table [paginatorDropdownAppendTo]="'body'"
         styleClass="p-datatable-striped"
         #dt1
         [value]="fichasectorial"
@@ -227,7 +227,7 @@
             </div>
         </div>
     </ng-template>
-    <p-table
+    <p-table [paginatorDropdownAppendTo]="'body'"
         *ngIf="check.FichaLimitada"
         styleClass="p-datatable-striped"
         #dt1
@@ -326,7 +326,7 @@
         <div class="card-body">
             <p-toast></p-toast>
 
-            <p-table
+            <p-table [paginatorDropdownAppendTo]="'body'"
                 *ngIf="!check.FichaLimitada"
                 styleClass="p-datatable-striped"
                 #dt1
@@ -573,7 +573,7 @@
                     </tr>
                 </ng-template>
             </p-table>
-            <p-table
+            <p-table [paginatorDropdownAppendTo]="'body'"
                 *ngIf="check.FichaLimitada"
                 styleClass="p-datatable-striped"
                 #dt1

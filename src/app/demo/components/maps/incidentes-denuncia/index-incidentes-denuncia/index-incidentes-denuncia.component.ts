@@ -194,7 +194,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
         this.listService
             .listarEncargadosCategorias(this.token, 'encargado', this.id)
             .subscribe((response) => {
-                console.log(response);
+                //console.log(response);
                 if (response.data) {
                     this.encargos = response.data;
                 }
@@ -264,7 +264,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                                     }
                                 );
                         }
-                        console.log(this.incidentesDenuncias);
+                        //console.log(this.incidentesDenuncias);
                         if (
                             !this.check.TotalFilterIncidente &&
                             this.encargos.length > 0
@@ -275,16 +275,11 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                                         (element) =>
                                             element.categoria._id ===
                                                 ficha.categoria._id ||
-                                                ficha.ciudadano._id == 
-                                            this.id
+                                            ficha.ciudadano._id == this.id
                                     )
                                 );
                         }
-                        console.log(
-                            this.incidentesDenuncias,
-                            this.categoria,
-                            this.subcategoria
-                        );
+
                         if (this.categoria) {
                             this.itemh.push({ label: this.categoria });
                             this.incidentesDenuncias =
@@ -294,11 +289,6 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                                         this.categoria
                                 );
                         }
-                        console.log(
-                            this.incidentesDenuncias,
-                            this.categoria,
-                            this.subcategoria
-                        );
                         if (this.subcategoria) {
                             this.itemh.push({ label: this.subcategoria });
                             this.incidentesDenuncias =
@@ -308,11 +298,6 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                                         this.subcategoria
                                 );
                         }
-                        console.log(
-                            this.incidentesDenuncias,
-                            this.categoria,
-                            this.subcategoria
-                        );
                         if (this.encargos.length > 0) {
                             this.encargos.forEach((element) => {
                                 if (element.categoria) {
@@ -329,22 +314,12 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                                 }
                             });
                         }
-                        console.log(
-                            this.incidentesDenuncias,
-                            this.categoria,
-                            this.subcategoria
-                        );
                         if (!this.check.ViewIncidente) {
                             this.incidentesDenuncias =
                                 this.incidentesDenuncias.filter(
                                     (ficha: any) => ficha.view == true
                                 );
                         }
-                        console.log(
-                            this.incidentesDenuncias,
-                            this.categoria,
-                            this.subcategoria
-                        );
                         this.load_lista = false;
                         this.loadpath = true;
                         // Obtener el ID de la URL
@@ -493,7 +468,10 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
         table.clear();
     }
 
-    getSeverity(status: string, fecha?: any): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' {
+    getSeverity(
+        status: string,
+        fecha?: any
+    ): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' {
         switch (status.toLowerCase()) {
             case 'suspendido':
                 return 'danger';
@@ -530,13 +508,16 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
 
     eliminarModal(row: any) {
         this.iddelete = row;
-        console.log(this.iddelete, this.id);
+        //console.log(this.iddelete, this.id);
         this.visibledelete = true;
     }
 
     eliminarIncidente() {
         if (this.iddelete) {
-            if (this.id == this.iddelete.ciudadano._id||this.check.BorrarIncidente) {
+            if (
+                this.id == this.iddelete.ciudadano._id ||
+                this.check.BorrarIncidente
+            ) {
                 this.deleteser
                     .eliminarIncidenteDenuncia(this.token, this.iddelete._id)
                     .subscribe(
@@ -578,7 +559,7 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                     )
                     .subscribe(
                         (response) => {
-                            console.log(response);
+                            //console.log(response);
                             this.messageService.add({
                                 severity: 'success',
                                 summary: 'Eliminado',

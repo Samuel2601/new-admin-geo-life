@@ -27,7 +27,7 @@
             ></p-button>
         </div>
 
-        <p-table
+        <p-table [paginatorDropdownAppendTo]="'body'"
             [value]="usuarios"
             *ngIf="usuarios.length > 0 && !load_lista"
             [scrollable]="true"

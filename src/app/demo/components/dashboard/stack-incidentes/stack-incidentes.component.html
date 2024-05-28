@@ -6,7 +6,7 @@
 </div>
 <div class="card mt-5">
   
-    <p-table
+    <p-table [paginatorDropdownAppendTo]="'body'"
         *ngIf="labelsmobil.length > 0"
         [value]="labelsmobil"
         [rows]="10"
@@ -40,7 +40,7 @@
 </div>
 
 <div class="card" *ngIf="!modal">
-    <p-table
+    <p-table [paginatorDropdownAppendTo]="'body'"
         styleClass="p-datatable-striped"
         #dt1
         [value]="constIncidente"

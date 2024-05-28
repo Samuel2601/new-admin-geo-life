@@ -36,7 +36,26 @@
 
 <p-scrollPanel styleClass="custombar2" *ngIf="!modal">
     <div class="card">
-        <p-table
+        <p-table [paginatorDropdownAppendTo]="'body'" *ngIf="basicData" [value]="basicData.labels" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20]">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th *ngIf="longLabels[0]">Incide</th>
+                    <th>Barrio</th>
+                    <th>Incidentes</th>
+                    <th>Porcentaje</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item let-i="rowIndex">
+                <tr>
+                    <td *ngIf="longLabels[i]">{{ item }} </td>
+                    <td><ng-container *ngIf="longLabels[i]">{{longLabels[i]}}</ng-container> <ng-container *ngIf="!longLabels[i]">{{ item }}</ng-container> </td>
+                    <td>{{ basicData.datasets[0].data[i] }}</td>
+                    <td>{{ basicData.datasets[0].data[i] / constFicha.length | percent: '1.2' }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <!--
+ <p-table [paginatorDropdownAppendTo]="'body'"
             styleClass="p-datatable-striped"
             #dt1
             [value]="constFicha"
@@ -167,7 +186,6 @@
                             </th>
                         </div>
                     </th>
-                    <!-- Agrega las columnas restantes según tu necesidad -->
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-incidente let-rowIndex="rowIndex">
@@ -191,7 +209,6 @@
                             [severity]="getSeverity(incidente.estado.nombre)"
                         ></p-tag>
                     </td>
-                    <!-- Agrega las columnas restantes según tu necesidad -->
                 </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">
@@ -200,5 +217,7 @@
                 </tr>
             </ng-template>
         </p-table>
+        -->
+       
     </div>
 </p-scrollPanel>

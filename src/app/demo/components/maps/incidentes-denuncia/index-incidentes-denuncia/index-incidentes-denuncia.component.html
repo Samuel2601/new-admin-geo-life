@@ -46,6 +46,7 @@
         </div>
     </div>
     <p-table
+        [paginatorDropdownAppendTo]="'body'"
         styleClass="p-datatable-striped"
         #dt1
         [value]="incidentesDenuncias"
@@ -268,13 +269,14 @@
     </div>
     <div class="card-body">
         <p-table
+            [paginatorDropdownAppendTo]="'body'"
             styleClass="p-datatable-striped"
             #dt1
             [value]="incidentesDenuncias"
             dataKey="_id"
             [rows]="10"
             [showCurrentPageReport]="true"
-            [rowsPerPageOptions]="[10, 25, 50]"
+            [rowsPerPageOptions]="[10, 25, 50, 100]"
             [loading]="load_lista"
             [paginator]="true"
             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
@@ -458,7 +460,8 @@
                             </th>
                         </div>
                     </th>
-                    <th style="min-width: 10rem" *ngIf="!isMobil()">
+                    <!--
+<th style="min-width: 10rem" *ngIf="!isMobil()">
                         <div class="flex align-items-center">
                             Respuesta
                             <p-columnFilter
@@ -471,6 +474,8 @@
                             </th>
                         </div>
                     </th>
+                    -->
+
                     <th style="min-width: 10rem">
                         <div class="flex align-items-center">Evidencias</div>
                     </th>
@@ -539,7 +544,8 @@
                             >--</ng-container
                         >
                     </td>
-                    <td *ngIf="!isMobil()">
+                    <!--
+ <td *ngIf="!isMobil()">
                         <ng-container *ngIf="incidente.respuesta">{{
                             incidente.respuesta
                         }}</ng-container>
@@ -547,6 +553,8 @@
                             >--</ng-container
                         >
                     </td>
+                    -->
+
                     <td (click)="stopPropagation($event)">
                         <img
                             *ngIf="incidente.evidencia.length > 0"
@@ -602,13 +610,12 @@
 </p-galleria>
 
 <p-dialog
-   
     header="Detalles de la Incidencia"
     [(visible)]="visible"
     [modal]="false"
     [style]="{ width: isMobil() ? '100%' : '40vw' }"
 >
-    <div class="modal-body"  *ngIf="option">
+    <div class="modal-body" *ngIf="option">
         <p>
             <strong>Categoría:</strong>
             {{ option.categoria.nombre }}
@@ -685,21 +692,32 @@
             <div class="justify-content-end">
                 <p-button
                     class="m-3"
-                    *ngIf="((option.estado.orden < 2&& check.EditIncidentesDenunciaComponent)||check.ContestarIncidente)&&option._id==id"
+                    *ngIf="
+                        ((option.estado.orden < 2 &&
+                            check.EditIncidentesDenunciaComponent) ||
+                            check.ContestarIncidente) &&
+                        option._id == id
+                    "
                     [label]="'Editar'"
                     icon="pi pi-file-edit"
                     (click)="editar(true)"
                 ></p-button>
                 <p-button
                     class="m-3"
-                    *ngIf="(option.estado.orden < 2&&check.EditIncidentesDenunciaComponent)"
+                    *ngIf="
+                        option.estado.orden < 2 &&
+                        check.EditIncidentesDenunciaComponent
+                    "
                     [label]="'Responder'"
                     icon="pi pi-file-edit"
                     (click)="editar(false)"
                 ></p-button>
                 <p-button
                     class="m-3"
-                    *ngIf="option.estado.orden == 1||check.BorrarIncidente==true"
+                    *ngIf="
+                        option.estado.orden == 1 ||
+                        check.BorrarIncidente == true
+                    "
                     label="Borrar"
                     icon="pi pi-images"
                     (click)="eliminarModal(option)"

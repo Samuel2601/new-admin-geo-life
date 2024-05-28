@@ -14,7 +14,7 @@
     <div class="card-body">
         <p-toast></p-toast>
         <div class="table-responsive-sm">
-            <p-table
+            <p-table [paginatorDropdownAppendTo]="'body'"
                 styleClass="p-datatable-striped"
                 class="table table-sm align-middle table-striped table-hover"
                 [value]="permisos"

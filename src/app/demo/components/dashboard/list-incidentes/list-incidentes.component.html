@@ -278,7 +278,7 @@
 </div>
 
 <div class="card" *ngIf="incidente.length > 0">
-    <p-table
+    <p-table [paginatorDropdownAppendTo]="'body'"
         styleClass="p-datatable-striped"
         #dt1
         [value]="incidente"
@@ -467,7 +467,7 @@
                 <canvas #exportCanvas style="display: none"></canvas>
             </div>
             <div class="col-12 xl:col-6">
-                <p-table #dt1 [value]="getEntries(totales[item.clave])">
+                <p-table [paginatorDropdownAppendTo]="'body'" #dt1 [value]="getEntries(totales[item.clave])">
                     <ng-template pTemplate="caption">
                         <div class="flex">
                             <h4>Lista de {{ item.clave | uppercase }}</h4>
@@ -501,7 +501,7 @@
                             <td>{{ categoria[0] }}</td>
                             <td>{{ categoria[1].registros }}</td>
                             <td>
-                                {{ categoria[1].porcentaje / 100 | percent }}
+                                {{ categoria[1].porcentaje / 100 | percent:'1.2' }}
                             </td>
                         </tr>
                     </ng-template>
@@ -517,7 +517,7 @@
                             <td>
                                 {{
                                     getTotales(totales[item.clave])
-                                        .totalPorcentaje / 100 | percent
+                                        .totalPorcentaje / 100 | percent:'1.2'
                                 }}
                             </td>
                         </tr>

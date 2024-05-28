@@ -29,7 +29,7 @@
 </p-scrollPanel>
 <p-scrollPanel styleClass="custombar2" *ngIf="!modal">
     <div class="card">
-        <p-table
+        <p-table [paginatorDropdownAppendTo]="'body'"
             styleClass="p-datatable-striped"
             #dt1
             [value]="constFicha"

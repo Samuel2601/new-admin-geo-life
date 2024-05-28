@@ -29,6 +29,7 @@ export class StackbarriofichaComponent {
     token = this.helper.token();
     constFicha: any = [];
     loading = true;
+    longLabels:any[]=[];
     async rankin() {
         this.loading = true;
         // Obtener todos los incidentes si aún no se han cargado
@@ -69,19 +70,124 @@ export class StackbarriofichaComponent {
             data: Object.values(incidentesPorDireccion).sort(
                 (a: number, b: number) => b - a
             ),
+            backgroundColor: [],
+            borderColor: [],
+            hoverBackgroundColor: [],
             label: 'Ficha Sectorial',
             borderWidth: 1,
         };
+        const documentStyle = getComputedStyle(document.documentElement);
+        dataset.data.forEach((element) => {
+            const color = this.generarColor();
+            dataset.backgroundColor.push(
+                documentStyle.getPropertyValue(color + '-300')
+            );
+            dataset.borderColor.push(
+                documentStyle.getPropertyValue(color + '-500')
+            );
+            dataset.hoverBackgroundColor.push(
+                documentStyle.getPropertyValue(color + '-700')
+            );
+        });
 
         // Actualizar basicData con los datos ordenados
         this.basicData.datasets = [dataset];
-        this.basicData.labels = direccionesOrdenadas;
+        
         //console.log(this.basicData);
         // Actualizar la vista
         this.canvas();
         ////console.log(this.encontrarMaximo());
         this.loading = false;
         this.helper.setStbarrioficha(this);
+        
+        const textColor = documentStyle.getPropertyValue('--text-color');
+        const textColorSecondary = documentStyle.getPropertyValue(
+            '--text-color-secondary'
+        );
+        const surfaceBorder =
+            documentStyle.getPropertyValue('--surface-border');
+
+        this.longLabels = direccionesOrdenadas;
+        const longLabels = this.longLabels
+        const indices = this.longLabels.map((_, index) => index + 1);
+        this.basicData.labels = indices//direccionesOrdenadas;
+        this.optionsbar = {
+            maintainAspectRatio: false,
+            aspectRatio: 0.8,
+            plugins: {
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function (context) {
+                            // Muestra el label largo en el tooltip
+                            const index = context.dataIndex;
+                            return longLabels[index]+': '+dataset.data[index];
+                        },
+                    },
+                },
+                legend: {
+                    labels: {
+                        color: textColor,
+                    },
+                },
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                    ticks: {
+                        color: textColorSecondary,
+                        callback: function (value, index) {
+                            // Muestra el índice en el eje x
+                            return indices[index];
+                        },
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false,
+                    },
+                },
+                y: {
+                    stacked: true,
+                    ticks: {
+                        color: textColorSecondary,
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false,
+                    },
+                },
+            },
+        };
+    }
+    colorIndex: number = 0;
+    generarColor(): string {
+        const colores = [
+            'green',
+            'blue',
+            'yellow',
+            'cyan',
+            'pink',
+            'indigo',
+            'bluegray',
+            'purple',
+            'red',
+        ];
+        const tonos = ['500', '300', '700'];
+
+        if (!this.colorIndex) {
+            this.colorIndex = 0;
+        }
+
+        const colorElegido = colores[this.colorIndex];
+
+        this.colorIndex++;
+        if (this.colorIndex >= colores.length) {
+            this.colorIndex = 0;
+        }
+
+        const color = `--${colorElegido}`;
+        return color;
     }
     encontrarMaximo(): { label: string; valor: number } {
         let maximoValor = 0;
@@ -301,23 +407,25 @@ export class StackbarriofichaComponent {
         table.clear();
     }
 
-    getSeverity(status: string): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' {
+    getSeverity(
+        status: string
+    ): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' {
         switch (status.toLowerCase()) {
             case 'suspendido':
                 return 'danger';
-    
+
             case 'finalizado':
                 return 'success';
-    
+
             case 'en proceso':
                 return 'info';
-    
+
             case 'pendiente':
                 return 'warning';
-    
+
             case 'planificada':
                 return 'info';
-    
+
             default:
                 return 'secondary'; // Asegúrate de retornar un valor válido por defecto
         }

@@ -488,7 +488,7 @@
                         {{ rowIndex + 1 }}
                     </td>
                     <td>
-                        {{ incidente.direccion_geo.nombre }}
+                        {{ incidente.direccion_geo.nombre }} <ng-container *ngIf="check.ViewIncidente&&incidente.view==false">(Borrado)</ng-container>
                     </td>
                     <td>
                         {{ incidente.categoria.nombre }}
@@ -646,13 +646,6 @@
         <p>
             <strong>Descripción:</strong>
             {{ option.descripcion }}
-        </p>
-        <p>
-            <strong>Respuesta:</strong
-            ><ng-container *ngIf="option.respuesta">{{
-                option.respuesta
-            }}</ng-container>
-            <ng-container *ngIf="!option.respuesta">--</ng-container>
         </p>
         <p>
             <strong>Encargado:</strong

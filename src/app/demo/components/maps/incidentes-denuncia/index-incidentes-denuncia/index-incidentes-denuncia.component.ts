@@ -176,11 +176,14 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
                 this.helperservice.decryptData(
                     'IndexEstadoIncidenteComponent'
                 ) || false;
+            this.check.ViewIncidente =
+                this.helperservice.decryptData('ViewIncidente') || false;
             this.check.ContestarIncidente =
                 this.helperservice.decryptData('ContestarIncidente') || false;
             if (!this.check.IndexIncidentesDenunciaComponent) {
                 this.router.navigate(['/notfound']);
             }
+
             ////console.log(this.check);
             await this.buscarencargos();
         } catch (error) {

@@ -1209,12 +1209,48 @@ export class LayersComponent implements OnInit {
             });
             this.capaActiva = false;
         } else {
+            console.log(this.arr_polygon);
             this.arr_polygon.forEach((polygon: google.maps.Polygon) => {
                 polygon.setMap(this.mapCustom);
             });
             this.capaActiva = true;
+            this.centrarMap();
         }
         this.updateItem();
+    }
+    centrarMap() {
+        if (this.mapCustom) {
+            const bounds = new google.maps.LatLngBounds();
+
+            // Calcular los límites que abarcan todos los polígonos
+            this.arr_polygon.forEach((polygon: google.maps.Polygon) => {
+                polygon.getPath().getArray().forEach((latLng) => {
+                    bounds.extend(latLng);
+                });
+            });
+    
+            // Ajustar el mapa para que abarque todos los polígonos
+            this.mapCustom.fitBounds(bounds);
+
+            // Obtener el centro y el nivel de zoom adecuado para incluir todos los polígonos
+            const center = bounds.getCenter();
+            const zoom = this.calculateZoomLevel(bounds);
+            console.log(center, zoom);
+            // Ajustar el mapa para que abarque todos los polígonos
+            this.mapCustom.setCenter({lat:0.935233,lng: -79.681929});
+            this.mapCustom.setZoom(zoom);
+        }
+    }
+    // Método auxiliar para calcular el nivel de zoom adecuado
+    calculateZoomLevel(bounds: google.maps.LatLngBounds): number {
+        const GLOBE_WIDTH = 256; // ancho de un tile en el nivel de zoom 0
+        const angle = bounds.toSpan().lng();
+        const mapDiv = this.mapCustom.getDiv();
+        const width = mapDiv.offsetWidth;
+        const zoom = Math.floor(
+            Math.log((width * 360) / angle / GLOBE_WIDTH) / Math.LN2
+        );
+        return zoom;
     }
 
     borrarpoligonos() {
@@ -1232,6 +1268,7 @@ export class LayersComponent implements OnInit {
         this.lista_feature.forEach((feature: any) => {
             this.poligonoview(false, feature);
         });
+        this.centrarMap();
         this.updateItem();
     }
 
@@ -1375,63 +1412,72 @@ export class LayersComponent implements OnInit {
     id_feature: any;
     levantarpopup(polygon: any, feature: any) {
         if (this.infoWindowActual && !this.capaActiva) {
-          this.infoWindowActual.close();
-          this.infoWindowActual = null;
-          this.url_imag = null;
+            this.infoWindowActual.close();
+            this.infoWindowActual = null;
+            this.url_imag = null;
         }
         this.features[polygon.id] = null;
         polygon.addListener('click', (event: any) => {
-          if (this.features[polygon.id] == feature && !this.capaActiva) {
-            this.latitud = event.latLng.lat();
-            this.longitud = event.latLng.lng();
-            this.addMarker(
-              { lat: this.latitud, lng: this.longitud },
-              'Poligono',
-              feature.properties.nombre,
-              feature
-            );
-          } else {
-            this.openInfoWindow.open(null);
-            if (this.infoWindowActual) {
-              this.infoWindowActual.close();
-              this.features[polygon.id] = null;
-              this.infoWindowActual = null;
-            }
-    
-            if (!this.infoWindowActual) {
-              this.features[polygon.id] = feature;
-              this.id_feature = polygon.id;
-              this.url_imag = `${this.url}helper/obtener_portada_barrio/${this.features[this.id_feature].id}`;
-    
-              const content = this.createInfoWindowContent(feature);
-    
-              this.infoWindowActual = new google.maps.InfoWindow({
-                content: content,
-                ariaLabel: 'info',
-              });
-    
-              google.maps.event.addListener(this.infoWindowActual, 'closeclick', () => {
-                console.log('La ventana de información se ha cerrado');
-                this.infoWindowActual = null;
-              });
-    
-              this.infoWindowActual.setPosition(event.latLng);
-              this.infoWindowActual.open(this.mapCustom);
+            if (this.features[polygon.id] == feature && !this.capaActiva) {
+                this.latitud = event.latLng.lat();
+                this.longitud = event.latLng.lng();
+                this.addMarker(
+                    { lat: this.latitud, lng: this.longitud },
+                    'Poligono',
+                    feature.properties.nombre,
+                    feature
+                );
             } else {
-              this.infoWindowActual.setPosition(event.latLng);
-              this.infoWindowActual.open(this.mapCustom);
+                this.openInfoWindow.open(null);
+                if (this.infoWindowActual) {
+                    this.infoWindowActual.close();
+                    this.features[polygon.id] = null;
+                    this.infoWindowActual = null;
+                }
+
+                if (!this.infoWindowActual) {
+                    this.features[polygon.id] = feature;
+                    this.id_feature = polygon.id;
+                    this.url_imag = `${this.url}helper/obtener_portada_barrio/${
+                        this.features[this.id_feature].id
+                    }`;
+
+                    const content = this.createInfoWindowContent(feature);
+
+                    this.infoWindowActual = new google.maps.InfoWindow({
+                        content: content,
+                        ariaLabel: 'info',
+                    });
+
+                    google.maps.event.addListener(
+                        this.infoWindowActual,
+                        'closeclick',
+                        () => {
+                            console.log(
+                                'La ventana de información se ha cerrado'
+                            );
+                            this.infoWindowActual = null;
+                        }
+                    );
+
+                    this.infoWindowActual.setPosition(event.latLng);
+                    this.infoWindowActual.open(this.mapCustom);
+                } else {
+                    this.infoWindowActual.setPosition(event.latLng);
+                    this.infoWindowActual.open(this.mapCustom);
+                }
             }
-          }
         });
-      }
-      @ViewChild('infoWindowTemplate', { static: true }) infoWindowTemplate: TemplateRef<any>;
-      createInfoWindowContent(feature: any): HTMLElement {
+    }
+    @ViewChild('infoWindowTemplate', { static: true })
+    infoWindowTemplate: TemplateRef<any>;
+    createInfoWindowContent(feature: any): HTMLElement {
         const view = this.infoWindowTemplate.createEmbeddedView({ feature });
         const div = document.createElement('div');
         div.appendChild(view.rootNodes[0]);
         this.appRef.attachView(view);
         return div;
-      }
+    }
 
     responsiveimage(): string {
         let aux = window.innerWidth - 120;

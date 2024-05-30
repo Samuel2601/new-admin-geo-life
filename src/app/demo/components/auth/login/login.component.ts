@@ -9,6 +9,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { GLOBAL } from 'src/app/demo/services/GLOBAL';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Howl } from 'howler';
+import { AuthService } from 'src/app/demo/services/auth.service';
 
 @Component({
     selector: 'app-login',
@@ -46,7 +47,8 @@ export class LoginComponent implements OnInit {
         private helper: HelperService,
         private messageService: MessageService,
         public layoutService: LayoutService,
-        private cookieService: CookieService
+        private cookieService: CookieService,
+        private authService: AuthService
     ) {
         this.loginForm = this.formBuilder.group({
             correo: [
@@ -142,6 +144,15 @@ export class LoginComponent implements OnInit {
     }
 
     async postLogin() {
+        const isAuthenticated = await this.authService.authenticate();
+        if (isAuthenticated) {
+            // Autenticación exitosa
+            // Lógica para guardar la sesión del usuario
+            console.log('User authenticated successfully');
+          } else {
+            // Autenticación fallida
+            console.log('Authentication failed');
+          }
         ////console.log(this.loginForm,this.loginForm.valid);
         if (this.loginForm.valid) {
             let user = {

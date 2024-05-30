@@ -686,7 +686,7 @@
                 <p-button
                     class="m-3"
                     *ngIf="
-                        ((option.estado.orden < 2 &&
+                        ((option.estado.orden != 2 &&
                             check.EditIncidentesDenunciaComponent) ||
                             check.ContestarIncidente) &&
                         option._id == id
@@ -698,7 +698,7 @@
                 <p-button
                     class="m-3"
                     *ngIf="
-                        option.estado.orden < 2 &&
+                        option.estado.orden != 2 &&
                         check.EditIncidentesDenunciaComponent
                     "
                     [label]="'Responder'"

@@ -1289,7 +1289,7 @@
     tslib "^2.4.0"
     xml2js "^0.5.0"
 
-"@capacitor/core@^6.0.0":
+"@capacitor/core@^6.0.0", "@capacitor/core@latest":
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/@capacitor/core/-/core-6.0.0.tgz#abfaf1013cec686cf9743cf4fdc445d10e2f13ea"
   integrity sha512-NvxIQsJcMiIV+Le1DilR2GGyQQbDInfXK1UywGROQ5mycdFlW5XoAPZ+MKnFGB123RoEgE3uhDGgwTXUmSlX9A==
@@ -4124,6 +4124,13 @@ canvg@^3.0.6:
     rgbcolor "^1.0.1"
     stackblur-canvas "^2.0.0"
     svg-pathdata "^6.0.3"
+
+capacitor-fingerprint-auth@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/capacitor-fingerprint-auth/-/capacitor-fingerprint-auth-0.0.2.tgz#d8425e404af222dbd039bbd21665148b5a0bab2c"
+  integrity sha512-77tjfarFWQBfAJcCg3FJTbhi6nhUthyp2amwm+Yi1Mw7lFH3gA4ADbpnnG6jPynlgX+6JMMNWzyLCaNMRsrEbg==
+  dependencies:
+    "@capacitor/core" latest
 
 chalk@^2.4.2:
   version "2.4.2"

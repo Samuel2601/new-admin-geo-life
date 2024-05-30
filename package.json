@@ -42,6 +42,7 @@
     "@popperjs/core": "^2.11.8",
     "@turf/turf": "^6.5.0",
     "browser-image-compression": "^2.0.2",
+    "capacitor-fingerprint-auth": "^0.0.2",
     "chart.js": "^4.4.3",
     "crypto-js": "^4.2.0",
     "howler": "^2.2.4",

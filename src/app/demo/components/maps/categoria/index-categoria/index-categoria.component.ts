@@ -338,10 +338,12 @@ export class IndexCategoriaComponent implements OnInit {
                 const subategoria = element.data.nombre;
                 const descripcion_cat = row.data.descripcion;
                 const descripcion_sub = element.data.descripcion;
-                return [categoria, subategoria, descripcion_cat,descripcion_sub]
+                return [categoria,descripcion_cat,subategoria,descripcion_sub].join(';');
             });
+            console.log(resul);
             csv.push(...resul);
         });
+        console.log(csv);
         csv.map((value:any) => {
             if (typeof value === 'string') {
                 return '"' + value.replace(/"/g, '""') + '"';

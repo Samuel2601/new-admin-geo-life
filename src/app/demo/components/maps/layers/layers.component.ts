@@ -783,7 +783,7 @@ export class LayersComponent implements OnInit {
             const panelmenu = document.getElementById('panelmenu');
 
             // Verificar si el speedDial ya está en el mapa antes de agregarlo
-            if (!this.pushmenu && this.mapCustom.controls) {
+            if (!this.pushmenu && this.mapCustom.controls&&panelmenu) {
                 this.pushmenu = true;
                 const customControlDiv = document.createElement('div');
                 customControlDiv.appendChild(panelmenu);

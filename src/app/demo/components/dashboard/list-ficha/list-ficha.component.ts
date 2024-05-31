@@ -230,8 +230,13 @@ export class ListFichaComponent implements OnInit{
 
         return porcentajes;
     }
-
+    check:any={};
     async ngOnInit() {
+        this.check.DashboardComponent = this.helper.decryptData('DashboardComponent') || false;
+        //console.log(this.check.DashboardComponent);
+        if (!this.check.DashboardComponent) {
+            this.router.navigate(['/notfound']);
+        }
         //this.helper.llamarspinner();
         if (!this.token) {
             this.router.navigate(['/auth/login']);

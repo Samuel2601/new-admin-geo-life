@@ -5,6 +5,7 @@ import { ListService } from 'src/app/demo/services/list.service';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { ChartModule, UIChart } from 'primeng/chart';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -24,7 +25,8 @@ export class ListIncidentesComponent implements OnInit {
         public formBuilder: FormBuilder,
         private listar: ListService,
         private helper: HelperService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private router: Router
     ) {
         this.filterForm = this.formBuilder.group({
             fecha_inicio: [''],
@@ -228,8 +230,20 @@ export class ListIncidentesComponent implements OnInit {
 
         return porcentajes;
     }
-
+    check:any={};
     async ngOnInit() {
+        this.check.DashboardComponent = this.helper.decryptData('DashboardComponent') || false;
+        //console.log(this.check.DashboardComponent);
+        if (!this.check.DashboardComponent) {
+            this.router.navigate(['/notfound']);
+        }
+        //this.helper.llamarspinner();
+        if (!this.token) {
+            this.router.navigate(['/auth/login']);
+            //this.helper.cerrarspinner();
+            throw new Error('Token no encontrado');
+        }
+        
         await this.rankin();
         await this.listCategoria();
         await this.listarEstado();

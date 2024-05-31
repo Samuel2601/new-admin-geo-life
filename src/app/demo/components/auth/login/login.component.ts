@@ -9,7 +9,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { GLOBAL } from 'src/app/demo/services/GLOBAL';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Howl } from 'howler';
-import { AuthService } from 'src/app/demo/services/auth.service';
+import { NativeBiometric } from 'capacitor-native-biometric';
 
 @Component({
     selector: 'app-login',
@@ -47,8 +47,7 @@ export class LoginComponent implements OnInit {
         private helper: HelperService,
         private messageService: MessageService,
         public layoutService: LayoutService,
-        private cookieService: CookieService,
-        private authService: AuthService
+        private cookieService: CookieService
     ) {
         this.loginForm = this.formBuilder.group({
             correo: [
@@ -144,16 +143,6 @@ export class LoginComponent implements OnInit {
     }
 
     async postLogin() {
-        const isAuthenticated = await this.authService.authenticate();
-        if (isAuthenticated) {
-            // Autenticación exitosa
-            // Lógica para guardar la sesión del usuario
-            console.log('User authenticated successfully');
-          } else {
-            // Autenticación fallida
-            console.log('Authentication failed');
-          }
-        ////console.log(this.loginForm,this.loginForm.valid);
         if (this.loginForm.valid) {
             let user = {
                 correo: this.loginForm.get('correo')?.value,
@@ -165,11 +154,10 @@ export class LoginComponent implements OnInit {
                 user.time = 60;
                 user.tipo = 'days';
             }
-            ////console.log(user);
+
             this._adminService.login(user).subscribe(
-                (response: any) => {
+                async (response: any) => {
                     if (response.token) {
-                       // console.log(response.data);
                         const data = response.data;
                         if (data) {
                             this.cookieService.set(
@@ -217,19 +205,44 @@ export class LoginComponent implements OnInit {
                             summary: 'Ingreso',
                             detail: 'Bienvenido',
                         });
-                        //this.navbarComponent.cerrarmodal();
-                        //this.navbarComponent.asignarToken();
-                        this.stopAudio();
+                        if (this.helper.isMobil()) {
+                            // Realizar autenticación biométrica
+                            const result = await NativeBiometric.isAvailable();
+                            if (result.isAvailable) {
+                                const verified =
+                                    await NativeBiometric.verifyIdentity({
+                                        reason: 'For easy log in',
+                                        title: 'Log in',
+                                        subtitle:
+                                            'Place your finger on the sensor',
+                                        description:
+                                            'Touch ID or Face ID required',
+                                    })
+                                        .then(() => true)
+                                        .catch(() => false);
+
+                                if (!verified) {
+                                    this.messageService.add({
+                                        severity: 'error',
+                                        summary: '(fallo)',
+                                        detail: 'Sin biometria',
+                                    });
+                                    // Si la autenticación biométrica falla, muestra un mensaje al usuario o realiza alguna acción adecuada
+                                    return;
+                                }
+                            }
+                        }
+
+                        // Redirigir a la página de mapa después de la autenticación exitosa
                         setTimeout(() => {
                             this.router.navigate(['/maps']);
                         }, 2000);
                     }
                 },
                 (error) => {
-                    // //console.error(error);
                     this.messageService.add({
                         severity: 'error',
-                        summary: ('(' + error.status + ')').toString(),
+                        summary: '(' + error.status + ')',
                         detail: error.error.message || 'Sin conexión',
                     });
                 }
@@ -237,7 +250,7 @@ export class LoginComponent implements OnInit {
         } else {
             this.messageService.add({
                 severity: 'error',
-                summary: 'Aviso'.toString(),
+                summary: 'Aviso',
                 detail: 'Completa los datos',
             });
         }

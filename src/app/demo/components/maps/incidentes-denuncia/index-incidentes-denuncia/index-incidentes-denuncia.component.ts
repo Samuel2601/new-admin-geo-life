@@ -183,6 +183,8 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
             if (!this.check.IndexIncidentesDenunciaComponent) {
                 this.router.navigate(['/notfound']);
             }
+            this.check.FichaLimitada =
+                this.helperservice.decryptData('FichaLimitada') || false;
 
             ////console.log(this.check);
             await this.buscarencargos();

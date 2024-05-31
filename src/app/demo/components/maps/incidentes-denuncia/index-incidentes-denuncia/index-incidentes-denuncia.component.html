@@ -442,7 +442,7 @@
                     <th style="min-width: 10rem">
                         <div class="flex align-items-center">Foto</div>
                     </th>
-                    <th style="min-width: 10rem" *ngIf="!isMobil()">
+                    <th style="min-width: 10rem" *ngIf="!isMobil()&&!check.FichaLimitada" >
                         <div class="flex align-items-center">
                             Encargado
                             <p-columnFilter
@@ -536,7 +536,7 @@
                             "
                         />
                     </td>
-                    <td *ngIf="!isMobil()">
+                    <td *ngIf="!isMobil()&&!check.FichaLimitada">
                         <ng-container *ngIf="incidente.encargado">{{
                             incidente.encargado.nombres
                         }}</ng-container>
@@ -647,7 +647,7 @@
             <strong>Descripción:</strong>
             {{ option.descripcion }}
         </p>
-        <p>
+        <p *ngIf="!check.FichaLimitada">
             <strong>Encargado:</strong
             ><ng-container *ngIf="option.encargado">{{
                 option.encargado.nombres

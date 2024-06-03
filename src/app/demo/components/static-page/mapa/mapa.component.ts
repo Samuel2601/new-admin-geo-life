@@ -358,7 +358,7 @@ export class MapaComponent implements OnInit {
 
     addtemplateFR() {
         setTimeout(() => {
-            let formularioMap=undefined
+            let formularioMap = undefined;
             if (this.formularioMapRef) {
                 formularioMap = this.formularioMapRef.nativeElement;
             }
@@ -632,7 +632,7 @@ export class MapaComponent implements OnInit {
             //this.mapCustom.setZoom(18);
             infoWindow.open(this.mapCustom, marker);
         });
-
+        this.mapCustom.setZoom(18);
         /*marker.addListener('click', () => {
     const index = this.markers.indexOf(marker);
     if (this.popupStates[index]) {
@@ -1053,68 +1053,6 @@ export class MapaComponent implements OnInit {
     pathselect: any[] = [];
     pathson: any[] = [];
     selectpath: any;
-    pathpush(item: any) {
-        if (item) {
-            if (!this.pathselect.includes(item)) {
-                this.pathselect.push(item);
-            } else {
-                const index = this.pathselect.indexOf(item);
-                if (index !== -1) {
-                    this.pathselect.splice(index, 1);
-                }
-            }
-            this.rutasdialog();
-        }
-    }
-
-    rutasdialog() {
-        const colors = [
-            '#2196f3',
-            '#f57c00',
-            '#3f51b5',
-            '#009688',
-            '#f57c00',
-            '#9c27b0',
-            '#ff4032',
-            '#4caf50',
-        ];
-        if (this.pathson.length > 0) {
-            this.pathson.forEach((element: any) => {
-                element.setMap(null);
-            });
-        }
-        this.pathson = [];
-        this.pathselect.forEach((element: any, index: number) => {
-            const path = [];
-            if (element.geometry.coordinates) {
-                element.geometry.coordinates.forEach((paths: any) => {
-                    for (const coord of paths) {
-                        path.push({ lat: coord[1], lng: coord[0] });
-                    }
-                });
-            }
-
-            const route = new google.maps.Polyline({
-                path: path,
-                geodesic: true,
-                strokeColor: colors[index % colors.length],
-                strokeOpacity: 1.0,
-                strokeWeight: 6, // Ajusta este valor para hacer la línea más ancha
-            });
-
-            route.addListener('click', (event: any) => {
-                const infoWindow = new google.maps.InfoWindow({
-                    content: element.properties.nombre,
-                });
-
-                infoWindow.setPosition(event.latLng);
-                infoWindow.open(this.mapCustom);
-            });
-
-            route.setMap(this.mapCustom);
-            this.pathson.push(route);
-        });
-    }
 
     incidencia: FormGroup<any>;
 
@@ -1153,11 +1091,27 @@ export class MapaComponent implements OnInit {
     onSubCategoriaClick(subcategoria: any): void {
         console.log(subcategoria);
         this.visible_map = true;
+    }
+    recargarmapa() {
         setTimeout(() => {
             this.initmap();
             this.addtemplateBG();
             this.addtemplateFR();
-            this.getLocation();
+            console.log(this.opcionb,this.latitud,this.longitud);
+            if(this.latitud&&this.longitud){
+                setTimeout(() => {
+                    this.addMarker(
+                        { lat: this.latitud, lng: this.longitud },
+                        'Ubicación',
+                        'Tu ubicación elejida'
+                    );
+                    this.poligonoposition();  
+                }, 1000);                
+            }else{
+                this.getLocation();
+            }
+
+            
         }, 500);
     }
     iconPaths: { [key: string]: string } = {};

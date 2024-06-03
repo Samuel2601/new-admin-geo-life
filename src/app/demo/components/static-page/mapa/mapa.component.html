@@ -38,36 +38,6 @@
     </p>
     -->
 
-<p-dialog
-    header="Selecciona una ruta para mostrar"
-    [(visible)]="visiblepath"
-    [style]="{ width: isMobil() ? '100%' : '50vw' }"
-    [modal]="true"
->
-    <div class="card flex flex-wrap gap-3 justify-content-center">
-        <ng-container *ngFor="let item of rutas">
-            <div>
-                <p-button
-                    [raised]="true"
-                    [text]="true"
-                    severity="success"
-                    (click)="pathpush(item)"
-                >
-                    <img
-                        [src]="
-                            pathselect.includes(item)
-                                ? 'assets/icon/eye-slashOFF.svg'
-                                : 'assets/icon/eye-slash.svg'
-                        "
-                        style="width: 18px"
-                    />
-                    {{ item.properties.nombre }}
-                </p-button>
-            </div>
-        </ng-container>
-    </div>
-</p-dialog>
-
 <p-stepper>
     <p-stepperPanel header="Categoría">
         <ng-template
@@ -140,7 +110,7 @@
                             (click)="
                                 onSubCategoriaClick(product);
                                 nextCallback.emit();
-                              
+                                recargarmapa()
                             "
                         >
                             <td
@@ -167,7 +137,7 @@
                     icon="pi pi-arrow-right"
                     iconPos="right"
                     [disabled]="!visible_map"
-                    (onClick)="nextCallback.emit()"
+                    (onClick)="nextCallback.emit(); recargarmapa()"
                 />
             </div>
         </ng-template>
@@ -276,7 +246,7 @@
                 <p-button
                     label="Atrás"
                     icon="pi pi-arrow-left"
-                    (onClick)="prevCallback.emit()"
+                    (onClick)="prevCallback.emit(); recargarmapa()"
                 />
             </div>
         </ng-template>

@@ -83,12 +83,13 @@ export class LoginComponent implements OnInit {
     }
 
     async ngOnInit() {
+        this.playAudio();
         let bolroutin: boolean = true;
         this.route.queryParams.subscribe((params) => {
             if (params && params['correo'] && params['password']) {
                 this.loginForm.get('correo')?.setValue(params['correo']);
                 this.loginForm.get('pass')?.setValue(params['password']);
-                this.playAudio();
+                
                 bolroutin = false;
             }
         });

@@ -261,8 +261,9 @@ export class MapaComponent implements OnInit {
             });
     }
     ngOnDestroy() {
-        if (this.ref) {
-            this.ref.close();
+        if (this.mapCustom) {
+            google.maps.event.clearInstanceListeners(this.mapCustom);
+            this.mapCustom = null;
         }
     }
     async ngOnInit() {
@@ -357,7 +358,10 @@ export class MapaComponent implements OnInit {
 
     addtemplateFR() {
         setTimeout(() => {
-            const formularioMap = this.formularioMapRef.nativeElement;
+            let formularioMap=undefined
+            if (this.formularioMapRef) {
+                formularioMap = this.formularioMapRef.nativeElement;
+            }
             if (this.load_fullscreen) {
                 if (!this.isFormularioMapAdded()) {
                     const customControlDiv = document.createElement('div');

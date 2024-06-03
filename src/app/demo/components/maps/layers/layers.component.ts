@@ -503,7 +503,6 @@ export class LayersComponent implements OnInit {
                                         styleClass: 'itemcustom',
                                         command: () => {
                                             if (
-                                                (this.opcionb ? true : false) &&
                                                 this.check
                                                     .IndexIncidentesDenunciaComponent
                                             ) {
@@ -944,6 +943,9 @@ export class LayersComponent implements OnInit {
     //INICIALIZADOR DEL MAPA
     initmap() {
         this.loader.load().then(() => {
+            this.helperService.autocompleteService = new google.maps.places.AutocompleteService();
+            this.helperService.geocoderService = new google.maps.Geocoder();
+            
             const haightAshbury = { lat: 0.977035, lng: -79.655415 };
             this.mapCustom = new google.maps.Map(
                 document.getElementById('map') as HTMLElement,
@@ -1627,9 +1629,7 @@ export class LayersComponent implements OnInit {
         this.controlFullScreem();
         this.mostrarficha = false;
         this.mostrarincidente = false;
-        if (this.opcionb) {
-            this.mostrarincidente = true;
-        }
+        this.mostrarincidente = true;
         if (this.mapCustom) {
             if (this.mostrarincidente) {
             }

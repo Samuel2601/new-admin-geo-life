@@ -168,12 +168,15 @@
     style="z-index: inherit"
 >
 </app-index-ficha-sectorial>
+<!--
+[filtro]="mostrarfiltro ? 'direccion_geo.nombre' : undefined"
+    [valor]="mostrarfiltro ? opcionb.properties.nombre : undefined"
+-->
 <app-index-incidentes-denuncia
     class="container"
     *ngIf="mostrarincidente"
     id="indexficha"
-    [filtro]="mostrarfiltro ? 'direccion_geo.nombre' : undefined"
-    [valor]="mostrarfiltro ? opcionb.properties.nombre : undefined"
+    
     [categoria]="categoria"
     [subcategoria]="subcategoria"
     [modal]="true"

@@ -66,6 +66,7 @@
         ]"
         [sortMode]="'multiple'"
         [scrollable]="true"
+        scrollHeight="650px"
     >
         <ng-template pTemplate="caption">
             <div class="flex">
@@ -102,7 +103,7 @@
         <ng-template pTemplate="header">
             <tr>
                 <th style="width: 3rem" pFrozenColumn>#</th>
-                <th style="min-width: 6rem" *ngIf="!valor">
+                <th style="min-width: 4rem" *ngIf="!valor">
                     <div class="flex align-items-center">
                         Dirección
                         <p-columnFilter
@@ -120,7 +121,7 @@
                         </th>
                     </div>
                 </th>
-                <th style="min-width: 6rem">
+                <th style="min-width: 4rem">
                     <div class="flex align-items-center">
                         Categoría
                         <p-columnFilter
@@ -136,25 +137,7 @@
                         </th>
                     </div>
                 </th>
-                <th style="min-width: 12rem">
-                    <div class="flex align-items-center">
-                        Descripción
-                        <p-columnFilter
-                            type="text"
-                            field="ciudadano.descripcion"
-                            display="menu"
-                        ></p-columnFilter>
-                        <th
-                            pSortableColumn="ciudadano.descripcion"
-                            style="width: 20%"
-                        >
-                            <p-sortIcon
-                                field="ciudadano.descripcion"
-                            ></p-sortIcon>
-                        </th>
-                    </div>
-                </th>
-                <th style="min-width: 5rem">
+                <th style="min-width: 3rem">
                     <div class="flex align-items-center">
                         Estado
                         <p-columnFilter
@@ -166,9 +149,6 @@
                             <p-sortIcon field="estado.nombre"></p-sortIcon>
                         </th>
                     </div>
-                </th>
-                <th style="min-width: 10rem">
-                    <div class="flex align-items-center">Foto</div>
                 </th>
                 <th
                     style="min-width: 2rem"
@@ -196,28 +176,10 @@
                     {{ incidente.categoria.nombre }}
                 </td>
                 <td>
-                    {{ incidente.descripcion }}
-                </td>
-                <td>
                     <p-tag
                         [value]="incidente.estado.nombre"
                         [severity]="getSeverity(incidente.estado.nombre)"
                     ></p-tag>
-                </td>
-                <td (click)="stopPropagation($event); displayBasic = true">
-                    <img
-                        *ngIf="incidente.foto.length > 0"
-                        [src]="
-                            url + 'helper/obtener_portada/' + incidente.foto[0]
-                        "
-                        class="navbar-brand-img mx-auto"
-                        style="max-height: 4rem !important; cursor: pointer"
-                        alt="..."
-                        (click)="
-                            openModalimagen(incidente.foto);
-                            this.displayBasic = true
-                        "
-                    />
                 </td>
                 <td alignFrozen="right" pFrozenColumn [frozen]="balanceFrozen">
                     <p-button

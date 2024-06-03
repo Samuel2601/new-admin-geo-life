@@ -12,6 +12,8 @@ import { HelperService } from 'src/app/demo/services/helper.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { MapaComponent } from '../mapa/mapa.component';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { StepperModule } from 'primeng/stepper';
 @Component({
     selector: 'app-home',
     standalone: true,
@@ -25,7 +27,8 @@ import { MapaComponent } from '../mapa/mapa.component';
         TagModule,
         DialogModule,
         TableModule,
-        MapaComponent
+        MapaComponent,
+        StepperModule,
     ],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss',
@@ -38,7 +41,8 @@ export class HomeComponent implements OnInit {
     constructor(
         private list: ListService,
         private helperService: HelperService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        public dialogService: DialogService
     ) {
         this.incidencia = this.fb.group({
             direccion_geo: [{ value: '', disabled: true }],
@@ -154,9 +158,9 @@ export class HomeComponent implements OnInit {
 
     visible_categoria: boolean = false;
     visible_subcategoria: boolean = false;
+    ref: DynamicDialogRef | undefined;
     incidente() {
         this.visible_categoria = true;
-        this.listCategoria();
     }
     categorias: any[] = [];
     listCategoria() {
@@ -171,7 +175,7 @@ export class HomeComponent implements OnInit {
     onCategoriaClick(cateogria: any) {
         console.log(cateogria);
         this.incidencia.get('categoria').setValue(cateogria);
-        this.visible_categoria = false;
+        //this.visible_categoria = false;
         this.visible_subcategoria = true;
         this.list
             .listarSubcategorias(this.token, 'categoria', cateogria._id)
@@ -183,12 +187,11 @@ export class HomeComponent implements OnInit {
             });
     }
     visible_map: boolean = false;
-    onSubCategoriaClick(subcategoria: any) {
+    
+    onSubCategoriaClick(subcategoria: any): void {
         console.log(subcategoria);
-        this.visible_map=true;
-       // this.initmap();
+        this.visible_map = true;
     }
-
 
     showInfo(button: any) {
         button.showInfo = true;

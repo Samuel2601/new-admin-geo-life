@@ -15,7 +15,7 @@ import {
 import { Router } from '@angular/router';
 import * as L from 'leaflet';
 import {
-  CommonModule,
+    CommonModule,
     Location,
     LocationStrategy,
     PathLocationStrategy,
@@ -33,14 +33,24 @@ declare global {
         Finger: any;
     }
 }
-import { FormControl, FormsModule } from '@angular/forms';
+import {
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    FormsModule,
+    Validators,
+} from '@angular/forms';
 import { SpeedDial } from 'primeng/speeddial';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Loader } from '@googlemaps/js-api-loader';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
-import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import {
+    DialogService,
+    DynamicDialogConfig,
+    DynamicDialogRef,
+} from 'primeng/dynamicdialog';
 import { AdminService } from 'src/app/demo/services/admin.service';
 import { ListService } from 'src/app/demo/services/list.service';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -52,6 +62,7 @@ import { CarouselModule } from 'primeng/carousel';
 import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
+import { StepperModule } from 'primeng/stepper';
 interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
     id?: string;
 }
@@ -70,10 +81,16 @@ interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
         DialogModule,
         TableModule,
         AutoCompleteModule,
+        StepperModule,
     ],
     templateUrl: './mapa.component.html',
     styleUrl: './mapa.component.scss',
-    providers: [MessageService,DialogService,DynamicDialogConfig,DynamicDialogRef],
+    providers: [
+        MessageService,
+        DialogService,
+        DynamicDialogConfig,
+        DynamicDialogRef,
+    ],
 })
 export class MapaComponent implements OnInit {
     @ViewChildren(SpeedDial) speedDials: QueryList<SpeedDial> | undefined;
@@ -184,8 +201,21 @@ export class MapaComponent implements OnInit {
         private ref: DynamicDialogRef,
         private admin: AdminService,
         private list: ListService,
-        private appRef: ApplicationRef
+        private appRef: ApplicationRef,
+        private fb: FormBuilder
     ) {
+        this.incidencia = this.fb.group({
+            direccion_geo: [{ value: '', disabled: true }],
+            ciudadano: [{ value: '', disabled: true }, Validators.required],
+            estado: [{ value: '', disabled: true }, Validators.required],
+            categoria: [{ value: '', disabled: true }, Validators.required],
+            subcategoria: [{ value: '', disabled: true }, Validators.required],
+            descripcion: [{ value: '', disabled: true }, Validators.required],
+            encargado: [{ value: '', disabled: true }, Validators.required],
+            respuesta: [{ value: '', disabled: true }, Validators.required],
+            evidencia: [[]],
+            view: true,
+        });
         this.subscription = this.layoutService.configUpdate$
             .pipe(debounceTime(25))
             .subscribe((config) => {
@@ -237,6 +267,7 @@ export class MapaComponent implements OnInit {
     }
     async ngOnInit() {
         this.helperService.llamarspinner();
+        this.listCategoria();
         App.addListener('backButton', (data) => {
             this.sidebarVisible ? (this.sidebarVisible = false) : '';
             this.mostrarficha ? (this.mostrarficha = false) : '';
@@ -273,552 +304,12 @@ export class MapaComponent implements OnInit {
             console.error('Error al verificar permisos:', error);
             this.router.navigate(['/notfound']);
         }
-
-        this.updateItem();
-        this.initmap();
         await this.getWFSgeojson(this.urlgeoser);
-        this.getLocation();
+
         setTimeout(() => {
             this.helperService.cerrarspinner();
         }, 1500);
-        // this.listCategoria();
     }
-    categorias: any[] = [];
-    listCategoria() {
-        this.list.listarCategorias(this.token).subscribe((response) => {
-            if (response.data) {
-                this.categorias = response.data;
-                console.log(this.categorias);
-            }
-        });
-    }
-    Listitems(label: string, campo: any, icono1: string, icono2: string) {
-        const index = this.items.findIndex((item) => item.label === label);
-        if (index !== -1) {
-            // Actualizar el icono del elemento 'Barrios'
-            this.items[index].icon = campo ? icono1 : icono2;
-        }
-    }
-    categoria: string;
-    subcategoria: string;
-    mostrarfiltro: boolean = true;
-    updateItem() {
-        this.items = [
-            {
-                label: 'Menu Principal',
-                styleClass: 'itemcustom',
-                expanded: true,
-                items: [
-                    {
-                        icon: 'pi bi-bankcustom',
-                        label: 'Alcaldía Ciudadana',
-                        styleClass: 'itemcustom',
-                        //expanded: true,
-                        items: [
-                            {
-                                icon: 'pi bi-estadistica',
-                                label: 'Estadística',
-                                styleClass: 'itemcustom',
-                                visible: this.check.DashboardComponent,
-                                command: () => {
-                                    if (this.check.DashboardComponent) {
-                                        this.controlFullScreem();
-                                        this.sidebarVisible = true;
-                                    } else {
-                                        this.messageService.add({
-                                            severity: 'error',
-                                            summary: 'ERROR',
-                                            detail: 'No tienes permiso para esto',
-                                        });
-                                    }
-                                },
-                            },
-                            {
-                                icon: 'pi bi-ticcioce',
-                                label: 'TIC-CIOCE',
-                                styleClass: 'itemcustom',
-                                visible: this.check.DashboardComponent,
-                                command: () => {
-                                    if (
-                                        (this.opcionb ? true : false) &&
-                                        this.check
-                                            .CreateIncidentesDenunciaComponent &&
-                                        (this.latitud ? true : false) &&
-                                        (this.longitud ? true : false)
-                                    ) {
-                                    } else {
-                                        if (
-                                            (this.opcionb ? true : false) &&
-                                            this.check
-                                                .IndexIncidentesDenunciaComponent &&
-                                            this.check.DashboardComponent
-                                        ) {
-                                            this.mostrarincidente = false;
-                                            setTimeout(() => {
-                                                this.mostrarfiltro = false;
-                                                this.categoria = 'CIOCE';
-                                                this.subcategoria = undefined;
-                                                this.incidente();
-                                            }, 500);
-                                        } else {
-                                            this.messageService.add({
-                                                severity: 'error',
-                                                summary: 'ERROR',
-                                                detail: 'Primero selecciona un punto',
-                                            });
-                                        }
-                                    }
-                                },
-                            },
-                            {
-                                icon: 'pi bi-ecu',
-                                label: 'ECU-MUNICIPAL',
-                                styleClass: 'itemcustom',
-                                visible: this.check.DashboardComponent,
-                                command: () => {
-                                    if (
-                                        (this.opcionb ? true : false) &&
-                                        this.check
-                                            .CreateIncidentesDenunciaComponent &&
-                                        (this.latitud ? true : false) &&
-                                        (this.longitud ? true : false)
-                                    ) {
-                                    } else {
-                                        if (
-                                            (this.opcionb ? true : false) &&
-                                            this.check
-                                                .IndexIncidentesDenunciaComponent &&
-                                            this.check.DashboardComponent
-                                        ) {
-                                            this.mostrarincidente = false;
-                                            setTimeout(() => {
-                                                this.mostrarfiltro = false;
-                                                this.categoria =
-                                                    'ECU MUNICIPAL';
-                                                this.subcategoria = undefined;
-                                                this.incidente();
-                                            }, 500);
-                                        } else {
-                                            this.messageService.add({
-                                                severity: 'error',
-                                                summary: 'ERROR',
-                                                detail: 'Primero selecciona un punto',
-                                            });
-                                        }
-                                    }
-                                },
-                            },
-                            {
-                                icon: this.capaActiva
-                                    ? 'pi bi-barrio-on-custom'
-                                    : 'bi bi-barrio-off-custom',
-                                label: 'Barrios',
-                                styleClass: 'itemcustom',
-                                command: () => {
-                                    this.arr_polygon.length == 0
-                                        ? this.reloadmap()
-                                        : this.mostrarpoligono();
-                                },
-                            },
-                            {
-                                icon: !this.capaActivaWIFI
-                                    ? 'bi bi-wifi-on'
-                                    : 'bi bi-wifi-off',
-                                label: 'Puntos Wifi',
-                                styleClass: 'itemcustom',
-                                command: () => {
-                                    this.reloadWifi();
-                                },
-                            },
-                            {
-                                separator: true,
-                            },
-                            {
-                                icon: 'pi bi-ficha_sectorial',
-                                label: 'Fichas Sectorials',
-                                styleClass: 'itemcustom',
-                                expanded: true,
-                                items: [
-                                    {
-                                        icon: 'pi bi-ver-ficha_sectorial',
-                                        label: 'Ver Fichas Sectoriales',
-                                        styleClass: 'itemcustom',
-                                        command: () => {
-                                            if (
-                                                (this.opcionb ? true : false) &&
-                                                this.check
-                                                    .IndexFichaSectorialComponent
-                                            ) {
-                                                this.fichaTecnica();
-                                            } else {
-                                                this.messageService.add({
-                                                    severity: 'error',
-                                                    summary: 'ERROR',
-                                                    detail: 'Primero selecciona un lugar',
-                                                });
-                                            }
-                                        },
-                                    },
-                                    {
-                                        icon: 'pi bi-new-ficha_sectorial',
-                                        label: 'Nueva Ficha Sectorial',
-                                        styleClass: 'itemcustom',
-                                        visible:
-                                            this.check
-                                                .CreateFichaSectorialComponent,
-                                        command: () => {
-                                            if (
-                                                (this.opcionb ? true : false) &&
-                                                this.check
-                                                    .CreateFichaSectorialComponent
-                                            ) {
-                                            } else {
-                                                this.messageService.add({
-                                                    severity: 'error',
-                                                    summary: 'ERROR',
-                                                    detail: 'Primero selecciona un lugar',
-                                                });
-                                            }
-                                        },
-                                    },
-                                ],
-                            },
-                            {
-                                separator: true,
-                            },
-                            {
-                                icon: 'pi bi-incidentes',
-                                label: 'Incidentes',
-                                styleClass: 'itemcustom',
-                                expanded: true,
-                                visible:
-                                    this.check
-                                        .CreateIncidentesDenunciaComponent,
-                                items: [
-                                    {
-                                        icon: 'pi bi-ver-incidentes',
-                                        label: 'Ver Incidentes',
-                                        styleClass: 'itemcustom',
-                                        command: () => {
-                                            if (
-                                                (this.opcionb ? true : false) &&
-                                                this.check
-                                                    .IndexIncidentesDenunciaComponent
-                                            ) {
-                                                this.mostrarincidente = false;
-                                                setTimeout(() => {
-                                                    this.mostrarfiltro = true;
-                                                    this.categoria = undefined;
-                                                    this.subcategoria =
-                                                        undefined;
-                                                    this.incidente();
-                                                }, 500);
-                                            } else {
-                                                this.messageService.add({
-                                                    severity: 'error',
-                                                    summary: 'ERROR',
-                                                    detail: 'Primero selecciona un lugar',
-                                                });
-                                            }
-                                        },
-                                    },
-                                    {
-                                        icon: 'pi bi-new-incidentes',
-                                        label: 'Nuevo Incidente',
-                                        styleClass: 'itemcustom',
-
-                                        command: () => {
-                                            if (
-                                                (this.opcionb ? true : false) &&
-                                                this.check
-                                                    .CreateIncidentesDenunciaComponent &&
-                                                (this.latitud ? true : false) &&
-                                                (this.longitud ? true : false)
-                                            ) {
-                                            } else {
-                                                this.messageService.add({
-                                                    severity: 'error',
-                                                    summary: 'ERROR',
-                                                    detail: 'Primero selecciona un punto',
-                                                });
-                                            }
-                                        },
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                    {
-                        icon: 'pi pi-directionscustom',
-                        label: 'ESVIAL',
-                        styleClass: 'itemcustom',
-                        command: () => {
-                            if (
-                                (this.opcionb ? true : false) &&
-                                this.check.CreateIncidentesDenunciaComponent &&
-                                (this.latitud ? true : false) &&
-                                (this.longitud ? true : false)
-                            ) {
-                            } else {
-                                if (
-                                    (this.opcionb ? true : false) &&
-                                    this.check
-                                        .IndexIncidentesDenunciaComponent &&
-                                    this.check.DashboardComponent
-                                ) {
-                                    this.mostrarincidente = false;
-                                    setTimeout(() => {
-                                        this.mostrarfiltro = false;
-                                        this.categoria = 'ESVIAL';
-                                        this.subcategoria =
-                                            'Transporte terrestre y seguridad vial';
-                                        this.incidente();
-                                    }, 500);
-                                } else {
-                                    this.messageService.add({
-                                        severity: 'error',
-                                        summary: 'ERROR',
-                                        detail: 'Primero selecciona un punto',
-                                    });
-                                }
-                            }
-                        },
-                    },
-                    {
-                        icon: 'pi bi-dropletcustom',
-                        label: 'EPMAPSE',
-                        styleClass: 'itemcustom',
-                        command: () => {
-                            if (
-                                (this.opcionb ? true : false) &&
-                                this.check.CreateIncidentesDenunciaComponent &&
-                                (this.latitud ? true : false) &&
-                                (this.longitud ? true : false)
-                            ) {
-                            } else {
-                                if (
-                                    (this.opcionb ? true : false) &&
-                                    this.check
-                                        .IndexIncidentesDenunciaComponent &&
-                                    this.check.DashboardComponent
-                                ) {
-                                    this.mostrarincidente = false;
-                                    setTimeout(() => {
-                                        this.mostrarfiltro = false;
-                                        this.categoria =
-                                            'Agua Potable y Alcantarillado';
-                                        this.subcategoria = undefined;
-                                        this.incidente();
-                                    }, 500);
-                                } else {
-                                    this.messageService.add({
-                                        severity: 'error',
-                                        summary: 'ERROR',
-                                        detail: 'Primero selecciona un punto',
-                                    });
-                                }
-                            }
-                        },
-                    },
-                    {
-                        icon: 'pi bi-bomberos',
-                        label: 'BOMBEROS',
-                        styleClass: 'itemcustom',
-                        command: () => {
-                            if (
-                                (this.opcionb ? true : false) &&
-                                this.check.CreateIncidentesDenunciaComponent &&
-                                (this.latitud ? true : false) &&
-                                (this.longitud ? true : false)
-                            ) {
-                            } else {
-                                if (
-                                    (this.opcionb ? true : false) &&
-                                    this.check
-                                        .IndexIncidentesDenunciaComponent &&
-                                    this.check.DashboardComponent
-                                ) {
-                                    this.mostrarincidente = false;
-                                    setTimeout(() => {
-                                        this.mostrarfiltro = false;
-                                        this.categoria = 'Cuerpo de Bomberos';
-                                        this.subcategoria =
-                                            'Incendios / Desastres varios';
-                                        this.incidente();
-                                    }, 500);
-                                } else {
-                                    this.messageService.add({
-                                        severity: 'error',
-                                        summary: 'ERROR',
-                                        detail: 'Primero selecciona un punto',
-                                    });
-                                }
-                            }
-                        },
-                    },
-                    {
-                        icon: 'pi bi-camionprimne',
-                        label: 'Recolector',
-                        styleClass: 'itemcustom',
-                        items: [
-                            {
-                                icon: this.load_truck
-                                    ? 'pi bi-camionoff'
-                                    : 'pi bi-camionon',
-                                label: 'Ver Recolectores',
-                                styleClass: 'itemcustom',
-                                command: () => {
-                                    if (this.load_truck) {
-                                        this.load_truck = false;
-                                        this.cargarRecolectores();
-                                        // Iniciar el intervalo y almacenar el identificador devuelto en una variable
-                                        this.intervalId = setInterval(() => {
-                                            this.cargarRecolectores();
-                                        }, 2000);
-                                    } else {
-                                        // Detener el intervalo si está activo
-                                        clearInterval(this.intervalId);
-                                        this.load_truck = true;
-                                        this.clearMarkers();
-                                    }
-                                    setTimeout(() => {
-                                        this.updateItem();
-                                    }, 200);
-                                },
-                            },
-                            {
-                                icon: 'pi bi-path',
-                                label: 'Ver Rutas',
-                                styleClass: 'itemcustom',
-                                command: async () => {
-                                    if (this.rutas.length == 0) {
-                                        const aux = await this.getWFSgeojson(
-                                            this.urlgeoserruta2
-                                        );
-                                        if (aux && aux.features) {
-                                            this.rutas = aux.features;
-                                            this.visiblepath = true;
-                                        } else {
-                                            this.messageService.add({
-                                                severity: 'error',
-                                                summary: 'Ocurrio Algo',
-                                                detail: 'Sin conexión',
-                                            });
-                                        }
-                                    } else {
-                                        this.visiblepath = true;
-                                    }
-                                },
-                            },
-                            {
-                                icon: 'pi bi-trashcustom',
-                                label: 'Denuncia/Incidente',
-                                styleClass: 'itemcustom',
-                                command: () => {
-                                    if (
-                                        (this.opcionb ? true : false) &&
-                                        this.check
-                                            .CreateIncidentesDenunciaComponent &&
-                                        (this.latitud ? true : false) &&
-                                        (this.longitud ? true : false)
-                                    ) {
-                                    } else {
-                                        if (
-                                            (this.opcionb ? true : false) &&
-                                            this.check
-                                                .IndexIncidentesDenunciaComponent &&
-                                            this.check.DashboardComponent
-                                        ) {
-                                            this.mostrarincidente = false;
-                                            setTimeout(() => {
-                                                this.mostrarfiltro = false;
-                                                this.categoria = 'Higiene';
-                                                this.subcategoria =
-                                                    ' Servicio de recolección de desechos';
-                                                this.incidente();
-                                            }, 500);
-                                        } else {
-                                            this.messageService.add({
-                                                severity: 'error',
-                                                summary: 'ERROR',
-                                                detail: 'Primero selecciona un punto',
-                                            });
-                                        }
-                                    }
-                                },
-                            },
-                        ],
-                    },
-                ],
-            },
-        ];
-        //this.addtemplateSP();
-        this.addtemplateMn();
-        this.addtemplateFR();
-        this.addtemplateBG();
-    }
-    load_truck: boolean = true;
-    intervalId: any;
-    pushmenu: boolean = false;
-    addtemplateMn() {
-        setTimeout(() => {
-            const panelmenu = document.getElementById('panelmenu');
-
-            // Verificar si el speedDial ya está en el mapa antes de agregarlo
-            if (!this.pushmenu && this.mapCustom.controls) {
-                this.pushmenu = true;
-                const customControlDiv = document.createElement('div');
-                customControlDiv.appendChild(panelmenu);
-
-                // Añadir el speedDial al control solo si no está agregado
-                this.mapCustom.controls[
-                    google.maps.ControlPosition.LEFT_TOP
-                ].push(customControlDiv);
-            }
-        }, 200);
-    }
-    isMenuAdded(): boolean {
-        const speedDial = document.getElementById('speedDial');
-        const speedDialParent = speedDial.parentElement;
-        return (
-            speedDialParent &&
-            speedDialParent.tagName === 'DIV' &&
-            speedDialParent.parentNode === this.mapCustom.getDiv()
-        );
-    }
-
-    addtemplateSP() {
-        setTimeout(() => {
-            const speedDial = document.getElementsByTagName('p-speedDial')[0];
-
-            // Verificar si el speedDial ya está en el mapa antes de agregarlo
-            if (!this.isSpeedDialAdded()) {
-                const customControlDiv = document.createElement('div');
-                customControlDiv.appendChild(speedDial);
-
-                // Añadir el speedDial al control solo si no está agregado
-                this.mapCustom.controls[
-                    google.maps.ControlPosition.LEFT_TOP
-                ].push(customControlDiv);
-            }
-
-            if (this.speedDials) {
-                this.speedDials.forEach((speedDial, index) => {
-                    speedDial.show();
-                });
-            }
-        }, 1000);
-    }
-    isSpeedDialAdded(): boolean {
-        const speedDial = document.getElementsByTagName('p-speedDial')[0];
-        const speedDialParent = speedDial.parentElement;
-        return (
-            speedDialParent &&
-            speedDialParent.tagName === 'DIV' &&
-            speedDialParent.parentNode === this.mapCustom.getDiv()
-        );
-    }
-
     addtemplateBG() {
         setTimeout(() => {
             const speedDial = document.createElement('button');
@@ -898,6 +389,14 @@ export class MapaComponent implements OnInit {
         }
         return false; // El formulario no está agregado al mapa
     }
+    categorias: any[] = [];
+    categoria: string;
+    subcategoria: string;
+    mostrarfiltro: boolean = true;
+
+    load_truck: boolean = true;
+    intervalId: any;
+    pushmenu: boolean = false;
 
     //CONEXION DE FEATURE
     async getWFSgeojson(url: any) {
@@ -926,9 +425,13 @@ export class MapaComponent implements OnInit {
     //INICIALIZADOR DEL MAPA
     initmap() {
         this.loader.load().then(() => {
+            this.helperService.autocompleteService =
+                new google.maps.places.AutocompleteService();
+            this.helperService.geocoderService = new google.maps.Geocoder();
+
             const haightAshbury = { lat: 0.977035, lng: -79.655415 };
             this.mapCustom = new google.maps.Map(
-                document.getElementById('map') as HTMLElement,
+                document.getElementById('map2') as HTMLElement,
                 {
                     zoom: 15,
                     center: haightAshbury,
@@ -1030,14 +533,10 @@ export class MapaComponent implements OnInit {
             if (this.isFullscreen(elementToSendFullscreen)) {
                 this.mapCustom.setOptions({ mapTypeControl: true });
                 this.load_fullscreen = false;
-                this.addtemplateMn();
-                this.addtemplateFR();
                 this.exitFullscreen();
             } else {
                 this.load_fullscreen = true;
                 this.mapCustom.setOptions({ mapTypeControl: false });
-                this.addtemplateMn();
-                this.addtemplateFR();
                 this.requestFullscreen(elementToSendFullscreen);
             }
         };
@@ -1080,7 +579,6 @@ export class MapaComponent implements OnInit {
             (document as any).msExitFullscreen();
         }
     }
-
     onClickHandlerMap = async (e: any) => {
         if (this.mapCustom) {
             this.opcionb = false;
@@ -1102,7 +600,6 @@ export class MapaComponent implements OnInit {
         feature?: any
     ) {
         if (feature) this.opcionb = feature;
-        this.updateItem();
         this.deleteMarkers('');
         const map = this.mapCustom;
         const marker = new google.maps.Marker({
@@ -1198,7 +695,6 @@ export class MapaComponent implements OnInit {
             this.capaActiva = true;
             this.centrarMap();
         }
-        this.updateItem();
     }
     centrarMap() {
         if (this.mapCustom) {
@@ -1254,7 +750,6 @@ export class MapaComponent implements OnInit {
             this.poligonoview(false, feature);
         });
         this.centrarMap();
-        this.updateItem();
     }
 
     poligonoview(ver: boolean, featurecall: any, search?: boolean) {
@@ -1278,7 +773,6 @@ export class MapaComponent implements OnInit {
                 }
                 //this.myControl.setValue(feature.properties.nombre);
                 this.opcionb = feature;
-                this.updateItem();
             }
             const geometry = feature.geometry;
             const properties = feature.properties;
@@ -1364,7 +858,6 @@ export class MapaComponent implements OnInit {
           }*/
                     this.poligonoview(true, feature);
                     buscarbol = true;
-                    this.updateItem();
                     break;
                 }
             }
@@ -1495,7 +988,6 @@ export class MapaComponent implements OnInit {
                         'Ubicación',
                         'Tu ubicación Actual'
                     );
-                    this.updateItem();
                     this.poligonoposition();
                 },
                 (error) => {
@@ -1540,86 +1032,6 @@ export class MapaComponent implements OnInit {
             this.showOptions = false;
         }, 200);
     }
-    arr_wifi: any[] = [];
-    async reloadWifi() {
-        if (this.capaActivaWIFI) {
-            if (this.arr_wifi.length != 0) {
-                this.arr_wifi.forEach((marker) =>
-                    marker.setMap(this.mapCustom)
-                );
-            } else {
-                this.arr_wifi = [];
-                await this.getWFSgeojson(this.urlgeoserwifi).then((e) => {
-                    const geoJson = e;
-                    geoJson.features.forEach((feature: any) => {
-                        const latlng = new google.maps.LatLng(
-                            feature.geometry.coordinates[1],
-                            feature.geometry.coordinates[0]
-                        );
-                        const marker = new google.maps.Marker({
-                            title: feature.id,
-                            position: latlng,
-                            map: this.mapCustom,
-                            icon: {
-                                url: './assets/icon/router-fill.svg',
-                                scaledSize: new google.maps.Size(25, 41),
-                                anchor: new google.maps.Point(13, 41),
-                            },
-                        });
-                        const infoWindow = new google.maps.InfoWindow({
-                            content: `
-                    <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px">
-                        <b style="text-align: center">${feature.properties.punto}</b>
-                    </div>`,
-                        });
-                        marker.addListener('click', () => {
-                            this.mapCustom.setCenter(latlng);
-                            //this.mapCustom.setZoom(18);
-                            infoWindow.open(this.mapCustom, marker);
-                        });
-
-                        this.arr_wifi.push(marker);
-                    });
-                });
-                this.arr_wifi.forEach((marker) =>
-                    marker.setMap(this.mapCustom)
-                );
-            }
-            this.capaActivaWIFI = false;
-            //this.capaActivaWIFIpop = true;
-        } else {
-            this.arr_wifi.forEach((marker) => marker.setMap(null));
-            this.capaActivaWIFI = true;
-        }
-
-        this.updateItem();
-    }
-    fichaTecnica() {
-        //console.log('actividad');
-        this.controlFullScreem();
-        this.mostrarficha = false;
-        this.mostrarincidente = false;
-        if (this.opcionb) {
-            this.mostrarficha = true;
-        }
-        if (this.mapCustom) {
-            //this.map.off('click', this.onClickHandlerMap);
-            if (this.mostrarficha) {
-            }
-        }
-    }
-    incidente() {
-        this.controlFullScreem();
-        this.mostrarficha = false;
-        this.mostrarincidente = false;
-        if (this.opcionb) {
-            this.mostrarincidente = true;
-        }
-        if (this.mapCustom) {
-            if (this.mostrarincidente) {
-            }
-        }
-    }
 
     controlFullScreem() {
         const elementToSendFullscreen = this.mapCustom.getDiv()
@@ -1627,8 +1039,6 @@ export class MapaComponent implements OnInit {
         if (this.isFullscreen(elementToSendFullscreen)) {
             this.mapCustom.setOptions({ mapTypeControl: true });
             this.load_fullscreen = false;
-            this.addtemplateMn();
-            this.addtemplateFR();
             this.exitFullscreen();
         }
     }
@@ -1701,32 +1111,72 @@ export class MapaComponent implements OnInit {
             this.pathson.push(route);
         });
     }
-    viewwifi(feature: any) {
-        if (typeof feature !== 'string') {
-            const marker = this.arr_wifi.find((element) => {
-                if (element.title == feature.id) {
-                    return element;
+
+    incidencia: FormGroup<any>;
+
+    visible_categoria: boolean = false;
+    visible_subcategoria: boolean = false;
+
+    incidente() {
+        this.visible_categoria = true;
+        this.listCategoria();
+    }
+    listCategoria() {
+        this.list.listarCategorias(this.token).subscribe((response) => {
+            if (response.data) {
+                this.categorias = response.data;
+                console.log(this.categorias);
+            }
+        });
+    }
+    subcategorias: any[] = [];
+    onCategoriaClick(cateogria: any) {
+        console.log(cateogria);
+        this.incidencia.get('categoria').setValue(cateogria);
+        //this.visible_categoria = false;
+        this.visible_subcategoria = true;
+        this.list
+            .listarSubcategorias(this.token, 'categoria', cateogria._id)
+            .subscribe((response) => {
+                console.log(response);
+                if (response.data) {
+                    this.subcategorias = response.data;
                 }
             });
-            if (marker) {
-                const latlng = new google.maps.LatLng(
-                    feature.geometry.coordinates[1],
-                    feature.geometry.coordinates[0]
-                );
-                this.latitud = feature.geometry.coordinates[1];
-                this.longitud = feature.geometry.coordinates[0];
-                const infoWindow = new google.maps.InfoWindow({
-                    content: `
-              <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px">
-                  <b style="text-align: center">${feature.properties.punto}</b>
-              </div>`,
-                });
-                this.mapCustom.setCenter(latlng);
-                //this.mapCustom.setZoom(18);
+    }
+    visible_map: boolean = false;
 
-                infoWindow.open(this.mapCustom, marker);
-                this.poligonoposition();
+    onSubCategoriaClick(subcategoria: any): void {
+        console.log(subcategoria);
+        this.visible_map = true;
+        setTimeout(() => {
+            this.initmap();
+            this.addtemplateBG();
+            this.addtemplateFR();
+            this.getLocation();
+        }, 500);
+    }
+    iconPaths: { [key: string]: string } = {};
+
+    getIconPath(categoria: any): string {
+        if (!this.iconPaths[categoria.nombre]) {
+            const svgPath = `assets/categorias/${categoria.nombre}.svg`;
+            const pngPath = `assets/categorias/${categoria.nombre}.png`;
+
+            // Verificar si el archivo SVG existe
+            if (this.fileExists(svgPath)) {
+                this.iconPaths[categoria.nombre] = svgPath;
+            } else {
+                this.iconPaths[categoria.nombre] = pngPath;
             }
         }
+
+        return this.iconPaths[categoria.nombre];
+    }
+    fileExists(url: string): boolean {
+        const http = new XMLHttpRequest();
+        http.open('HEAD', url, false);
+        http.send();
+        return http.status !== 404;
     }
 }

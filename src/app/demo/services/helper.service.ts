@@ -59,8 +59,8 @@ export class HelperService {
 
     actualizarToken(token: any) {}
 
-    private autocompleteService: google.maps.places.AutocompleteService;
-    private geocoderService: google.maps.Geocoder;
+    public autocompleteService: google.maps.places.AutocompleteService;
+    public geocoderService: google.maps.Geocoder;
 
     constructor(
         private dialogService: DialogService,
@@ -69,8 +69,7 @@ export class HelperService {
         private filterService: FilterService,
         private listarService: ListService
     ) {
-        this.autocompleteService = new google.maps.places.AutocompleteService();
-        this.geocoderService = new google.maps.Geocoder();
+        
     }
 
     searchStreets(

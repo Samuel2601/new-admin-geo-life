@@ -87,24 +87,64 @@ export class LoginComponent implements OnInit {
         this.route.queryParams.subscribe((params) => {
             if (params && params['correo'] && params['password']) {
                 this.loginForm.get('correo')?.setValue(params['correo']);
-                this.loginForm.get('password')?.setValue(params['password']);
+                this.loginForm.get('pass')?.setValue(params['password']);
                 this.playAudio();
                 bolroutin = false;
             }
         });
         if (bolroutin) {
-            this.nombreUsuario = this.helper.decryptDataLogin(
-                this.cookieService.get('nombreUsuario')
-            );
-            this.fotoUsuario = this.helper.decryptDataLogin(
-                this.cookieService.get('fotoUsuario')
-            );
-            const correoCookie = this.cookieService.get('correo');
-            if (correoCookie) {
+            this.nombreUsuario = this.helper.isMobil()
+                ? this.helper.decryptDataLogin(
+                      localStorage.getItem('nombreUsuario')
+                  )
+                : this.helper.decryptDataLogin(
+                      this.cookieService.get('nombreUsuario')
+                  );
+            this.fotoUsuario = this.helper.isMobil()
+                ? this.helper.decryptDataLogin(
+                      localStorage.getItem('fotoUsuario')
+                  )
+                : this.helper.decryptDataLogin(
+                      this.cookieService.get('fotoUsuario')
+                  );
+            const correoCookieuser = this.helper.isMobil()
+                ? localStorage.getItem('correo')
+                : this.cookieService.get('correo');
+            const correoCookiepass = this.helper.isMobil()
+                ? localStorage.getItem('pass')
+                : this.cookieService.get('pass');
+            if (correoCookieuser) {
                 try {
                     const correoDesencriptado =
-                        this.helper.decryptDataLogin(correoCookie);
+                        this.helper.decryptDataLogin(correoCookieuser);
                     this.loginForm.get('correo').setValue(correoDesencriptado);
+                    if (this.helper.isMobil() && correoCookiepass) {
+                        // Realizar autenticación biométrica
+                        const result = await NativeBiometric.isAvailable();
+                        if (result.isAvailable) {
+                            const verified =
+                                await NativeBiometric.verifyIdentity({
+                                    reason: 'Para un facil inicio de sesión',
+                                    title: 'Inicio de Sesión',
+                                    subtitle: 'Coloque su dedo en el sensor.',
+                                    description:
+                                        'Se requiere Touch ID o Face ID',
+                                })
+                                    .then(() => true)
+                                    .catch(() => false);
+
+                            if (verified) {
+                                const correoDesencriptado =
+                                    this.helper.decryptDataLogin(
+                                        correoCookiepass
+                                    );
+                                this.loginForm
+                                    .get('pass')
+                                    .setValue(correoDesencriptado);
+                                this.postLogin();
+                            }
+                        }
+                    }
                 } catch (error) {
                     console.error('Error al desencriptar el correo:', error);
                     // Manejar el error de desencriptación de manera adecuada
@@ -160,24 +200,51 @@ export class LoginComponent implements OnInit {
                     if (response.token) {
                         const data = response.data;
                         if (data) {
-                            this.cookieService.set(
-                                'nombreUsuario',
-                                this.helper.encryptDataLogin(
-                                    data.nombres,
-                                    'buzon'
-                                )
-                            );
-                            this.cookieService.set(
-                                'fotoUsuario',
-                                this.helper.encryptDataLogin(data.foto, 'buzon')
-                            );
-                            this.cookieService.set(
-                                'correo',
-                                this.helper.encryptDataLogin(
-                                    data.correo,
-                                    'buzon'
-                                )
-                            );
+                            if (!this.helper.isMobil()) {
+                                this.cookieService.set(
+                                    'nombreUsuario',
+                                    this.helper.encryptDataLogin(
+                                        data.nombres,
+                                        'buzon'
+                                    )
+                                );
+                                this.cookieService.set(
+                                    'fotoUsuario',
+                                    this.helper.encryptDataLogin(
+                                        data.foto,
+                                        'buzon'
+                                    )
+                                );
+                                this.cookieService.set(
+                                    'correo',
+                                    this.helper.encryptDataLogin(
+                                        data.correo,
+                                        'buzon'
+                                    )
+                                );
+                            } else {
+                                localStorage.setItem(
+                                    'nombreUsuario',
+                                    this.helper.encryptDataLogin(
+                                        data.nombres,
+                                        'buzon'
+                                    )
+                                );
+                                localStorage.setItem(
+                                    'fotoUsuario',
+                                    this.helper.encryptDataLogin(
+                                        data.foto,
+                                        'buzon'
+                                    )
+                                );
+                                localStorage.setItem(
+                                    'correo',
+                                    this.helper.encryptDataLogin(
+                                        data.correo,
+                                        'buzon'
+                                    )
+                                );
+                            }
                         }
                         if (!this.loginForm.get('save')?.value) {
                             sessionStorage.setItem('token', response.token);
@@ -205,18 +272,21 @@ export class LoginComponent implements OnInit {
                             summary: 'Ingreso',
                             detail: 'Bienvenido',
                         });
-                        if (this.helper.isMobil()) {
+                        if (
+                            this.helper.isMobil() &&
+                            !localStorage.getItem('pass')
+                        ) {
                             // Realizar autenticación biométrica
                             const result = await NativeBiometric.isAvailable();
                             if (result.isAvailable) {
                                 const verified =
                                     await NativeBiometric.verifyIdentity({
-                                        reason: 'For easy log in',
-                                        title: 'Log in',
+                                        reason: 'Para un facil inicio de sesión',
+                                        title: 'Inicio de Sesión',
                                         subtitle:
-                                            'Place your finger on the sensor',
+                                            'Coloque su dedo en el sensor.',
                                         description:
-                                            'Touch ID or Face ID required',
+                                            'Se requiere Touch ID o Face ID',
                                     })
                                         .then(() => true)
                                         .catch(() => false);
@@ -228,7 +298,15 @@ export class LoginComponent implements OnInit {
                                         detail: 'Sin biometria',
                                     });
                                     // Si la autenticación biométrica falla, muestra un mensaje al usuario o realiza alguna acción adecuada
-                                    return;
+                                    //return;
+                                } else {
+                                    localStorage.setItem(
+                                        'pass',
+                                        this.helper.encryptDataLogin(
+                                            user.password,
+                                            'buzon'
+                                        )
+                                    );
                                 }
                             }
                         }

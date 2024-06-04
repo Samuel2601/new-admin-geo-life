@@ -247,12 +247,18 @@
             </form>
             
             <div *ngIf="incidencia.get('descripcion')" [innerHTML]="incidencia.get('descripcion').value"></div>
-            <div class="flex pt-4 justify-content-start">
+            <div class="flex pt-4 justify-content-between">
                 <p-button
                     label="Atrás"
                     icon="pi pi-arrow-left"
                     (onClick)="prevCallback.emit(); recargarmapa()"
                 />
+                <p-button
+                label="Enviar"
+                icon="pi pi-send"
+                iconPos="right"
+                (onClick)="enviar()"
+            />
             </div>
         </ng-template>
     </p-stepperPanel>

@@ -1141,4 +1141,7 @@ export class MapaComponent implements OnInit {
         http.send();
         return http.status !== 404;
     }
+    enviar(){
+        console.log(this.incidencia.value);
+    }
 }

@@ -242,6 +242,11 @@
             let-index="index"
         >
             Describre tu problema
+            <form [formGroup]="incidencia">
+                <p-editor formControlName="descripcion" [style]="{ height: '320px' }" />
+            </form>
+            
+            <div *ngIf="incidencia.get('descripcion')" [innerHTML]="incidencia.get('descripcion').value"></div>
             <div class="flex pt-4 justify-content-start">
                 <p-button
                     label="Atrás"

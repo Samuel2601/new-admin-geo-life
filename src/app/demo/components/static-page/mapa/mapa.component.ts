@@ -63,6 +63,8 @@ import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { StepperModule } from 'primeng/stepper';
+import { EditorModule } from 'primeng/editor';
+import { ReactiveFormsModule } from '@angular/forms';
 interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
     id?: string;
 }
@@ -82,6 +84,8 @@ interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
         TableModule,
         AutoCompleteModule,
         StepperModule,
+        EditorModule,
+        ReactiveFormsModule
     ],
     templateUrl: './mapa.component.html',
     styleUrl: './mapa.component.scss',

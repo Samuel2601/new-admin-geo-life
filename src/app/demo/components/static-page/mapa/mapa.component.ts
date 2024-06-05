@@ -27,7 +27,12 @@ import { Subscription, debounceTime, map } from 'rxjs';
 import { Capacitor, Plugins } from '@capacitor/core';
 const { Geolocation } = Plugins;
 import { App } from '@capacitor/app';
-import { MenuItem, MessageService } from 'primeng/api';
+import {
+    ConfirmationService,
+    MenuItem,
+    MessageService,
+    PrimeNGConfig,
+} from 'primeng/api';
 declare global {
     interface JQueryStatic {
         Finger: any;
@@ -65,6 +70,19 @@ import { TableModule } from 'primeng/table';
 import { StepperModule } from 'primeng/stepper';
 import { EditorModule } from 'primeng/editor';
 import { ReactiveFormsModule } from '@angular/forms';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { FileUpload, FileUploadModule } from 'primeng/fileupload';
+import {
+    Camera,
+    CameraResultType,
+    CameraSource,
+    Photo,
+} from '@capacitor/camera';
+import { GalleriaModule } from 'primeng/galleria';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { BadgeModule } from 'primeng/badge';
 interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
     id?: string;
 }
@@ -85,7 +103,14 @@ interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
         AutoCompleteModule,
         StepperModule,
         EditorModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        InputTextareaModule,
+        FloatLabelModule,
+        FileUploadModule,
+        GalleriaModule,
+        ConfirmDialogModule,
+        ToastModule,
+        BadgeModule,
     ],
     templateUrl: './mapa.component.html',
     styleUrl: './mapa.component.scss',
@@ -94,6 +119,7 @@ interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
         DialogService,
         DynamicDialogConfig,
         DynamicDialogRef,
+        ConfirmationService,
     ],
 })
 export class MapaComponent implements OnInit {
@@ -206,17 +232,19 @@ export class MapaComponent implements OnInit {
         private admin: AdminService,
         private list: ListService,
         private appRef: ApplicationRef,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private confirmationService: ConfirmationService,
+        private config: PrimeNGConfig
     ) {
         this.incidencia = this.fb.group({
-            direccion_geo: [{ value: '', disabled: true }],
-            ciudadano: [{ value: '', disabled: true }, Validators.required],
-            estado: [{ value: '', disabled: true }, Validators.required],
-            categoria: [{ value: '', disabled: true }, Validators.required],
-            subcategoria: [{ value: '', disabled: true }, Validators.required],
-            descripcion: [{ value: '', disabled: true }, Validators.required],
-            encargado: [{ value: '', disabled: true }, Validators.required],
-            respuesta: [{ value: '', disabled: true }, Validators.required],
+            direccion_geo: [{ value: '' }],
+            ciudadano: [{ value: '' }, Validators.required],
+            estado: [{ value: '' }, Validators.required],
+            categoria: [{ value: '' }, Validators.required],
+            subcategoria: [{ value: '' }, Validators.required],
+            descripcion: '',
+            encargado: [{ value: '' }, Validators.required],
+            respuesta: [{ value: '' }, Validators.required],
             evidencia: [[]],
             view: true,
         });
@@ -1095,27 +1123,26 @@ export class MapaComponent implements OnInit {
     onSubCategoriaClick(subcategoria: any): void {
         console.log(subcategoria);
         this.visible_map = true;
+        this.incidencia.get('subcategoria').setValue(subcategoria);
     }
     recargarmapa() {
         setTimeout(() => {
             this.initmap();
             this.addtemplateBG();
             this.addtemplateFR();
-            console.log(this.opcionb,this.latitud,this.longitud);
-            if(this.latitud&&this.longitud){
+            console.log(this.opcionb, this.latitud, this.longitud);
+            if (this.latitud && this.longitud) {
                 setTimeout(() => {
                     this.addMarker(
                         { lat: this.latitud, lng: this.longitud },
                         'Ubicación',
                         'Tu ubicación elejida'
                     );
-                    this.poligonoposition();  
-                }, 1000);                
-            }else{
+                    this.poligonoposition();
+                }, 1000);
+            } else {
                 this.getLocation();
             }
-
-            
         }, 500);
     }
     iconPaths: { [key: string]: string } = {};
@@ -1141,7 +1168,230 @@ export class MapaComponent implements OnInit {
         http.send();
         return http.status !== 404;
     }
-    enviar(){
+    @ViewChild('fileUpload') fileUpload: FileUpload;
+    enviar() {
         console.log(this.incidencia.value);
+        if (this.selectedFiles.length > 0) {
+            this.confirmationService.confirm({
+                message:
+                    'Tienes imágenes sin cargar. ¿Deseas cargarlas antes de enviar?',
+                header: 'Confirmación',
+                icon: 'pi pi-exclamation-triangle',
+                accept: () => {
+                    // Acción de cargar las imágenes
+                    this.cargarImagenes();
+                },
+                reject: () => {
+                    // Acción de enviar sin cargar las imágenes
+                    this.procederSinCargar();
+                },
+            });
+        } else {
+            this.procederSinCargar();
+        }
+    }
+    messages: any[] = []; // Declaración de mensajes
+    cargarImagenes() {
+        // Lógica para cargar las imágenes
+        // Simulación de carga
+        setTimeout(() => {
+            this.messages.push({
+                severity: 'success',
+                summary: 'Éxito',
+                detail: 'Imágenes cargadas correctamente',
+            });
+            this.procederSinCargar();
+        }, 1000);
+    }
+
+    procederSinCargar() {
+        // Lógica para proceder sin cargar las imágenes
+        console.log('Enviado sin cargar imágenes adicionales');
+    }
+    upload: boolean = true;
+    imagenesSeleccionadas: any[] = [];
+    load_carrusel = false;
+    public file: Array<any> = [];
+    selectedFiles: File[] = [];
+    mostrargale = false;
+    onFilesSelected(event: any): void {
+        //console.log(event);
+        this.load_carrusel = false;
+        const files: FileList = event.files;
+
+        for (let file of event.files) {
+            this.selectedFiles.push(file);
+            const objectURL = URL.createObjectURL(file);
+            this.imagenesSeleccionadas.push({ itemImageSrc: objectURL });
+            if (this.selectedFiles.length == 5) {
+                this.upload = false;
+            }
+        }
+
+        this.messageService.add({
+            severity: 'info',
+            summary: 'Excelente',
+            detail: this.selectedFiles.length + 'Imagenes subidas',
+        });
+        this.mostrargale = true;
+    }
+    async tomarFotoYEnviar(event: any) {
+        this.load_carrusel = false;
+        this.upload = true;
+        const image = await Camera.getPhoto({
+            quality: 90,
+            allowEditing: false,
+            resultType: CameraResultType.Base64,
+            source: CameraSource.Prompt,
+            promptLabelPhoto: 'Seleccionar de la galería',
+            promptLabelPicture: 'Tomar foto',
+        });
+        if (image && image.base64String && this.selectedFiles.length <= 5) {
+            const byteCharacters = atob(image.base64String);
+            const byteNumbers = new Array(byteCharacters.length);
+
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Puedes ajustar el tipo según el formato de tu imagen
+            let im = new File([blob], 'prueba', { type: 'image/jpeg' });
+            this.selectedFiles.push(im);
+
+            const reader = new FileReader();
+            reader.onload = (e: any) => {
+                this.imagenesSeleccionadas.push({
+                    itemImageSrc: e.target.result,
+                });
+            };
+            setTimeout(() => {
+                this.mostrargale = true;
+            }, 1000);
+            reader.readAsDataURL(im);
+            this.load_carrusel = true;
+
+            if (this.selectedFiles.length == 5) {
+                this.upload = false;
+            }
+        } else {
+            this.messageService.add({
+                severity: 'warning',
+                summary: 'MAX img',
+                detail: 'Solo puede enviar 5 imangenes',
+            });
+            this.load_carrusel = true;
+            //console.error('Error al obtener la cadena base64 de la imagen.');
+        }
+    }
+    displayCustom: boolean | undefined;
+
+    activeIndex: number = 0;
+
+    images: any[] | undefined;
+    imageClick(index: number) {
+        this.activeIndex = index;
+        this.displayCustom = true;
+    }
+    responsiveOptions = [
+        {
+            breakpoint: '1024px',
+            numVisible: 5,
+        },
+        {
+            breakpoint: '768px',
+            numVisible: 3,
+        },
+        {
+            breakpoint: '560px',
+            numVisible: 1,
+        },
+    ];
+
+    ///FILE UPLOAD
+    files = [];
+    totalSize: number = 0;
+    totalSizePercent: number = 0;
+
+    choose(event, callback) {
+        callback();
+    }
+    clearFiles(clearCallback: Function) {
+        clearCallback();
+        this.totalSize = 0;
+        this.totalSizePercent = 0;
+        this.files = [];
+    }
+    load_remove: boolean = true;
+    onRemoveTemplatingFile(event, file, removeFileCallback, index) {
+        this.load_remove = false;
+        removeFileCallback(event, index);
+        console.log(this.files);
+        const fileIndex = this.files.indexOf(file);
+        if (fileIndex > -1) {
+            this.files.splice(fileIndex, 1);
+            this.totalSize -= parseInt(this.formatSize(file.size));
+            this.totalSizePercent = this.totalSize / 10;
+        }
+        setTimeout(() => {
+            this.load_remove = true;
+        }, 1000);
+    }
+
+    onClearTemplatingUpload(clear) {
+        clear();
+        this.totalSize = 0;
+        this.totalSizePercent = 0;
+    }
+
+    onTemplatedUpload() {
+        this.messageService.add({
+            severity: 'info',
+            summary: 'Exito',
+            detail: 'Imagenes Listos para enviar',
+            life: 3000,
+        });
+    }
+
+    onSelectedFiles(event) {
+        const selectedFiles = event.currentFiles;
+        const totalFiles = this.files.length + selectedFiles.length;
+
+        if (totalFiles > 5) {
+            const excessFiles = totalFiles - 5;
+            selectedFiles.splice(-excessFiles, excessFiles);
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Ya estás al límite',
+                detail: 'Solo puede mandar 5 imagenes.',
+                life: 3000,
+            });
+        }
+
+        this.files = [...this.files, ...selectedFiles];
+
+        this.files.forEach((file) => {
+            this.totalSize += parseInt(this.formatSize(file.size));
+        });
+        this.totalSizePercent = this.totalSize / 10;
+    }
+    selectedFilesnew: any[] = [];
+    uploadEvent(callback) {
+        callback();
+        this.selectedFilesnew = this.files;
+        this.files = [];
+    }
+
+    formatSize(bytes) {
+        const k = 1024;
+        const dm = 3;
+        const sizes = this.config.translation.fileSizeTypes;
+        if (bytes === 0) {
+            return `0 ${sizes[0]}`;
+        }
+
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        const formattedSize = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
+        return `${formattedSize} ${sizes[i]}`;
     }
 }

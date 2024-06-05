@@ -241,24 +241,287 @@
             let-prevCallback="prevCallback"
             let-index="index"
         >
-            Describre tu problema
             <form [formGroup]="incidencia">
-                <p-editor formControlName="descripcion" [style]="{ height: '320px' }" />
+                <h4>Describrenos tu problemática</h4>
+                <textarea
+                    [style]="{
+                        height: '320px',
+                        width: '-webkit-fill-available'
+                    }"
+                    rows="5"
+                    cols="30"
+                    pInputTextarea
+                    formControlName="descripcion"
+                >
+                </textarea>
             </form>
-            
-            <div *ngIf="incidencia.get('descripcion')" [innerHTML]="incidencia.get('descripcion').value"></div>
+            <h4>Puedes agregar fotos, es opcional. (maximo 5 fotos)</h4>
+            <div class="mb-3" *ngIf="!isMobil() && upload">
+                <p-toast />
+                <p-fileUpload
+                    name="myfile[]"
+                    url="https://www.primefaces.org/cdn/api/upload.php"
+                    [multiple]="true"
+                    accept="image/*"
+                    [maxFileSize]="1000000"
+                    [fileLimit]="5 - files.length"
+                    (onUpload)="onTemplatedUpload()"
+                    (onSelect)="onSelectedFiles($event)"
+                >
+                    <ng-template
+                        pTemplate="header"
+                        let-files
+                        let-chooseCallback="chooseCallback"
+                        let-clearCallback="clearCallback"
+                        let-uploadCallback="uploadCallback"
+                    >
+                        <div
+                            class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2"
+                        >
+                            <div class="flex gap-2">
+                                <p-button
+                                    (onClick)="choose($event, chooseCallback)"
+                                    icon="pi pi-images"
+                                    [rounded]="true"
+                                    [outlined]="true"
+                                />
+                                <p-button
+                                    (onClick)="uploadEvent(uploadCallback)"
+                                    icon="pi pi-cloud-upload"
+                                    [rounded]="true"
+                                    [outlined]="true"
+                                    severity="success"
+                                    [disabled]="!files || files.length === 0"
+                                />
+                                <p-button
+                                    (onClick)=" clearFiles(clearCallback)"
+                                    icon="pi pi-times"
+                                    [rounded]="true"
+                                    [outlined]="true"
+                                    severity="danger"
+                                    [disabled]="!files || files.length === 0"
+                                />
+                            </div>
+                            <span>{{ totalSize / 1024 | number: '1.2-2' }} MB / 5 MB</span>
+                            
+                            <p-progressBar
+                                [value]="files?.length"
+                                [showValue]="false"
+                                styleClass="md:w-20rem h-1rem w-full md:ml-auto"
+                                [ngClass]="{
+                                    'exceeded-progress-bar': totalSizePercent > 100
+                                }"
+                            >
+                                <span class="white-space-nowrap" *ngIf="totalSize>0">
+                                    {{ totalSize/ 1024| number: '1.2-2' }}MB / 5MB
+                                </span>
+                            </p-progressBar>
+                        </div>
+                    </ng-template>
+                    <ng-template
+                        pTemplate="content"
+                        let-uploadedFiles="uploadedFiles"
+                        let-removeFileCallback="removeFileCallback"
+                        let-removeUploadedFileCallback="removeUploadedFileCallback"
+                    >
+                        <div *ngIf="files?.length > 0">
+                            <h5>Pendiente</h5>
+                            <div class="flex flex-wrap p-0 sm:p-5 gap-5">
+                                <div
+                                    *ngFor="let file of files; let i = index"
+                                    class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3"
+                                >
+                                    <div>
+                                        <img
+                                            role="presentation"
+                                            [alt]="file.name"
+                                            [src]="file.objectURL"
+                                            width="100"
+                                            height="50"
+                                        />
+                                    </div>
+                                    <span class="font-semibold">{{
+                                        file.name
+                                    }}</span>
+                                    <div>{{ formatSize(file.size) }}</div>
+                                    <p-badge
+                                        value="Pending"
+                                        severity="warning"
+                                    />
+                                    <p-button
+                                        icon="pi pi-times"
+                                        (click)="
+                                            onRemoveTemplatingFile(
+                                                $event,
+                                                file,
+                                                removeFileCallback,
+                                                index
+                                            )
+                                        "
+                                        [outlined]="true"
+                                        [rounded]="true"
+                                        severity="danger"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="selectedFilesnew?.length > 0">
+                            <h5>Completado</h5>
+                            <div class="flex flex-wrap p-0 sm:p-5 gap-5">
+                                <div
+                                    *ngFor="
+                                        let file of selectedFilesnew;
+                                        let i = index
+                                    "
+                                    class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3"
+                                >
+                                    <div>
+                                        <img
+                                            role="presentation"
+                                            [alt]="file.name"
+                                            [src]="file.objectURL"
+                                            width="100"
+                                            height="50"
+                                        />
+                                    </div>
+                                    <span class="font-semibold">{{
+                                        file.name
+                                    }}</span>
+                                    <div>{{ formatSize(file.size) }}</div>
+                                    <p-badge
+                                        value="Completed"
+                                        class="mt-3"
+                                        severity="success"
+                                    />
+                                    <p-button
+                                        icon="pi pi-times"
+                                        (onClick)="
+                                            removeUploadedFileCallback(index)
+                                        "
+                                        [outlined]="true"
+                                        [rounded]="true"
+                                        severity="danger"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="file"> </ng-template>
+                    <ng-template pTemplate="empty">
+                        <div
+                            class="flex align-items-center justify-content-center flex-column"
+                        >
+                            <i
+                                class="pi pi-cloud-upload border-2 border-circle p-5 text-8xl text-400 border-400"
+                            ></i>
+                            <p class="mt-4 mb-0">
+                                Drag and drop files to here to upload.
+                            </p>
+                        </div>
+                    </ng-template>
+                </p-fileUpload>
+
+                <p-fileUpload
+                    chooseLabel="Seleccionar"
+                    uploadLabel="Cargar"
+                    cancelLabel="Cancelar"
+                    name="demo[]"
+                    url="https://www.primefaces.org/cdn/api/upload.php"
+                    (onUpload)="onFilesSelected($event)"
+                    [multiple]="true"
+                    accept="image/*"
+                    [maxFileSize]="5000000"
+                    [fileLimit]="5 - selectedFiles.length"
+                    invalidFileLimitMessageSummary="Se superó el número máximo de archivos"
+                >
+                    <ng-template pTemplate="content">
+                        <ul *ngIf="selectedFiles.length">
+                            <li
+                                *ngFor="
+                                    let itemfile of selectedFiles;
+                                    let i = index
+                                "
+                            >
+                                {{ itemfile.name }} - {{ itemfile.size }} bytes
+                            </li>
+                        </ul>
+                    </ng-template>
+                </p-fileUpload>
+            </div>
+            <div class="mb-3" *ngIf="isMobil() && upload">
+                <h4 for="formFileMultiple" class="form-label">
+                    <p-button
+                        id="fotoButton"
+                        icon="pi bi-camera2-custom"
+                        [raised]="true"
+                        [outlined]="true"
+                        label="Añadir nueva Foto"
+                        (click)="tomarFotoYEnviar($event)"
+                    ></p-button>
+                </h4>
+            </div>
+            <div class="mb-3" *ngIf="mostrargale">
+                <p-button
+                    class="m-3"
+                    *ngIf="imagenesSeleccionadas.length > 0"
+                    icon="pi bi-box-arrow-up-right"
+                    [raised]="true"
+                    [outlined]="true"
+                    label="Ver Fotos"
+                    (click)="imageClick(0)"
+                ></p-button>
+
+                <p-button
+                    class="m-3"
+                    *ngIf="imagenesSeleccionadas.length > 0"
+                    label="Borrar Fotos"
+                    severity="warning"
+                    (onClick)="
+                        upload = true;
+                        imagenesSeleccionadas = [];
+                        selectedFiles = []
+                    "
+                    icon="pi pi-trash"
+                ></p-button>
+
+                <p-galleria
+                    [value]="imagenesSeleccionadas"
+                    [(visible)]="displayCustom"
+                    [(activeIndex)]="activeIndex"
+                    [responsiveOptions]="responsiveOptions"
+                    [containerStyle]="{ 'max-width': '850px' }"
+                    [numVisible]="7"
+                    [circular]="true"
+                    [fullScreen]="true"
+                    [showItemNavigators]="true"
+                    [showThumbnails]="false"
+                >
+                    <ng-template pTemplate="item" let-item>
+                        <img
+                            [src]="item.itemImageSrc"
+                            style="width: 60%; display: block"
+                        />
+                    </ng-template>
+                </p-galleria>
+            </div>
             <div class="flex pt-4 justify-content-between">
                 <p-button
+                    class="mt-3"
                     label="Atrás"
                     icon="pi pi-arrow-left"
                     (onClick)="prevCallback.emit(); recargarmapa()"
                 />
+                <p-confirmDialog
+                    header="Confirmación"
+                    icon="pi pi-exclamation-triangle"
+                ></p-confirmDialog>
                 <p-button
-                label="Enviar"
-                icon="pi pi-send"
-                iconPos="right"
-                (onClick)="enviar()"
-            />
+                    class="mt-3"
+                    label="Enviar"
+                    icon="pi pi-send"
+                    iconPos="right"
+                    (onClick)="enviar()"
+                />
             </div>
         </ng-template>
     </p-stepperPanel>

@@ -234,19 +234,15 @@ export class MapaComponent implements OnInit {
         private appRef: ApplicationRef,
         private fb: FormBuilder,
         private confirmationService: ConfirmationService,
-        private config: PrimeNGConfig
+        private config: PrimeNGConfig,
+        private adminservice: AdminService,
     ) {
         this.incidencia = this.fb.group({
             direccion_geo: [{ value: '' }],
             ciudadano: [{ value: '' }, Validators.required],
-            estado: [{ value: '' }, Validators.required],
             categoria: [{ value: '' }, Validators.required],
             subcategoria: [{ value: '' }, Validators.required],
             descripcion: '',
-            encargado: [{ value: '' }, Validators.required],
-            respuesta: [{ value: '' }, Validators.required],
-            evidencia: [[]],
-            view: true,
         });
         this.subscription = this.layoutService.configUpdate$
             .pipe(debounceTime(25))
@@ -299,6 +295,8 @@ export class MapaComponent implements OnInit {
         }
     }
     async ngOnInit() {
+        this.incidencia.get('ciudadano')
+        ?.setValue(this.adminservice.identity(this.token));
         this.helperService.llamarspinner();
         this.listCategoria();
         App.addListener('backButton', (data) => {
@@ -1168,10 +1166,21 @@ export class MapaComponent implements OnInit {
         http.send();
         return http.status !== 404;
     }
+    nextDescript(nextCallback){
+        nextCallback.emit(); 
+        this.incidencia.get('direccion_geo').setValue({
+            nombre: this.opcionb?.properties?.nombre?this.opcionb.properties.nombre:'Barrio sin nombre',
+            latitud: this.latitud,
+            longitud: this.longitud,
+        });
+    }
+
+
     @ViewChild('fileUpload') fileUpload: FileUpload;
     enviar() {
         console.log(this.incidencia.value);
-        if (this.selectedFiles.length > 0) {
+        console.log(this.selectedFilesnew);
+        if(this.files.length>0){
             this.confirmationService.confirm({
                 message:
                     'Tienes imágenes sin cargar. ¿Deseas cargarlas antes de enviar?',
@@ -1186,14 +1195,14 @@ export class MapaComponent implements OnInit {
                     this.procederSinCargar();
                 },
             });
-        } else {
+        }else{
             this.procederSinCargar();
         }
     }
     messages: any[] = []; // Declaración de mensajes
     cargarImagenes() {
-        // Lógica para cargar las imágenes
-        // Simulación de carga
+        this.selectedFilesnew = [...this.files, ...this.selectedFilesnew];
+        this.files = [];
         setTimeout(() => {
             this.messages.push({
                 severity: 'success',
@@ -1207,6 +1216,9 @@ export class MapaComponent implements OnInit {
     procederSinCargar() {
         // Lógica para proceder sin cargar las imágenes
         console.log('Enviado sin cargar imágenes adicionales');
+        console.log(this.incidencia.value);
+        console.log(this.selectedFilesnew);
+
     }
     upload: boolean = true;
     imagenesSeleccionadas: any[] = [];
@@ -1218,7 +1230,7 @@ export class MapaComponent implements OnInit {
         //console.log(event);
         this.load_carrusel = false;
         const files: FileList = event.files;
-
+        console.log(event.files);
         for (let file of event.files) {
             this.selectedFiles.push(file);
             const objectURL = URL.createObjectURL(file);
@@ -1227,7 +1239,7 @@ export class MapaComponent implements OnInit {
                 this.upload = false;
             }
         }
-
+        console.log(this.selectedFiles);
         this.messageService.add({
             severity: 'info',
             summary: 'Excelente',
@@ -1322,20 +1334,27 @@ export class MapaComponent implements OnInit {
         this.totalSizePercent = 0;
         this.files = [];
     }
-    load_remove: boolean = true;
-    onRemoveTemplatingFile(event, file, removeFileCallback, index) {
-        this.load_remove = false;
+    onRemoveTemplatingFile(
+        event,
+        file,
+        removeFileCallback,
+        index,
+        upload: boolean
+    ) {
         removeFileCallback(event, index);
-        console.log(this.files);
-        const fileIndex = this.files.indexOf(file);
-        if (fileIndex > -1) {
-            this.files.splice(fileIndex, 1);
-            this.totalSize -= parseInt(this.formatSize(file.size));
-            this.totalSizePercent = this.totalSize / 10;
+        if (!upload) {
+            const fileIndex = this.files.indexOf(file);
+            if (fileIndex > -1) {
+                this.files.splice(fileIndex, 1);
+                this.totalSize -= parseInt(this.formatSize(file.size));
+                this.totalSizePercent = ((this.totalSize / 1024)*100)/5;
+            }
+        } else {
+            const fileIndex = this.selectedFilesnew.indexOf(file);
+            if (fileIndex > -1) {
+                this.selectedFilesnew.splice(fileIndex, 1);
+            }
         }
-        setTimeout(() => {
-            this.load_remove = true;
-        }, 1000);
     }
 
     onClearTemplatingUpload(clear) {
@@ -1355,7 +1374,10 @@ export class MapaComponent implements OnInit {
 
     onSelectedFiles(event) {
         const selectedFiles = event.currentFiles;
-        const totalFiles = this.files.length + selectedFiles.length;
+        const totalFiles =
+            this.files.length +
+            selectedFiles.length +
+            this.selectedFilesnew.length;
 
         if (totalFiles > 5) {
             const excessFiles = totalFiles - 5;
@@ -1373,13 +1395,15 @@ export class MapaComponent implements OnInit {
         this.files.forEach((file) => {
             this.totalSize += parseInt(this.formatSize(file.size));
         });
-        this.totalSizePercent = this.totalSize / 10;
+
+        this.totalSizePercent = ((this.totalSize / 1024)*100)/5;
     }
     selectedFilesnew: any[] = [];
     uploadEvent(callback) {
         callback();
-        this.selectedFilesnew = this.files;
+        this.selectedFilesnew = [...this.files, ...this.selectedFilesnew];
         this.files = [];
+        console.log(this.selectedFilesnew);
     }
 
     formatSize(bytes) {

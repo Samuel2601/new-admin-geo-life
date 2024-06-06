@@ -229,7 +229,7 @@
                     icon="pi pi-arrow-right"
                     iconPos="right"
                     [disabled]="!visible_map"
-                    (onClick)="nextCallback.emit()"
+                    (onClick)="nextDescript(nextCallback)"
                 />
             </div>
         </ng-template>
@@ -263,14 +263,13 @@
                     url="https://www.primefaces.org/cdn/api/upload.php"
                     [multiple]="true"
                     accept="image/*"
-                    [maxFileSize]="1000000"
+                    [maxFileSize]="5000000"
                     [fileLimit]="5 - files.length"
                     (onUpload)="onTemplatedUpload()"
                     (onSelect)="onSelectedFiles($event)"
                 >
                     <ng-template
                         pTemplate="header"
-                        let-files
                         let-chooseCallback="chooseCallback"
                         let-clearCallback="clearCallback"
                         let-uploadCallback="uploadCallback"
@@ -303,18 +302,13 @@
                                 />
                             </div>
                             <span>{{ totalSize / 1024 | number: '1.2-2' }} MB / 5 MB</span>
-                            
-                            <p-progressBar
-                                [value]="files?.length"
-                                [showValue]="false"
-                                styleClass="md:w-20rem h-1rem w-full md:ml-auto"
-                                [ngClass]="{
-                                    'exceeded-progress-bar': totalSizePercent > 100
-                                }"
-                            >
-                                <span class="white-space-nowrap" *ngIf="totalSize>0">
-                                    {{ totalSize/ 1024| number: '1.2-2' }}MB / 5MB
-                                </span>
+                            <span>Imagenes por subir: {{ files.length }}</span>
+                            <p-progressBar [value]="totalSizePercent" styleClass="md:w-20rem h-1rem w-full md:ml-auto">
+                                <ng-template pTemplate="content"> 
+                                    <span class="white-space-nowrap">
+                                        {{ totalSize / 1024 | number: '1.2-2' }} MB / 5 MB
+                                    </span> 
+                                </ng-template>
                             </p-progressBar>
                         </div>
                     </ng-template>
@@ -355,7 +349,8 @@
                                                 $event,
                                                 file,
                                                 removeFileCallback,
-                                                index
+                                                index,
+                                                false
                                             )
                                         "
                                         [outlined]="true"
@@ -396,7 +391,13 @@
                                     <p-button
                                         icon="pi pi-times"
                                         (onClick)="
-                                            removeUploadedFileCallback(index)
+                                         onRemoveTemplatingFile(
+                                                $event,
+                                                file,
+                                                removeUploadedFileCallback,
+                                                index,
+                                                true
+                                            )
                                         "
                                         [outlined]="true"
                                         [rounded]="true"
@@ -415,36 +416,9 @@
                                 class="pi pi-cloud-upload border-2 border-circle p-5 text-8xl text-400 border-400"
                             ></i>
                             <p class="mt-4 mb-0">
-                                Drag and drop files to here to upload.
+                                Arrastre y suelte archivos aquí para cargarlos.
                             </p>
                         </div>
-                    </ng-template>
-                </p-fileUpload>
-
-                <p-fileUpload
-                    chooseLabel="Seleccionar"
-                    uploadLabel="Cargar"
-                    cancelLabel="Cancelar"
-                    name="demo[]"
-                    url="https://www.primefaces.org/cdn/api/upload.php"
-                    (onUpload)="onFilesSelected($event)"
-                    [multiple]="true"
-                    accept="image/*"
-                    [maxFileSize]="5000000"
-                    [fileLimit]="5 - selectedFiles.length"
-                    invalidFileLimitMessageSummary="Se superó el número máximo de archivos"
-                >
-                    <ng-template pTemplate="content">
-                        <ul *ngIf="selectedFiles.length">
-                            <li
-                                *ngFor="
-                                    let itemfile of selectedFiles;
-                                    let i = index
-                                "
-                            >
-                                {{ itemfile.name }} - {{ itemfile.size }} bytes
-                            </li>
-                        </ul>
                     </ng-template>
                 </p-fileUpload>
             </div>

@@ -24,11 +24,18 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th>Nombre</th>
+                        <th>Opción</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-product>
                     <tr>
                         <td>{{ product.nombre }}</td>
+                        <td *ngIf="check.EditActividadProyectoComponent"><p-button
+                            icon="pi pi-pencil"
+                            [rounded]="true"
+                            severity="success"
+                            (click)="editRow(product)"
+                        ></p-button></td>
                     </tr>
                 </ng-template>
             </p-table>

@@ -233,7 +233,10 @@ export class HelperService {
         this.homeComponent = homeComponent;
     }
     cerrarMapa(){
-        this.homeComponent.visible_categoria=false;
+        this.homeComponent.visible_incidente=false;
+    }
+    cerrarMapaFicha(){
+        this.homeComponent.visible_ficha=false;
     }
     marcarLugar(latitud: any, longitud: any, nombres?: any) {
         if (this.mapComponent) {

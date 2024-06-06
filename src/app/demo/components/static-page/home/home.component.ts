@@ -12,6 +12,7 @@ import { HelperService } from 'src/app/demo/services/helper.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { MapaComponent } from '../mapa/mapa.component';
+import { MapaFichaComponent } from '../mapa-ficha/mapa-ficha.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { StepperModule } from 'primeng/stepper';
 import { Router } from '@angular/router';
@@ -32,13 +33,14 @@ import { RouterModule } from '@angular/router';
         MapaComponent,
         StepperModule,
         RouterModule,
+        MapaFichaComponent
     ],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
     responsiveOptions: any[] = [];
-    producto: any[] = [];
+    productos: any[] = [];
     token = this.helperService.token() || undefined;
     incidencia: FormGroup<any>;
     constructor(
@@ -63,6 +65,7 @@ export class HomeComponent implements OnInit {
     }
     ngOnInit(): void {
         this.helperService.setHomeComponent(this);
+
         this.responsiveOptions = [
             {
                 breakpoint: '1199px',
@@ -80,11 +83,20 @@ export class HomeComponent implements OnInit {
                 numScroll: 1,
             },
         ];
-        this.producto.push(
+        this.productos.push(
             {
                 id: '1000',
                 image: 'assets/App Esmeraldas La Bella.png',
                 url: 'https://play.google.com/store/apps/details?id=ec.gob.esmeraldas.labella&hl=es_CL&gl=US',
+                items: [
+                    {
+                        logo: 'assets/icon/icono-ico.png',
+                        titulo: 'ESMERALDAS LA BELLA',
+                        descripcion:
+                            'Cada ves, más cerca de ti <br> Ya puedes usar nuestra APP',
+                    },
+                ],
+                mobil: false,
             },
             {
                 id: '1001',
@@ -93,30 +105,29 @@ export class HomeComponent implements OnInit {
                     {
                         logo: 'assets/icon/icono-ico.png',
                         titulo: 'ESMERALDAS LA BELLA',
-                        descripcion:
-                            'Novedades <span class="text-indigo-500" >cerca de ti</span>',
-                        extra: 'assets/icon/grafc1.png',
+                        descripcion: 'Estamos trabajando por tu bienestar',
                     },
                     {
                         logo: 'assets/icon/icono-ico.png',
                         titulo: 'ESMERALDAS LA BELLA',
-                        descripcion:
-                            'Se ha registrado tu incidente',
+                        descripcion: 'Registra tus incumbenientes',
                     },
                     {
                         logo: 'assets/icon/icono-ico.png',
                         titulo: 'ESMERALDAS LA BELLA',
-                        descripcion:
-                            'Your revenue <span class="text-red-500"></span> getting low',
-                        extra: 'assets/icon/grafsc1.png',
+                        descripcion: 'Mira lo que se ha realizado en tu barrio',
                     },
                 ],
+                mobil: true,
             },
             {
                 id: '1002',
-                image: 'bamboo-watch.jpg',
+                image: 'assets/noticias/notice_recolector.jpg',
+                url: 'https://www.facebook.com/photo/?fbid=773092638319602&set=a.487906363504899',
+                mobil: true,
             }
         );
+        this.filterProductos();
     }
     buttons = [
         {
@@ -134,7 +145,7 @@ export class HomeComponent implements OnInit {
             icon: 'assets/menu/negocio.png',
             showInfo: false,
             command: async () => {
-                this.incidente();
+                this.ficha();
             },
         },
         {
@@ -159,18 +170,40 @@ export class HomeComponent implements OnInit {
             },
         },
     ];
+    filteredProductos: any[] = [];
+    filterProductos(): void {
+        if (this.isMobil()) {
+            this.filteredProductos = this.productos.filter(
+                (product) => product.mobil
+            );
+        } else {
+            this.filteredProductos = this.productos;
+        }
+    }
+    openLink(url) {
+        if (url) {
+            window.open(url, '_blank');
+        }
+    }
     isMobil(): boolean {
         return this.helperService.isMobil();
     }
 
-    visible_categoria: boolean = false;
-    visible_subcategoria: boolean = false;
-    ref: DynamicDialogRef | undefined;
+    visible_incidente: boolean = false;
     incidente() {
         if (!this.token) {
             throw this.router.navigate(['/auth/login']);
         } else {
-            this.visible_categoria = true;
+            this.visible_incidente = true;
+        }
+    }
+
+    visible_ficha: boolean = false;
+    ficha() {
+        if (!this.token) {
+            throw this.router.navigate(['/auth/login']);
+        } else {
+            this.visible_ficha = true;
         }
     }
 

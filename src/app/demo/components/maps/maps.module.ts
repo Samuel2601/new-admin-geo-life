@@ -144,6 +144,7 @@ import { CreateDireccionGeoComponent } from './direccion-geo/create-direccion-ge
 import { EditDireccionGeoComponent } from './direccion-geo/edit-direccion-geo/edit-direccion-geo.component';
 import { EditFichaSectorialComponent } from './ficha-sectorial/edit-ficha-sectorial/edit-ficha-sectorial.component';
 import { EditIncidentesDenunciaComponent } from './incidentes-denuncia/edit-incidentes-denuncia/edit-incidentes-denuncia.component';
+import { EditActividadProyectoComponent } from './ficha-sectorial/actividad-proyecto/edit-actividad-proyecto/edit-actividad-proyecto.component';
 
 @NgModule({  
   imports: [
@@ -251,6 +252,7 @@ import { EditIncidentesDenunciaComponent } from './incidentes-denuncia/edit-inci
     RippleModule,
     StyleClassModule,
     FloatLabelModule,
+    
   ],
   declarations: [LayersComponent, IndexIncidentesDenunciaComponent,
     IndexEstadoIncidenteComponent,
@@ -285,7 +287,8 @@ import { EditIncidentesDenunciaComponent } from './incidentes-denuncia/edit-inci
     CreateDireccionGeoComponent,
     EditDireccionGeoComponent,
     EditFichaSectorialComponent,
-    EditIncidentesDenunciaComponent
+    EditIncidentesDenunciaComponent,
+    EditActividadProyectoComponent
   ],
   providers: [MessageService,DialogService,DynamicDialogConfig,DynamicDialogRef],
   bootstrap: [IndexUsuarioComponent]

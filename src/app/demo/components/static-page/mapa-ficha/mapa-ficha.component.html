@@ -107,7 +107,7 @@
                     <ng-template pTemplate="header">
                         <tr>
                             <th>
-                                {{ incidencia.get("categoria").value.nombre }}
+                                {{ fichaSectorialForm.get("categoria").value.nombre }}
                             </th>
                         </tr>
                     </ng-template>
@@ -247,7 +247,7 @@
             let-prevCallback="prevCallback"
             let-index="index"
         >
-            <form [formGroup]="incidencia">
+            <form [formGroup]="fichaSectorialForm">
                 <h4>Describrenos tu problemática</h4>
                 <textarea
                     [style]="{

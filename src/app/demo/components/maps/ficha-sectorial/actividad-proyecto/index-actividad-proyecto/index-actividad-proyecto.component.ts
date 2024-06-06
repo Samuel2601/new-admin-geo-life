@@ -6,16 +6,19 @@ import { ListService } from 'src/app/demo/services/list.service';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { App } from '@capacitor/app';
+import { EditActividadProyectoComponent } from '../edit-actividad-proyecto/edit-actividad-proyecto.component';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-index-actividad-proyecto',
   templateUrl: './index-actividad-proyecto.component.html',
-  styleUrl: './index-actividad-proyecto.component.scss'
+  styleUrl: './index-actividad-proyecto.component.scss',
+  providers: [MessageService],
 })
 export class IndexActividadProyectoComponent implements OnInit {
   model:boolean=true;
   actividadPro:any=[];
 
-  constructor(private ref: DynamicDialogRef,private modalService: NgbModal,private router: Router,private listService:ListService,private helper:HelperService,private dialogService: DialogService){
+  constructor(private ref: DynamicDialogRef,private modalService: NgbModal,private router: Router,private listService:ListService,private helper:HelperService,private dialogService: DialogService,private messageService: MessageService){
 
   }
   cerrarModal() {
@@ -24,6 +27,7 @@ export class IndexActividadProyectoComponent implements OnInit {
   check:any={};
   ngOnInit(): void {
     this.check.CreateActividadProyectoComponent = this.helper.decryptData('CreateActividadProyectoComponent') || false;
+    this.check.EditActividadProyectoComponent = this.helper.decryptData('EditActividadProyectoComponent') || false;
     this.router.events.subscribe((val) => {
       // Verificar la ruta actual y ajustar el valor de model
       if (this.router.url === '/create-estado-incidente') {
@@ -58,4 +62,24 @@ export class IndexActividadProyectoComponent implements OnInit {
        this.ref.close();
     });
   }
+  editRow(product: any) {
+    //console.log(id);
+    if (this.check.EditActividadProyectoComponent) {
+      this.ref = this.dialogService.open(EditActividadProyectoComponent, {
+          header: 'Editar Actividad de Ficha: '+product.nombre,
+          width: this.isMobil() ? '100%' : '50%',
+          height:'300px',
+          data: { id: product._id },
+      });
+      App.addListener('backButton', (data) => {
+          this.ref.close();
+      });
+  } else {
+      this.messageService.add({
+          severity: 'error',
+          summary: 'Lo sentimos',
+          detail: 'No tiene permisos para esto',
+      });
+  }
+}
 }

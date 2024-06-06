@@ -31,7 +31,7 @@ import { RouterModule } from '@angular/router';
         TableModule,
         MapaComponent,
         StepperModule,
-        RouterModule
+        RouterModule,
     ],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss',
@@ -83,39 +83,38 @@ export class HomeComponent implements OnInit {
         this.producto.push(
             {
                 id: '1000',
-                code: 'f230fh0g3',
-                name: 'Bamboo Watch',
-                description: 'Product Description',
-                image: 'bamboo-watch.jpg',
-                price: 65,
-                category: 'Accessories',
-                quantity: 24,
-                inventoryStatus: 'INSTOCK',
-                rating: 5,
+                image: 'assets/App Esmeraldas La Bella.png',
+                url: 'https://play.google.com/store/apps/details?id=ec.gob.esmeraldas.labella&hl=es_CL&gl=US',
             },
             {
-                id: '1000',
-                code: 'f230fh0g3',
-                name: 'Bamboo Watch',
-                description: 'Product Description',
-                image: 'bamboo-watch.jpg',
-                price: 65,
-                category: 'Accessories',
-                quantity: 24,
-                inventoryStatus: 'INSTOCK',
-                rating: 5,
+                id: '1001',
+                image: 'assets/layout/images/hero-15.png',
+                items: [
+                    {
+                        logo: 'assets/icon/icono-ico.png',
+                        titulo: 'ESMERALDAS LA BELLA',
+                        descripcion:
+                            'Novedades <span class="text-indigo-500" >cerca de ti</span>',
+                        extra: 'assets/icon/grafc1.png',
+                    },
+                    {
+                        logo: 'assets/icon/icono-ico.png',
+                        titulo: 'ESMERALDAS LA BELLA',
+                        descripcion:
+                            'Se ha registrado tu incidente',
+                    },
+                    {
+                        logo: 'assets/icon/icono-ico.png',
+                        titulo: 'ESMERALDAS LA BELLA',
+                        descripcion:
+                            'Your revenue <span class="text-red-500"></span> getting low',
+                        extra: 'assets/icon/grafsc1.png',
+                    },
+                ],
             },
             {
-                id: '1000',
-                code: 'f230fh0g3',
-                name: 'Bamboo Watch',
-                description: 'Product Description',
+                id: '1002',
                 image: 'bamboo-watch.jpg',
-                price: 65,
-                category: 'Accessories',
-                quantity: 24,
-                inventoryStatus: 'INSTOCK',
-                rating: 5,
             }
         );
     }
@@ -174,7 +173,7 @@ export class HomeComponent implements OnInit {
             this.visible_categoria = true;
         }
     }
-    
+
     showInfo(button: any) {
         button.showInfo = true;
     }

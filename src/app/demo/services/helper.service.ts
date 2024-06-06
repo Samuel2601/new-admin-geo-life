@@ -20,6 +20,7 @@ import { StackIncidentesComponent } from '../components/dashboard/stack-incident
 import { StackbarriofichaComponent } from '../components/dashboard/stackbarrioficha/stackbarrioficha.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ListService } from './list.service';
+import { HomeComponent } from '../components/static-page/home/home.component';
 @Injectable({
     providedIn: 'root',
 })
@@ -46,7 +47,7 @@ export class HelperService {
                 return null;
             }
         } else {
-            if (this.router.url !== '/auth/login') {
+            if (this.router.url !== '/auth/login'&&this.router.url!=='/home') {
                 this.router.navigate(['/auth/login']);
                 if (this.llamadasActivas > 0) {
                     this.cerrarspinner();
@@ -224,9 +225,15 @@ export class HelperService {
         }
     }
     private mapComponent: LayersComponent | null = null;
-
+    private homeComponent: HomeComponent | null = null;
     setMapComponent(mapComponent: LayersComponent) {
         this.mapComponent = mapComponent;
+    }
+    setHomeComponent(homeComponent: HomeComponent) {
+        this.homeComponent = homeComponent;
+    }
+    cerrarMapa(){
+        this.homeComponent.visible_categoria=false;
     }
     marcarLugar(latitud: any, longitud: any, nombres?: any) {
         if (this.mapComponent) {

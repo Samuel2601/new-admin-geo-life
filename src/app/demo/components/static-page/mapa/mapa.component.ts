@@ -83,6 +83,7 @@ import { GalleriaModule } from 'primeng/galleria';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { BadgeModule } from 'primeng/badge';
+import { CreateService } from 'src/app/demo/services/create.service';
 interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
     id?: string;
 }
@@ -236,13 +237,14 @@ export class MapaComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private config: PrimeNGConfig,
         private adminservice: AdminService,
+        private createService: CreateService
     ) {
         this.incidencia = this.fb.group({
             direccion_geo: [{ value: '' }],
             ciudadano: [{ value: '' }, Validators.required],
             categoria: [{ value: '' }, Validators.required],
             subcategoria: [{ value: '' }, Validators.required],
-            descripcion: '',
+            descripcion: ['', Validators.required],
         });
         this.subscription = this.layoutService.configUpdate$
             .pipe(debounceTime(25))
@@ -295,8 +297,6 @@ export class MapaComponent implements OnInit {
         }
     }
     async ngOnInit() {
-        this.incidencia.get('ciudadano')
-        ?.setValue(this.adminservice.identity(this.token));
         this.helperService.llamarspinner();
         this.listCategoria();
         App.addListener('backButton', (data) => {
@@ -1166,21 +1166,22 @@ export class MapaComponent implements OnInit {
         http.send();
         return http.status !== 404;
     }
-    nextDescript(nextCallback){
-        nextCallback.emit(); 
+    nextDescript(nextCallback) {
+        nextCallback.emit();
         this.incidencia.get('direccion_geo').setValue({
-            nombre: this.opcionb?.properties?.nombre?this.opcionb.properties.nombre:'Barrio sin nombre',
+            nombre: this.opcionb?.properties?.nombre
+                ? this.opcionb.properties.nombre
+                : 'Barrio sin nombre',
             latitud: this.latitud,
             longitud: this.longitud,
         });
     }
 
-
     @ViewChild('fileUpload') fileUpload: FileUpload;
     enviar() {
         console.log(this.incidencia.value);
         console.log(this.selectedFilesnew);
-        if(this.files.length>0){
+        if (this.files.length > 0) {
             this.confirmationService.confirm({
                 message:
                     'Tienes imágenes sin cargar. ¿Deseas cargarlas antes de enviar?',
@@ -1195,7 +1196,7 @@ export class MapaComponent implements OnInit {
                     this.procederSinCargar();
                 },
             });
-        }else{
+        } else {
             this.procederSinCargar();
         }
     }
@@ -1214,11 +1215,66 @@ export class MapaComponent implements OnInit {
     }
 
     procederSinCargar() {
+        this.helperService.llamarspinner();
         // Lógica para proceder sin cargar las imágenes
         console.log('Enviado sin cargar imágenes adicionales');
         console.log(this.incidencia.value);
         console.log(this.selectedFilesnew);
+        if (!this.token) {
+            throw this.router.navigate(['/auth/login']);
+        }
+        //console.log(this.nuevoIncidenteDenuncia.value);
+        this.incidencia
+            .get('ciudadano')
+            ?.setValue(this.adminservice.identity(this.token));
 
+        if (this.incidencia.valid) {
+            this.createService
+                .registrarIncidenteDenuncia(
+                    this.token,
+                    this.incidencia.value,
+                    this.selectedFilesnew
+                )
+                .subscribe(
+                    (response) => {
+                        // Manejar la respuesta del servidor
+                        //console.log(response);
+                        if (response.data) {
+                            this.messageService.add({
+                                severity: 'success',
+                                summary: 'Ingresado',
+                                detail: 'Correctamente',
+                            });
+                            this.helperService.cerrarspinner();
+                            setTimeout(() => {
+                                this.helperService.cerrarMapa();
+                            }, 1000);
+                        }
+                     
+                    },
+                    (error) => {
+                        // Manejar errores
+                        console.error(error);
+                        if (error.error.message == 'InvalidToken') {
+                            this.router.navigate(['/auth/login']);
+                        } else {
+                            this.messageService.add({
+                                severity: 'error',
+                                summary: ('(' + error.status + ')').toString(),
+                                detail: error.error.message || 'Sin conexión',
+                            });
+                        }
+                        this.helperService.cerrarspinner();
+                    }
+                );
+        } else {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'ERROR',
+                detail: 'Complete todo el formulario',
+            });
+            this.helperService.cerrarspinner();
+        }
     }
     upload: boolean = true;
     imagenesSeleccionadas: any[] = [];
@@ -1347,7 +1403,7 @@ export class MapaComponent implements OnInit {
             if (fileIndex > -1) {
                 this.files.splice(fileIndex, 1);
                 this.totalSize -= parseInt(this.formatSize(file.size));
-                this.totalSizePercent = ((this.totalSize / 1024)*100)/5;
+                this.totalSizePercent = ((this.totalSize / 1024) * 100) / 5;
             }
         } else {
             const fileIndex = this.selectedFilesnew.indexOf(file);
@@ -1396,7 +1452,7 @@ export class MapaComponent implements OnInit {
             this.totalSize += parseInt(this.formatSize(file.size));
         });
 
-        this.totalSizePercent = ((this.totalSize / 1024)*100)/5;
+        this.totalSizePercent = ((this.totalSize / 1024) * 100) / 5;
     }
     selectedFilesnew: any[] = [];
     uploadEvent(callback) {

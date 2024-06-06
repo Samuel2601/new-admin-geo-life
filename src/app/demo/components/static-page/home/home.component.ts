@@ -14,6 +14,8 @@ import { TableModule } from 'primeng/table';
 import { MapaComponent } from '../mapa/mapa.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { StepperModule } from 'primeng/stepper';
+import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 @Component({
     selector: 'app-home',
     standalone: true,
@@ -29,6 +31,7 @@ import { StepperModule } from 'primeng/stepper';
         TableModule,
         MapaComponent,
         StepperModule,
+        RouterModule
     ],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss',
@@ -42,7 +45,8 @@ export class HomeComponent implements OnInit {
         private list: ListService,
         private helperService: HelperService,
         private fb: FormBuilder,
-        public dialogService: DialogService
+        public dialogService: DialogService,
+        private router: Router
     ) {
         this.incidencia = this.fb.group({
             direccion_geo: [{ value: '', disabled: true }],
@@ -58,6 +62,7 @@ export class HomeComponent implements OnInit {
         });
     }
     ngOnInit(): void {
+        this.helperService.setHomeComponent(this);
         this.responsiveOptions = [
             {
                 breakpoint: '1199px',
@@ -139,7 +144,10 @@ export class HomeComponent implements OnInit {
             icon: 'assets/menu/publicacion.png',
             showInfo: false,
             command: async () => {
-                this.incidente();
+                window.open(
+                    'https://esmeraldas.gob.ec/noticias.html',
+                    '_blank'
+                );
             },
         },
         {
@@ -160,39 +168,13 @@ export class HomeComponent implements OnInit {
     visible_subcategoria: boolean = false;
     ref: DynamicDialogRef | undefined;
     incidente() {
-        this.visible_categoria = true;
+        if (!this.token) {
+            throw this.router.navigate(['/auth/login']);
+        } else {
+            this.visible_categoria = true;
+        }
     }
-    categorias: any[] = [];
-    listCategoria() {
-        this.list.listarCategorias(this.token).subscribe((response) => {
-            if (response.data) {
-                this.categorias = response.data;
-                console.log(this.categorias);
-            }
-        });
-    }
-    subcategorias: any[] = [];
-    onCategoriaClick(cateogria: any) {
-        console.log(cateogria);
-        this.incidencia.get('categoria').setValue(cateogria);
-        //this.visible_categoria = false;
-        this.visible_subcategoria = true;
-        this.list
-            .listarSubcategorias(this.token, 'categoria', cateogria._id)
-            .subscribe((response) => {
-                console.log(response);
-                if (response.data) {
-                    this.subcategorias = response.data;
-                }
-            });
-    }
-    visible_map: boolean = false;
     
-    onSubCategoriaClick(subcategoria: any): void {
-        console.log(subcategoria);
-        this.visible_map = true;
-    }
-
     showInfo(button: any) {
         button.showInfo = true;
     }

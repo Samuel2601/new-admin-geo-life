@@ -158,7 +158,7 @@ export class LoginComponent implements OnInit {
         }
 
         if (this.helper.token()) {
-            this.router.navigate(['/maps']);
+            this.router.navigate(['/home']);
         }
         this.setHeight();
         window.addEventListener('resize', () => {
@@ -314,7 +314,7 @@ export class LoginComponent implements OnInit {
 
                         // Redirigir a la página de mapa después de la autenticación exitosa
                         setTimeout(() => {
-                            this.router.navigate(['/maps']);
+                            this.router.navigate(['/home']);
                         }, 2000);
                     }
                 },

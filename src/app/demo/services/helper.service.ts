@@ -47,7 +47,7 @@ export class HelperService {
                 return null;
             }
         } else {
-            if (this.router.url !== '/auth/login'&&this.router.url!=='/home') {
+            if (this.router.url !== '/auth/login'&&this.router.url!=='/home'&&this.router.url!=='/') {
                 this.router.navigate(['/auth/login']);
                 if (this.llamadasActivas > 0) {
                     this.cerrarspinner();

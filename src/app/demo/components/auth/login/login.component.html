@@ -9,7 +9,12 @@
             class="mb-5 w-6rem flex-shrink-0"
         />-->
     <div class="flex flex-column align-items-center justify-content-center">
-        <p-image src="assets/icon/ESMERALDAS_LA_BELLA.png" alt="Image" width="350" class="mb-5"></p-image>
+        <p-image
+            src="assets/icon/ESMERALDAS_LA_BELLA.png"
+            alt="Image"
+            width="350"
+            class="mb-5"
+        ></p-image>
         <div
             style="
                 border-radius: 56px;
@@ -26,7 +31,11 @@
                 style="border-radius: 53px"
             >
                 <div class="text-center mb-5">
-                    <p-avatar size="xlarge" shape="circle"  [style]="{'width':'9rem','height':'9rem'}">
+                    <p-avatar
+                        size="xlarge"
+                        shape="circle"
+                        [style]="{ width: '9rem', height: '9rem' }"
+                    >
                         <img
                             [src]="
                                 fotoUsuario
@@ -42,7 +51,8 @@
                     </p-avatar>
                     <div class="text-900 text-3xl font-medium mb-3">
                         <span *ngIf="nombreUsuario"
-                            >¡Bienvenido, <br> {{ nombreUsuario }}!</span
+                            >¡Bienvenido, <br />
+                            {{ nombreUsuario }}!</span
                         >
                         <span *ngIf="!nombreUsuario">Bienvenido!</span>
                     </div>
@@ -110,13 +120,32 @@
                         >
                         -->
                     </div>
-                    <button
-                        pButton
-                        pRipple
-                        label="Iniciar Sesión"
-                        class="w-full p-3 text-xl"
-                        type="submit"
-                    ></button>
+                    <div class="flex flex-column align-items-center">
+                        <button
+                            pButton
+                            pRipple
+                            label="Iniciar Sesión"
+                            class="w-full p-3 text-xl"
+                            type="submit"
+                        ></button>
+                        <ng-container *ngIf="statusbiometrico()">
+                            <span class="my-3">O</span>
+                            <button
+                                pButton
+                                pRipple
+                                class="w-full p-3 text-xl"
+                                type="button"
+                                (click)="callbiometrico()"
+                                label="HUELLA"
+                            >
+                                <img
+                                    src="https://i.postimg.cc/Hx5Kpkt4/huella-dactilar.png"
+                                    alt="Huella"
+                                    width="30"
+                                />
+                            </button>
+                        </ng-container>
+                    </div>
                 </form>
             </div>
         </div>

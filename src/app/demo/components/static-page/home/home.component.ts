@@ -146,9 +146,12 @@ export class HomeComponent implements OnInit {
             label: 'Incidentes/ESVIAL',
             info: 'Puedes reportar los incidentes y denuncias con respecto a ESVIAL.',
             icon: 'https://i.postimg.cc/PJWtsTFC/ESVIAL.png',
-            showInfo: false,            
-            command: async () => {                
-                this.incidente('ESVIAL','Transporte terrestre y seguridad vial');
+            showInfo: false,
+            command: async () => {
+                this.incidente(
+                    'ESVIAL',
+                    'Transporte terrestre y seguridad vial'
+                );
             },
         },
         {
@@ -163,10 +166,13 @@ export class HomeComponent implements OnInit {
         {
             label: 'Incidentes/BOMBEROS',
             info: 'Puedes reportar los incidentes y denuncias con respecto a BOMBEROS.',
-            icon: 'https://i.postimg.cc/MH5g262p/bomberos.png',
+            icon: 'https://i.postimg.cc/G2qqqn71/bomberos-1.png',
             showInfo: false,
             command: async () => {
-                this.incidente('Cuerpo de Bomberos','Incendios / Desastres varios');
+                this.incidente(
+                    'Cuerpo de Bomberos',
+                    'Incendios / Desastres varios'
+                );
             },
         },
         {
@@ -175,7 +181,10 @@ export class HomeComponent implements OnInit {
             icon: 'https://i.postimg.cc/qMg1MX2L/recolectores-ver-recolectores.png',
             showInfo: false,
             command: async () => {
-                this.incidente('Higiene',' Servicio de recolección de desechos');
+                this.incidente(
+                    'Higiene',
+                    ' Servicio de recolección de desechos'
+                );
             },
         },
         {
@@ -229,7 +238,7 @@ export class HomeComponent implements OnInit {
         },*/
     ];
     filteredProductos: any[] = [];
-    
+
     filterProductos(): void {
         if (this.isMobil()) {
             this.filteredProductos = this.productos.filter(
@@ -249,19 +258,18 @@ export class HomeComponent implements OnInit {
     }
 
     visible_incidente: boolean = false;
-    button_active:any={cate:'',sub:''};
-    incidente(cate?,sub?) {
-
-        if(cate){
-            this.button_active.cate=cate;
-        }else{
-            this.button_active.cate=undefined
+    button_active: any = { cate: '', sub: '' };
+    incidente(cate?, sub?) {
+        if (cate) {
+            this.button_active.cate = cate;
+        } else {
+            this.button_active.cate = undefined;
         }
 
-        if(sub){
-            this.button_active.sub=sub;
-        }else{
-            this.button_active.sub=undefined
+        if (sub) {
+            this.button_active.sub = sub;
+        } else {
+            this.button_active.sub = undefined;
         }
 
         if (!this.token) {

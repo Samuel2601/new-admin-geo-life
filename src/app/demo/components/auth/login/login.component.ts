@@ -81,6 +81,18 @@ export class LoginComponent implements OnInit {
             );
         });
     }
+    statusbiometrico():boolean {
+        const correoCookieuser = this.helper.isMobil()
+            ? localStorage.getItem('correo')
+            : this.cookieService.get('correo');
+        const correoCookiepass = this.helper.isMobil()
+            ? localStorage.getItem('pass')
+            : this.cookieService.get('pass');
+        if (correoCookieuser && correoCookiepass) {
+            return true;
+        }
+        return false;
+    }
     async callbiometrico() {
         const correoCookieuser = this.helper.isMobil()
             ? localStorage.getItem('correo')
@@ -148,7 +160,7 @@ export class LoginComponent implements OnInit {
                 : this.helper.decryptDataLogin(
                       this.cookieService.get('fotoUsuario')
                   );
-                  this.callbiometrico();
+            this.callbiometrico();
         }
 
         if (this.helper.token()) {

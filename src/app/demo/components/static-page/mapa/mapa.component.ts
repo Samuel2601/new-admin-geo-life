@@ -300,7 +300,7 @@ export class MapaComponent implements OnInit {
         }
     }
     async ngOnInit() {
-        console.log(this.cate, this.sub);
+        //console.log(this.cate, this.sub);
         this.helperService.llamarspinner();
         this.listCategoria();
         App.addListener('backButton', (data) => {

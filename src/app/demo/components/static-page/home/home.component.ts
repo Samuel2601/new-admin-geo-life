@@ -208,7 +208,7 @@ export class HomeComponent implements OnInit {
                 );
             },
         },
-       /* {
+        {
             label: 'Otros Servicios',
             info: 'Descubre otros servicios disponibles para ti.',
             icon: 'assets/menu/servicios.png',
@@ -217,6 +217,7 @@ export class HomeComponent implements OnInit {
                 window.open('https://tramites.esmeraldas.gob.ec/', '_blank');
             },
         },
+        /*
         {
             label: 'Esvial',
             info: 'Servicio en Línea, consulta de citaciones.',

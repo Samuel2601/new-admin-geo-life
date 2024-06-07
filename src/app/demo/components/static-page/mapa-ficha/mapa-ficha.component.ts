@@ -317,7 +317,21 @@ export class MapaFichaComponent implements OnInit {
             this.check.IndexFichaSectorialComponent =
                 this.helperService.decryptData(
                     'IndexFichaSectorialComponent'
-                ) || false; //await this.helperService.checkPermiso('IndexFichaSectorialComponent') || false;
+                ) || false; 
+            if(!this.check.IndexFichaSectorialComponent){
+                this.messages.push({
+                    severity: 'danger',
+                    summary: 'ERROR',
+                    detail: 'No tienes Permisos para crear esto.',
+                });
+                setTimeout(() => {
+                    this.helperService.cerrarMapaFicha();
+                    this.helperService.cerrarspinner();
+                }, 1000);
+                throw new Error('Permisos no valido');
+                
+            }
+                //await this.helperService.checkPermiso('IndexFichaSectorialComponent') || false;
             this.check.IndexIncidentesDenunciaComponent =
                 this.helperService.decryptData(
                     'IndexIncidentesDenunciaComponent'

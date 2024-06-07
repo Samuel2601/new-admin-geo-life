@@ -305,3 +305,25 @@
     border-top-left-radius: 5%; /* Ajusta el valor según sea necesario */
     border-top-right-radius: 5%; /* Ajusta el valor según sea necesario */
   }
+
+  /* Media query para dispositivos móviles */
+@media (max-width: 768px) {
+  .custom-icon-categoria {
+    width: 50px; /* Tamaño para móviles */
+    height: 50px; /* Tamaño para móviles */
+    margin-bottom: 10px; /* Espacio entre el icono y el texto */
+  }
+
+  .cube-categoria {
+    width: 100px; /* Tamaño para móviles */
+    height: 100px; /* Tamaño para móviles */
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateY(0);
+    transition: transform 0.5s ease-in-out;
+    border-radius: 5%;
+  }
+  p{
+    font-size: 0.7em !important;
+  }
+}

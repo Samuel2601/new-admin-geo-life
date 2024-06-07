@@ -43,7 +43,7 @@
         </article>
         <div
             class="w-full xl:w-4 relative flex justify-content-center align-items-center"
-            [ngStyle]="{'margin-top': isMobil() ? '-30px' : '0px'}"
+            [ngStyle]="{'margin-top': isMobil() ? '-30px' : '0px', height:isMobil()?'200px':'auto'}"
         >
             <p-carousel
                 [value]="filteredProductos"
@@ -63,7 +63,7 @@
                                 [src]="product.image"
                                 alt="Image"
                                 class="rounded-top"
-                                width="550"
+                                [ngStyle]="{height:isMobil()?'200px':'auto'}"
                                 (click)="openLink(product.url)"
                             />
                             <ng-container *ngIf="product.items">
@@ -320,7 +320,7 @@
     </div>
 </div>
 
-<div class="surface-section px-4 py-8 md:px-6 lg:px-8 overflow-hidden">
+<div class="surface-section px-4 pb-8 md:px-6 lg:px-8 overflow-hidden"  [ngStyle]="{'padding-top': isMobil() ? '0px !important' : '5rem !important'}">
     <div class="button-container">
         <div class="cube" *ngFor="let button of buttons">
             <div class="cube-face cube-front">

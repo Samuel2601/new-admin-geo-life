@@ -38,7 +38,7 @@
     </p>
     -->
 
-<p-stepper class="safe-margin-top">
+<p-stepper #stepper class="safe-margin-top" [(activeStep)]="activeIndex">
     <p-stepperPanel header="Categoría">
         <ng-template
             pTemplate="content"
@@ -53,6 +53,7 @@
                         <div
                             class="cube-categoria mt-3 mb-3"
                             *ngIf="categoria.nombre != 'CIOCE'"
+                            [ngStyle]="{ 'background-color': cateactive(categoria.nombre,'categoria') }"
                         >
                             <div
                                 class="cube-face-categoria cube-front-categoria"
@@ -112,11 +113,10 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-product>
-                        <tr
+                        <tr [ngStyle]="{ 'background-color': cateactive(product.nombre,'subcategoria') }"
                             (click)="
                                 onSubCategoriaClick(product);
                                 nextCallback.emit();
-                                recargarmapa()
                             "
                         >
                             <td

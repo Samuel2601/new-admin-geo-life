@@ -322,7 +322,7 @@
 
 <div class="surface-section px-4 pb-8 md:px-6 lg:px-8 overflow-hidden"  [ngStyle]="{'padding-top': isMobil() ? '0px !important' : '5rem !important'}">
     <div class="button-container">
-        <div class="cube" *ngFor="let button of buttons">
+        <div class="cube" *ngFor="let button of buttons; let i = index">
             <div class="cube-face cube-front">
                 <img
                     [src]="button.icon"
@@ -516,7 +516,7 @@
     (onShow)="isMobil() ? dialog1.maximize() : ''"
     class="safe-margin-top"
 >
-    <app-mapa *ngIf="visible_incidente"></app-mapa>
+    <app-mapa *ngIf="visible_incidente" [cate]="button_active.cate" [sub]="button_active.sub"></app-mapa>
 </p-dialog>
 
 <p-dialog

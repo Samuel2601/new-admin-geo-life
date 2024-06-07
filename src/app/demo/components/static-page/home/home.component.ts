@@ -143,7 +143,43 @@ export class HomeComponent implements OnInit {
     }
     buttons = [
         {
-            label: 'Incidentes',
+            label: 'Incidentes/ESVIAL',
+            info: 'Puedes reportar los incidentes y denuncias con respecto a ESVIAL.',
+            icon: 'https://i.postimg.cc/PJWtsTFC/ESVIAL.png',
+            showInfo: false,            
+            command: async () => {                
+                this.incidente('ESVIAL','Transporte terrestre y seguridad vial');
+            },
+        },
+        {
+            label: 'Incidentes/EPMAPSE',
+            info: 'Puedes reportar los incidentes y denuncias con respecto a EPMAPSE.',
+            icon: 'https://i.postimg.cc/yYGf4ccS/Agua-Potable-y-Alcantarillado.png',
+            showInfo: false,
+            command: async () => {
+                this.incidente('Agua Potable y Alcantarillado');
+            },
+        },
+        {
+            label: 'Incidentes/BOMBEROS',
+            info: 'Puedes reportar los incidentes y denuncias con respecto a BOMBEROS.',
+            icon: 'https://i.postimg.cc/MH5g262p/bomberos.png',
+            showInfo: false,
+            command: async () => {
+                this.incidente('Cuerpo de Bomberos','Incendios / Desastres varios');
+            },
+        },
+        {
+            label: 'Incidentes/RECOLECTORES',
+            info: 'Puedes reportar los incidentes y denuncias con respecto a RECOLECTORES.',
+            icon: 'https://i.postimg.cc/qMg1MX2L/recolectores-ver-recolectores.png',
+            showInfo: false,
+            command: async () => {
+                this.incidente('Higiene',' Servicio de recolección de desechos');
+            },
+        },
+        {
+            label: 'Otros Incidentes',
             info: 'Puedes reportar los incidentes y denuncias que se presenten en la ciudad.',
             icon: 'assets/menu/seguimiento.png',
             showInfo: false,
@@ -172,7 +208,7 @@ export class HomeComponent implements OnInit {
                 );
             },
         },
-        {
+       /* {
             label: 'Otros Servicios',
             info: 'Descubre otros servicios disponibles para ti.',
             icon: 'assets/menu/servicios.png',
@@ -189,9 +225,10 @@ export class HomeComponent implements OnInit {
             command: async () => {
                 window.open('https://servicios.axiscloud.ec/AutoServicio/inicio.jsp?ps_empresa=10&ps_accion=P55', '_blank');
             },
-        },
+        },*/
     ];
     filteredProductos: any[] = [];
+    
     filterProductos(): void {
         if (this.isMobil()) {
             this.filteredProductos = this.productos.filter(
@@ -211,7 +248,21 @@ export class HomeComponent implements OnInit {
     }
 
     visible_incidente: boolean = false;
-    incidente() {
+    button_active:any={cate:'',sub:''};
+    incidente(cate?,sub?) {
+
+        if(cate){
+            this.button_active.cate=cate;
+        }else{
+            this.button_active.cate=undefined
+        }
+
+        if(sub){
+            this.button_active.sub=sub;
+        }else{
+            this.button_active.sub=undefined
+        }
+
         if (!this.token) {
             throw this.router.navigate(['/auth/login']);
         } else {

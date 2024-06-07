@@ -11,6 +11,7 @@ import {
     ViewChildren,
     TemplateRef,
     ApplicationRef,
+    Input,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import * as L from 'leaflet';
@@ -67,7 +68,7 @@ import { CarouselModule } from 'primeng/carousel';
 import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
-import { StepperModule } from 'primeng/stepper';
+import { Stepper, StepperModule } from 'primeng/stepper';
 import { EditorModule } from 'primeng/editor';
 import { ReactiveFormsModule } from '@angular/forms';
 import { InputTextareaModule } from 'primeng/inputtextarea';
@@ -124,6 +125,8 @@ interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
     ],
 })
 export class MapaComponent implements OnInit {
+    @Input() cate: any = '';
+    @Input() sub: any = '';
     @ViewChildren(SpeedDial) speedDials: QueryList<SpeedDial> | undefined;
     @ViewChild('formulariomap', { static: true }) formularioMapRef!: ElementRef;
     loader = new Loader({
@@ -297,6 +300,7 @@ export class MapaComponent implements OnInit {
         }
     }
     async ngOnInit() {
+        console.log(this.cate, this.sub);
         this.helperService.llamarspinner();
         this.listCategoria();
         App.addListener('backButton', (data) => {
@@ -1098,6 +1102,17 @@ export class MapaComponent implements OnInit {
             if (response.data) {
                 this.categorias = response.data;
                 //console.log(this.categorias);
+                if (this.cate) {
+                    let aux = this.categorias.find(
+                        (element) => element.nombre == this.cate
+                    );
+
+                    if (aux) {
+                        console.log(aux);
+                        this.navigateToStep(1);
+                        this.onCategoriaClick(aux);
+                    }
+                }
             }
         });
     }
@@ -1113,6 +1128,16 @@ export class MapaComponent implements OnInit {
                 //console.log(response);
                 if (response.data) {
                     this.subcategorias = response.data;
+                    if (this.sub) {
+                        let aux = this.subcategorias.find(
+                            (element) => element.nombre == this.sub
+                        );
+                        if (aux) {
+                            console.log(aux);
+                            
+                            this.onSubCategoriaClick(aux);
+                        }
+                    }
                 }
             });
     }
@@ -1122,7 +1147,21 @@ export class MapaComponent implements OnInit {
         //console.log(subcategoria);
         this.visible_map = true;
         this.incidencia.get('subcategoria').setValue(subcategoria);
+        this.navigateToStep(2);
+        this.recargarmapa();
     }
+    cateactive(cate: any, tipo: string) {
+        if (
+            this.incidencia.get(tipo).value &&
+            cate === this.incidencia.get(tipo).value.nombre
+        ) {
+            const documentStyle = getComputedStyle(document.documentElement);
+            return documentStyle.getPropertyValue('--primary-color');
+        } else {
+            return '';
+        }
+    }
+
     recargarmapa() {
         setTimeout(() => {
             this.initmap();
@@ -1250,7 +1289,6 @@ export class MapaComponent implements OnInit {
                                 this.helperService.cerrarMapa();
                             }, 1000);
                         }
-                     
                     },
                     (error) => {
                         // Manejar errores
@@ -1353,8 +1391,6 @@ export class MapaComponent implements OnInit {
         }
     }
     displayCustom: boolean | undefined;
-
-    activeIndex: number = 0;
 
     images: any[] | undefined;
     imageClick(index: number) {
@@ -1473,5 +1509,14 @@ export class MapaComponent implements OnInit {
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         const formattedSize = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
         return `${formattedSize} ${sizes[i]}`;
+    }
+    @ViewChild('stepper') stepper: Stepper;
+    activeIndex: number = 0;
+    navigateToStep(index: number) {
+        this.activeIndex = index;
+        // Si necesitas usar el método `goto`, asegúrate de que `stepper` esté disponible
+        if (this.stepper) {
+            this.stepper.activeStep = index;
+        }
     }
 }

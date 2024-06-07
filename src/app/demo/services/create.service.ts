@@ -50,7 +50,14 @@ export class CreateService {
     }
   }*/
 
-
+  IsJSON(str) {
+    try {
+      JSON.parse(str);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
   registrarActividadProyecto(token: any, data: any, fotos: File[]): Observable<any> {
     let headers = new HttpHeaders({
       Authorization: token,
@@ -58,7 +65,8 @@ export class CreateService {
     const formData = new FormData();
     formData.append('descripcion', data.descripcion);
     formData.append('encargado', data.encargado);
-    formData.append('direccion_geo', data.direccion_geo);
+    
+    formData.append('direccion_geo',this.IsJSON(data.direccion_geo)?JSON.stringify(data.direccion_geo):data.direccion_geo);
     formData.append('estado', data.estado._id);
     formData.append('actividad', data.actividad._id);
     formData.append('fecha_evento', data.fecha_evento);

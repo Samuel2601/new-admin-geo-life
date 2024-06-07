@@ -58,8 +58,8 @@
                                 "
                             ></button>
                         </td>
-                        <td>{{ encargadoCategoria.categoria.nombre }}</td>
-                        <td>{{ encargadoCategoria.categoria.descripcion }}</td>
+                        <td *ngIf="encargadoCategoria.categoria">{{ encargadoCategoria.categoria.nombre }}</td>
+                        <td *ngIf="encargadoCategoria.categoria">{{ encargadoCategoria.categoria.descripcion }}</td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="rowexpansion" let-encargadoCategoria>

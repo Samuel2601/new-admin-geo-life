@@ -12,8 +12,9 @@ import { HomeComponent } from './demo/components/static-page/home/home.component
                 children: [
                     { path: 'dashboard', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
                     { path: 'maps', loadChildren: () => import('./demo/components/maps/maps.module').then(m => m.MapsModule) },
-                    { path: '', loadChildren: () => import('./demo/components/maps/maps.module').then(m => m.MapsModule) },
-                    { path: 'home',component: HomeComponent }
+                    //{ path: '', loadChildren: () => import('./demo/components/maps/maps.module').then(m => m.MapsModule) },
+                    { path: 'home',component: HomeComponent },
+                    { path: '',component: HomeComponent }
                 ]
             },
             { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },

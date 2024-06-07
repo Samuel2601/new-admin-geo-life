@@ -98,9 +98,9 @@ export class HomeComponent implements OnInit {
                 ],
                 mobil: false,
             },
-            {
+            /*{
                 id: '1001',
-                image: 'assets/layout/images/hero-15.png',
+                image: 'https://i.postimg.cc/4ydyyKYh/444943064-772994744996058-5130094033753262063-n.jpg',
                 items: [
                     {
                         logo: 'assets/icon/icono-ico.png',
@@ -119,11 +119,23 @@ export class HomeComponent implements OnInit {
                     },
                 ],
                 mobil: true,
+            },*/
+            {
+                id: '1002',
+                image: 'https://i.postimg.cc/nL4GYW0G/notice-recolector.jpg',
+                url: 'https://www.facebook.com/photo/?fbid=773092638319602&set=a.487906363504899',
+                mobil: true,
             },
             {
                 id: '1002',
-                image: 'assets/noticias/notice_recolector.jpg',
-                url: 'https://www.facebook.com/photo/?fbid=773092638319602&set=a.487906363504899',
+                image: 'https://i.postimg.cc/4ydyyKYh/444943064-772994744996058-5130094033753262063-n.jpg',
+                url: 'https://www.facebook.com/alcaldiaciudadanadeesmeraldas/posts/pfbid037w3Up2J5CWBLeHtVYb69dJ9ZD3KKgwrUy6ga5gQxwjYa32souymP6tgbh9r2szj7l?rdid=SPHco5EmCgtnqfzb',
+                mobil: true,
+            },
+            {
+                id: '1002',
+                image: 'https://i.postimg.cc/bwbJZfwL/444480002-771894401772759-148770588324050042-n333.jpg',
+                url: 'https://www.facebook.com/alcaldiaciudadanadeesmeraldas/posts/pfbid0THQ1Q3s95P8VyRthucxoCDGbR94EgpV9KSdsUqeTnwXSrWEnUndLNe8epDM2qGp8l',
                 mobil: true,
             }
         );

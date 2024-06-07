@@ -253,6 +253,22 @@
                     formControlName="descripcion"
                 >
                 </textarea>
+                <div class="mb-5">
+                    <h4 for="fecha_evento" class="form-label">
+                        Fecha del Evento
+                    </h4>
+                    <p-calendar
+                        [touchUI]="isMobil()"
+                        [readonlyInput]="isMobil()"
+                        id="fecha_evento"
+                        name="fecha_evento"
+                        formControlName="fecha_evento"
+                        [showTime]="true"
+                        [showIcon]="true"
+                        appendTo="body"
+                        inputId="buttondisplay"
+                    ></p-calendar>
+                </div>
             </form>
             <h4>Puedes agregar fotos, es opcional. (maximo 5 fotos)</h4>
             <div class="mb-3" *ngIf="!isMobil() && upload">

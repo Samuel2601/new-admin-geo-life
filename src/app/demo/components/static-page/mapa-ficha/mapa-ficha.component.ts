@@ -84,6 +84,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { BadgeModule } from 'primeng/badge';
 import { CreateService } from 'src/app/demo/services/create.service';
+import { CalendarModule } from 'primeng/calendar';
 interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
     id?: string;
 }
@@ -112,6 +113,7 @@ interface ExtendedPolygonOptions extends google.maps.PolygonOptions {
         ConfirmDialogModule,
         ToastModule,
         BadgeModule,
+        CalendarModule
     ],
     templateUrl: './mapa-ficha.component.html',
     styleUrl: './mapa-ficha.component.scss',
@@ -278,14 +280,14 @@ export class MapaFichaComponent implements OnInit {
             });
     }
     imprimir(prediction: any) {
-        //console.log(prediction)
+        ////console.log(prediction)
         this.helperService
             .getLatLngFromAddress(prediction.description)
             .then((location) => {
                 this.latitud = location.lat();
                 this.longitud = location.lng();
                 this.poligonoposition(false);
-                //console.log('Latitude:', location.lat(), 'Longitude:', location.lng());
+                ////console.log('Latitude:', location.lat(), 'Longitude:', location.lng());
                 //this.addMarker(location,'NUEVO SISTEMA DE BUSQUEDA');
             })
             .catch((error) => {
@@ -724,7 +726,7 @@ export class MapaFichaComponent implements OnInit {
             });
             this.capaActiva = false;
         } else {
-            console.log(this.arr_polygon);
+            //console.log(this.arr_polygon);
             this.arr_polygon.forEach((polygon: google.maps.Polygon) => {
                 polygon.setMap(this.mapCustom);
             });
@@ -752,7 +754,7 @@ export class MapaFichaComponent implements OnInit {
             // Obtener el centro y el nivel de zoom adecuado para incluir todos los polígonos
             const center = bounds.getCenter();
             const zoom = this.calculateZoomLevel(bounds);
-            console.log(center, zoom);
+            //console.log(center, zoom);
             // Ajustar el mapa para que abarque todos los polígonos
             this.mapCustom.setCenter({ lat: 0.935233, lng: -79.681929 });
             this.mapCustom.setZoom(zoom);
@@ -967,9 +969,6 @@ export class MapaFichaComponent implements OnInit {
                         this.infoWindowActual,
                         'closeclick',
                         () => {
-                            console.log(
-                                'La ventana de información se ha cerrado'
-                            );
                             this.infoWindowActual = null;
                         }
                     );
@@ -1099,20 +1098,20 @@ export class MapaFichaComponent implements OnInit {
         this.list.listarTiposActividadesProyecto(this.token).subscribe((response) => {
             if (response.data) {
                 this.categorias = response.data;
-                console.log(this.categorias);
+                //console.log(this.categorias);
             }
         });
     }
     subcategorias: any[] = [];
     onCategoriaClick(cateogria: any) {
-        console.log(cateogria);
+        //console.log(cateogria);
         this.fichaSectorialForm.get('actividad').setValue(cateogria);
         //this.visible_categoria = false;
         this.visible_subcategoria = true;
         this.list
             .listarEstadosActividadesProyecto(this.token)
             .subscribe((response) => {
-                console.log(response);
+                //console.log(response);
                 if (response.data) {
                     this.subcategorias = response.data;
                 }
@@ -1121,7 +1120,7 @@ export class MapaFichaComponent implements OnInit {
     visible_map: boolean = false;
 
     onSubCategoriaClick(subcategoria: any): void {
-        console.log(subcategoria);
+        //console.log(subcategoria);
         this.visible_map = true;
         this.fichaSectorialForm.get('estado').setValue(subcategoria);
     }
@@ -1130,7 +1129,7 @@ export class MapaFichaComponent implements OnInit {
             this.initmap();
             this.addtemplateBG();
             this.addtemplateFR();
-            console.log(this.opcionb, this.latitud, this.longitud);
+            //console.log(this.opcionb, this.latitud, this.longitud);
             if (this.latitud && this.longitud) {
                 setTimeout(() => {
                     this.addMarker(
@@ -1181,8 +1180,8 @@ export class MapaFichaComponent implements OnInit {
 
     @ViewChild('fileUpload') fileUpload: FileUpload;
     enviar() {
-        console.log(this.fichaSectorialForm.value);
-        console.log(this.selectedFilesnew);
+        //console.log(this.fichaSectorialForm.value);
+        //console.log(this.selectedFilesnew);
         if (this.files.length > 0) {
             this.confirmationService.confirm({
                 message:
@@ -1219,20 +1218,20 @@ export class MapaFichaComponent implements OnInit {
     procederSinCargar() {
         this.helperService.llamarspinner();
         // Lógica para proceder sin cargar las imágenes
-        console.log('Enviado sin cargar imágenes adicionales');
-        console.log(this.fichaSectorialForm.value);
-        console.log(this.selectedFilesnew);
+        //console.log('Enviado sin cargar imágenes adicionales');
+        //console.log(this.fichaSectorialForm.value);
+        //console.log(this.selectedFilesnew);
         if (!this.token) {
             throw this.router.navigate(['/auth/login']);
         }
-        //console.log(this.nuevoIncidenteDenuncia.value);
+        ////console.log(this.nuevoIncidenteDenuncia.value);
         this.fichaSectorialForm
-            .get('ciudadano')
+            .get('encargado')
             ?.setValue(this.adminservice.identity(this.token));
 
         if (this.fichaSectorialForm.valid) {
             this.createService
-                .registrarIncidenteDenuncia(
+                .registrarActividadProyecto(
                     this.token,
                     this.fichaSectorialForm.value,
                     this.selectedFilesnew
@@ -1240,7 +1239,7 @@ export class MapaFichaComponent implements OnInit {
                 .subscribe(
                     (response) => {
                         // Manejar la respuesta del servidor
-                        //console.log(response);
+                        ////console.log(response);
                         if (response.data) {
                             this.messageService.add({
                                 severity: 'success',
@@ -1285,10 +1284,10 @@ export class MapaFichaComponent implements OnInit {
     selectedFiles: File[] = [];
     mostrargale = false;
     onFilesSelected(event: any): void {
-        //console.log(event);
+        ////console.log(event);
         this.load_carrusel = false;
         const files: FileList = event.files;
-        console.log(event.files);
+        //console.log(event.files);
         for (let file of event.files) {
             this.selectedFiles.push(file);
             const objectURL = URL.createObjectURL(file);
@@ -1297,7 +1296,7 @@ export class MapaFichaComponent implements OnInit {
                 this.upload = false;
             }
         }
-        console.log(this.selectedFiles);
+        //console.log(this.selectedFiles);
         this.messageService.add({
             severity: 'info',
             summary: 'Excelente',
@@ -1461,7 +1460,7 @@ export class MapaFichaComponent implements OnInit {
         callback();
         this.selectedFilesnew = [...this.files, ...this.selectedFilesnew];
         this.files = [];
-        console.log(this.selectedFilesnew);
+        //console.log(this.selectedFilesnew);
     }
 
     formatSize(bytes) {

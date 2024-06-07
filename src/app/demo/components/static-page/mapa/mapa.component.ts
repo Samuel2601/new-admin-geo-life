@@ -722,7 +722,7 @@ export class MapaComponent implements OnInit {
             });
             this.capaActiva = false;
         } else {
-            console.log(this.arr_polygon);
+            //console.log(this.arr_polygon);
             this.arr_polygon.forEach((polygon: google.maps.Polygon) => {
                 polygon.setMap(this.mapCustom);
             });
@@ -750,7 +750,7 @@ export class MapaComponent implements OnInit {
             // Obtener el centro y el nivel de zoom adecuado para incluir todos los polígonos
             const center = bounds.getCenter();
             const zoom = this.calculateZoomLevel(bounds);
-            console.log(center, zoom);
+            //console.log(center, zoom);
             // Ajustar el mapa para que abarque todos los polígonos
             this.mapCustom.setCenter({ lat: 0.935233, lng: -79.681929 });
             this.mapCustom.setZoom(zoom);
@@ -1097,20 +1097,20 @@ export class MapaComponent implements OnInit {
         this.list.listarCategorias(this.token).subscribe((response) => {
             if (response.data) {
                 this.categorias = response.data;
-                console.log(this.categorias);
+                //console.log(this.categorias);
             }
         });
     }
     subcategorias: any[] = [];
     onCategoriaClick(cateogria: any) {
-        console.log(cateogria);
+        //console.log(cateogria);
         this.incidencia.get('categoria').setValue(cateogria);
         //this.visible_categoria = false;
         this.visible_subcategoria = true;
         this.list
             .listarSubcategorias(this.token, 'categoria', cateogria._id)
             .subscribe((response) => {
-                console.log(response);
+                //console.log(response);
                 if (response.data) {
                     this.subcategorias = response.data;
                 }
@@ -1119,7 +1119,7 @@ export class MapaComponent implements OnInit {
     visible_map: boolean = false;
 
     onSubCategoriaClick(subcategoria: any): void {
-        console.log(subcategoria);
+        //console.log(subcategoria);
         this.visible_map = true;
         this.incidencia.get('subcategoria').setValue(subcategoria);
     }
@@ -1128,7 +1128,7 @@ export class MapaComponent implements OnInit {
             this.initmap();
             this.addtemplateBG();
             this.addtemplateFR();
-            console.log(this.opcionb, this.latitud, this.longitud);
+            //console.log(this.opcionb, this.latitud, this.longitud);
             if (this.latitud && this.longitud) {
                 setTimeout(() => {
                     this.addMarker(
@@ -1179,8 +1179,8 @@ export class MapaComponent implements OnInit {
 
     @ViewChild('fileUpload') fileUpload: FileUpload;
     enviar() {
-        console.log(this.incidencia.value);
-        console.log(this.selectedFilesnew);
+        //console.log(this.incidencia.value);
+        //console.log(this.selectedFilesnew);
         if (this.files.length > 0) {
             this.confirmationService.confirm({
                 message:
@@ -1217,13 +1217,13 @@ export class MapaComponent implements OnInit {
     procederSinCargar() {
         this.helperService.llamarspinner();
         // Lógica para proceder sin cargar las imágenes
-        console.log('Enviado sin cargar imágenes adicionales');
-        console.log(this.incidencia.value);
-        console.log(this.selectedFilesnew);
+        //console.log('Enviado sin cargar imágenes adicionales');
+        //console.log(this.incidencia.value);
+        //console.log(this.selectedFilesnew);
         if (!this.token) {
             throw this.router.navigate(['/auth/login']);
         }
-        //console.log(this.nuevoIncidenteDenuncia.value);
+        ////console.log(this.nuevoIncidenteDenuncia.value);
         this.incidencia
             .get('ciudadano')
             ?.setValue(this.adminservice.identity(this.token));
@@ -1286,7 +1286,7 @@ export class MapaComponent implements OnInit {
         //console.log(event);
         this.load_carrusel = false;
         const files: FileList = event.files;
-        console.log(event.files);
+        //console.log(event.files);
         for (let file of event.files) {
             this.selectedFiles.push(file);
             const objectURL = URL.createObjectURL(file);
@@ -1295,7 +1295,7 @@ export class MapaComponent implements OnInit {
                 this.upload = false;
             }
         }
-        console.log(this.selectedFiles);
+        //console.log(this.selectedFiles);
         this.messageService.add({
             severity: 'info',
             summary: 'Excelente',
@@ -1459,7 +1459,7 @@ export class MapaComponent implements OnInit {
         callback();
         this.selectedFilesnew = [...this.files, ...this.selectedFilesnew];
         this.files = [];
-        console.log(this.selectedFilesnew);
+        //console.log(this.selectedFilesnew);
     }
 
     formatSize(bytes) {

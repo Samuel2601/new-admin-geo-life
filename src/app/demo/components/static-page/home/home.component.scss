@@ -130,3 +130,9 @@ p {
   border-top-left-radius: 5%; /* Ajusta el valor según sea necesario */
   border-top-right-radius: 5%; /* Ajusta el valor según sea necesario */
 }
+
+/* ejemplo.component.css */
+:host ::ng-deep .p-dialog {
+  width: 70vw !important;
+  max-width: none;
+}

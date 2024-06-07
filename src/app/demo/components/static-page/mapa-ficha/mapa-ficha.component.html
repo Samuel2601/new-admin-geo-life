@@ -53,9 +53,13 @@
                         <div
                             class="cube-categoria mt-3 mb-3"
                             *ngIf="categoria.nombre != 'CIOCE'"
+                            (click)="
+                                onCategoriaClick(categoria); nextCallback.emit()
+                            "
                         >
                             <div
                                 class="cube-face-categoria cube-front-categoria"
+                                style="cursor: pointer"
                             >
                                 <img
                                     [src]="categoria.icono"
@@ -63,21 +67,6 @@
                                     class="custom-icon-categoria"
                                 />
                                 <p>{{ categoria.nombre }}</p>
-                            </div>
-                            <div
-                                class="cube-face-categoria cube-back-categoria"
-                            >
-                                <p>{{ categoria.descripcion }}</p>
-                                <p-button
-                                    class="mt-3"
-                                    *ngIf="categoria"
-                                    (click)="
-                                        onCategoriaClick(categoria);
-                                        nextCallback.emit()
-                                    "
-                                    [label]="categoria.nombre"
-                                >
-                                </p-button>
                             </div>
                         </div>
                     </ng-container>
@@ -107,7 +96,10 @@
                     <ng-template pTemplate="header">
                         <tr>
                             <th>
-                                {{ fichaSectorialForm.get("categoria").value.nombre }}
+                                {{
+                                    fichaSectorialForm.get("actividad").value
+                                        .nombre
+                                }}
                             </th>
                         </tr>
                     </ng-template>
@@ -124,6 +116,7 @@
                                     word-wrap: break-word;
                                     white-space: normal;
                                     overflow-wrap: break-word;
+                                    cursor: pointer;
                                 "
                             >
                                 {{ product.nombre }}
@@ -248,7 +241,7 @@
             let-index="index"
         >
             <form [formGroup]="fichaSectorialForm">
-                <h4>Describrenos tu problemática</h4>
+                <h4>Describenos tu problemática</h4>
                 <textarea
                     [style]="{
                         height: '320px',

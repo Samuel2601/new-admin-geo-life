@@ -1106,11 +1106,11 @@ export class MapaFichaComponent implements OnInit {
     subcategorias: any[] = [];
     onCategoriaClick(cateogria: any) {
         console.log(cateogria);
-        this.fichaSectorialForm.get('categoria').setValue(cateogria);
+        this.fichaSectorialForm.get('actividad').setValue(cateogria);
         //this.visible_categoria = false;
         this.visible_subcategoria = true;
         this.list
-            .listarSubcategorias(this.token, 'categoria', cateogria._id)
+            .listarEstadosActividadesProyecto(this.token)
             .subscribe((response) => {
                 console.log(response);
                 if (response.data) {
@@ -1123,7 +1123,7 @@ export class MapaFichaComponent implements OnInit {
     onSubCategoriaClick(subcategoria: any): void {
         console.log(subcategoria);
         this.visible_map = true;
-        this.fichaSectorialForm.get('subcategoria').setValue(subcategoria);
+        this.fichaSectorialForm.get('estado').setValue(subcategoria);
     }
     recargarmapa() {
         setTimeout(() => {

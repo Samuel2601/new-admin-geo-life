@@ -43,6 +43,7 @@
         </article>
         <div
             class="w-full xl:w-4 relative flex justify-content-center align-items-center"
+            [ngStyle]="{'margin-top': isMobil() ? '-30px' : '0px'}"
         >
             <p-carousel
                 [value]="filteredProductos"

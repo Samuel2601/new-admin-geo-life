@@ -218,6 +218,15 @@ export class HomeComponent implements OnInit {
             },
         },
         {
+            label: 'Alcaldía Ciudadana',
+            info: 'Interactua con las diferentes unidades de la Alcaldía Ciudadana',
+            icon: 'https://i.postimg.cc/MKNj2Zvp/acald-a-informa.png',
+            showInfo: false,
+            command: async () => {
+                this.router.navigate(['/maps']);
+            },
+        },
+        {
             label: 'Otros Servicios',
             info: 'Descubre otros servicios disponibles para ti.',
             icon: 'assets/menu/servicios.png',

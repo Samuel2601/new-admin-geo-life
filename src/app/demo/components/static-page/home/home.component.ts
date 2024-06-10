@@ -1,39 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { CardModule } from 'primeng/card';
-import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
-import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { CarouselModule } from 'primeng/carousel';
-import { TagModule } from 'primeng/tag';
-import { DialogModule } from 'primeng/dialog';
 import { ListService } from 'src/app/demo/services/list.service';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TableModule } from 'primeng/table';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Router } from '@angular/router';
+import { ImportsModule } from 'src/app/demo/services/import';
 import { MapaComponent } from '../mapa/mapa.component';
 import { MapaFichaComponent } from '../mapa-ficha/mapa-ficha.component';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { StepperModule } from 'primeng/stepper';
-import { Router } from '@angular/router';
-import { RouterModule } from '@angular/router';
 @Component({
     selector: 'app-home',
     standalone: true,
-    imports: [
-        NgbModule,
-        CommonModule,
-        CardModule,
-        ButtonModule,
-        TooltipModule,
-        CarouselModule,
-        TagModule,
-        DialogModule,
-        TableModule,
+    imports: [ImportsModule,
         MapaComponent,
-        StepperModule,
-        RouterModule,
-        MapaFichaComponent,
+        MapaFichaComponent
     ],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss',
@@ -145,7 +124,7 @@ export class HomeComponent implements OnInit {
         {
             label: 'Incidentes/ESVIAL',
             info: 'Puedes reportar los incidentes y denuncias con respecto a ESVIAL.',
-            icon: 'https://i.postimg.cc/PJWtsTFC/ESVIAL.png',
+            icon: 'https://i.postimg.cc/CxxGM2YS/VIAL.png',
             showInfo: false,
             command: async () => {
                 this.incidente(
@@ -157,7 +136,7 @@ export class HomeComponent implements OnInit {
         {
             label: 'Incidentes/EPMAPSE',
             info: 'Puedes reportar los incidentes y denuncias con respecto a EPMAPSE.',
-            icon: 'https://i.postimg.cc/yYGf4ccS/Agua-Potable-y-Alcantarillado.png',
+            icon: 'https://i.postimg.cc/LX5rhc1p/AGUA-1.png',
             showInfo: false,
             command: async () => {
                 this.incidente('Agua Potable y Alcantarillado');
@@ -166,7 +145,7 @@ export class HomeComponent implements OnInit {
         {
             label: 'Incidentes/BOMBEROS',
             info: 'Puedes reportar los incidentes y denuncias con respecto a BOMBEROS.',
-            icon: 'https://i.postimg.cc/G2qqqn71/bomberos-1.png',
+            icon: 'https://i.postimg.cc/8PHdSS2Z/BOMBEROS-2.png',
             showInfo: false,
             command: async () => {
                 this.incidente(
@@ -178,7 +157,7 @@ export class HomeComponent implements OnInit {
         {
             label: 'Incidentes/RECOLECTORES',
             info: 'Puedes reportar los incidentes y denuncias con respecto a RECOLECTORES.',
-            icon: 'https://i.postimg.cc/qMg1MX2L/recolectores-ver-recolectores.png',
+            icon: 'https://i.postimg.cc/3wy2mDdq/RECOLECTORES.png',
             showInfo: false,
             command: async () => {
                 this.incidente(
@@ -190,7 +169,7 @@ export class HomeComponent implements OnInit {
         {
             label: 'Otros Incidentes',
             info: 'Puedes reportar los incidentes y denuncias que se presenten en la ciudad.',
-            icon: 'assets/menu/seguimiento.png',
+            icon: 'https://i.postimg.cc/cJxqGg16/OTROS.png',
             showInfo: false,
             command: async () => {
                 this.incidente();
@@ -199,16 +178,16 @@ export class HomeComponent implements OnInit {
         {
             label: 'Fichas Sectoriales',
             info: 'Accede a información detallada sobre eventos y actividades en tu sector.',
-            icon: 'assets/menu/negocio.png',
+            icon: 'https://i.postimg.cc/kg3BG4JP/icoco-fichas-2.png',
             showInfo: false,
             command: async () => {
                 this.ficha();
             },
         },
         {
-            label: 'Alcaldía Informa',
+            label: 'Noticias',
             info: 'Mantente informado sobre comunicados de la alcaldía.',
-            icon: 'assets/menu/publicacion.png',
+            icon: 'https://i.postimg.cc/yNvM11Wj/NOTICIAS.png',
             showInfo: false,
             command: async () => {
                 window.open(
@@ -220,7 +199,7 @@ export class HomeComponent implements OnInit {
         {
             label: 'Alcaldía Ciudadana',
             info: 'Interactua con las diferentes unidades de la Alcaldía Ciudadana',
-            icon: 'https://i.postimg.cc/MKNj2Zvp/acald-a-informa.png',
+            icon: 'https://i.postimg.cc/8PDd950F/ALCALDIA.png',
             showInfo: false,
             command: async () => {
                 this.router.navigate(['/maps']);
@@ -229,7 +208,7 @@ export class HomeComponent implements OnInit {
         {
             label: 'Otros Servicios',
             info: 'Descubre otros servicios disponibles para ti.',
-            icon: 'assets/menu/servicios.png',
+            icon: 'https://i.postimg.cc/9Qj51gvd/SERVICIOS.png',
             showInfo: false,
             command: async () => {
                 window.open('https://tramites.esmeraldas.gob.ec/', '_blank');

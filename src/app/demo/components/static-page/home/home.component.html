@@ -43,7 +43,10 @@
         </article>
         <div
             class="w-full xl:w-4 relative flex justify-content-center align-items-center"
-            [ngStyle]="{'margin-top': isMobil() ? '-30px' : '0px', height:isMobil()?'200px':'auto'}"
+            [ngStyle]="{
+                'margin-top': isMobil() ? '-30px' : '0px',
+                height: isMobil() ? '200px' : 'auto'
+            }"
         >
             <p-carousel
                 [value]="filteredProductos"
@@ -55,7 +58,10 @@
                 [autoplayInterval]="5000"
             >
                 <ng-template let-product pTemplate="item">
-                    <div class="surface-border border-round m-2 p-3" *ngIf="isMobil()&&product.mobil||!isMobil()">
+                    <div
+                        class="surface-border border-round m-2 p-3"
+                        *ngIf="(isMobil() && product.mobil) || !isMobil()"
+                    >
                         <div
                             class="w-full relative flex justify-content-center align-items-center"
                         >
@@ -63,13 +69,28 @@
                                 [src]="product.image"
                                 alt="Image"
                                 class="rounded-top"
-                                [ngStyle]="{height:isMobil()?'200px':'auto'}"
+                                [ngStyle]="{
+                                    height: isMobil() ? '200px' : 'auto'
+                                }"
                                 (click)="openLink(product.url)"
                             />
+                            <!--
+ <p-image
+                                src="product.image"
+                                alt="Image"
+                                class="rounded-top"
+                                [ngStyle]="{
+                                    height: isMobil() ? '200px' : 'auto'
+                                }"
+                                [preview]="true"
+                                (click)="openLink(product.url)"
+                            />
+                            -->
+                           
                             <ng-container *ngIf="product.items">
                                 <article
                                     *ngIf="product.items[2]"
-                                    class="absolute flex align-items-center w-24rem border-round-xl z-2  gap-3 px-4 py-3"
+                                    class="absolute flex align-items-center w-24rem border-round-xl z-2 gap-3 px-4 py-3"
                                     style="
                                         bottom: 41%;
                                         backdrop-filter: blur(40px);
@@ -80,7 +101,9 @@
                                             0.5
                                         );
                                     "
-                                    [ngStyle]="{right: isMobil() ? '42.8%' : '50%'}"
+                                    [ngStyle]="{
+                                        right: isMobil() ? '42.8%' : '50%'
+                                    }"
                                 >
                                     <img
                                         *ngIf="product.items[2].logo"
@@ -125,7 +148,9 @@
                                             0.5
                                         );
                                     "
-                                    [ngStyle]="{right: isMobil() ? '42.8%' : '50%'}"
+                                    [ngStyle]="{
+                                        right: isMobil() ? '42.8%' : '50%'
+                                    }"
                                 >
                                     <img
                                         *ngIf="product.items[1].logo"
@@ -159,7 +184,7 @@
                                 </article>
                                 <article
                                     *ngIf="product.items[0]"
-                                    class="absolute flex align-items-center w-24rem border-round-xl z-2  gap-3 px-4 py-3"
+                                    class="absolute flex align-items-center w-24rem border-round-xl z-2 gap-3 px-4 py-3"
                                     style="
                                         bottom: 7%;
                                         backdrop-filter: blur(40px);
@@ -170,7 +195,9 @@
                                             0.5
                                         );
                                     "
-                                    [ngStyle]="{right: isMobil() ? '42.8%' : '50%'}"
+                                    [ngStyle]="{
+                                        right: isMobil() ? '42.8%' : '50%'
+                                    }"
                                 >
                                     <img
                                         *ngIf="product.items[0].logo"
@@ -202,8 +229,6 @@
                                         width="64"
                                     />
                                 </article>
-                                
-                                
                             </ng-container>
                         </div>
                     </div>
@@ -320,7 +345,12 @@
     </div>
 </div>
 
-<div class="surface-section px-4 pb-8 md:px-6 lg:px-8 overflow-hidden"  [ngStyle]="{'padding-top': isMobil() ? '0px !important' : '5rem !important'}">
+<div
+    class="surface-section px-4 pb-8 md:px-6 lg:px-8 overflow-hidden"
+    [ngStyle]="{
+        'padding-top': isMobil() ? '0px !important' : '5rem !important'
+    }"
+>
     <div class="button-container">
         <div class="cube" *ngFor="let button of buttons; let i = index">
             <div class="cube-face cube-front">
@@ -507,7 +537,6 @@
 
 <p-dialog
     header="Incidentes/Denuncias"
-    
     [modal]="true"
     [(visible)]="visible_incidente"
     [style]="{ width: '80rem' }"
@@ -516,12 +545,15 @@
     (onShow)="isMobil() ? dialog1.maximize() : ''"
     class="safe-margin-top"
 >
-    <app-mapa *ngIf="visible_incidente" [cate]="button_active.cate" [sub]="button_active.sub"></app-mapa>
+    <app-mapa
+        *ngIf="visible_incidente"
+        [cate]="button_active.cate"
+        [sub]="button_active.sub"
+    ></app-mapa>
 </p-dialog>
 
 <p-dialog
     header="Fichas Sectoriales"
-    
     [modal]="true"
     [(visible)]="visible_ficha"
     [style]="{ width: '80rem' }"

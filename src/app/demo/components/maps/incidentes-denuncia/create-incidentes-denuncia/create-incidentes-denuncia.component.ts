@@ -124,7 +124,7 @@ export class CreateIncidentesDenunciaComponent implements OnInit {
         this.load_form = false;
         if (this.data) {
             this.nuevoIncidenteDenuncia.get('direccion_geo').setValue({
-                nombre: this.data.properties.nombre,
+                nombre:  this.data?.properties?.nombre?this.data.properties.nombre: 'Barrio sin nombre',
                 latitud: this.direccion.latitud,
                 longitud: this.direccion.longitud,
             });

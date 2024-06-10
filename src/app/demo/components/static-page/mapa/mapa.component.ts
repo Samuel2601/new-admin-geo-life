@@ -1339,6 +1339,7 @@ export class MapaComponent implements OnInit {
             summary: 'Excelente',
             detail: this.selectedFiles.length + 'Imagenes subidas',
         });
+        
         this.mostrargale = true;
     }
     async tomarFotoYEnviar(event: any) {
@@ -1363,7 +1364,7 @@ export class MapaComponent implements OnInit {
             const byteArray = new Uint8Array(byteNumbers);
             const blob = new Blob([byteArray], { type: 'image/jpeg' }); // Puedes ajustar el tipo según el formato de tu imagen
             let im = new File([blob], 'prueba', { type: 'image/jpeg' });
-            this.selectedFiles.push(im);
+            this.selectedFilesnew.push(im);
 
             const reader = new FileReader();
             reader.onload = (e: any) => {
@@ -1377,7 +1378,7 @@ export class MapaComponent implements OnInit {
             reader.readAsDataURL(im);
             this.load_carrusel = true;
 
-            if (this.selectedFiles.length == 5) {
+            if (this.selectedFilesnew.length == 5) {
                 this.upload = false;
             }
         } else {
@@ -1393,8 +1394,9 @@ export class MapaComponent implements OnInit {
     displayCustom: boolean | undefined;
 
     images: any[] | undefined;
+    activeIndexG:number=0;
     imageClick(index: number) {
-        this.activeIndex = index;
+        this.activeIndexG = index;
         this.displayCustom = true;
     }
     responsiveOptions = [

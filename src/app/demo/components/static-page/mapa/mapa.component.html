@@ -53,7 +53,12 @@
                         <div
                             class="cube-categoria mt-3 mb-3"
                             *ngIf="categoria.nombre != 'CIOCE'"
-                            [ngStyle]="{ 'background-color': cateactive(categoria.nombre,'categoria') }"
+                            [ngStyle]="{
+                                'background-color': cateactive(
+                                    categoria.nombre,
+                                    'categoria'
+                                )
+                            }"
                         >
                             <div
                                 class="cube-face-categoria cube-front-categoria"
@@ -113,10 +118,16 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-product>
-                        <tr [ngStyle]="{ 'background-color': cateactive(product.nombre,'subcategoria') }"
+                        <tr
+                            [ngStyle]="{
+                                'background-color': cateactive(
+                                    product.nombre,
+                                    'subcategoria'
+                                )
+                            }"
                             (click)="
                                 onSubCategoriaClick(product);
-                                nextCallback.emit();
+                                nextCallback.emit()
                             "
                         >
                             <td
@@ -195,7 +206,8 @@
                             >
                             </p-autoComplete>
                             <label for="float-label"
-                                >Ingresa una dirección o elije un punto en el mapa
+                                >Ingresa una dirección o elije un punto en el
+                                mapa
                             </label>
                         </span>
                     </div>
@@ -463,6 +475,7 @@
                     (onClick)="
                         upload = true;
                         imagenesSeleccionadas = [];
+                        selectedFilesnew = [];
                         selectedFiles = []
                     "
                     icon="pi pi-trash"
@@ -471,7 +484,7 @@
                 <p-galleria
                     [value]="imagenesSeleccionadas"
                     [(visible)]="displayCustom"
-                    [(activeIndex)]="activeIndex"
+                    [(activeIndex)]="activeIndexG"
                     [responsiveOptions]="responsiveOptions"
                     [containerStyle]="{ 'max-width': '850px' }"
                     [numVisible]="7"

@@ -226,6 +226,16 @@ export class HomeComponent implements OnInit {
         },*/
     ];
     filteredProductos: any[] = [];
+    imageselecte:any;
+    load_image:boolean=false;
+    showimage(img:any){
+        this.imageselecte=img;
+        console.log(this.imageselecte);
+        setTimeout(() => {
+            this.load_image=true;
+        }, 500);
+       
+    }
 
     filterProductos(): void {
         if (this.isMobil()) {

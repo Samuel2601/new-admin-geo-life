@@ -72,7 +72,7 @@
                                 [ngStyle]="{
                                     height: isMobil() ? '200px' : 'auto'
                                 }"
-                                
+                                (click)="showimage(product)"
                             />
                             <!--
                                 (click)="openLink(product.url)"
@@ -87,7 +87,7 @@
                                 (click)="openLink(product.url)"
                             />
                             -->
-                           
+
                             <ng-container *ngIf="product.items">
                                 <article
                                     *ngIf="product.items[2]"
@@ -564,4 +564,18 @@
     class="safe-margin-top"
 >
     <app-mapa-ficha *ngIf="visible_ficha"></app-mapa-ficha>
+</p-dialog>
+
+<p-dialog
+    header="Imagen"
+    [modal]="true"
+    [(visible)]="load_image"
+    [style]="{ width: '50rem' }"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [maximizable]="true"
+>
+    <ng-container *ngIf="imageselecte">
+        <img [src]="imageselecte.image" style="width: 100%; display: block" />
+        <p-button  label="Ir" (click)="openLink(imageselecte.url)" [style]="{'margin-top': '20px'}"></p-button>
+    </ng-container>
 </p-dialog>

@@ -127,21 +127,30 @@
                             label="Iniciar Sesión"
                             class="w-full p-3 text-xl"
                             type="submit"
+                            [rounded]="true"
+                            
                         ></button>
+                        <!--
+                            
+                        -->
                         <ng-container *ngIf="statusbiometrico()">
                             <span class="my-3">O</span>
                             <button
                                 pButton
                                 pRipple
-                                class="w-full p-3 text-xl"
+                                class="w-5 p-3 text-xl"
                                 type="button"
                                 (click)="callbiometrico()"
                                 label="HUELLA"
+                                severity="secondary"
+                                [raised]="true"
+                                [rounded]="true"
+                                [text]="true"
                             >
                                 <img
                                     src="https://i.postimg.cc/Hx5Kpkt4/huella-dactilar.png"
                                     alt="Huella"
-                                    width="30"
+                                    width="20"
                                 />
                             </button>
                         </ng-container>

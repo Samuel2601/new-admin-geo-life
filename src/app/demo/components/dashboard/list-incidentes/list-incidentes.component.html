@@ -6,6 +6,7 @@
             <div class="field col-12 md:col-3">
                 <span class="p-float-label">
                     <p-calendar
+                        appendTo="body"
                         inputId="calendar"
                         formControlName="fecha_inicio"
                     ></p-calendar>
@@ -15,6 +16,7 @@
             <div class="field col-12 md:col-3">
                 <span class="p-float-label">
                     <p-calendar
+                        appendTo="body"
                         inputId="calendar"
                         formControlName="fecha_fin"
                     ></p-calendar>
@@ -25,6 +27,7 @@
             <div class="field col-12 md:col-3" *ngIf="categorias.length > 0">
                 <span class="p-float-label">
                     <p-multiSelect
+                        appendTo="body"
                         [options]="categorias"
                         placeholder="Seleccione las Categorias"
                         optionLabel="nombre"
@@ -85,6 +88,7 @@
             <div class="field col-12 md:col-3" *ngIf="subcategorias.length > 0">
                 <span class="p-float-label">
                     <p-multiSelect
+                        appendTo="body"
                         [options]="subcategorias"
                         placeholder="Seleccione las Categorias"
                         optionLabel="nombre"
@@ -145,6 +149,7 @@
             <div class="field col-12 md:col-3" *ngIf="estados.length > 0">
                 <span class="p-float-label">
                     <p-multiSelect
+                        appendTo="body"
                         [options]="estados"
                         placeholder="Seleccione los Estados"
                         optionLabel="nombre"
@@ -201,6 +206,7 @@
             <div class="field col-12 md:col-3" *ngIf="direcciones.length > 0">
                 <span class="p-float-label">
                     <p-multiSelect
+                        appendTo="body"
                         [options]="direcciones"
                         placeholder="Seleccione las Direcciones"
                         optionLabel="nombre"
@@ -259,6 +265,7 @@
             </div>
             <div class="field col-12 md:col-3">
                 <p-selectButton
+                    appendTo="body"
                     [options]="viewmentOptions"
                     optionLabel="name"
                     optionValue="value"
@@ -278,7 +285,8 @@
 </div>
 
 <div class="card" *ngIf="incidente.length > 0">
-    <p-table [paginatorDropdownAppendTo]="'body'"
+    <p-table
+        [paginatorDropdownAppendTo]="'body'"
         styleClass="p-datatable-striped"
         #dt1
         [value]="incidente"
@@ -467,7 +475,11 @@
                 <canvas #exportCanvas style="display: none"></canvas>
             </div>
             <div class="col-12 xl:col-6">
-                <p-table [paginatorDropdownAppendTo]="'body'" #dt1 [value]="getEntries(totales[item.clave])">
+                <p-table
+                    [paginatorDropdownAppendTo]="'body'"
+                    #dt1
+                    [value]="getEntries(totales[item.clave])"
+                >
                     <ng-template pTemplate="caption">
                         <div class="flex">
                             <h4>Lista de {{ item.clave | uppercase }}</h4>
@@ -501,7 +513,10 @@
                             <td>{{ categoria[0] }}</td>
                             <td>{{ categoria[1].registros }}</td>
                             <td>
-                                {{ categoria[1].porcentaje / 100 | percent:'1.2' }}
+                                {{
+                                    categoria[1].porcentaje / 100
+                                        | percent : "1.2"
+                                }}
                             </td>
                         </tr>
                     </ng-template>
@@ -517,7 +532,7 @@
                             <td>
                                 {{
                                     getTotales(totales[item.clave])
-                                        .totalPorcentaje / 100 | percent:'1.2'
+                                        .totalPorcentaje / 100 | percent : "1.2"
                                 }}
                             </td>
                         </tr>

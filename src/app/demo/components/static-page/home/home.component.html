@@ -552,6 +552,22 @@
         [sub]="button_active.sub"
     ></app-mapa>
 </p-dialog>
+<p-dialog
+    header="Incidentes/Denuncias"
+    [modal]="true"
+    [(visible)]="visible_incidente_mirror"
+    [style]="{ width: '80rem' }"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    #dialog11
+    (onShow)="isMobil() ? dialog11.maximize() : ''"
+    class="safe-margin-top"
+>
+    <app-list-incidentes
+        *ngIf="visible_incidente_mirror"
+        [cate]="button_active.cate"
+        [sub]="button_active.sub"
+    ></app-list-incidentes>
+</p-dialog>
 
 <p-dialog
     header="Fichas Sectoriales"
@@ -567,6 +583,19 @@
 </p-dialog>
 
 <p-dialog
+    header="Fichas Sectoriales"
+    [modal]="true"
+    [(visible)]="visible_ficha_mirror"
+    [style]="{ width: '80rem' }"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    #dialog22
+    (onShow)="isMobil() ? dialog22.maximize() : ''"
+    class="safe-margin-top"
+>
+    <app-list-ficha *ngIf="visible_ficha_mirror"></app-list-ficha>
+</p-dialog>
+
+<p-dialog
     header="Imagen"
     [modal]="true"
     [(visible)]="load_image"
@@ -576,6 +605,10 @@
 >
     <ng-container *ngIf="imageselecte">
         <img [src]="imageselecte.image" style="width: 100%; display: block" />
-        <p-button  label="Ir" (click)="openLink(imageselecte.url)" [style]="{'margin-top': '20px'}"></p-button>
+        <p-button
+            label="Ir"
+            (click)="openLink(imageselecte.url)"
+            [style]="{ 'margin-top': '20px' }"
+        ></p-button>
     </ng-container>
 </p-dialog>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
@@ -7,13 +7,14 @@ import { Table } from 'primeng/table';
 import { ChartModule, UIChart } from 'primeng/chart';
 import { Router } from '@angular/router';
 
-
 @Component({
     selector: 'app-list-incidentes',
     templateUrl: './list-incidentes.component.html',
     styleUrl: './list-incidentes.component.scss',
 })
 export class ListIncidentesComponent implements OnInit {
+    @Input() cate: any = '';
+    @Input() sub: any = '';
     public filterForm: FormGroup | any;
     private token = this.helper.token();
     public categorias: any[] = [];
@@ -35,15 +36,14 @@ export class ListIncidentesComponent implements OnInit {
             subcategoria: [[], [Validators.minLength(1)]],
             estado: [[], [Validators.minLength(1)]],
             direccion: [[], [Validators.minLength(1)]],
-            view:[null]
+            view: [null],
         });
     }
     viewmentOptions: any[] = [
         { name: 'Todos', value: null },
         { name: 'Visibles', value: true },
-        { name: 'Ocultos', value: false }
+        { name: 'Ocultos', value: false },
     ];
-
 
     filtro() {
         this.helper.llamarspinner();
@@ -95,14 +95,14 @@ export class ListIncidentesComponent implements OnInit {
                 direccion.some(
                     (d: any) => d.nombre == elemento.direccion_geo.nombre
                 );
-            const viewValida= 
-            view==null|| elemento.view==view
+            const viewValida = view == null || elemento.view == view;
 
             return (
                 categoriaValida &&
                 subcategoriaValida &&
                 estadoValido &&
-                direccionValida&&viewValida
+                direccionValida &&
+                viewValida
             );
         });
         this.incidente = elementosFiltrados;
@@ -230,9 +230,10 @@ export class ListIncidentesComponent implements OnInit {
 
         return porcentajes;
     }
-    check:any={};
+    check: any = {};
     async ngOnInit() {
-        this.check.DashboardComponent = this.helper.decryptData('DashboardComponent') || false;
+        this.check.DashboardComponent =
+            this.helper.decryptData('DashboardComponent') || false;
         //console.log(this.check.DashboardComponent);
         if (!this.check.DashboardComponent) {
             this.router.navigate(['/notfound']);
@@ -243,7 +244,7 @@ export class ListIncidentesComponent implements OnInit {
             //this.helper.cerrarspinner();
             throw new Error('Token no encontrado');
         }
-        
+
         await this.rankin();
         await this.listCategoria();
         await this.listarEstado();
@@ -251,21 +252,37 @@ export class ListIncidentesComponent implements OnInit {
             this.updateSubcategorias();
         });
     }
+    async load_selecte() {
+        if (this.cate) {
+            let aux = this.categorias.find(
+                (element) => element.nombre === this.cate
+            );
+            //console.log(aux,this.categorias,this.cate);
+            if (aux) {
+                this.filterForm.get('categoria').setValue([aux]);
+                await this.updateSubcategorias();
+                this.filtro();
+            }
+        }
+    }
     async listarEstado() {
-        if(this.token)this.listar
-            .listarEstadosIncidentes(this.token)
-            .subscribe((response) => {
-                if (response.data) {
-                    this.estados = response.data;
-                }
-            });
+        if (this.token)
+            this.listar
+                .listarEstadosIncidentes(this.token)
+                .subscribe((response) => {
+                    if (response.data) {
+                        this.estados = response.data;
+                    }
+                });
     }
     async listCategoria() {
-        if(this.token)this.listar.listarCategorias(this.token).subscribe((response) => {
-            if (response.data) {
-                this.categorias = response.data;
-            }
-        });
+        if (this.token)
+            this.listar.listarCategorias(this.token).subscribe((response) => {
+                if (response.data) {
+                    this.categorias = response.data;
+                    this.load_selecte();
+                }
+            });
     }
     async updateSubcategorias() {
         this.filterForm.get('subcategoria').setValue([]);
@@ -290,7 +307,7 @@ export class ListIncidentesComponent implements OnInit {
     options: any;
     async rankin() {
         // Obtener todos los incidentes si aún no se han cargado
-        if (this.constIncidente.length === 0&&this.token) {
+        if (this.constIncidente.length === 0 && this.token) {
             try {
                 const response: any = await this.listar
                     .listarIncidentesDenuncias(this.token, '', '', false)
@@ -381,8 +398,10 @@ export class ListIncidentesComponent implements OnInit {
             csv = table.value.map((row) => {
                 const titulo = row[0];
                 const registros = row[1].registros;
-                const porcentaje = row[1].porcentaje.toFixed(2).replace('.', ',');
-            
+                const porcentaje = row[1].porcentaje
+                    .toFixed(2)
+                    .replace('.', ',');
+
                 return [titulo, registros, porcentaje]
                     .map((value) => {
                         if (typeof value === 'string') {
@@ -401,8 +420,8 @@ export class ListIncidentesComponent implements OnInit {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        let ext='.csv';
-        a.download = titulo?titulo+ext:'IncidentesFiltrado'+ext;
+        let ext = '.csv';
+        a.download = titulo ? titulo + ext : 'IncidentesFiltrado' + ext;
         a.click();
         URL.revokeObjectURL(url);
     }
@@ -419,23 +438,25 @@ export class ListIncidentesComponent implements OnInit {
         }
     }
 
-    getSeverity(status: string): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' {
+    getSeverity(
+        status: string
+    ): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' {
         switch (status.toLowerCase()) {
             case 'suspendido':
                 return 'danger';
-    
+
             case 'finalizado':
                 return 'success';
-    
+
             case 'en proceso':
                 return 'info';
-    
+
             case 'pendiente':
                 return 'warning';
-    
+
             case 'planificada':
                 return 'info';
-    
+
             default:
                 return 'secondary'; // Asegúrate de retornar un valor válido por defecto
         }

@@ -7,12 +7,15 @@ import { Router } from '@angular/router';
 import { ImportsModule } from 'src/app/demo/services/import';
 import { MapaComponent } from '../mapa/mapa.component';
 import { MapaFichaComponent } from '../mapa-ficha/mapa-ficha.component';
+import { DashboardModule } from '../../dashboard/dashboard.module';
 @Component({
     selector: 'app-home',
     standalone: true,
-    imports: [ImportsModule,
+    imports: [
+        ImportsModule,
         MapaComponent,
-        MapaFichaComponent
+        MapaFichaComponent,
+        DashboardModule,
     ],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss',
@@ -42,9 +45,10 @@ export class HomeComponent implements OnInit {
             view: true,
         });
     }
+    DashboardComponent: boolean=false;
     ngOnInit(): void {
         this.helperService.setHomeComponent(this);
-
+         
         this.responsiveOptions = [
             {
                 breakpoint: '1199px',
@@ -118,6 +122,13 @@ export class HomeComponent implements OnInit {
                 mobil: true,
             }
         );
+        try {
+            this.DashboardComponent =
+            this.helperService.decryptData('DashboardComponent') || false;
+            console.log(this.DashboardComponent);
+        } catch (error) {
+            
+        }
         this.filterProductos();
     }
     buttons = [
@@ -226,15 +237,14 @@ export class HomeComponent implements OnInit {
         },*/
     ];
     filteredProductos: any[] = [];
-    imageselecte:any;
-    load_image:boolean=false;
-    showimage(img:any){
-        this.imageselecte=img;
+    imageselecte: any;
+    load_image: boolean = false;
+    showimage(img: any) {
+        this.imageselecte = img;
         console.log(this.imageselecte);
         setTimeout(() => {
-            this.load_image=true;
+            this.load_image = true;
         }, 500);
-       
     }
 
     filterProductos(): void {
@@ -256,6 +266,7 @@ export class HomeComponent implements OnInit {
     }
 
     visible_incidente: boolean = false;
+    visible_incidente_mirror: boolean = false;
     button_active: any = { cate: '', sub: '' };
     incidente(cate?, sub?) {
         if (cate) {
@@ -273,16 +284,25 @@ export class HomeComponent implements OnInit {
         if (!this.token) {
             throw this.router.navigate(['/auth/login']);
         } else {
-            this.visible_incidente = true;
+            if (this.DashboardComponent) {
+                this.visible_incidente_mirror = true;
+            } else {
+                this.visible_incidente = true;
+            }
         }
     }
 
     visible_ficha: boolean = false;
+    visible_ficha_mirror: boolean = false;
     ficha() {
         if (!this.token) {
             throw this.router.navigate(['/auth/login']);
         } else {
-            this.visible_ficha = true;
+            if (this.DashboardComponent) {
+                this.visible_ficha_mirror = true;
+            } else {
+                this.visible_ficha = true;
+            }
         }
     }
 

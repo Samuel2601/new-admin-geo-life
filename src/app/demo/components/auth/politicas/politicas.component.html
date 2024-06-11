@@ -16,16 +16,7 @@
         "
         [style]="{ width: isMobile() ? '100%' : '70vw' }"
     >
-        <!--
-<div class="flex justify-content-center mt-2 mb-2">
-            <p-button
-                icon="pi pi-arrow-left"
-                routerLink="/maps"
-                [rounded]="true"
-                severity="info"
-            ></p-button>
-        </div>
-    -->
+        
 
         <div
             class="w-full surface-card py-8 px-5 sm:px-8 flex flex-column align-items-center"
@@ -160,6 +151,53 @@
                         consentimiento revocado no tiene efectos retroactivos.
                     </p>
                 </p-fieldset>
+                <p-fieldset
+                    legend="Eliminación de datos de usuario"
+                    [toggleable]="true"
+                >
+                    <p class="m-0">
+                        <strong>Derecho a la eliminación de datos:</strong> Los
+                        usuarios tienen el derecho a solicitar la eliminación de
+                        sus datos personales en cualquier momento. Este derecho
+                        garantiza que los datos personales del usuario sean
+                        eliminados de nuestros sistemas y bases de datos,
+                        excepto en aquellos casos donde exista una obligación
+                        legal de conservarlos.
+                    </p>
+                    <p-divider></p-divider>
+                    <p class="m-0">
+                        <strong>Solicitud de eliminación:</strong> Para
+                        solicitar la eliminación de sus datos personales, los
+                        usuarios deben enviar un correo electrónico a
+                        <a href="mailto:aplicaciones&#64;esmeraldas.gob.ec"
+                            >aplicaciones&#64;esmeraldas.gob.ec</a
+                        >
+                        con el asunto "Solicitud de eliminación de datos
+                        personales". En el cuerpo del correo, deberán
+                        proporcionar la siguiente información:
+                    </p>
+                    <ul>
+                        <li>Nombre completo del usuario</li>
+                        <li>Correo electrónico asociado a la cuenta</li>
+                        <li>Motivo de la solicitud (opcional)</li>
+                    </ul>
+                    <p-divider></p-divider>
+                    <p class="m-0">
+                        <strong>Proceso de eliminación:</strong> Una vez
+                        recibida la solicitud, nuestro equipo de soporte
+                        procesará la solicitud dentro de un plazo de 15 días
+                        hábiles. Se enviará un correo de confirmación al usuario
+                        una vez que sus datos hayan sido eliminados.
+                    </p>
+                    <p-divider></p-divider>
+                    <p class="m-0">
+                        <strong>Excepciones:</strong> En algunos casos, es
+                        posible que no podamos eliminar ciertos datos debido a
+                        obligaciones legales. En tales casos, informaremos al
+                        usuario sobre la razón específica por la cual no se
+                        puede proceder con la eliminación de sus datos.
+                    </p>
+                </p-fieldset>
 
                 Información de contacto:
                 <a href="mailto:aplicaciones@esmeraldas.gob.ec">
@@ -171,6 +209,13 @@
                         class="p-button-text"
                     ></button>
                 </a>
+                <div class="flex justify-content-center mt-2 mb-2">
+                    <p-button
+                        routerLink="/home"
+                        label="Inicio"
+                        [rounded]="true"
+                    ></p-button>
+                </div>
             </div>
         </div>
     </div>

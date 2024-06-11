@@ -22,9 +22,9 @@ export class AdminService {
 		let headers = new HttpHeaders().set('Content-Type', 'application/json');
 		return this._http.post(this.url + 'login_admin', data, { headers: headers });
 	}
-	forgotpassword(data: any): Observable<any> {
+	recoverPassword(data: any): Observable<any> {
 		let headers = new HttpHeaders().set('Content-Type', 'application/json');
-		return this._http.post(this.url + 'forgotpassword', data, { headers: headers });
+		return this._http.post(this.url + 'recover-password', data, { headers: headers });
 	}
 	newpassword(data: any, token: any): Observable<any> {
 		let headers = new HttpHeaders({

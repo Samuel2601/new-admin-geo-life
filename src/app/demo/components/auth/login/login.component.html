@@ -113,10 +113,11 @@
                             >No tienes una cuenta?</a
                         >
                         <!--
-<a
+                         <a
                             class="font-medium no-underline ml-2 text-right cursor-pointer"
                             style="color: var(--primary-color)"
-                            >Forgot password?</a
+                            [routerLink]="'/auth/recovery'"
+                            >Olvidates tu contraseña?</a
                         >
                         -->
                     </div>
@@ -128,7 +129,6 @@
                             class="w-full p-3 text-xl"
                             type="submit"
                             [rounded]="true"
-                            
                         ></button>
                         <!--
                             

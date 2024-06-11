@@ -125,7 +125,7 @@ export class HomeComponent implements OnInit {
         try {
             this.DashboardComponent =
             this.helperService.decryptData('DashboardComponent') || false;
-            console.log(this.DashboardComponent);
+            
         } catch (error) {
             
         }

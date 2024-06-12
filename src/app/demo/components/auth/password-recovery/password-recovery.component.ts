@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { AdminService } from 'src/app/demo/services/admin.service';
+import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-password-recovery',
     templateUrl: './password-recovery.component.html',
     styleUrls: ['./password-recovery.component.scss'],
+    providers: [MessageService],
 })
 export class PasswordRecoveryComponent implements OnInit {
     recoveryForm: FormGroup;
@@ -16,9 +18,10 @@ export class PasswordRecoveryComponent implements OnInit {
 
     constructor(
         private formBuilder: FormBuilder,
-        private http: HttpClient,
         private recaptchaV3Service: ReCaptchaV3Service,
-        private admin: AdminService
+        private admin: AdminService,
+        private messageService: MessageService,
+        private router: Router,
     ) {}
 
     ngOnInit() {
@@ -45,13 +48,24 @@ export class PasswordRecoveryComponent implements OnInit {
         }
 
         const formData = this.recoveryForm.value;
-        console.log(formData);
         this.admin.recoverPassword(formData).subscribe(
             (response) => {
-                console.log(response);
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Actualizado',
+                    detail: response.message,
+                });
+                setTimeout(() => {
+                    this.router.navigate(['/auth/login']); 
+                }, 500);
             },
             (error) => {
                 console.error(error);
+                this.messageService.add({
+                    severity: 'error',
+                    summary: ('(' + error.status + ')').toString(),
+                    detail: error.error.message || 'Sin conexión',
+                });
             }
         );
     }

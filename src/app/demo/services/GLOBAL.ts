@@ -5,7 +5,7 @@ export var GLOBAL = {
 
     //url: "https://api.pagosegbfcristorey.tk/api/",
 
-    //url: "https://api.incorp.tk/api/",
+    //url: "https://api.incorp.tk/sapi/",
 
     /* url : 'https://api.linajeperuano.com/api/', */
 };

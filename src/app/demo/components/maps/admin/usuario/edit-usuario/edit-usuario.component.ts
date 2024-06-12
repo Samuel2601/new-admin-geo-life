@@ -7,7 +7,7 @@ import { GLOBAL } from 'src/app/demo/services/GLOBAL';
 import { Capacitor } from '@capacitor/core';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
-import { MessageService } from 'primeng/api';
+import { Message, MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DialogService } from 'primeng/dynamicdialog';
 @Component({
     selector: 'app-edit-usuario',
@@ -51,7 +51,7 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit {
                 }
             });
             if (!this.token) {
-                this.router.navigate(['/maps']);
+                this.router.navigate(['/home']);
             }
         }
 
@@ -78,12 +78,18 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit {
     isMobil() {
         return this.helper.isMobil();
     }
+    messages: Message[] | undefined;
     obteneruser(id: any) {
         this._filterservice.obtenerUsuario(this.token, id).subscribe(
             (response) => {
                 this.datauser = response.data;
                 this.datauser.password = '';
                 //console.log(this.datauser);
+                if(this.datauser.password_temp){
+                    this.messages = [
+                        { severity: 'error', detail: 'Por favor de cambiar su contraseña y guardar' },
+                    ];
+                }
             },
             (error) => {
                 this.messageService.add({
@@ -95,6 +101,9 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit {
         );
     }
     updateUser() {
+        if(this.datauser.password_temp){
+            this.datauser.password_temp=undefined;
+        }
         this.updateservice
             .actualizarUsuario(
                 this.token,

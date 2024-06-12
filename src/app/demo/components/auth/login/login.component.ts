@@ -317,10 +317,14 @@ export class LoginComponent implements OnInit {
                                 }
                             }
                         }
-
                         // Redirigir a la página de mapa después de la autenticación exitosa
                         setTimeout(() => {
-                            this.router.navigate(['/home']);
+                            if(response.pass){
+                                this.router.navigate(['/maps/edit-user']);
+                            }else{
+                                this.router.navigate(['/home']);
+                            }
+                            
                         }, 2000);
                     }
                 },

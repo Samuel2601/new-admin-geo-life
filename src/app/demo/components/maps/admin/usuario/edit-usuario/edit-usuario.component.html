@@ -99,7 +99,7 @@
                     <div class="field col-12 md:col-3">
                         <label htmlFor="state">Rol </label>
                         <p-dropdown
-                        appendTo="body"
+                            appendTo="body"
                             [disabled]="editing"
                             [options]="listrol"
                             [(ngModel)]="datauser.rol_user"
@@ -181,6 +181,7 @@
             <h5 *ngIf="!editing">
                 Formulario de actialización de datos de usuario
             </h5>
+            <p-messages [(value)]="messages" [enableService]="false" />
             <div class="p-fluid p-formgrid grid">
                 <div class="field col-4">
                     <img
@@ -238,6 +239,7 @@
                                 [(ngModel)]="datauser.correo"
                                 placeholder="Ingresa tu correo"
                                 type="email"
+                                [disabled]="editing"
                             />
                         </div>
                         <div class="field col-12 md:col-6">

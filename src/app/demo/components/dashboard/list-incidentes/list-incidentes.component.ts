@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
     templateUrl: './list-incidentes.component.html',
     styleUrl: './list-incidentes.component.scss',
 })
-export class ListIncidentesComponent implements OnInit {
+export class ListIncidentesComponent implements OnInit, AfterViewInit {
     @Input() cate: any = '';
     @Input() sub: any = '';
     public filterForm: FormGroup | any;
@@ -44,7 +44,11 @@ export class ListIncidentesComponent implements OnInit {
         { name: 'Visibles', value: true },
         { name: 'Ocultos', value: false },
     ];
-
+    @ViewChild('fechaInicio', { static: true }) fechaInicio: ElementRef;
+    ngAfterViewInit() {
+        // Deshabilitar autofocus en el campo fecha_inicio
+        this.fechaInicio.nativeElement.querySelector('input').blur();
+    }
     filtro() {
         this.helper.llamarspinner();
         this.load_table = false;
@@ -261,9 +265,9 @@ export class ListIncidentesComponent implements OnInit {
             if (aux) {
                 this.filterForm.get('categoria').setValue([aux]);
                 await this.updateSubcategorias();
-                this.filtro();
             }
         }
+        this.filtro();
     }
     async listarEstado() {
         if (this.token)

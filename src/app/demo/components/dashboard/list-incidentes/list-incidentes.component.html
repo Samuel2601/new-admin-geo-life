@@ -7,10 +7,12 @@
                 <span class="p-float-label">
                     <p-calendar
                         appendTo="body"
-                        inputId="calendar"
+                        inputId="fechaInicio"
                         formControlName="fecha_inicio"
+                        [autofocus]="false"
+                        #fechaInicio
                     ></p-calendar>
-                    <label for="calendar">Fecha de inicio</label>
+                    <label for="fechaInicio">Fecha de inicio</label>
                 </span>
             </div>
             <div class="field col-12 md:col-3">

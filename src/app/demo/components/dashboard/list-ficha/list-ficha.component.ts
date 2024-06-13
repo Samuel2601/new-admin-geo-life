@@ -7,14 +7,13 @@ import { Table } from 'primeng/table';
 import { ChartModule, UIChart } from 'primeng/chart';
 import { Router } from '@angular/router';
 
-
 @Component({
-  selector: 'app-list-ficha',
-  templateUrl: './list-ficha.component.html',
-  styleUrl: './list-ficha.component.scss'
+    selector: 'app-list-ficha',
+    templateUrl: './list-ficha.component.html',
+    styleUrl: './list-ficha.component.scss',
 })
-export class ListFichaComponent implements OnInit{
-  public filterForm: FormGroup | any;
+export class ListFichaComponent implements OnInit {
+    public filterForm: FormGroup | any;
     private token = this.helper.token();
     public actividades: any[] = [];
     public encargados: any[] = [];
@@ -26,7 +25,7 @@ export class ListFichaComponent implements OnInit{
         private listar: ListService,
         private helper: HelperService,
         private messageService: MessageService,
-        private router: Router,
+        private router: Router
     ) {
         this.filterForm = this.formBuilder.group({
             fecha_inicio: [''],
@@ -35,15 +34,14 @@ export class ListFichaComponent implements OnInit{
             encargado: [[], [Validators.minLength(1)]],
             estado: [[], [Validators.minLength(1)]],
             direccion: [[], [Validators.minLength(1)]],
-            view:[null]
+            view: [null],
         });
     }
     viewmentOptions: any[] = [
         { name: 'Todos', value: null },
         { name: 'Visibles', value: true },
-        { name: 'Ocultos', value: false }
+        { name: 'Ocultos', value: false },
     ];
-
 
     filtro() {
         this.helper.llamarspinner();
@@ -78,8 +76,7 @@ export class ListFichaComponent implements OnInit{
                 encargado.length === 0 ||
                 encargado.some(
                     (s: any) =>
-                        s._id.toString() ===
-                        elemento.encargado._id.toString()
+                        s._id.toString() === elemento.encargado._id.toString()
                 );
 
             const estadoValido =
@@ -92,27 +89,22 @@ export class ListFichaComponent implements OnInit{
             // Filtrar por dirección
             const direccionValida =
                 direccion.length === 0 ||
-                direccion.some(
-                    (d: any) => d.nombre == elemento.direccion_geo
-                );
-            const viewValida= 
-            view==null|| elemento.view==view
+                direccion.some((d: any) => d.nombre == elemento.direccion_geo);
+            const viewValida = view == null || elemento.view == view;
 
             return (
                 actividadValida &&
                 encargadoValida &&
                 estadoValido &&
-                direccionValida&&viewValida
+                direccionValida &&
+                viewValida
             );
         });
         this.ficha = elementosFiltrados;
         // Mostrar totales y porcentajes en la tabla
         // Obtener totales y porcentajes
         this.totales = this.obtenerTotales(this.ficha);
-        this.totales = this.obtenerPorcentajes(
-            this.totales,
-            this.ficha.length
-        );
+        this.totales = this.obtenerPorcentajes(this.totales, this.ficha.length);
         for (const key in this.dataForm) {
             if (Object.prototype.hasOwnProperty.call(this.dataForm, key)) {
                 const element = this.dataForm[key];
@@ -206,8 +198,7 @@ export class ListFichaComponent implements OnInit{
             porcentajes.encargados[key] = {
                 registros: totales.encargados[key].registros,
                 porcentaje:
-                    (totales.encargados[key].registros / totalFichas) *
-                    100,
+                    (totales.encargados[key].registros / totalFichas) * 100,
             };
         }
 
@@ -223,21 +214,22 @@ export class ListFichaComponent implements OnInit{
             porcentajes.direcciones[key] = {
                 registros: totales.direcciones[key].registros,
                 porcentaje:
-                    (totales.direcciones[key].registros / totalFichas) *
-                    100,
+                    (totales.direcciones[key].registros / totalFichas) * 100,
             };
         }
 
         return porcentajes;
     }
-    check:any={};
+    check: any = {};
     async ngOnInit() {
-        this.check.DashboardComponent = this.helper.decryptData('DashboardComponent') || false;
+        //this.helper.llamarspinner();
+        this.check.DashboardComponent =
+            this.helper.decryptData('DashboardComponent') || false;
         //console.log(this.check.DashboardComponent);
         if (!this.check.DashboardComponent) {
             this.router.navigate(['/notfound']);
         }
-        //this.helper.llamarspinner();
+
         if (!this.token) {
             this.router.navigate(['/auth/login']);
             //this.helper.cerrarspinner();
@@ -250,46 +242,55 @@ export class ListFichaComponent implements OnInit{
             this.updateEncargados();
         });
         setTimeout(() => {
-            this.helper.cerrarspinner();
-        }, 1550);
+            // this.helper.cerrarspinner();
+            this.filtro();
+        }, 550);
     }
     async listarEstado() {
-        if(this.token)this.listar
-            .listarEstadosActividadesProyecto(this.token)
-            .subscribe((response) => {
-                if (response.data) {
-                    this.estados = response.data;
-                }
-            });
+        if (this.token)
+            this.listar
+                .listarEstadosActividadesProyecto(this.token)
+                .subscribe((response) => {
+                    if (response.data) {
+                        this.estados = response.data;
+                    }
+                });
     }
     async listCategoria() {
-        if(this.token)this.listar.listarTiposActividadesProyecto(this.token).subscribe((response) => {
-            if (response.data) {
-                this.actividades = response.data;
-            }
-        });
+        if (this.token)
+            this.listar
+                .listarTiposActividadesProyecto(this.token)
+                .subscribe((response) => {
+                    if (response.data) {
+                        this.actividades = response.data;
+                    }
+                });
     }
     async updateEncargados() {
-      this.filterForm.get('encargado').setValue([]);
-      const actividadSeleccionada = this.filterForm.get('actividad').value;
-      this.encargados = [];
-      try {
-          for (const actividad of actividadSeleccionada) {
-              const encargadosActividad = this.constFicha
-                  .filter(ficha => ficha.actividad._id == actividad._id)
-                  .map(ficha => ficha.encargado);
-              this.encargados = this.encargados.concat(encargadosActividad);
-          }
-          // Eliminar duplicados
-          this.encargados = this.encargados.filter((encargado, index, self) =>
-              index === self.findIndex(e => (
-                  e._id === encargado._id && e.nombres === encargado.nombres
-              ))
-          );
-      } catch (error) {
-          console.error('Error al obtener encargados:', error);
-      }
-  }
+        this.filterForm.get('encargado').setValue([]);
+        const actividadSeleccionada = this.filterForm.get('actividad').value;
+        this.encargados = [];
+        try {
+            for (const actividad of actividadSeleccionada) {
+                const encargadosActividad = this.constFicha
+                    .filter((ficha) => ficha.actividad._id == actividad._id)
+                    .map((ficha) => ficha.encargado);
+                this.encargados = this.encargados.concat(encargadosActividad);
+            }
+            // Eliminar duplicados
+            this.encargados = this.encargados.filter(
+                (encargado, index, self) =>
+                    index ===
+                    self.findIndex(
+                        (e) =>
+                            e._id === encargado._id &&
+                            e.nombres === encargado.nombres
+                    )
+            );
+        } catch (error) {
+            console.error('Error al obtener encargados:', error);
+        }
+    }
 
     constFicha: any[] = [];
     ficha: any[] = [];
@@ -387,8 +388,10 @@ export class ListFichaComponent implements OnInit{
             csv = table.value.map((row) => {
                 const titulo = row[0];
                 const registros = row[1].registros;
-                const porcentaje = row[1].porcentaje.toFixed(2).replace('.', ',');
-            
+                const porcentaje = row[1].porcentaje
+                    .toFixed(2)
+                    .replace('.', ',');
+
                 return [titulo, registros, porcentaje]
                     .map((value) => {
                         if (typeof value === 'string') {
@@ -407,8 +410,8 @@ export class ListFichaComponent implements OnInit{
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        let ext='.csv';
-        a.download = titulo?titulo+ext:'FichasFiltrado'+ext;
+        let ext = '.csv';
+        a.download = titulo ? titulo + ext : 'FichasFiltrado' + ext;
         a.click();
         URL.revokeObjectURL(url);
     }
@@ -425,28 +428,30 @@ export class ListFichaComponent implements OnInit{
         }
     }
 
-    getSeverity(status: string): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' {
+    getSeverity(
+        status: string
+    ): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' {
         switch (status.toLowerCase()) {
             case 'suspendido':
                 return 'danger';
-    
+
             case 'finalizado':
                 return 'success';
-    
+
             case 'en proceso':
                 return 'info';
-    
+
             case 'pendiente':
                 return 'warning';
-    
+
             case 'planificada':
                 return 'info';
-    
+
             default:
                 return 'secondary'; // Asegúrate de retornar un valor válido por defecto
         }
     }
-    
+
     ultimoColor: string;
     colorIndex: number = 0;
     tonoIndex: number = 0;

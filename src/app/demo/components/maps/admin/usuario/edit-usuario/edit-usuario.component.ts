@@ -85,7 +85,7 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit {
                 this.datauser = response.data;
                 this.datauser.password = '';
                 //console.log(this.datauser);
-                if(this.datauser.password_temp){
+                if(this.datauser.password_temp!="undefined"){
                     this.messages = [
                         { severity: 'error', detail: 'Por favor de cambiar su contraseña y guardar' },
                     ];

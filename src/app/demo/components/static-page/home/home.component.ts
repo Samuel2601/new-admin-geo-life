@@ -111,13 +111,13 @@ export class HomeComponent implements OnInit {
             },
             {
                 id: '1002',
-                image: 'https://i.postimg.cc/4ydyyKYh/444943064-772994744996058-5130094033753262063-n.jpg',
+                image: 'https://i.postimg.cc/CxyHrcCz/alcalde-2-1.jpg',
                 url: 'https://www.facebook.com/alcaldiaciudadanadeesmeraldas/posts/pfbid037w3Up2J5CWBLeHtVYb69dJ9ZD3KKgwrUy6ga5gQxwjYa32souymP6tgbh9r2szj7l?rdid=SPHco5EmCgtnqfzb',
                 mobil: true,
             },
             {
                 id: '1002',
-                image: 'https://i.postimg.cc/bwbJZfwL/444480002-771894401772759-148770588324050042-n333.jpg',
+                image: 'https://i.postimg.cc/44S1Vfmv/12-02-informr-alcalde-1.jpg',
                 url: 'https://www.facebook.com/alcaldiaciudadanadeesmeraldas/posts/pfbid0THQ1Q3s95P8VyRthucxoCDGbR94EgpV9KSdsUqeTnwXSrWEnUndLNe8epDM2qGp8l',
                 mobil: true,
             }

@@ -371,45 +371,6 @@ export class LayersComponent implements OnInit {
                                 },
                             },
                             {
-                                icon: 'pi bi-ecu',
-                                label: 'ECU-MUNICIPAL',
-                                styleClass: 'itemcustom',
-                                visible: this.check.DashboardComponent,
-                                command: () => {
-                                    if (
-                                        (this.opcionb ? true : false) &&
-                                        this.check
-                                            .CreateIncidentesDenunciaComponent &&
-                                        (this.latitud ? true : false) &&
-                                        (this.longitud ? true : false)
-                                    ) {
-                                        this.nuevoIncidente('ECU MUNICIPAL');
-                                    } else {
-                                        if (
-                                            (this.opcionb ? true : false) &&
-                                            this.check
-                                                .IndexIncidentesDenunciaComponent &&
-                                            this.check.DashboardComponent
-                                        ) {
-                                            this.mostrarincidente = false;
-                                            setTimeout(() => {
-                                                this.mostrarfiltro = false;
-                                                this.categoria =
-                                                    'ECU MUNICIPAL';
-                                                this.subcategoria = undefined;
-                                                this.incidente();
-                                            }, 500);
-                                        } else {
-                                            this.messageService.add({
-                                                severity: 'error',
-                                                summary: 'ERROR',
-                                                detail: 'Primero selecciona un punto',
-                                            });
-                                        }
-                                    }
-                                },
-                            },
-                            {
                                 icon: this.capaActiva
                                     ? 'pi bi-barrio-on-custom'
                                     : 'bi bi-barrio-off-custom',
@@ -782,7 +743,7 @@ export class LayersComponent implements OnInit {
             const panelmenu = document.getElementById('panelmenu');
 
             // Verificar si el speedDial ya está en el mapa antes de agregarlo
-            if (!this.pushmenu && this.mapCustom.controls&&panelmenu) {
+            if (!this.pushmenu && this.mapCustom.controls && panelmenu) {
                 this.pushmenu = true;
                 const customControlDiv = document.createElement('div');
                 customControlDiv.appendChild(panelmenu);
@@ -943,9 +904,10 @@ export class LayersComponent implements OnInit {
     //INICIALIZADOR DEL MAPA
     initmap() {
         this.loader.load().then(() => {
-            this.helperService.autocompleteService = new google.maps.places.AutocompleteService();
+            this.helperService.autocompleteService =
+                new google.maps.places.AutocompleteService();
             this.helperService.geocoderService = new google.maps.Geocoder();
-            
+
             const haightAshbury = { lat: 0.977035, lng: -79.655415 };
             this.mapCustom = new google.maps.Map(
                 document.getElementById('map') as HTMLElement,
@@ -1226,11 +1188,14 @@ export class LayersComponent implements OnInit {
 
             // Calcular los límites que abarcan todos los polígonos
             this.arr_polygon.forEach((polygon: google.maps.Polygon) => {
-                polygon.getPath().getArray().forEach((latLng) => {
-                    bounds.extend(latLng);
-                });
+                polygon
+                    .getPath()
+                    .getArray()
+                    .forEach((latLng) => {
+                        bounds.extend(latLng);
+                    });
             });
-    
+
             // Ajustar el mapa para que abarque todos los polígonos
             this.mapCustom.fitBounds(bounds);
 
@@ -1239,7 +1204,7 @@ export class LayersComponent implements OnInit {
             const zoom = this.calculateZoomLevel(bounds);
             console.log(center, zoom);
             // Ajustar el mapa para que abarque todos los polígonos
-            this.mapCustom.setCenter({lat:0.935233,lng: -79.681929});
+            this.mapCustom.setCenter({ lat: 0.935233, lng: -79.681929 });
             this.mapCustom.setZoom(zoom);
         }
     }

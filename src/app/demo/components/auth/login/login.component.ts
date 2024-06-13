@@ -14,16 +14,7 @@ import { NativeBiometric } from 'capacitor-native-biometric';
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
-    styles: [
-        `
-            :host ::ng-deep .pi-eye,
-            :host ::ng-deep .pi-eye-slash {
-                transform: scale(1.6);
-                margin-right: 1rem;
-                color: var(--primary-color) !important;
-            }
-        `,
-    ],
+    styleUrls: ['./login.component.scss'],
     providers: [MessageService, DynamicDialogRef],
 })
 export class LoginComponent implements OnInit {
@@ -81,7 +72,7 @@ export class LoginComponent implements OnInit {
             );
         });
     }
-    statusbiometrico():boolean {
+    statusbiometrico(): boolean {
         const correoCookieuser = this.helper.isMobil()
             ? localStorage.getItem('correo')
             : this.cookieService.get('correo');
@@ -279,9 +270,12 @@ export class LoginComponent implements OnInit {
                             summary: 'Ingreso',
                             detail: 'Bienvenido',
                         });
+                        const correoCookiepass = this.helper.isMobil()
+                            ? localStorage.getItem('pass')
+                            : this.cookieService.get('pass');
                         if (
                             this.helper.isMobil() &&
-                            !localStorage.getItem('pass')
+                            (!correoCookiepass||this.loginForm.get('pass')?.value!=this.helper.decryptDataLogin(correoCookiepass))
                         ) {
                             // Realizar autenticación biométrica
                             const result = await NativeBiometric.isAvailable();
@@ -319,12 +313,11 @@ export class LoginComponent implements OnInit {
                         }
                         // Redirigir a la página de mapa después de la autenticación exitosa
                         setTimeout(() => {
-                            if(response.pass){
+                            if (response.pass) {
                                 this.router.navigate(['/maps/edit-user']);
-                            }else{
+                            } else {
                                 this.router.navigate(['/home']);
                             }
-                            
                         }, 2000);
                     }
                 },
@@ -384,4 +377,11 @@ export class LoginComponent implements OnInit {
         }
     }
     async postReset(cedula: string) {}
+    loginWithFacebook() {
+        // Lógica para iniciar sesión con Facebook
+    }
+
+    loginWithGoogle() {
+        // Lógica para iniciar sesión con Google
+    }
 }

@@ -9,6 +9,7 @@ import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
 import { Message, MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DialogService } from 'primeng/dynamicdialog';
+import { NativeBiometric } from 'capacitor-native-biometric';
 @Component({
     selector: 'app-edit-usuario',
     templateUrl: './edit-usuario.component.html',
@@ -62,7 +63,7 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit {
             this.editing = this.id == this.adminservice.identity(this.token);
             //console.log(this.editing,this.id, this.adminservice.identity(this.token));
         }
-        
+
         this.listarRol();
         this.obteneruser(this.id);
     }
@@ -85,9 +86,12 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit {
                 this.datauser = response.data;
                 this.datauser.password = '';
                 //console.log(this.datauser);
-                if(this.datauser.password_temp!="undefined"){
+                if (this.datauser.password_temp != 'undefined') {
                     this.messages = [
-                        { severity: 'error', detail: 'Por favor de cambiar su contraseña y guardar' },
+                        {
+                            severity: 'error',
+                            detail: 'Por favor de cambiar su contraseña y guardar',
+                        },
                     ];
                 }
             },
@@ -101,8 +105,8 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit {
         );
     }
     updateUser() {
-        if(this.datauser.password_temp){
-            this.datauser.password_temp=undefined;
+        if (this.datauser.password_temp) {
+            this.datauser.password_temp = undefined;
         }
         this.updateservice
             .actualizarUsuario(
@@ -112,13 +116,56 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit {
                 this.archivoSeleccionado
             )
             .subscribe(
-                (response) => {
+                async (response) => {
                     //console.log(response);
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Actualizado',
                         detail: response.message,
                     });
+                    const correoCookiepass = localStorage.getItem('pass');
+                    if (
+                        this.helper.isMobil() &&
+                        (!correoCookiepass ||
+                            this.datauser.password !=
+                                this.helper.decryptDataLogin(correoCookiepass))
+                    ) {
+                        // Realizar autenticación biométrica
+                        const result = await NativeBiometric.isAvailable();
+                        if (result.isAvailable) {
+                            const verified =
+                                await NativeBiometric.verifyIdentity({
+                                    reason: 'Para un facil inicio de sesión',
+                                    title: 'Inicio de Sesión',
+                                    subtitle: 'Coloque su dedo en el sensor.',
+                                    description:
+                                        'Se requiere Touch ID o Face ID',
+                                })
+                                    .then(() => true)
+                                    .catch(() => false);
+
+                            if (!verified) {
+                                this.messageService.add({
+                                    severity: 'error',
+                                    summary: '(fallo)',
+                                    detail: 'Sin biometria',
+                                });
+                                // Si la autenticación biométrica falla, muestra un mensaje al usuario o realiza alguna acción adecuada
+                                //return;
+                            } else {
+                                localStorage.setItem(
+                                    'pass',
+                                    this.helper.encryptDataLogin(
+                                        this.datauser.password,
+                                        'buzon'
+                                    )
+                                );
+                            }
+                        }
+                    }
+                    setTimeout(() => {
+                        this.router.navigate(['/home']);
+                    }, 500);
                 },
                 (error) => {
                     this.messageService.add({
@@ -169,7 +216,7 @@ export class EditUsuarioComponent implements OnInit, AfterViewInit {
                 this.archivoSeleccionado = file;
             }
         }
-         setTimeout(() => {
+        setTimeout(() => {
             this.load_form = false;
         }, 1500);
     }

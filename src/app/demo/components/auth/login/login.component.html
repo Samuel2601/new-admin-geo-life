@@ -1,4 +1,5 @@
 <p-toast></p-toast>
+
 <div
     class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden"
 >
@@ -132,6 +133,12 @@
                             type="submit"
                             [rounded]="true"
                         ></button>
+                        <div
+                            class="fb-like"
+                            data-share="true"
+                            data-width="450"
+                            data-show-faces="true"
+                        ></div>
                         <!--
                             
                         -->
@@ -156,6 +163,34 @@
                                 />
                             </button>
                         </ng-container>
+                    </div>
+                    <!-- Botones de inicio de sesión con Facebook y Google -->
+                    <div class="flex flex-column align-items-center my-3">
+                        <span class="my-3">O</span>
+                        <button
+                            pButton
+                            pRipple
+                            class="w-full p-3 text-xl"
+                            type="button"
+                            (click)="loginWithFacebook()"
+                            label="Iniciar sesión con Facebook"
+                            style="background-color: #3b5998; color: white"
+                            [rounded]="true"
+                        >
+                            <i class="pi pi-facebook mr-2"></i>
+                        </button>
+                        <button
+                            pButton
+                            pRipple
+                            class="w-full p-3 text-xl mt-2"
+                            type="button"
+                            (click)="loginWithGoogle()"
+                            label="Iniciar sesión con Google"
+                            style="background-color: #db4437; color: white"
+                            [rounded]="true"
+                        >
+                            <i class="pi pi-google mr-2"></i>
+                        </button>
                     </div>
                 </form>
             </div>

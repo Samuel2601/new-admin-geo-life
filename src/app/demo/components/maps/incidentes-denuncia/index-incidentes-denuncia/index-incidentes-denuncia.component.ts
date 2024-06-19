@@ -380,11 +380,17 @@ export class IndexIncidentesDenunciaComponent implements OnInit, OnChanges {
         });
     }
     editar(edit: boolean) {
+        let editor=edit;
+        
+        if(this.encargos.find(element=>element.categoria._id==this.option.categoria._id)){
+            editor = true;
+            console.log(this.encargos,edit,this.option);
+        }
         this.ref = this.dialogService.open(EditIncidentesDenunciaComponent, {
             header: 'Editar Incidente',
             dismissableMask: true,
             width: this.isMobil() ? '100%' : '70%',
-            data: { id: this.option._id, edit: edit },
+            data: { id: this.option._id, edit: editor },
         });
         this.ref.onClose.subscribe((data: any) => {
             if (data) {

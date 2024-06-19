@@ -181,10 +181,6 @@ $gutter: 1rem; //for primeflex grid system
     /* Asegura que la imagen esté por encima del spinner */
     /* Ajusta el tamaño y otros estilos según sea necesario */
 }
-.safe-margin-top {
-    margin-top: 20px; /* Valor por defecto */
-    margin-top: env(safe-area-inset-top);
-  }
 @import "assets/layout/styles/layout/layout.scss";
 
 /* PrimeNG */

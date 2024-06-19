@@ -45,7 +45,7 @@ export class EditIncidentesDenunciaComponent implements OnInit {
             encargado: [{ value: '', disabled: true }, Validators.required],
             respuesta: [{ value: '', disabled: true }, Validators.required],
             evidencia: [[]],
-            view:true
+            view: true,
         });
     }
 
@@ -80,6 +80,7 @@ export class EditIncidentesDenunciaComponent implements OnInit {
     ];
     edit: boolean;
     async ngOnInit() {
+        console.log('Edición');
         this.load_form = false;
         this.check.EditIncidentesDenunciaComponent =
             this.helper.decryptData('EditIncidentesDenunciaComponent') || false;
@@ -100,6 +101,12 @@ export class EditIncidentesDenunciaComponent implements OnInit {
             this.obtenerincidente();
             this.listarCategorias();
             this.listartEstados();
+            if (this.edit) {
+                this.incidencia.get('estado').enable();
+                this.incidencia.get('encargado').enable();
+                this.incidencia.get('respuesta').enable();
+                this.incidencia.get('evidencia').enable();
+            }
         }
         setTimeout(() => {
             //console.log(this.incidencia,this.categorias,this.subcategorias,this.estados)
@@ -127,8 +134,7 @@ export class EditIncidentesDenunciaComponent implements OnInit {
                                         key == 'estado') ||
                                     (ficha.ciudadano._id == this.id_user &&
                                         key != 'estado') ||
-                                    (this.check.ContestarIncidente &&
-                                        this.edit)
+                                    (this.check.ContestarIncidente && this.edit)
                                 ) {
                                     this.habilitarCampo(key);
                                 }
@@ -145,8 +151,11 @@ export class EditIncidentesDenunciaComponent implements OnInit {
     }
     enviar() {
         //console.log(this.incidencia);
-        this.incidencia.get('encargado').enable();
-        this.incidencia.get('encargado').setValue(this.id_user);
+        if( this.incidencia.get('ciudadano').value?._id != this.id_user || this.edit){
+            this.incidencia.get('encargado').enable();
+            this.incidencia.get('encargado').setValue(this.id_user);
+        }
+     
         this.update
             .actualizarIncidenteDenuncia(
                 this.token,

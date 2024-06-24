@@ -425,9 +425,9 @@ export class LayersComponent implements OnInit {
                                         icon: 'pi bi-new-ficha_sectorial',
                                         label: 'Nueva Ficha Sectorial',
                                         styleClass: 'itemcustom',
-                                        visible:
-                                            this.check
-                                                .CreateFichaSectorialComponent,
+                                        visible: false,
+                                           /* this.check
+                                                .CreateFichaSectorialComponent,*/
                                         command: () => {
                                             if (
                                                 (this.opcionb ? true : false) &&

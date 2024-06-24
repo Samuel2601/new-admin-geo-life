@@ -265,7 +265,7 @@
                     </label>
                 </span>
             </div>
-            <div class="field col-12 md:col-3">
+            <div class="field col-12 md:col-3" *ngIf="check.ReporteIncidenteView">
                 <p-selectButton
                     appendTo="body"
                     [options]="viewmentOptions"

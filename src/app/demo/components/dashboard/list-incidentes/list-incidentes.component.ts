@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    Input,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HelperService } from 'src/app/demo/services/helper.service';
 import { ListService } from 'src/app/demo/services/list.service';
@@ -36,7 +43,7 @@ export class ListIncidentesComponent implements OnInit, AfterViewInit {
             subcategoria: [[], [Validators.minLength(1)]],
             estado: [[], [Validators.minLength(1)]],
             direccion: [[], [Validators.minLength(1)]],
-            view: [null],
+            view: [true],
         });
     }
     viewmentOptions: any[] = [
@@ -238,6 +245,8 @@ export class ListIncidentesComponent implements OnInit, AfterViewInit {
     async ngOnInit() {
         this.check.DashboardComponent =
             this.helper.decryptData('DashboardComponent') || false;
+        this.check.ReporteIncidenteView =
+            this.helper.decryptData('ReporteIncidenteView') || false;
         //console.log(this.check.DashboardComponent);
         if (!this.check.DashboardComponent) {
             this.router.navigate(['/notfound']);

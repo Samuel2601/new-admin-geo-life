@@ -34,7 +34,7 @@ export class ListFichaComponent implements OnInit {
             encargado: [[], [Validators.minLength(1)]],
             estado: [[], [Validators.minLength(1)]],
             direccion: [[], [Validators.minLength(1)]],
-            view: [null],
+            view: [true],
         });
     }
     viewmentOptions: any[] = [
@@ -225,6 +225,8 @@ export class ListFichaComponent implements OnInit {
         //this.helper.llamarspinner();
         this.check.DashboardComponent =
             this.helper.decryptData('DashboardComponent') || false;
+        this.check.ReporteFichaView =
+            this.helper.decryptData('ReporteFichaView') || false;
         //console.log(this.check.DashboardComponent);
         if (!this.check.DashboardComponent) {
             this.router.navigate(['/notfound']);

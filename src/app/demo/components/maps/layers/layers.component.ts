@@ -648,7 +648,7 @@ export class LayersComponent implements OnInit {
                                         // Iniciar el intervalo y almacenar el identificador devuelto en una variable
                                         this.intervalId = setInterval(() => {
                                             this.cargarRecolectores();
-                                        }, 2000);
+                                        }, 1000);
                                     } else {
                                         // Detener el intervalo si está activo
                                         clearInterval(this.intervalId);
@@ -928,20 +928,51 @@ export class LayersComponent implements OnInit {
             });
         });
     }
-    truk: any = [];
-    //ver recolector / Reportar
-    cargarRecolectores() {
-        // Crear una copia de los marcadores actuales
-        const oldMarkers = this.truk.slice();
+    
+    inforecolector: any[] = [];
+    markersrecolectores: Map<string, any> = new Map();
 
-        this.admin.obtenerGPS().subscribe(
-            (respone) => {
-                if (respone) {
-                    respone.forEach((feature: any) => {
-                        const latlng = new google.maps.LatLng(
-                            feature.latitude,
-                            feature.longitude
+    async cargarRecolectores() {
+        try {
+            const response = await this.admin.obtenerGPS().toPromise();
+
+            if (response) {
+                const promises = response.map(async (feature: any) => {
+                    let device = this.inforecolector.find(
+                        (element) => element.deviceId == feature.deviceId
+                    );
+
+                    if (!device) {
+                        const response2 = await this.admin
+                            .obtenerNameGPS(feature.deviceId)
+                            .toPromise();
+                        device = {
+                            deviceId: feature.deviceId,
+                            ...response2[0],
+                        };
+                        this.inforecolector.push(device);
+                    }
+
+                    const latlng = new google.maps.LatLng(
+                        feature.latitude,
+                        feature.longitude
+                    );
+
+                    if (this.markersrecolectores.has(feature.deviceId)) {
+                        // Actualizar la posición del marcador existente
+                        const marker = this.markersrecolectores.get(
+                            feature.deviceId
                         );
+                        marker.setPosition(latlng);
+                        marker.setIcon({
+                            url: feature.attributes.motion
+                                ? './assets/menu/camionON.png'
+                                : './assets/menu/camionOFF.png',
+                            scaledSize: new google.maps.Size(40, 40),
+                            anchor: new google.maps.Point(13, 41),
+                        });
+                    } else {
+                        // Crear un nuevo marcador si no existe
                         const marker = new google.maps.Marker({
                             position: latlng,
                             map: this.mapCustom,
@@ -955,10 +986,9 @@ export class LayersComponent implements OnInit {
                         });
 
                         const infoWindow = new google.maps.InfoWindow({
-                            content: `
-            <div style="font-family: Arial, sans-serif; font-size: 14px; width:200px">
-                <b style="text-align: center">${feature.deviceId}</b>
-            </div>`,
+                            content: `<div style="font-family: Arial, sans-serif; font-size: 14px; width:200px">
+                                        <b style="text-align: center">${device.name}</b>
+                                      </div>`,
                         });
 
                         marker.addListener('click', () => {
@@ -966,36 +996,27 @@ export class LayersComponent implements OnInit {
                             infoWindow.open(this.mapCustom, marker);
                         });
 
-                        this.truk.push(marker);
-                    });
+                        this.markersrecolectores.set(feature.deviceId, marker);
+                    }
+                });
 
-                    // Animación para eliminar los marcadores antiguos
-                    /* oldMarkers.forEach((marker: google.maps.Marker) => {
+                await Promise.all(promises);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    // Animación para eliminar los marcadores antiguos
+    /* oldMarkers.forEach((marker: google.maps.Marker) => {
         marker.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout(() => {
           marker.setMap(null);
         }, 1000); // 1000 milisegundos (1 segundo) de retraso antes de quitar el marcador
       });*/
-                    let opacity = 1;
-                    const fadeOutInterval = setInterval(() => {
-                        opacity -= 0.1;
-                        oldMarkers.forEach((marker) => {
-                            marker.setOpacity(opacity);
-                            if (opacity <= 0) {
-                                marker.setMap(null);
-                                clearInterval(fadeOutInterval);
-                            }
-                        });
-                    }, 100);
-                }
-            },
-            (error) => {
-                console.error(error);
-            }
-        );
-    }
+
     clearMarkers() {
-        this.truk.forEach((element) => {
+        this.markersrecolectores.forEach((element) => {
             element.setMap(null);
         });
     }

@@ -18,6 +18,13 @@ export class AdminService {
         .set('Authorization', 'Basic ' + btoa('CIUDADANIA:123456789'));
 		return this._http.get('https://inteligenciavehicular.com/api/positions/', { headers: headers });
 	}
+	//devicesId
+	obtenerNameGPS(id:any): Observable<any> {
+		let headers = new HttpHeaders()
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Basic ' + btoa('CIUDADANIA:123456789'));
+		return this._http.get('https://inteligenciavehicular.com/api/devices?id='+id, { headers: headers });
+	}
 	login(data: any): Observable<any> {
 		let headers = new HttpHeaders().set('Content-Type', 'application/json');
 		return this._http.post(this.url + 'login_admin', data, { headers: headers });

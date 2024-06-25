@@ -1262,7 +1262,8 @@ export class MapaFichaComponent implements OnInit {
                             });
                             this.helperService.cerrarspinner();
                             setTimeout(() => {
-                                this.helperService.cerrarMapaFicha();
+                                this.helperService.cerrarMapaFicha();                                
+                                throw this.router.navigate(['maps/ficha-sectorial']);
                             }, 1000);
                         }
                      

@@ -50,13 +50,8 @@ export class CreateService {
     }
   }*/
 
-  IsJSON(str) {
-    try {
-      JSON.parse(str);
-    } catch (e) {
-      return false;
-    }
-    return true;
+    isObject(obj) {
+      return obj && typeof obj === 'object' && !Array.isArray(obj);
   }
   registrarActividadProyecto(token: any, data: any, fotos: File[]): Observable<any> {
     let headers = new HttpHeaders({
@@ -66,12 +61,15 @@ export class CreateService {
     formData.append('descripcion', data.descripcion);
     formData.append('encargado', data.encargado);
     
-    formData.append('direccion_geo',this.IsJSON(data.direccion_geo)?JSON.stringify(data.direccion_geo):data.direccion_geo);
+    formData.append('direccion_geo',this.isObject(data.direccion_geo)?JSON.stringify(data.direccion_geo):data.direccion_geo);
     formData.append('estado', data.estado._id);
     formData.append('actividad', data.actividad._id);
     formData.append('fecha_evento', data.fecha_evento);
     formData.append('observacion', data.observacion);
-
+    // Iterar sobre los valores de FormData y mostrarlos en la consola
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
     // Llama a la función compressor para comprimir cada imagen
     return new Observable((observer) => {
       const compressedFilesPromises = fotos.map((foto) => this.compressor(foto));

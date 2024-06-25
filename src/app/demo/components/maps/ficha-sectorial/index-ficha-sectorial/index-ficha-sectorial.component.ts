@@ -192,6 +192,7 @@ export class IndexFichaSectorialComponent implements OnInit, OnChanges {
                         }
                         this.load_lista = false;
                     }
+                    console.log(this.fichasectorial);
                 },
                 (error) => {
                     this.load_lista = false;

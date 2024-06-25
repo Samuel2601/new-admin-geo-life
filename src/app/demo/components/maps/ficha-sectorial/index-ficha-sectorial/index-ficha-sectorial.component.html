@@ -163,7 +163,8 @@
         <ng-template pTemplate="body" let-incidente>
             <tr (click)="showdialog(incidente)">
                 <td *ngIf="!modal">
-                    {{ incidente.direccion_geo }}
+                    <ng-container *ngIf="isJSONString(incidente.direccion_geo)">{{ parseJSON(incidente.direccion_geo).nombre }}</ng-container>
+                            <ng-container *ngIf="!isJSONString(incidente.direccion_geo)">{{ incidente.direccion_geo }}</ng-container>  
                 </td>
                 <td
                     (click)="
@@ -513,7 +514,8 @@
                     <tr (click)="visible = true; option = incidente">
                         <td>{{ rowIndex + 1 }}</td>
                         <td>
-                            {{ incidente.direccion_geo }}
+                            <ng-container *ngIf="isJSONString(incidente.direccion_geo)">{{ parseJSON(incidente.direccion_geo).nombre }}</ng-container>
+                            <ng-container *ngIf="!isJSONString(incidente.direccion_geo)">{{ incidente.direccion_geo }}</ng-container>  
                         </td>
                         <td>
                             {{ incidente.actividad.nombre }}
@@ -619,7 +621,8 @@
                     <tr>
                         <td>{{ rowIndex + 1 }}</td>
                         <td>
-                            {{ incidente.direccion_geo }}
+                            <ng-container *ngIf="isJSONString(incidente.direccion_geo)">{{ parseJSON(incidente.direccion_geo).nombre }}</ng-container>
+                            <ng-container *ngIf="!isJSONString(incidente.direccion_geo)">{{ incidente.direccion_geo }}</ng-container>                            
                         </td>
                         <td>
                             {{ incidente.actividad.nombre }}

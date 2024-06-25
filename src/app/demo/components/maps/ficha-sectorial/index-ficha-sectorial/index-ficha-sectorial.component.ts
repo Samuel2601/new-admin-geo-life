@@ -41,23 +41,25 @@ export class IndexFichaSectorialComponent implements OnInit, OnChanges {
     clear(table: Table) {
         table.clear();
     }
-    getSeverity(status: string): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' {
+    getSeverity(
+        status: string
+    ): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' {
         switch (status.toLowerCase()) {
             case 'suspendido':
                 return 'danger';
-    
+
             case 'finalizado':
                 return 'success';
-    
+
             case 'en proceso':
                 return 'info';
-    
+
             case 'pendiente':
                 return 'warning';
-    
+
             case 'planificada':
                 return 'info';
-    
+
             default:
                 return 'secondary'; // Asegúrate de retornar un valor válido por defecto
         }
@@ -106,7 +108,7 @@ export class IndexFichaSectorialComponent implements OnInit, OnChanges {
         if (!this.modal) this.helperservice.llamarspinner();
         if (!this.token) {
             this.router.navigate(['/auth/login']);
-            if (!this.modal)this.helperservice.cerrarspinner();
+            if (!this.modal) this.helperservice.cerrarspinner();
             throw new Error('Token no encontrado');
         }
         try {
@@ -145,6 +147,22 @@ export class IndexFichaSectorialComponent implements OnInit, OnChanges {
 
     isMobil() {
         return this.helperservice.isMobil();
+    }
+    isJSONString(str:string) {
+        try {
+            JSON.parse(str);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+    parseJSON(str: string): any {
+        try {
+            return JSON.parse(str);
+        } catch (e) {
+            console.error("Error parsing JSON string:", e);
+            return null;
+        }
     }
 
     listarficha() {
@@ -399,7 +417,7 @@ export class IndexFichaSectorialComponent implements OnInit, OnChanges {
         } else {
             this.iddelete.view = false;
             this.iddelete.view_id = this.id;
-            this.iddelete.view_date=new Date();
+            this.iddelete.view_date = new Date();
             this.updateService
                 .actualizarActividadProyecto(
                     this.token,

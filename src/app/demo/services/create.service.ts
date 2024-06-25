@@ -67,9 +67,9 @@ export class CreateService {
     formData.append('fecha_evento', data.fecha_evento);
     formData.append('observacion', data.observacion);
     // Iterar sobre los valores de FormData y mostrarlos en la consola
-    /*formData.forEach((value, key) => {
+    formData.forEach((value, key) => {
       console.log(`${key}: ${value}`);
-    });*/
+    });
     // Llama a la función compressor para comprimir cada imagen
     return new Observable((observer) => {
       const compressedFilesPromises = fotos.map((foto) => this.compressor(foto));

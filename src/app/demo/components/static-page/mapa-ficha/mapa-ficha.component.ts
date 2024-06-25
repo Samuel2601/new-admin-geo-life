@@ -249,6 +249,7 @@ export class MapaFichaComponent implements OnInit {
             actividad: [undefined, Validators.required],
             fecha_evento: [''],
             observacion: [''],
+            foto:[]
         });
         this.subscription = this.layoutService.configUpdate$
             .pipe(debounceTime(25))
@@ -1242,6 +1243,7 @@ export class MapaFichaComponent implements OnInit {
         this.fichaSectorialForm
             .get('encargado')
             ?.setValue(this.adminservice.identity(this.token));
+        this.fichaSectorialForm.get('foto').setValue(this.selectedFiles);
         if (this.fichaSectorialForm.valid) {
             this.createService
                 .registrarActividadProyecto(

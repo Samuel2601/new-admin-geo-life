@@ -50,7 +50,7 @@ export class CreateService {
     }
   }*/
 
-    isObject(obj) {
+  isObject(obj) {
       return obj && typeof obj === 'object' && !Array.isArray(obj);
   }
   registrarActividadProyecto(token: any, data: any, fotos: File[]): Observable<any> {

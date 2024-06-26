@@ -158,3 +158,16 @@ p {
   width: 70vw !important;
   max-width: none;
 }
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.section-divider {
+  border: 0;
+  height: 1px;
+  background: #000; /* Puedes cambiar el color según tu preferencia */
+  margin-bottom: 2rem;
+}

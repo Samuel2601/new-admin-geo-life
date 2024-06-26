@@ -169,31 +169,29 @@
                         </div>
                     </div>
 
-                    <div *ngIf="!load_fullscreen" class="card flex">
-                        <span class="p-float-label">
-                            <p-autoComplete
-                                appendTo="body"
-                                [(ngModel)]="query"
-                                [suggestions]="predictions"
-                                (completeMethod)="search($event)"
-                                field="description"
-                                placeholder=""
-                                [forceSelection]="true"
-                                (onSelect)="imprimir(query)"
-                                [inputStyle]="{
-                                    width: isMobil()
-                                        ? responsiveimage()
-                                        : '400px'
-                                }"
-                            >
-                            </p-autoComplete>
-                            <label for="float-label"
-                                >Ingresa una dirección o elije un punto en el mapa
-                            </label>
-                        </span>
-                    </div>
+                    <span class="p-float-label mb-3 mt-3" *ngIf="!load_fullscreen">
+                        <p-autoComplete
+                            appendTo="body"
+                            [(ngModel)]="query"
+                            [suggestions]="predictions"
+                            (completeMethod)="search($event)"
+                            field="description"
+                            placeholder=""
+                            [forceSelection]="true"
+                            (onSelect)="imprimir(query)"
+                            [inputStyle]="{
+                                width: isMobil()
+                                    ? responsiveimage()
+                                    : '80vh'
+                            }"
+                        >
+                        </p-autoComplete>
+                        <label for="float-label"
+                            >Ingresa una dirección o referencia
+                        </label>
+                    </span>
 
-                    <div class="card" id="map2" style="min-height: 50rem"></div>
+                    <div class="card" id="map2" style="min-height: 50vh;margin-left: -18px; margin-right: -18px;"></div>
                     <div [style.display]="'none'">
                         <div class="controls fullscreen-control">
                             <button

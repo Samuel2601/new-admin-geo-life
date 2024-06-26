@@ -92,14 +92,14 @@ p {
 /* Media query para dispositivos móviles */
 @media (max-width: 768px) {
   .custom-icon {
-    width: 80px; /* Tamaño para móviles */
-    height: 80px; /* Tamaño para móviles */
+    width: 100px; /* Tamaño para móviles */
+    height: 100px; /* Tamaño para móviles */
     margin-bottom: 10px; /* Espacio entre el icono y el texto */
   }
 
   .cube {
     width: 100px; /* Tamaño para móviles */
-    height: 100px; /* Tamaño para móviles */
+    height: 160px; /* Tamaño para móviles */
     position: relative;
     transform-style: preserve-3d;
     transform: rotateY(0);

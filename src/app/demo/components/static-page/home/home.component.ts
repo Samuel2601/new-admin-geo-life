@@ -133,7 +133,7 @@ export class HomeComponent implements OnInit {
     }
     buttons = [
         {
-            label: 'Incidentes/ESVIAL',
+            label: 'Incidentes ESVIAL',
             info: 'Puedes reportar los incidentes y denuncias con respecto a ESVIAL.',
             icon: 'https://i.postimg.cc/CxxGM2YS/VIAL.png',
             showInfo: false,
@@ -145,7 +145,7 @@ export class HomeComponent implements OnInit {
             },
         },
         {
-            label: 'Incidentes/EPMAPSE',
+            label: 'Incidentes EPMAPSE',
             info: 'Puedes reportar los incidentes y denuncias con respecto a EPMAPSE.',
             icon: 'https://i.postimg.cc/LX5rhc1p/AGUA-1.png',
             showInfo: false,
@@ -154,7 +154,7 @@ export class HomeComponent implements OnInit {
             },
         },
         {
-            label: 'Incidentes/BOMBEROS',
+            label: 'Incidentes BOMBEROS',
             info: 'Puedes reportar los incidentes y denuncias con respecto a BOMBEROS.',
             icon: 'https://i.postimg.cc/8PHdSS2Z/BOMBEROS-2.png',
             showInfo: false,
@@ -166,7 +166,7 @@ export class HomeComponent implements OnInit {
             },
         },
         {
-            label: 'Incidentes/RECOLECTORES',
+            label: 'Incidentes RECOLECTORES',
             info: 'Puedes reportar los incidentes y denuncias con respecto a RECOLECTORES.',
             icon: 'https://i.postimg.cc/3wy2mDdq/RECOLECTORES.png',
             showInfo: false,

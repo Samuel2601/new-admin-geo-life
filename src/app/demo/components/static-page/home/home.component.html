@@ -594,6 +594,7 @@
     #dialog2
     (onShow)="isMobil() ? dialog2.maximize() : ''"
     class="safe-margin-top"
+    [contentStyle]="{'padding-bottom':0}"
 >
     <app-mapa-ficha *ngIf="visible_ficha_mirror"></app-mapa-ficha>
 </p-dialog>

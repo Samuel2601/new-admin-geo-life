@@ -189,7 +189,7 @@ export class HomeComponent implements OnInit {
                 {
                     label: 'RECOLECTORES',
                     info: 'Puedes reportar los incidentes y denuncias con respecto a RECOLECTORES.',
-                    icon: 'https://i.postimg.cc/c4LhscCW/Imagen-de-Whats-App-2024-06-26-a-las-12-06-55-15776554-fotor-bg-remover-20240626121226.png',
+                    icon: 'https://i.postimg.cc/KvSyxyB3/Iconos-disen-o-01.png',
                     showInfo: false,
                     command: async () => {
                         this.incidente(
@@ -224,7 +224,7 @@ export class HomeComponent implements OnInit {
                 {
                     label: 'Registro de la Propiedad',
                     info: 'Realiza tus trámites en Registro de la Propiedad Certificación e Inscripción.',
-                    icon: 'https://i.postimg.cc/VkSFtLXH/Imagen-de-Whats-App-2024-06-26-a-las-12-07-33-4b4cdcca-fotor-bg-remover-2024062612116.png',
+                    icon: 'https://i.postimg.cc/pXfMd1JG/Iconos-disen-o-14.png',
                     showInfo: false,
                     command: async () => {
                         window.open(
@@ -248,7 +248,7 @@ export class HomeComponent implements OnInit {
                 {
                     label: 'Ciudad Global',
                     info: 'Interactua con las diferentes unidades de la Alcaldía Ciudadana',
-                    icon: 'https://i.postimg.cc/qMNZLPYt/Imagen-de-Whats-App-2024-06-26-a-las-12-09-30-27b5bceb-removebg-preview.png',
+                    icon: 'https://i.postimg.cc/4NVs93s1/Iconos-disen-o-08.png',
                     showInfo: false,
                     command: async () => {
                         this.router.navigate(['/maps']);
@@ -269,7 +269,7 @@ export class HomeComponent implements OnInit {
                 {
                     label: 'Gestión de Riesgos',
                     info: 'Descubre otros servicios disponibles para ti.',
-                    icon: 'https://i.postimg.cc/PJXxw4Fz/gestion-de-crisis.png',
+                    icon: 'https://i.postimg.cc/CMfV3KBV/Iconos-disen-o-15.png',
                     showInfo: false,
                     command: async () => {
                         window.open(

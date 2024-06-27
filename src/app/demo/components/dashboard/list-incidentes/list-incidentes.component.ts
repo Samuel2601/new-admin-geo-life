@@ -13,6 +13,8 @@ import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { ChartModule, UIChart } from 'primeng/chart';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { GLOBAL } from 'src/app/demo/services/GLOBAL';
 
 @Component({
     selector: 'app-list-incidentes',
@@ -54,7 +56,7 @@ export class ListIncidentesComponent implements OnInit, AfterViewInit {
     @ViewChild('fechaInicio', { static: true }) fechaInicio: ElementRef;
     ngAfterViewInit() {
         // Deshabilitar autofocus en el campo fecha_inicio
-        this.fechaInicio.nativeElement.querySelector('input').blur();
+        //this.fechaInicio.nativeElement.querySelector('input').blur();
     }
     filtro() {
         this.helper.llamarspinner();
@@ -301,19 +303,29 @@ export class ListIncidentesComponent implements OnInit, AfterViewInit {
         this.filterForm.get('subcategoria').setValue([]);
         const categoriaSeleccionada = this.filterForm.get('categoria').value;
         this.subcategorias = [];
-        try {
-            for (const element of categoriaSeleccionada) {
-                const response = await this.listar
-                    .listarSubcategorias(this.token, 'categoria', element._id)
-                    .toPromise();
-                if (response.data) {
-                    this.subcategorias.push(...response.data);
-                }
+        
+        if (categoriaSeleccionada && categoriaSeleccionada.length > 0) {
+            try {
+                // Crear un array de promesas
+                const promises = categoriaSeleccionada.map(element => 
+                    firstValueFrom(this.listar.listarSubcategorias(this.token, 'categoria', element._id))
+                );
+                
+                // Ejecutar todas las promesas en paralelo
+                const responses = await Promise.all(promises);
+                
+                // Procesar las respuestas
+                responses.forEach(response => {
+                    if (response.data) {
+                        this.subcategorias.push(...response.data);
+                    }
+                });
+            } catch (error) {
+                console.error('Error al obtener subcategorias:', error);
             }
-        } catch (error) {
-            console.error('Error al obtener subcategorias:', error);
         }
     }
+    
 
     constIncidente: any[] = [];
     incidente: any[] = [];
@@ -451,29 +463,6 @@ export class ListIncidentesComponent implements OnInit, AfterViewInit {
         }
     }
 
-    getSeverity(
-        status: string
-    ): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' {
-        switch (status.toLowerCase()) {
-            case 'suspendido':
-                return 'danger';
-
-            case 'finalizado':
-                return 'success';
-
-            case 'en proceso':
-                return 'info';
-
-            case 'pendiente':
-                return 'warning';
-
-            case 'planificada':
-                return 'info';
-
-            default:
-                return 'secondary'; // Asegúrate de retornar un valor válido por defecto
-        }
-    }
     ultimoColor: string;
     colorIndex: number = 0;
     tonoIndex: number = 0;
@@ -601,5 +590,78 @@ export class ListIncidentesComponent implements OnInit, AfterViewInit {
             });
         };
         img.src = base64Image;
+    }
+    viewdialog: boolean = false;
+    optionview: any;
+    imagenModal: any;
+    imagenAMostrar: any;
+    displayBasic: boolean = false;
+    public url = GLOBAL.url;
+    openModalimagen(url: any) {
+        this.imagenModal = url;
+        //console.log('imagenModal',this.imagenModal);
+        this.imagenAMostrar = this.imagenModal[0];
+        //const this.ref = this.dialogService.open(this.modalContent, { size: 'lg' });
+    }
+    isMobil() {
+        return this.helper.isMobil();
+    }
+    responsiveOptions: any[] = [
+        {
+            breakpoint: '1500px',
+            numVisible: 5,
+        },
+        {
+            breakpoint: '1024px',
+            numVisible: 3,
+        },
+        {
+            breakpoint: '768px',
+            numVisible: 2,
+        },
+        {
+            breakpoint: '560px',
+            numVisible: 1,
+        },
+    ];
+    verficha(rowIndex: any) {
+        this.viewdialog = true;
+        this.optionview = rowIndex;
+        //console.log(rowIndex);
+    }
+    getSeverity(
+        status: string,
+        fecha?: any
+    ): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' {
+        switch (status.toLowerCase()) {
+            case 'suspendido':
+                return 'danger';
+
+            case 'finalizado':
+                return 'success';
+
+            case 'en proceso':
+                return 'success';
+
+            case 'pendiente':
+                let fechaActualMenosTresDias = new Date(fecha);
+                fechaActualMenosTresDias.setDate(
+                    fechaActualMenosTresDias.getDate() + 3
+                );
+
+                if (
+                    fechaActualMenosTresDias.getTime() <= new Date().getTime()
+                ) {
+                    return 'danger';
+                } else {
+                    return 'warning';
+                }
+
+            case 'planificada':
+                return 'info'; // Otra opción aquí, dependiendo de lo que desees
+
+            default:
+                return 'success'; // Otra opción aquí, dependiendo de lo que desees
+        }
     }
 }

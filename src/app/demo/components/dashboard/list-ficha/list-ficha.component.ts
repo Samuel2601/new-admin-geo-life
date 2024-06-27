@@ -6,6 +6,7 @@ import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { ChartModule, UIChart } from 'primeng/chart';
 import { Router } from '@angular/router';
+import { GLOBAL } from 'src/app/demo/services/GLOBAL';
 
 @Component({
     selector: 'app-list-ficha',
@@ -54,57 +55,36 @@ export class ListFichaComponent implements OnInit {
         const direccion = this.filterForm.get('direccion').value;
         const view = this.filterForm.get('view').value;
 
+        // Optimización de filtros: Usar métodos de búsqueda más eficientes
+        const actividadIds = actividad.map((c: any) => c._id.toString());
+        const encargadoIds = encargado.map((s: any) => s._id.toString());
+        const estadoIds = estado.map((e: any) => e._id.toString());
+        const direccionesNombres = direccion.map((d: any) => d.nombre);
+
         const elementosFiltrados = this.constFicha.filter((elemento) => {
-            // Filtrar por fecha de inicio y fin
             const fechaElemento = new Date(elemento.createdAt);
-            if (
-                fechaInicio &&
-                fechaFin &&
-                (fechaElemento < fechaInicio || fechaElemento > fechaFin)
-            ) {
-                return false;
-            }
-
-            const actividadValida =
-                actividad.length === 0 ||
-                actividad.some(
-                    (c: any) =>
-                        c._id.toString() === elemento.actividad._id.toString()
-                );
-
-            const encargadoValida =
-                encargado.length === 0 ||
-                encargado.some(
-                    (s: any) =>
-                        s._id.toString() === elemento.encargado._id.toString()
-                );
-
-            const estadoValido =
-                estado.length === 0 ||
-                estado.some(
-                    (e: any) =>
-                        e._id.toString() === elemento.estado._id.toString()
-                );
-
-            // Filtrar por dirección
-            const direccionValida =
-                direccion.length === 0 ||
-                direccion.some((d: any) => d.nombre == elemento.direccion_geo);
-            const viewValida = view == null || elemento.view == view;
-
             return (
-                actividadValida &&
-                encargadoValida &&
-                estadoValido &&
-                direccionValida &&
-                viewValida
+                (!fechaInicio ||
+                    !fechaFin ||
+                    (fechaElemento >= fechaInicio &&
+                        fechaElemento <= fechaFin)) &&
+                (actividadIds.length === 0 ||
+                    actividadIds.includes(elemento.actividad._id.toString())) &&
+                (encargadoIds.length === 0 ||
+                    encargadoIds.includes(elemento.encargado._id.toString())) &&
+                (estadoIds.length === 0 ||
+                    estadoIds.includes(elemento.estado._id.toString())) &&
+                (direccionesNombres.length === 0 ||
+                    direccionesNombres.includes(this.isJSONString(elemento.direccion_geo)?this.parseJSON(elemento.direccion_geo).nombre:elemento.direccion_geo)) &&
+                (view == null || elemento.view == view)
             );
         });
+
         this.ficha = elementosFiltrados;
         // Mostrar totales y porcentajes en la tabla
         // Obtener totales y porcentajes
         this.totales = this.obtenerTotales(this.ficha);
-        this.totales = this.obtenerPorcentajes(this.totales, this.ficha.length);
+
         for (const key in this.dataForm) {
             if (Object.prototype.hasOwnProperty.call(this.dataForm, key)) {
                 const element = this.dataForm[key];
@@ -129,145 +109,160 @@ export class ListFichaComponent implements OnInit {
     trackByFn(index, item) {
         return item.id; // Cambia 'id' por la propiedad única de tu objeto
     }
-    obtenerTotales(fichas: any[]) {
-        const totales = {
+    calcularTotalesYPorcentajes(fichas: any[], totalFichas: number) {
+        const totales = fichas.reduce((acc, elemento) => {
+            // Categorías
+            acc.actividades[elemento.actividad.nombre] = (acc.actividades[elemento.actividad.nombre] || 0) + 1;
+        
+            // Encargados
+            acc.encargados[elemento.encargado.nombres] = (acc.encargados[elemento.encargado.nombres] || 0) + 1;
+        
+            // Estados
+            acc.estados[elemento.estado.nombre] = (acc.estados[elemento.estado.nombre] || 0) + 1;
+        
+            // Direcciones
+            const direccion = this.isJSONString(elemento.direccion_geo) ? this.parseJSON(elemento.direccion_geo).nombre : elemento.direccion_geo;
+            acc.direcciones[direccion] = (acc.direcciones[direccion] || 0) + 1;
+        
+            return acc;
+        }, {
             actividades: {},
             encargados: {},
             estados: {},
-            direcciones: {},
-        };
-
-        fichas.forEach((elemento) => {
-            // Categorías
-            if (!totales.actividades[elemento.actividad.nombre]) {
-                totales.actividades[elemento.actividad.nombre] = {
-                    registros: 0,
-                    porcentaje: 0,
-                };
-            }
-            totales.actividades[elemento.actividad.nombre].registros++;
-
-            // Subcategorías
-            if (!totales.encargados[elemento.encargado.nombres]) {
-                totales.encargados[elemento.encargado.nombres] = {
-                    registros: 0,
-                    porcentaje: 0,
-                };
-            }
-            totales.encargados[elemento.encargado.nombres].registros++;
-
-            // Estados
-            if (!totales.estados[elemento.estado.nombre]) {
-                totales.estados[elemento.estado.nombre] = {
-                    registros: 0,
-                    porcentaje: 0,
-                };
-            }
-            totales.estados[elemento.estado.nombre].registros++;
-
-            // Direcciones
-            if (!totales.direcciones[elemento.direccion_geo]) {
-                totales.direcciones[elemento.direccion_geo] = {
-                    registros: 0,
-                    porcentaje: 0,
-                };
-            }
-            totales.direcciones[elemento.direccion_geo].registros++;
+            direcciones: {}
         });
-
+    
+        // Calcular porcentajes
+        for (const tipo in totales) {
+            for (const key in totales[tipo]) {
+                totales[tipo][key] = {
+                    registros: totales[tipo][key],
+                    porcentaje: (totales[tipo][key] / totalFichas) * 100
+                };
+            }
+        }
+    
         return totales;
     }
-
-    obtenerPorcentajes(totales: any, totalFichas: number) {
-        const porcentajes = {
-            actividades: {},
-            encargados: {},
-            estados: {},
-            direcciones: {},
-        };
-
-        for (const key in totales.actividades) {
-            porcentajes.actividades[key] = {
-                registros: totales.actividades[key].registros,
-                porcentaje:
-                    (totales.actividades[key].registros / totalFichas) * 100,
-            };
-        }
-
-        for (const key in totales.encargados) {
-            porcentajes.encargados[key] = {
-                registros: totales.encargados[key].registros,
-                porcentaje:
-                    (totales.encargados[key].registros / totalFichas) * 100,
-            };
-        }
-
-        for (const key in totales.estados) {
-            porcentajes.estados[key] = {
-                registros: totales.estados[key].registros,
-                porcentaje:
-                    (totales.estados[key].registros / totalFichas) * 100,
-            };
-        }
-
-        for (const key in totales.direcciones) {
-            porcentajes.direcciones[key] = {
-                registros: totales.direcciones[key].registros,
-                porcentaje:
-                    (totales.direcciones[key].registros / totalFichas) * 100,
-            };
-        }
-
-        return porcentajes;
+    
+    // Uso de la función refactorizada
+    obtenerTotales(fichas: any[]) {
+        return this.calcularTotalesYPorcentajes(fichas, fichas.length);
     }
     check: any = {};
-    async ngOnInit() {
-        //this.helper.llamarspinner();
+    ngOnInit() {
         this.check.DashboardComponent =
             this.helper.decryptData('DashboardComponent') || false;
         this.check.ReporteFichaView =
             this.helper.decryptData('ReporteFichaView') || false;
-        //console.log(this.check.DashboardComponent);
+
         if (!this.check.DashboardComponent) {
             this.router.navigate(['/notfound']);
+            return;
         }
 
         if (!this.token) {
             this.router.navigate(['/auth/login']);
-            //this.helper.cerrarspinner();
             throw new Error('Token no encontrado');
         }
-        await this.rankin();
-        await this.listCategoria();
-        await this.listarEstado();
-        this.filterForm.get('actividad').valueChanges.subscribe(() => {
-            this.updateEncargados();
-        });
-        setTimeout(() => {
-            // this.helper.cerrarspinner();
-            this.filtro();
-        }, 550);
+
+        this.helper.llamarspinner(); // Mostrar el spinner
+
+        Promise.all([
+            this.cargarRanking(),
+            this.listarEstados(),
+            this.listarCategorias(),
+        ])
+            .then(() => {
+                this.filterForm.get('actividad').valueChanges.subscribe(() => {
+                    this.updateEncargados();
+                });
+                const documentStyle = getComputedStyle(
+                    document.documentElement
+                );
+                const textColor =
+                    documentStyle.getPropertyValue('--text-color');
+                this.options = {
+                    cutout: '60%',
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: textColor,
+                            },
+                            onHover: this.handleHover,
+                            onLeave: this.handleLeave,
+                        },
+                    },
+                };
+                this.filtro();
+            })
+            .catch((error) => {
+                console.error('Error al cargar datos:', error);
+                // Manejar el error de forma adecuada (mostrar un mensaje al usuario, etc.)
+            })
+            .finally(() => {
+                this.helper.cerrarspinner(); // Ocultar el spinner
+            });
     }
-    async listarEstado() {
-        if (this.token)
-            this.listar
+
+    async cargarRanking() {
+        if (this.constFicha.length === 0) {
+            return this.listar
+                .listarFichaSectorial(this.token, '', '')
+                .toPromise()
+                .then((response) => {
+                    if (response.data) {
+                        this.constFicha = response.data;
+                        this.ficha = this.constFicha;
+                        this.obtenerValoresUnicosDireccionGeo();
+                    }
+                });
+        } else {
+            this.ficha = this.constFicha;
+            return Promise.resolve(); // Devolver una promesa resuelta si no es necesario cargar datos
+        }
+    }
+
+    obtenerValoresUnicosDireccionGeo() {
+        const valoresUnicos = new Set(
+            this.constFicha.map((elemento) => this.isJSONString(elemento.direccion_geo)?this.parseJSON(elemento.direccion_geo).nombre:elemento.direccion_geo)
+        );
+        this.direcciones = Array.from(valoresUnicos).map((nombre) => ({
+            nombre,
+        }));
+    }
+
+    listarEstados() {
+        if (this.token) {
+            return this.listar
                 .listarEstadosActividadesProyecto(this.token)
-                .subscribe((response) => {
+                .toPromise()
+                .then((response) => {
                     if (response.data) {
                         this.estados = response.data;
                     }
                 });
+        } else {
+            return Promise.resolve(); // Devolver una promesa resuelta si no hay token
+        }
     }
-    async listCategoria() {
-        if (this.token)
-            this.listar
+
+    listarCategorias() {
+        if (this.token) {
+            return this.listar
                 .listarTiposActividadesProyecto(this.token)
-                .subscribe((response) => {
+                .toPromise()
+                .then((response) => {
                     if (response.data) {
                         this.actividades = response.data;
                     }
                 });
+        } else {
+            return Promise.resolve(); // Devolver una promesa resuelta si no hay token
+        }
     }
+
     async updateEncargados() {
         this.filterForm.get('encargado').setValue([]);
         const actividadSeleccionada = this.filterForm.get('actividad').value;
@@ -297,11 +292,11 @@ export class ListFichaComponent implements OnInit {
     constFicha: any[] = [];
     ficha: any[] = [];
     options: any;
-    async rankin() {
+    rankin() {
         // Obtener todos los fichas si aún no se han cargado
         if (this.constFicha.length === 0) {
             try {
-                const response: any = await this.listar
+                const response: any = this.listar
                     .listarFichaSectorial(this.token, '', '')
                     .toPromise();
                 if (response.data) {
@@ -329,21 +324,7 @@ export class ListFichaComponent implements OnInit {
                 },
             },
         };
-        await this.obtenerValoresUnicosDireccionGeo();
-    }
-    async obtenerValoresUnicosDireccionGeo() {
-        const valoresUnicos = new Set();
-        this.constFicha.forEach((ficha: any) => {
-            const direccionGeo = ficha.direccion_geo;
-            const nombre = direccionGeo;
-            const claveUnica = `${nombre}`;
-            valoresUnicos.add(claveUnica);
-        });
-        // Convertir el Set a un array para devolver los valores únicos
-        this.direcciones = Array.from(valoresUnicos).map((valor: any) => {
-            const [nombre, latitud, longitud] = valor.split('-');
-            return { nombre };
-        });
+        this.obtenerValoresUnicosDireccionGeo();
     }
     clear(table: Table) {
         table.clear();
@@ -582,4 +563,55 @@ export class ListFichaComponent implements OnInit {
         };
         img.src = base64Image;
     }
+    viewdialog: boolean = false;
+    optionview: any;
+    imagenModal: any;
+    imagenAMostrar: any;
+    displayBasic: boolean = false;
+    public url = GLOBAL.url;
+    openModalimagen(url: any) {
+        this.imagenModal = url;
+        //console.log('imagenModal',this.imagenModal);
+        this.imagenAMostrar = this.imagenModal[0];
+        //const this.ref = this.dialogService.open(this.modalContent, { size: 'lg' });
+    }
+    isMobil() {
+        return this.helper.isMobil();
+    }
+    responsiveOptions = [
+        {
+            breakpoint: '1024px',
+            numVisible: 5,
+        },
+        {
+            breakpoint: '768px',
+            numVisible: 3,
+        },
+        {
+            breakpoint: '560px',
+            numVisible: 1,
+        },
+    ];
+    verficha(rowIndex: any) {
+        this.viewdialog = true;
+        this.optionview = rowIndex;
+        //console.log(rowIndex);
+    }
+    isJSONString(str:string) {
+        try {
+            JSON.parse(str);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+    parseJSON(str: string): any {
+        try {
+            return JSON.parse(str);
+        } catch (e) {
+            console.error("Error parsing JSON string:", e);
+            return null;
+        }
+    }
+
 }

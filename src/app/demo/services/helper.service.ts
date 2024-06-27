@@ -47,7 +47,11 @@ export class HelperService {
                 return null;
             }
         } else {
-            if (this.router.url !== '/auth/login'&&this.router.url!=='/home'&&this.router.url!=='/') {
+            if (
+                this.router.url !== '/auth/login' &&
+                this.router.url !== '/home' &&
+                this.router.url !== '/'
+            ) {
                 this.router.navigate(['/auth/login']);
                 if (this.llamadasActivas > 0) {
                     this.cerrarspinner();
@@ -69,9 +73,7 @@ export class HelperService {
         private adminService: AdminService,
         private filterService: FilterService,
         private listarService: ListService
-    ) {
-        
-    }
+    ) {}
 
     searchStreets(
         query: string
@@ -209,7 +211,6 @@ export class HelperService {
             });
         }
         this.llamadasActivas++;
-
     }
 
     cerrarspinner() {
@@ -232,11 +233,11 @@ export class HelperService {
     setHomeComponent(homeComponent: HomeComponent) {
         this.homeComponent = homeComponent;
     }
-    cerrarMapa(){
-        this.homeComponent.visible_incidente=false;
+    cerrarMapa() {
+        this.homeComponent.visible_incidente = false;
     }
-    cerrarMapaFicha(){
-        this.homeComponent.visible_ficha=false;
+    cerrarMapaFicha() {
+        this.homeComponent.visible_ficha = false;
     }
     marcarLugar(latitud: any, longitud: any, nombres?: any) {
         if (this.mapComponent) {

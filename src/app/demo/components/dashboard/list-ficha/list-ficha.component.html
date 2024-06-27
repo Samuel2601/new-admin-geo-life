@@ -1,3 +1,4 @@
+<!--fORMULARIO-->
 <div class="card">
     <p-toast></p-toast>
     <h5>Filtro de Busqueda de Fichas Sectoriales</h5>
@@ -116,15 +117,15 @@
                                 }}</b>
                                 item{{
                                     filterForm.get("encargado").value &&
-                                    filterForm.get("encargado").value
-                                        .length !== 1
+                                    filterForm.get("encargado").value.length !==
+                                        1
                                         ? "s"
                                         : ""
                                 }}
                                 seleccionado{{
                                     filterForm.get("encargado").value &&
-                                    filterForm.get("encargado").value
-                                        .length !== 1
+                                    filterForm.get("encargado").value.length !==
+                                        1
                                         ? "s"
                                         : ""
                                 }}.
@@ -134,9 +135,7 @@
                     <label for="multiselectsub"
                         >Encargados
                         <ng-container
-                            *ngIf="
-                                filterForm.get('encargado').value.length > 0
-                            "
+                            *ngIf="filterForm.get('encargado').value.length > 0"
                             >: {{ filterForm.get("encargado").value.length }}
                         </ng-container></label
                     >
@@ -258,12 +257,12 @@
                 </span>
             </div>
             <div class="field col-12 md:col-3" *ngIf="check.ReporteFichaView">
-                <p-selectButton 
-                    [options]="viewmentOptions" 
-                    optionLabel="name" 
+                <p-selectButton
+                    [options]="viewmentOptions"
+                    optionLabel="name"
                     optionValue="value"
                     formControlName="view"
-                     />
+                />
             </div>
         </div>
         <div>
@@ -276,9 +275,10 @@
         </div>
     </form>
 </div>
-
+<!--fICHA-->
 <div class="card" *ngIf="ficha.length > 0">
-    <p-table [paginatorDropdownAppendTo]="'body'"
+    <p-table
+        [paginatorDropdownAppendTo]="'body'"
         styleClass="p-datatable-striped"
         #dt1
         [value]="ficha"
@@ -297,7 +297,6 @@
             'estado.nombre'
         ]"
         [sortMode]="'multiple'"
-        
     >
         <ng-template pTemplate="caption">
             <div class="flex">
@@ -342,13 +341,8 @@
                             field="direccion_geo"
                             display="Dirección"
                         ></p-columnFilter>
-                        <th
-                            pSortableColumn="direccion_geo"
-                            style="width: 20%"
-                        >
-                            <p-sortIcon
-                                field="direccion_geo"
-                            ></p-sortIcon>
+                        <th pSortableColumn="direccion_geo" style="width: 20%">
+                            <p-sortIcon field="direccion_geo"></p-sortIcon>
                         </th>
                     </div>
                 </th>
@@ -380,9 +374,7 @@
                             pSortableColumn="encargado.nombres"
                             style="width: 20%"
                         >
-                            <p-sortIcon
-                                field="encargado.nombres"
-                            ></p-sortIcon>
+                            <p-sortIcon field="encargado.nombres"></p-sortIcon>
                         </th>
                     </div>
                 </th>
@@ -394,10 +386,7 @@
                             field="fecha_evento"
                             display="Fecha Evento"
                         ></p-columnFilter>
-                        <th
-                            pSortableColumn="fecha_evento"
-                            style="width: 20%"
-                        >
+                        <th pSortableColumn="fecha_evento" style="width: 20%">
                             <p-sortIcon field="fecha_evento"></p-sortIcon>
                         </th>
                     </div>
@@ -419,10 +408,15 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-ficha let-rowIndex="rowIndex">
-            <tr>
+            <tr (click)="verficha(ficha)">
                 <td>{{ rowIndex + 1 }}</td>
                 <td>
-                    {{ ficha.direccion_geo }}
+                    <ng-container *ngIf="isJSONString(ficha.direccion_geo)">{{
+                        parseJSON(ficha.direccion_geo).nombre
+                    }}</ng-container>
+                    <ng-container *ngIf="!isJSONString(ficha.direccion_geo)">{{
+                        ficha.direccion_geo
+                    }}</ng-container>
                 </td>
                 <td>
                     {{ ficha.actividad.nombre }}
@@ -431,7 +425,7 @@
                     {{ ficha.encargado.nombres }}
                 </td>
                 <td>
-                    {{ ficha.fecha_evento | date : "medium" : "es"  }}
+                    {{ ficha.fecha_evento | date : "medium" : "es" }}
                 </td>
                 <td>
                     <p-tag
@@ -449,8 +443,8 @@
         </ng-template>
     </p-table>
 </div>
-
-<ng-container *ngIf="load_table&&ficha.length > 0">
+<!--GRÁFICOS-->
+<ng-container *ngIf="load_table && ficha.length > 0">
     <ng-container
         *ngFor="
             let item of convertirObjetoEnArreglo(dataForm);
@@ -472,12 +466,14 @@
                 <canvas #exportCanvas style="display: none"></canvas>
             </div>
             <div class="col-12 xl:col-6">
-                <p-table [paginatorDropdownAppendTo]="'body'" #dt1 [value]="getEntries(totales[item.clave])">
+                <p-table
+                    [paginatorDropdownAppendTo]="'body'"
+                    #dt1
+                    [value]="getEntries(totales[item.clave])"
+                >
                     <ng-template pTemplate="caption">
                         <div class="flex">
-                            <h4>
-                                Lista de {{ item.clave | uppercase }}
-                            </h4>
+                            <h4>Lista de {{ item.clave | uppercase }}</h4>
                             <p-button
                                 class="p-input-icon-left ml-auto"
                                 label="CSV"
@@ -508,7 +504,10 @@
                             <td>{{ actividad[0] }}</td>
                             <td>{{ actividad[1].registros }}</td>
                             <td>
-                                {{ actividad[1].porcentaje / 100 | percent:'1.2' }}
+                                {{
+                                    actividad[1].porcentaje / 100
+                                        | percent : "1.2"
+                                }}
                             </td>
                         </tr>
                     </ng-template>
@@ -524,7 +523,7 @@
                             <td>
                                 {{
                                     getTotales(totales[item.clave])
-                                        .totalPorcentaje / 100 | percent:'1.2'
+                                        .totalPorcentaje / 100 | percent : "1.2"
                                 }}
                             </td>
                         </tr>
@@ -534,10 +533,104 @@
         </div>
     </ng-container>
 </ng-container>
-<div class="card" *ngIf="load_table&&ficha.length ==0">
-    
-    <p-messages 
-        [value]="[{ severity: 'warn', detail: 'No tienes registros con este filtro' }]" 
-        [enableService]="false" 
-        [closable]="false" />
+<!--EN CASO DE NO TENER REGISTROS-->
+<div class="card" *ngIf="load_table && ficha.length == 0">
+    <p-messages
+        [value]="[
+            { severity: 'warn', detail: 'No tienes registros con este filtro' }
+        ]"
+        [enableService]="false"
+        [closable]="false"
+    />
 </div>
+<!--MODAL CON INFORMACION DE CADA UNO-->
+<p-dialog
+    header="Detalles de la Ficha Sectorial"
+    [(visible)]="viewdialog"
+    [modal]="false"
+    [style]="{ width: isMobil() ? '100%' : '50vw' }"
+>
+    <div class="modal-body" *ngIf="optionview">
+        <p>
+            <strong>Actividad:</strong>
+            {{ optionview.actividad.nombre }}
+        </p>
+        <p>
+            <strong>Dirección:</strong>
+            <ng-container *ngIf="isJSONString(optionview.direccion_geo)">{{
+                parseJSON(optionview.direccion_geo).nombre
+            }}</ng-container>
+            <ng-container *ngIf="!isJSONString(optionview.direccion_geo)">{{
+                optionview.direccion_geo
+            }}</ng-container>
+        </p>
+
+        <p>
+            <strong>Descripción:</strong>
+            {{ optionview.descripcion }}
+        </p>
+        <p>
+            <strong>Encargado:</strong>
+            {{ optionview.encargado.nombres }}
+        </p>
+        <p>
+            <strong>Estado:</strong>
+            <p-tag
+                [value]="optionview.estado.nombre"
+                [severity]="getSeverity(optionview.estado.nombre)"
+            >
+            </p-tag>
+        </p>
+        <p>
+            <strong>Fecha Evento:</strong>
+            {{ optionview.fecha_evento | date : "dd/MM/yyyy" }}
+        </p>
+        <p>
+            <strong>Observación:</strong>
+            {{ optionview.observacion }}
+        </p>
+        <div class="flex justify-content-between">
+            <div class="justify-content-between">
+                <p-button
+                    class="m-3"
+                    *ngIf="optionview.foto && optionview.foto.length > 0"
+                    label="Fotos"
+                    icon="pi pi-images"
+                    (click)="
+                        displayBasic = true; openModalimagen(optionview.foto)
+                    "
+                ></p-button>
+            </div>
+        </div>
+    </div>
+</p-dialog>
+<!--GALERIA DE IMAGENES DE CADA INCIDENTE-->
+<p-galleria *ngIf="displayBasic"
+    [value]="imagenModal"
+    [(visible)]="displayBasic"
+    [responsiveOptions]="responsiveOptions"
+    [containerStyle]="{ 'max-width': '50vw' }"
+    [numVisible]="9"
+    [circular]="true"
+    [fullScreen]="true"
+    [showItemNavigators]="true"
+>
+    <ng-template pTemplate="item" let-item>
+        <div style="width: 50vw; height: 50vh; display: flex; justify-content: center; align-items: center;">
+            <img
+                [src]="url + 'helper/obtener_portada_ficha/' + item"
+                style="max-width: 100%; max-height: 100%;"
+            />
+        </div>
+        
+    </ng-template>
+    <ng-template pTemplate="thumbnail" let-item>
+        <div class="grid grid-nogutter justify-content-center">
+            <img
+                [src]="url + 'helper/obtener_portada_ficha/' + item"
+                style="display: block"
+                style="max-height: 15vh"
+            />
+        </div>
+    </ng-template>
+</p-galleria>

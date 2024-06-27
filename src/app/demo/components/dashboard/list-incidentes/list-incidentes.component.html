@@ -428,7 +428,7 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-incidente let-rowIndex="rowIndex">
-            <tr>
+            <tr (click)="verficha(incidente)">
                 <td>{{ rowIndex + 1 }}</td>
                 <td>
                     {{ incidente.direccion_geo.nombre }}
@@ -553,3 +553,107 @@
         [closable]="false"
     />
 </div>
+
+<p-galleria
+    [value]="imagenModal"
+    [(visible)]="displayBasic"
+    [responsiveOptions]="responsiveOptions"
+    [containerStyle]="{ 'max-width': '50%' }"
+    [numVisible]="9"
+    [circular]="true"
+    [fullScreen]="true"
+    [showItemNavigators]="true"
+>
+    <ng-template pTemplate="item" let-item>
+        <img
+            [src]="url + 'helper/obtener_portada/' + item"
+            style="width: 100%; display: block"
+        />
+    </ng-template>
+    <ng-template pTemplate="thumbnail" let-item>
+        <div class="grid grid-nogutter justify-content-center">
+            <img
+                [src]="url + 'helper/obtener_portada/' + item"
+                style="display: block"
+                style="width: 30%"
+            />
+        </div>
+    </ng-template>
+</p-galleria>
+
+<p-dialog
+    header="Detalles de la Incidencia"
+    [(visible)]="viewdialog"
+    [modal]="false"
+    [style]="{ width: isMobil() ? '100%' : '40vw' }"
+>
+    <div class="modal-body" *ngIf="optionview">
+        <p>
+            <strong>Categoría:</strong>
+            {{ optionview.categoria.nombre }}
+        </p>
+        <p>
+            <strong>Subcategoría:</strong>
+            {{ optionview.subcategoria.nombre }}
+        </p>
+        <p>
+            <strong>Dirección Geográfica:</strong>
+            {{ optionview.direccion_geo.nombre }}
+        </p>
+        <p>
+            <strong>Estado:</strong>
+            <p-tag
+                [value]="optionview.estado.nombre"
+                [severity]="getSeverity(optionview.estado.nombre, optionview.createdAt)"
+            ></p-tag>
+        </p>
+        <p *ngIf="optionview.createdAt">
+            <strong>Fecha:</strong>
+            {{ optionview.createdAt | date : "medium" : "es" }}
+        </p>
+        <p>
+            <strong>Ciudadano:</strong>
+            {{ optionview.ciudadano.nombres }}
+        </p>
+        <p>
+            <strong>Descripción:</strong>
+            {{ optionview.descripcion }}
+        </p>
+        <p *ngIf="!check.FichaLimitada">
+            <strong>Encargado:</strong
+            ><ng-container *ngIf="optionview.encargado">{{
+                optionview.encargado.nombres
+            }}</ng-container>
+            <ng-container *ngIf="!optionview.encargado">--</ng-container>
+        </p>
+        <p>
+            <strong>Respuesta:</strong
+            ><ng-container *ngIf="optionview.respuesta">{{
+                optionview.respuesta
+            }}</ng-container>
+            <ng-container *ngIf="!optionview.respuesta">--</ng-container>
+        </p>
+        <div class="flex justify-content-between">
+            <div class="justify-content-between">
+                <p-button
+                    class="m-3"
+                    *ngIf="optionview.foto && optionview.foto.length > 0"
+                    label="Fotos"
+                    icon="pi pi-images"
+                    (click)="displayBasic = true; openModalimagen(optionview.foto)"
+                ></p-button>
+            </div>
+            <div class="justify-content-center">
+                <p-button
+                    class="m-3"
+                    *ngIf="optionview.evidencia && optionview.evidencia.length > 0"
+                    label="Evidencias"
+                    icon="pi pi-images"
+                    (click)="
+                        displayBasic = true; openModalimagen(optionview.evidencia)
+                    "
+                ></p-button>
+            </div>
+        </div>
+    </div>
+</p-dialog>

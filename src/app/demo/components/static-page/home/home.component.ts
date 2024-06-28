@@ -357,7 +357,7 @@ export class HomeComponent implements OnInit {
                     showInfo: false,
                     command: async () => {
                         window.open(
-                            'https://www.esmeraldas.gob.ec/alcaldia/concejales-canton-esmeraldas/concejala-yoli-m.html',
+                            'https://www.esmeraldas.gob.ec/alcaldia/concejales-canton-esmeraldas/vicealcaldesa.html',
                             '_blank'
                         );
                     },

@@ -167,7 +167,7 @@ export class HomeComponent implements OnInit {
                 {
                     label: 'EPMAPSE',
                     info: 'Puedes reportar los incidentes y denuncias con respecto a EPMAPSE.',
-                    icon: 'https://i.postimg.cc/LX5rhc1p/AGUA-1.png',
+                    icon: 'https://i.postimg.cc/j2625XdV/icoco-epmapse.png',
                     showInfo: false,
                     command: async () => {
                         this.incidente('Agua Potable y Alcantarillado');
@@ -176,7 +176,7 @@ export class HomeComponent implements OnInit {
                 {
                     label: 'BOMBEROS',
                     info: 'Puedes reportar los incidentes y denuncias con respecto a BOMBEROS.',
-                    icon: 'https://i.postimg.cc/8PHdSS2Z/BOMBEROS-2.png',
+                    icon: 'https://i.postimg.cc/Gh55HjWs/icoco-bomberos.png',
                     showInfo: false,
                     command: async () => {
                         this.incidente(

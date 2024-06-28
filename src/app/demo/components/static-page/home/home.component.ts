@@ -135,13 +135,13 @@ export class HomeComponent implements OnInit {
                 {
                     label: 'ESVIAL',
                     info: 'Puedes reportar Incidentes o mirar las Infracciones de tránsito',
-                    icon: 'https://i.postimg.cc/CxxGM2YS/VIAL.png',
+                    icon: 'https://i.postimg.cc/bYKqrncJ/Iconos-disen-o-09.png',
                     showInfo: false,
                     items: [
                         {
                             label: 'Incidentes ESVIAL',
                             info: 'Puedes reportar los incidentes y denuncias con respecto a ESVIAL.',
-                            icon: 'https://i.postimg.cc/PJWtsTFC/ESVIAL.png',
+                            icon: 'https://i.postimg.cc/C51r9XxQ/Imagen-de-Whats-App-2024-06-26-a-las-12-09-30-1cfaf812-fotor-bg-remover-20240626121913.png',
                             showInfo: false,
                             command: async () => {
                                 this.incidente(
@@ -201,7 +201,7 @@ export class HomeComponent implements OnInit {
                 {
                     label: 'Otros Incidentes',
                     info: 'Puedes reportar los incidentes y denuncias que se presenten en la ciudad.',
-                    icon: 'https://i.postimg.cc/cJxqGg16/OTROS.png',
+                    icon: 'https://i.postimg.cc/fW3wMKPp/Iconos-disen-o-07.png',
                     showInfo: false,
                     command: async () => {
                         this.incidente();
@@ -210,7 +210,7 @@ export class HomeComponent implements OnInit {
                 {
                     label: 'Fichas Sectoriales',
                     info: 'Accede a información detallada sobre eventos y actividades en tu sector.',
-                    icon: 'https://i.postimg.cc/kg3BG4JP/icoco-fichas-2.png',
+                    icon: 'https://i.postimg.cc/zfpQgsy7/Iconos-disen-o-05.png',
                     showInfo: false,
                     command: async () => {
                         this.ficha();
@@ -236,7 +236,7 @@ export class HomeComponent implements OnInit {
                 {
                     label: 'Noticias',
                     info: 'Mantente informado sobre comunicados de la alcaldía.',
-                    icon: 'https://i.postimg.cc/yNvM11Wj/NOTICIAS.png',
+                    icon: 'https://i.postimg.cc/cLcWF5Kg/Iconos-disen-o-11.png',
                     showInfo: false,
                     command: async () => {
                         window.open(
@@ -257,7 +257,7 @@ export class HomeComponent implements OnInit {
                 {
                     label: 'Otros Servicios',
                     info: 'Descubre otros servicios disponibles para ti.',
-                    icon: 'https://i.postimg.cc/9Qj51gvd/SERVICIOS.png',
+                    icon: 'https://i.postimg.cc/hGPB6bxC/Iconos-disen-o-12.png',
                     showInfo: false,
                     command: async () => {
                         window.open(

@@ -150,10 +150,9 @@ export class HomeComponent implements OnInit {
                                 );
                             },
                         },
-
                         {
                             label: 'Infracciones de Tránsito',
-                            info: 'Servicio en Línea, consulta de citaciones.',
+                            info: 'Servicio en línea para la consulta de citaciones.',
                             icon: 'https://i.postimg.cc/FsCZ1JkL/Imagen-de-Whats-App-2024-06-26-a-las-12-07-32-5233ccb0-fotor-bg-remover-20240626121152.png',
                             showInfo: false,
                             command: async () => {
@@ -223,7 +222,7 @@ export class HomeComponent implements OnInit {
             items: [
                 {
                     label: 'Registro de la Propiedad',
-                    info: 'Realiza tus trámites en Registro de la Propiedad Certificación e Inscripción.',
+                    info: 'Realiza tus trámites en Registro de la Propiedad, certificación e inscripción.',
                     icon: 'https://i.postimg.cc/pXfMd1JG/Iconos-disen-o-14.png',
                     showInfo: false,
                     command: async () => {
@@ -247,13 +246,45 @@ export class HomeComponent implements OnInit {
                 },
                 {
                     label: 'Ciudad Global',
-                    info: 'Interactua con las diferentes unidades de la Alcaldía Ciudadana',
+                    info: 'Interactúa con las diferentes unidades de la Alcaldía Ciudadana.',
                     icon: 'https://i.postimg.cc/4NVs93s1/Iconos-disen-o-08.png',
                     showInfo: false,
-                    command: async () => {
-                        this.router.navigate(['/maps']);
-                    },
-                },                
+                    items: [
+                        {
+                            label: 'Mapa de la Ciudad',
+                            info: 'Interactúa con las diferentes unidades de la Alcaldía Ciudadana.',
+                            icon: 'https://i.postimg.cc/qMNZLPYt/Imagen-de-Whats-App-2024-06-26-a-las-12-09-30-27b5bceb-removebg-preview.png',
+                            showInfo: false,
+                            command: async () => {
+                                this.router.navigate(['/maps']);
+                            },
+                        },
+                        {
+                            label: "TIC's",
+                            info: 'Conócenos',
+                            icon: 'https://i.postimg.cc/NG4bqngb/Imagen-de-Whats-App-2024-06-26-a-las-12-07-36-c26979b6-fotor-bg-remover-20240626121035.png',
+                            showInfo: false,
+                            command: async () => {
+                                window.open(
+                                    'https://esmeraldas.gob.ec/direcciones/ti/info_tics.html',
+                                    '_blank'
+                                );
+                            },
+                        },
+                        {
+                            label: 'Servicios',
+                            info: 'Descubre otros servicios que ofrecemos.',
+                            icon: 'https://i.postimg.cc/XJnzkpS3/Imagen-de-Whats-App-2024-06-26-a-las-12-09-35-803347bd-removebg-preview.png',
+                            showInfo: false,
+                            command: async () => {
+                                window.open(
+                                    'https://esmeraldas.gob.ec/direcciones/ti/servicios-ti.html',
+                                    '_blank'
+                                );
+                            },
+                        },
+                    ],
+                },
                 {
                     label: 'Otros Servicios',
                     info: 'Descubre otros servicios disponibles para ti.',
@@ -268,7 +299,7 @@ export class HomeComponent implements OnInit {
                 },
                 {
                     label: 'Gestión de Riesgos',
-                    info: 'Descubre otros servicios disponibles para ti.',
+                    info: 'Información general sobre gestión de riesgos.',
                     icon: 'https://i.postimg.cc/CMfV3KBV/Iconos-disen-o-15.png',
                     showInfo: false,
                     command: async () => {
@@ -281,12 +312,12 @@ export class HomeComponent implements OnInit {
             ],
         },
         {
-            label: 'Consejales',
+            label: 'Concejales',
             items: [
                 {
                     label: 'Lilian Orejuela',
-                    info: 'Rendición de Cuentas Lilian Orejuela.',
-                    icon: 'https://i.postimg.cc/R0FKBmB9/consejal-1.png',
+                    info: 'Rendición de cuentas de Lilian Orejuela.',
+                    icon: 'https://i.postimg.cc/N0QCLk71/Iconos-funcionarios-01.png',
                     showInfo: false,
                     command: async () => {
                         window.open(
@@ -297,8 +328,8 @@ export class HomeComponent implements OnInit {
                 },
                 {
                     label: 'Jorge Perea',
-                    info: 'Rendición de Cuentas Jorge Perea.',
-                    icon: 'https://i.postimg.cc/MZYbk9kW/JORGE-fotor-bg-remover-2024053183620.png',
+                    info: 'Rendición de cuentas de Jorge Perea.',
+                    icon: 'https://i.postimg.cc/HL3ZM8BF/Iconos-funcionarios-02.png',
                     showInfo: false,
                     command: async () => {
                         window.open(
@@ -306,11 +337,11 @@ export class HomeComponent implements OnInit {
                             '_blank'
                         );
                     },
-                },      
+                },
                 {
-                    label: 'Ramón Echeverria',
-                    info: 'Rendición de Cuentas Ramón Echeverria.',
-                    icon: 'https://i.postimg.cc/VLfy1Zd4/49938764-2088066691300558-8718155154085380096-n-fotor-bg-remover-2024053193834.png',
+                    label: 'Ramón Echeverría',
+                    info: 'Rendición de cuentas de Ramón Echeverría.',
+                    icon: 'https://i.postimg.cc/gjxTmcyQ/Iconos-funcionarios-09.png',
                     showInfo: false,
                     command: async () => {
                         window.open(
@@ -318,23 +349,23 @@ export class HomeComponent implements OnInit {
                             '_blank'
                         );
                     },
-                },  
+                },
                 {
-                    label: 'Yoli Marquez Cetre',
-                    info: 'Rendición de Cuentas Yoli Marquez Cetre.',
-                    icon: 'https://i.postimg.cc/BQQ5J2s2/441262099-7433463006749036-7393373753399887830-n-fotor-bg-remover-2024053114411.png',
+                    label: 'Yoli Márquez Cetre',
+                    info: 'Rendición de cuentas de Yoli Márquez Cetre.',
+                    icon: 'https://i.postimg.cc/4x6FJStf/Iconos-funcionarios-03.png',
                     showInfo: false,
                     command: async () => {
                         window.open(
-                            'https://www.esmeraldas.gob.ec/alcaldia/concejales-canton-esmeraldas/vicealcaldesa.html',
+                            'https://www.esmeraldas.gob.ec/alcaldia/concejales-canton-esmeraldas/concejala-yoli-m.html',
                             '_blank'
                         );
                     },
-                },    
+                },
                 {
                     label: 'Galo Cabezas Cañolas',
                     info: 'Rendición de Cuentas Galo Cabezas Cañolas.',
-                    icon: 'https://i.postimg.cc/C5JjjxCZ/357410929-6259323480831905-1173226859756085474-n-fotor-bg-remover-20240605102912.png',
+                    icon: 'https://i.postimg.cc/MGY4YFKP/Iconos-funcionarios-07.png',
                     showInfo: false,
                     command: async () => {
                         window.open(
@@ -346,7 +377,7 @@ export class HomeComponent implements OnInit {
                 {
                     label: 'José Maffares Guagua',
                     info: 'Rendición de Cuentas José Maffares Guagua.',
-                    icon: 'https://i.postimg.cc/26YFYrqc/425605791-2113349195709417-9111459625782608350-n-removebg-preview.png',
+                    icon: 'https://i.postimg.cc/DybMNZwb/Iconos-funcionarios-06.png',
                     showInfo: false,
                     command: async () => {
                         window.open(
@@ -358,7 +389,7 @@ export class HomeComponent implements OnInit {
                 {
                     label: 'Luisa Cuero',
                     info: 'Rendición de Cuentas Luisa Cuero.',
-                    icon: 'https://i.postimg.cc/QdFpTsFt/346839338-266235752519361-8128170372082584323-n-fotor-bg-remover-20240607125013.png',
+                    icon: 'https://i.postimg.cc/3RScs0G2/Iconos-funcionarios-10.png',
                     showInfo: false,
                     command: async () => {
                         window.open(
@@ -370,7 +401,7 @@ export class HomeComponent implements OnInit {
                 {
                     label: 'Laura Yagual',
                     info: 'Rendición de Cuentas Laura Yagual.',
-                    icon: 'https://i.postimg.cc/HsZwnjsR/348425824-994304325315637-2066268990053037357-n-fotor-bg-remover-202406101637.png',
+                    icon: 'https://i.postimg.cc/8zQ0gS7X/Iconos-funcionarios-04.png',
                     showInfo: false,
                     command: async () => {
                         window.open(
@@ -378,10 +409,11 @@ export class HomeComponent implements OnInit {
                             '_blank'
                         );
                     },
-                },      
+                }
             ],
         },
     ];
+    
 
     filteredProductos: any[] = [];
     imageselecte: any;

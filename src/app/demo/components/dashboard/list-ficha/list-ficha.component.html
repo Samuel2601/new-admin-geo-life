@@ -7,19 +7,19 @@
             <div class="field col-12 md:col-3">
                 <span class="p-float-label">
                     <p-calendar
-                        inputId="calendar"
+                        inputId="fecha_inicio"
                         formControlName="fecha_inicio"
                     ></p-calendar>
-                    <label for="calendar">Fecha de inicio</label>
+                    <label for="fecha_inicio">Fecha de inicio</label>
                 </span>
             </div>
             <div class="field col-12 md:col-3">
                 <span class="p-float-label">
                     <p-calendar
-                        inputId="calendar"
+                        inputId="fecha_fin"
                         formControlName="fecha_fin"
                     ></p-calendar>
-                    <label for="calendar">Fecha de fin</label>
+                    <label for="fecha_fin">Fecha de fin</label>
                 </span>
             </div>
 
@@ -545,6 +545,7 @@
 </div>
 <!--MODAL CON INFORMACION DE CADA UNO-->
 <p-dialog
+    appendTo="body"
     header="Detalles de la Ficha Sectorial"
     [(visible)]="viewdialog"
     [modal]="false"
@@ -605,7 +606,9 @@
     </div>
 </p-dialog>
 <!--GALERIA DE IMAGENES DE CADA INCIDENTE-->
-<p-galleria *ngIf="displayBasic"
+<p-galleria
+    appendTo="body"
+    *ngIf="displayBasic"
     [value]="imagenModal"
     [(visible)]="displayBasic"
     [responsiveOptions]="responsiveOptions"
@@ -616,13 +619,20 @@
     [showItemNavigators]="true"
 >
     <ng-template pTemplate="item" let-item>
-        <div style="width: 50vw; height: 50vh; display: flex; justify-content: center; align-items: center;">
+        <div
+            style="
+                width: 50vw;
+                height: 50vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            "
+        >
             <img
                 [src]="url + 'helper/obtener_portada_ficha/' + item"
-                style="max-width: 100%; max-height: 100%;"
+                style="max-width: 100%; max-height: 100%"
             />
         </div>
-        
     </ng-template>
     <ng-template pTemplate="thumbnail" let-item>
         <div class="grid grid-nogutter justify-content-center">

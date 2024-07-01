@@ -24,8 +24,8 @@
 
 .cube-face {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 99%;
+  height: 99%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -57,7 +57,7 @@ p {
   position: relative;
   width: 150px; /* Ajusta el tamaño según sea necesario */
   height: 150px; /* Ajusta el tamaño según sea necesario */
-  margin-bottom: 10px; /* Espacio entre el icono y el texto */
+  //margin-bottom: 10px; /* Espacio entre el icono y el texto */
 }
 
 .rounded-top {
@@ -170,4 +170,43 @@ p {
   height: 1px;
   background: #000; /* Puedes cambiar el color según tu preferencia */
   margin-bottom: 2rem;
+}
+.rounded-icon{
+  border-radius: 50%;
+  position: relative;
+  border-bottom: 3px solid transparent ;
+  border-left: 3px solid transparent ;
+  border-right: 3px solid transparent ;
+  border-radius: linear-gradient(0.25turn, rgba(255,249,34), rgba(255,0,128), rgba(56,2,155,0));
+    border-image-slice: 1;
+}
+
+
+.white-grad {
+  --b:5px;  /* border width*/
+  border-radius: 50%;
+  color: #313149;
+  display: inline-block;
+  margin: 10px;
+  width: 150px;
+  aspect-ratio: 1;
+  position: relative;
+  z-index: 0;
+}
+.white-grad:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: var(--c,linear-gradient(var(--surface-0), var(--primary-color)));
+  padding: var(--b);
+  border-radius:var(--r,50%);
+  -webkit-mask: 
+     linear-gradient(#fff 0 0) content-box, 
+     linear-gradient(#fff 0 0);
+          mask: 
+     linear-gradient(#fff 0 0) content-box, 
+     linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
 }

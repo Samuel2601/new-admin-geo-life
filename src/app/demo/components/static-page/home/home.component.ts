@@ -128,7 +128,7 @@ export class HomeComponent implements OnInit {
         } catch (error) {}
         this.filterProductos();
     }
-    setbuttons = [
+    setbuttons:any = [
         {
             label: 'Más Usados',
             items: [
@@ -142,7 +142,8 @@ export class HomeComponent implements OnInit {
                             label: 'Incidentes ESVIAL',
                             info: 'Puedes reportar los incidentes y denuncias con respecto a ESVIAL.',
                             icon: 'https://i.postimg.cc/C51r9XxQ/Imagen-de-Whats-App-2024-06-26-a-las-12-09-30-1cfaf812-fotor-bg-remover-20240626121913.png',
-                            showInfo: false,
+                            dev:true,
+                            showInfo: false, 
                             command: async () => {
                                 this.incidente(
                                     'ESVIAL',
@@ -154,7 +155,8 @@ export class HomeComponent implements OnInit {
                             label: 'Infracciones de Tránsito',
                             info: 'Servicio en línea para la consulta de citaciones.',
                             icon: 'https://i.postimg.cc/FsCZ1JkL/Imagen-de-Whats-App-2024-06-26-a-las-12-07-32-5233ccb0-fotor-bg-remover-20240626121152.png',
-                            showInfo: false,
+                            dev:true,
+                            showInfo: false,                            
                             command: async () => {
                                 window.open(
                                     'https://servicios.axiscloud.ec/AutoServicio/inicio.jsp?ps_empresa=10&ps_accion=P55',
@@ -162,6 +164,20 @@ export class HomeComponent implements OnInit {
                                 );
                             },
                         },
+                        {
+                            label: 'Página oficial',
+                            info: 'Conoce su sitio oficial',
+                            icon: 'https://i.postimg.cc/7YnWXf1v/375591046-633240775578090-7070193202552108562-n-removebg-preview-1.png',
+                            dev:true,
+                            showInfo: false,
+                            command: async () => {
+                                window.open(
+                                    'https://esvialep.gob.ec/',
+                                    '_blank'
+                                );
+                            },
+                        },
+                        
                     ],
                 },
                 {
@@ -169,21 +185,69 @@ export class HomeComponent implements OnInit {
                     info: 'Puedes reportar los incidentes y denuncias con respecto a EPMAPSE.',
                     icon: 'https://i.postimg.cc/j2625XdV/icoco-epmapse.png',
                     showInfo: false,
-                    command: async () => {
-                        this.incidente('Agua Potable y Alcantarillado');
-                    },
+                    items: [
+                        {
+                            label: 'Incidentes EPMAPSE',
+                            info: 'Puedes reportar los incidentes y denuncias con respecto a EPMAPSE.',
+                            icon: 'https://i.postimg.cc/yYGf4ccS/Agua-Potable-y-Alcantarillado.png',
+                            dev:true,
+                            showInfo: false, 
+                            command: async () => {
+                                this.incidente('Agua Potable y Alcantarillado');
+                            },
+                        },
+                        {
+                            label: 'Página oficial',
+                            info: 'Conoce su sitio oficial',
+                            icon: 'https://i.postimg.cc/2jHdQSw6/epmapse-mod-removebg-preview-2.png',
+                            dev:true,
+                            showInfo: false,
+                            command: async () => {
+                                window.open(
+                                    'https://epmapse.gob.ec/',
+                                    '_blank'
+                                );
+                            },
+                        },
+                        
+                    ],
+                    
                 },
                 {
                     label: 'BOMBEROS',
                     info: 'Puedes reportar los incidentes y denuncias con respecto a BOMBEROS.',
                     icon: 'https://i.postimg.cc/Gh55HjWs/icoco-bomberos.png',
                     showInfo: false,
-                    command: async () => {
-                        this.incidente(
-                            'Cuerpo de Bomberos',
-                            'Incendios / Desastres varios'
-                        );
-                    },
+                    items: [
+                        {
+                            label: 'Incidentes BOMBEROS',
+                            info: 'Puedes reportar los incidentes y denuncias con respecto a BOMBEROS.',
+                            icon: 'https://i.postimg.cc/pdYh1sx9/11.png',
+                            dev:true,
+                            showInfo: false, 
+                            command: async () => {
+                                this.incidente(
+                                    'Cuerpo de Bomberos',
+                                    'Incendios / Desastres varios'
+                                );
+                            },
+                        },
+                        {
+                            label: 'Página oficial',
+                            info: 'Conoce su sitio oficial',
+                            icon: 'https://i.postimg.cc/d0p2bHhy/352708610-231200392990592-6209922991130766173-n-removebg-preview.png',
+                            dev:true,
+                            showInfo: false,
+                            command: async () => {
+                                window.open(
+                                    'https://bomberosdeesmeraldas.gob.ec/',
+                                    '_blank'
+                                );
+                            },
+                        },
+                        
+                    ],
+                    
                 },
                 {
                     label: 'RECOLECTORES',
@@ -220,6 +284,18 @@ export class HomeComponent implements OnInit {
         {
             label: 'Otros Servicios',
             items: [
+                {
+                    label: 'Tramites Municipal',
+                    info: 'Descubre otros servicios disponibles para ti.',
+                    icon: 'https://i.postimg.cc/hGPB6bxC/Iconos-disen-o-12.png',
+                    showInfo: false,
+                    command: async () => {
+                        window.open(
+                            'https://tramites.esmeraldas.gob.ec/',
+                            '_blank'
+                        );
+                    },
+                },
                 {
                     label: 'Registro de la Propiedad',
                     info: 'Realiza tus trámites en Registro de la Propiedad, certificación e inscripción.',
@@ -285,18 +361,7 @@ export class HomeComponent implements OnInit {
                         },
                     ],
                 },
-                {
-                    label: 'Otros Servicios',
-                    info: 'Descubre otros servicios disponibles para ti.',
-                    icon: 'https://i.postimg.cc/hGPB6bxC/Iconos-disen-o-12.png',
-                    showInfo: false,
-                    command: async () => {
-                        window.open(
-                            'https://tramites.esmeraldas.gob.ec/',
-                            '_blank'
-                        );
-                    },
-                },
+                
                 {
                     label: 'Gestión de Riesgos',
                     info: 'Información general sobre gestión de riesgos.',

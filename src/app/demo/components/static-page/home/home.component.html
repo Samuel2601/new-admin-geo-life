@@ -364,7 +364,6 @@
     </div>
 </div>
 
-
 <ng-container *ngFor="let buttons of setbuttons">
     <div
         class="surface-section px-4 pb-8 md:px-6 lg:px-8 overflow-hidden"
@@ -377,7 +376,10 @@
         <hr class="section-divider" />
 
         <div class="button-container">
-            <div class="cube" *ngFor="let button of buttons.items; let i = index">
+            <div
+                class="cube"
+                *ngFor="let button of buttons.items; let i = index"
+            >
                 <div class="cube-face cube-front">
                     <img
                         [src]="button.icon"
@@ -405,7 +407,7 @@
                     *ngIf="button.items && button.items.length > 0"
                     [(visible)]="button.showInfo"
                     [modal]="true"
-                    [style]="{ width: isMobil()? '90vw':'50vw' }"
+                    [style]="{ width: isMobil() ? '90vw' : '50vw' }"
                     appendTo="body"
                 >
                     <div class="button-container">
@@ -414,11 +416,15 @@
                             *ngFor="let items of button.items; let i = index"
                         >
                             <div class="cube-face cube-front">
-                                <img
-                                    [src]="items.icon"
+                                <div class="white-grad" style="--b:0px 3px 8px 3px;--r:50% 50% 50% 50%;">
+                                    <img
+                                    [src]="items.icon"                                 
                                     alt="{{ button.label }}"
                                     class="custom-icon"
                                 />
+                                </div>
+
+                                
                                 <p>{{ items.label }}</p>
                             </div>
                             <div class="cube-face cube-back">
@@ -438,8 +444,6 @@
         </div>
     </div>
 </ng-container>
-
-
 
 <div
     class="surface-section px-4 py-8 md:px-6 lg:px-8 overflow-hidden"

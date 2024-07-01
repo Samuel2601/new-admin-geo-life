@@ -312,13 +312,14 @@ export class LayersComponent implements OnInit {
                         icon: 'pi bi-bankcustom',
                         label: 'Alcaldía Ciudadana',
                         styleClass: 'itemcustom',
-                        //expanded: true,
+                        expanded: true,
                         items: [
                             {
                                 icon: 'pi bi-estadistica',
                                 label: 'Estadística',
                                 styleClass: 'itemcustom',
-                                visible: this.check.DashboardComponent,
+                                //visible: this.check.DashboardComponent,
+                                visible: false,
                                 command: () => {
                                     if (this.check.DashboardComponent) {
                                         this.controlFullScreem();
@@ -336,7 +337,8 @@ export class LayersComponent implements OnInit {
                                 icon: 'pi bi-ticcioce',
                                 label: 'TIC-CIOCE',
                                 styleClass: 'itemcustom',
-                                visible: this.check.DashboardComponent,
+                                //visible: this.check.DashboardComponent,
+                                visible:false,
                                 command: () => {
                                     if (
                                         (this.opcionb ? true : false) &&
@@ -512,9 +514,48 @@ export class LayersComponent implements OnInit {
                         ],
                     },
                     {
+                        icon: 'pi bi-ticcioce',
+                        label: 'TIC-CIOCE',
+                        styleClass: 'itemcustom',
+                        visible: this.check.DashboardComponent,
+                        command: () => {
+                            if (
+                                (this.opcionb ? true : false) &&
+                                this.check
+                                    .CreateIncidentesDenunciaComponent &&
+                                (this.latitud ? true : false) &&
+                                (this.longitud ? true : false)
+                            ) {
+                                this.nuevoIncidente('CIOCE');
+                            } else {
+                                if (
+                                    (this.opcionb ? true : false) &&
+                                    this.check
+                                        .IndexIncidentesDenunciaComponent &&
+                                    this.check.DashboardComponent
+                                ) {
+                                    this.mostrarincidente = false;
+                                    setTimeout(() => {
+                                        this.mostrarfiltro = false;
+                                        this.categoria = 'CIOCE';
+                                        this.subcategoria = undefined;
+                                        this.incidente();
+                                    }, 500);
+                                } else {
+                                    this.messageService.add({
+                                        severity: 'error',
+                                        summary: 'ERROR',
+                                        detail: 'Primero selecciona un punto',
+                                    });
+                                }
+                            }
+                        },
+                    },
+                    {
                         icon: 'pi pi-directionscustom',
                         label: 'ESVIAL',
                         styleClass: 'itemcustom',
+                        visible: false,
                         command: () => {
                             if (
                                 (this.opcionb ? true : false) &&
@@ -555,6 +596,7 @@ export class LayersComponent implements OnInit {
                         icon: 'pi bi-dropletcustom',
                         label: 'EPMAPSE',
                         styleClass: 'itemcustom',
+                        visible: false,
                         command: () => {
                             if (
                                 (this.opcionb ? true : false) &&
@@ -594,6 +636,7 @@ export class LayersComponent implements OnInit {
                         icon: 'pi bi-bomberos',
                         label: 'BOMBEROS',
                         styleClass: 'itemcustom',
+                        visible: false,
                         command: () => {
                             if (
                                 (this.opcionb ? true : false) &&
@@ -688,6 +731,7 @@ export class LayersComponent implements OnInit {
                                 icon: 'pi bi-trashcustom',
                                 label: 'Denuncia/Incidente',
                                 styleClass: 'itemcustom',
+                                visible: false,
                                 command: () => {
                                     if (
                                         (this.opcionb ? true : false) &&
